@@ -16,6 +16,9 @@ export interface PersonalityType {
   description: string;
   traits: string[];
   compatibility: string[];
+  strengths: string[];
+  weaknesses: string[];
+  careers: string[];
 }
 
 export interface TestResult {
@@ -25,4 +28,4 @@ export interface TestResult {
   R: number; // Shame-resistant vs Shame-sensitive
   A: number; // Attachment vs Non-attachment
   type: PersonalityType;
-}
+} 

@@ -63,4 +63,4 @@ export const getProgressPercentage = (currentQuestion: number, totalQuestions: n
 
 export const getPersonalityTypeByCode = (code: string): PersonalityType | undefined => {
   return personalityTypes.find(type => type.code === code);
-};
+}; 

@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Heart } from 'lucide-react';
 
@@ -68,4 +70,4 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, onShowTypes, onBac
   );
 };
 
-export default Navigation;
+export default Navigation; 

@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { TestResult } from '../types/personality';
 import { getCategoryColor, getCategoryName } from '../data/personalityTypes';
@@ -197,165 +199,109 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
           </div>
         </div>
 
-        {/* Career Paths Section */}
+        {/* Strengths & Weaknesses */}
         <div className="mb-16">
           <div className="flex items-center mb-6">
             <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
               2
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">あなたのキャリアパス</h2>
+            <h2 className="text-2xl font-bold text-gray-900">長所と短所</h2>
           </div>
           
-          <div className="bg-gradient-to-r from-green-50 to-teal-50 rounded-lg p-8 mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-4">適職の例:</h3>
-                <ul className="space-y-2 text-gray-700">
-                  <li>• クリエイティブディレクター</li>
-                  <li>• 心理カウンセラー</li>
-                  <li>• 研究者・学者</li>
-                  <li>• アーティスト・デザイナー</li>
-                </ul>
-              </div>
-              
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-4">職場での強み:</h3>
-                <ul className="space-y-2 text-gray-700">
-                  <li>• 独創的なアイデアの創出</li>
-                  <li>• 深い洞察力と分析力</li>
-                  <li>• 他者への共感と理解</li>
-                  <li>• 長期的な視点での計画</li>
-                </ul>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-green-800 mb-4 flex items-center">
+                <Sparkles className="w-5 h-5 mr-2" />
+                長所
+              </h3>
+              <ul className="space-y-2">
+                {type.strengths.map((strength, index) => (
+                  <li key={index} className="text-green-700 flex items-start">
+                    <div className="w-2 h-2 bg-green-500 rounded-full mr-3 mt-2"></div>
+                    {strength}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-red-800 mb-4 flex items-center">
+                <RefreshCw className="w-5 h-5 mr-2" />
+                改善点
+              </h3>
+              <ul className="space-y-2">
+                {type.weaknesses.map((weakness, index) => (
+                  <li key={index} className="text-red-700 flex items-start">
+                    <div className="w-2 h-2 bg-red-500 rounded-full mr-3 mt-2"></div>
+                    {weakness}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
 
-        {/* Relationships Section */}
+        {/* Career Paths */}
         <div className="mb-16">
           <div className="flex items-center mb-6">
             <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
               3
             </div>
-            <h2 className="text-2xl font-bold text-gray-900">あなたの自己成長</h2>
+            <h2 className="text-2xl font-bold text-gray-900">適職</h2>
           </div>
           
-          <div className="bg-purple-50 rounded-lg p-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-4">成長のポイント:</h3>
-                <ul className="space-y-2 text-gray-700">
-                  <li>• 自分の価値観を大切にする</li>
-                  <li>• 創造性を活かす機会を見つける</li>
-                  <li>• 深い人間関係を築く</li>
-                  <li>• 完璧主義を和らげる</li>
-                </ul>
-              </div>
-              
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-4">注意すべき点:</h3>
-                <ul className="space-y-2 text-gray-700">
-                  <li>• 過度な理想主義</li>
-                  <li>• 批判に対する敏感さ</li>
-                  <li>• 決断の先延ばし</li>
-                  <li>• 孤立しがちな傾向</li>
-                </ul>
-              </div>
+          <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {type.careers.map((career, index) => (
+                <div key={index} className="bg-white rounded-lg p-4 text-center border border-purple-100 hover:border-purple-300 transition-colors">
+                  <span className="text-purple-700 font-medium">{career}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="text-center space-y-6">
-          <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-            <button className="bg-green-500 text-white px-8 py-3 rounded-lg hover:bg-green-600 transition-all font-medium">
-              プレミアム版を見る
-            </button>
+        {/* Relationships */}
+        <div className="mb-16">
+          <div className="flex items-center mb-6">
+            <div className="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+              4
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900">人間関係</h2>
+          </div>
+          
+          <div className="bg-pink-50 border border-pink-200 rounded-lg p-6">
+            <h3 className="font-semibold text-pink-800 mb-4 flex items-center">
+              <Users className="w-5 h-5 mr-2" />
+              相性の良いタイプ
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {type.compatibility.map((compatType, index) => (
+                <span
+                  key={index}
+                  className="bg-pink-200 text-pink-800 px-3 py-1 rounded-full text-sm font-mono"
+                >
+                  {compatType}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Call to Action */}
+        <div className="text-center">
+          <div className="bg-gradient-to-r from-teal-500 to-green-500 rounded-2xl p-8 text-white">
+            <h3 className="text-2xl font-bold mb-4">診断を再び受けますか？</h3>
+            <p className="mb-6 opacity-90">
+              時間が経つにつれて、あなたの性格や考え方も変化する可能性があります。
+            </p>
             <button
               onClick={onRestart}
-              className="border border-green-500 text-green-500 px-8 py-3 rounded-lg hover:bg-green-50 transition-all font-medium flex items-center justify-center space-x-2"
+              className="bg-white text-teal-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center mx-auto"
             >
-              <RefreshCw className="w-5 h-5" />
-              <span>もう一度テストする</span>
+              <RefreshCw className="w-5 h-5 mr-2" />
+              もう一度診断する
             </button>
-          </div>
-          
-          <p className="text-sm text-gray-500">
-            この結果をシェアして、友達や同僚と比較してみましょう
-          </p>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="bg-gray-50 py-16 border-t border-gray-200">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-4">Products</h4>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><a href="#" className="hover:text-green-600">Premium Profile</a></li>
-                <li><a href="#" className="hover:text-green-600">Team Assessments</a></li>
-                <li><a href="#" className="hover:text-green-600">Reports for Professionals</a></li>
-                <li><a href="#" className="hover:text-green-600">Testimonials</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-4">Resources</h4>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><a href="#" className="hover:text-green-600">Personality Test</a></li>
-                <li><a href="#" className="hover:text-green-600">Personality Types</a></li>
-                <li><a href="#" className="hover:text-green-600">Articles</a></li>
-                <li><a href="#" className="hover:text-green-600">Our Framework</a></li>
-                <li><a href="#" className="hover:text-green-600">Country Profiles</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-4">Help</h4>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><a href="#" className="hover:text-green-600">Contact Us</a></li>
-                <li><a href="#" className="hover:text-green-600">FAQ</a></li>
-                <li><a href="#" className="hover:text-green-600">Your Orders</a></li>
-                <li><a href="#" className="hover:text-green-600">Change Language</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-4">Our Other Creations</h4>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><a href="#" className="hover:text-green-600">NPQE®</a></li>
-                <li><a href="#" className="hover:text-green-600">MindTrackers®</a></li>
-                <li><a href="#" className="hover:text-green-600">Leadership by 16Personalities</a></li>
-                <li><a href="#" className="hover:text-green-600">INFJ by 16Personalities</a></li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="border-t border-gray-200 mt-12 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <div className="text-sm text-gray-500 mb-4 md:mb-0">
-                © 2011-2025 NERIS Analytics Limited
-              </div>
-              <div className="flex space-x-6">
-                <a href="#" className="text-gray-400 hover:text-gray-600">
-                  <span className="sr-only">Discord</span>
-                  <div className="w-5 h-5 bg-gray-400 rounded"></div>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-gray-600">
-                  <span className="sr-only">Facebook</span>
-                  <div className="w-5 h-5 bg-gray-400 rounded"></div>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-gray-600">
-                  <span className="sr-only">Instagram</span>
-                  <div className="w-5 h-5 bg-gray-400 rounded"></div>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-gray-600">
-                  <span className="sr-only">Twitter</span>
-                  <div className="w-5 h-5 bg-gray-400 rounded"></div>
-                </a>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -363,4 +309,4 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
   );
 };
 
-export default Results;
+export default Results; 

@@ -62,68 +62,8 @@ export const questions: Question[] = [
       { text: '強く同意しない', value: -2 }
     ]
   },
-  {
-    id: 6,
-    axis: 'EI',
-    text: '親しい少数の友人との時間を大切にする',
-    options: [
-      { text: '強く同意する', value: -2 },
-      { text: '同意する', value: -1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: 1 },
-      { text: '強く同意しない', value: 2 }
-    ]
-  },
-  {
-    id: 7,
-    axis: 'EI',
-    text: '思ったことをすぐに口に出して表現する',
-    options: [
-      { text: '強く同意する', value: 2 },
-      { text: '同意する', value: 1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: -1 },
-      { text: '強く同意しない', value: -2 }
-    ]
-  },
-  {
-    id: 8,
-    axis: 'EI',
-    text: '行動する前によく考えてから決める',
-    options: [
-      { text: '強く同意する', value: -2 },
-      { text: '同意する', value: -1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: 1 },
-      { text: '強く同意しない', value: 2 }
-    ]
-  },
-  {
-    id: 9,
-    axis: 'EI',
-    text: '活発でエネルギッシュな活動を好む',
-    options: [
-      { text: '強く同意する', value: 2 },
-      { text: '同意する', value: 1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: -1 },
-      { text: '強く同意しない', value: -2 }
-    ]
-  },
-  {
-    id: 10,
-    axis: 'EI',
-    text: '内省的で物事を深く考えることが多い',
-    options: [
-      { text: '強く同意する', value: -2 },
-      { text: '同意する', value: -1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: 1 },
-      { text: '強く同意しない', value: 2 }
-    ]
-  },
 
-  // Dominance/Submission Questions (11-20)
+  // Dominance/Submission Questions (11-15)
   {
     id: 11,
     axis: 'DS',
@@ -184,68 +124,8 @@ export const questions: Question[] = [
       { text: '強く同意しない', value: -2 }
     ]
   },
-  {
-    id: 16,
-    axis: 'DS',
-    text: '相手に合わせることで関係が円滑になると感じる',
-    options: [
-      { text: '強く同意する', value: -2 },
-      { text: '同意する', value: -1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: 1 },
-      { text: '強く同意しない', value: 2 }
-    ]
-  },
-  {
-    id: 17,
-    axis: 'DS',
-    text: '権威ある立場に立つことに魅力を感じる',
-    options: [
-      { text: '強く同意する', value: 2 },
-      { text: '同意する', value: 1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: -1 },
-      { text: '強く同意しない', value: -2 }
-    ]
-  },
-  {
-    id: 18,
-    axis: 'DS',
-    text: '支えられ、守られることに安心感を覚える',
-    options: [
-      { text: '強く同意する', value: -2 },
-      { text: '同意する', value: -1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: 1 },
-      { text: '強く同意しない', value: 2 }
-    ]
-  },
-  {
-    id: 19,
-    axis: 'DS',
-    text: '競争において勝つことに強いこだわりがある',
-    options: [
-      { text: '強く同意する', value: 2 },
-      { text: '同意する', value: 1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: -1 },
-      { text: '強く同意しない', value: -2 }
-    ]
-  },
-  {
-    id: 20,
-    axis: 'DS',
-    text: '協調性を重視し、調和を大切にする',
-    options: [
-      { text: '強く同意する', value: -2 },
-      { text: '同意する', value: -1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: 1 },
-      { text: '強く同意しない', value: 2 }
-    ]
-  },
 
-  // Thrill-seeking/Security-seeking Questions (21-30)
+  // Thrill-seeking/Security-seeking Questions (21-25)
   {
     id: 21,
     axis: 'TS',
@@ -306,68 +186,8 @@ export const questions: Question[] = [
       { text: '強く同意しない', value: -2 }
     ]
   },
-  {
-    id: 26,
-    axis: 'TS',
-    text: '変化よりも継続性を重視する',
-    options: [
-      { text: '強く同意する', value: -2 },
-      { text: '同意する', value: -1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: 1 },
-      { text: '強く同意しない', value: 2 }
-    ]
-  },
-  {
-    id: 27,
-    axis: 'TS',
-    text: '未知の体験に対してワクワクする',
-    options: [
-      { text: '強く同意する', value: 2 },
-      { text: '同意する', value: 1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: -1 },
-      { text: '強く同意しない', value: -2 }
-    ]
-  },
-  {
-    id: 28,
-    axis: 'TS',
-    text: '計画を立てて準備することを重要視する',
-    options: [
-      { text: '強く同意する', value: -2 },
-      { text: '同意する', value: -1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: 1 },
-      { text: '強く同意しない', value: 2 }
-    ]
-  },
-  {
-    id: 29,
-    axis: 'TS',
-    text: '衝動的な行動を取ることがある',
-    options: [
-      { text: '強く同意する', value: 2 },
-      { text: '同意する', value: 1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: -1 },
-      { text: '強く同意しない', value: -2 }
-    ]
-  },
-  {
-    id: 30,
-    axis: 'TS',
-    text: '慎重に考えてから行動することが多い',
-    options: [
-      { text: '強く同意する', value: -2 },
-      { text: '同意する', value: -1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: 1 },
-      { text: '強く同意しない', value: 2 }
-    ]
-  },
 
-  // Shame-resistant/Shame-sensitive Questions (31-40)
+  // Shame-resistant/Shame-sensitive Questions (31-35)
   {
     id: 31,
     axis: 'RH',
@@ -428,72 +248,12 @@ export const questions: Question[] = [
       { text: '強く同意しない', value: -2 }
     ]
   },
-  {
-    id: 36,
-    axis: 'RH',
-    text: '完璧でない自分を見せることに抵抗がある',
-    options: [
-      { text: '強く同意する', value: -2 },
-      { text: '同意する', value: -1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: 1 },
-      { text: '強く同意しない', value: 2 }
-    ]
-  },
-  {
-    id: 37,
-    axis: 'RH',
-    text: '失敗を恐れずにチャレンジできる',
-    options: [
-      { text: '強く同意する', value: 2 },
-      { text: '同意する', value: 1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: -1 },
-      { text: '強く同意しない', value: -2 }
-    ]
-  },
-  {
-    id: 38,
-    axis: 'RH',
-    text: '人から拒絶されることへの不安が強い',
-    options: [
-      { text: '強く同意する', value: -2 },
-      { text: '同意する', value: -1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: 1 },
-      { text: '強く同意しない', value: 2 }
-    ]
-  },
-  {
-    id: 39,
-    axis: 'RH',
-    text: '自分の弱みを隠そうとしない',
-    options: [
-      { text: '強く同意する', value: 2 },
-      { text: '同意する', value: 1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: -1 },
-      { text: '強く同意しない', value: -2 }
-    ]
-  },
-  {
-    id: 40,
-    axis: 'RH',
-    text: '社会的な規範や期待に縛られがち',
-    options: [
-      { text: '強く同意する', value: -2 },
-      { text: '同意する', value: -1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: 1 },
-      { text: '強く同意しない', value: 2 }
-    ]
-  },
 
-  // Attachment/Non-attachment Questions (41-50)
+  // Attachment/Non-attachment Questions (41-45)
   {
     id: 41,
     axis: 'AN',
-    text: '深い絆や愛着を重視する',
+    text: '深い恋愛関係を築くことを重要視する',
     options: [
       { text: '強く同意する', value: 2 },
       { text: '同意する', value: 1 },
@@ -505,7 +265,7 @@ export const questions: Question[] = [
   {
     id: 42,
     axis: 'AN',
-    text: '自由で束縛されない関係を好む',
+    text: '肉体的な関係は感情と切り離して考えられる',
     options: [
       { text: '強く同意する', value: -2 },
       { text: '同意する', value: -1 },
@@ -517,7 +277,7 @@ export const questions: Question[] = [
   {
     id: 43,
     axis: 'AN',
-    text: 'パートナーとの感情的なつながりを大切にする',
+    text: 'パートナーとの感情的な繋がりを大切にする',
     options: [
       { text: '強く同意する', value: 2 },
       { text: '同意する', value: 1 },
@@ -529,7 +289,7 @@ export const questions: Question[] = [
   {
     id: 44,
     axis: 'AN',
-    text: '感情に左右されず合理的に判断する',
+    text: '自由で束縛のない関係を好む',
     options: [
       { text: '強く同意する', value: -2 },
       { text: '同意する', value: -1 },
@@ -541,73 +301,13 @@ export const questions: Question[] = [
   {
     id: 45,
     axis: 'AN',
-    text: '愛する人のために犠牲を払うことができる',
+    text: '一途で深い愛情を求める',
     options: [
       { text: '強く同意する', value: 2 },
       { text: '同意する', value: 1 },
       { text: 'どちらでもない', value: 0 },
       { text: '同意しない', value: -1 },
       { text: '強く同意しない', value: -2 }
-    ]
-  },
-  {
-    id: 46,
-    axis: 'AN',
-    text: '個人の自立性を何よりも重視する',
-    options: [
-      { text: '強く同意する', value: -2 },
-      { text: '同意する', value: -1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: 1 },
-      { text: '強く同意しない', value: 2 }
-    ]
-  },
-  {
-    id: 47,
-    axis: 'AN',
-    text: '相手に依存することに抵抗を感じない',
-    options: [
-      { text: '強く同意する', value: 2 },
-      { text: '同意する', value: 1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: -1 },
-      { text: '強く同意しない', value: -2 }
-    ]
-  },
-  {
-    id: 48,
-    axis: 'AN',
-    text: '距離を保ちながらも良い関係を築きたい',
-    options: [
-      { text: '強く同意する', value: -2 },
-      { text: '同意する', value: -1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: 1 },
-      { text: '強く同意しない', value: 2 }
-    ]
-  },
-  {
-    id: 49,
-    axis: 'AN',
-    text: '愛情を表現し受け取ることに喜びを感じる',
-    options: [
-      { text: '強く同意する', value: 2 },
-      { text: '同意する', value: 1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: -1 },
-      { text: '強く同意しない', value: -2 }
-    ]
-  },
-  {
-    id: 50,
-    axis: 'AN',
-    text: '感情よりも論理を優先して行動する',
-    options: [
-      { text: '強く同意する', value: -2 },
-      { text: '同意する', value: -1 },
-      { text: 'どちらでもない', value: 0 },
-      { text: '同意しない', value: 1 },
-      { text: '強く同意しない', value: 2 }
     ]
   }
-];
+]; 

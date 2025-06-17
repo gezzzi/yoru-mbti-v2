@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { questions } from '../data/questions';
@@ -137,7 +139,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
 
   const QuestionItem: React.FC<{ question: Question }> = ({ question }) => (
     <div 
-      ref={(el) => questionRefs.current[question.id] = el}
+      ref={(el) => { questionRefs.current[question.id] = el; }}
       className="bg-white p-8 mb-8 border-b border-gray-100"
     >
       <div className="text-center mb-8">
@@ -197,20 +199,16 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
                 <div className="w-8 h-8 bg-blue-400 rounded-full"></div>
               </div>
               <p className="text-sm text-gray-700 leading-relaxed">
-                自分の性格タイプを深く理解するため
-                に、あなたの考えの傾向で正直に答え
-                してください。
+                自分の性格タイプを深く理解するため、最高の自己啓発ツールと言えるでしょう。
               </p>
             </div>
             
-            <div className="bg-orange-100 rounded-lg p-6 text-center">
-              <div className="w-16 h-16 bg-orange-200 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <div className="w-8 h-8 bg-orange-400 rounded-full"></div>
+            <div className="bg-green-100 rounded-lg p-6 text-center">
+              <div className="w-16 h-16 bg-green-200 rounded-full mx-auto mb-4 flex items-center justify-center">
+                <div className="w-8 h-8 bg-green-400 rounded-full"></div>
               </div>
               <p className="text-sm text-gray-700 leading-relaxed">
-                人生の様々な場面において、自分の
-                の性格タイプがどのような影響を与え
-                ているかを学びましょう。
+                人間関係を改善し、より良いコミュニケーションを築くためのガイダンスを提供します。
               </p>
             </div>
             
@@ -219,16 +217,34 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
                 <div className="w-8 h-8 bg-purple-400 rounded-full"></div>
               </div>
               <p className="text-sm text-gray-700 leading-relaxed">
-                オプションのプレミアムテストを
-                利用して、さらに詳細に理解しま
-                しょう。
+                キャリアや人生の重要な決断を下す際に、より確信を持てるようになります。
               </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Questions Section */}
+      {/* Progress Bar */}
+      <div className="bg-white border-b border-gray-200 py-4">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-gray-700">
+              質問 {currentPageIndex * questionsPerPage + 1}-{Math.min((currentPageIndex + 1) * questionsPerPage, questions.length)} / {questions.length}
+            </span>
+            <span className="text-sm font-medium text-gray-700">
+              {progress}% 完了
+            </span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div
+              className="bg-teal-500 h-2 rounded-full transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Questions */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {currentPageQuestions.map((question) => (
           <QuestionItem key={question.id} question={question} />
@@ -236,131 +252,35 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       </div>
 
       {/* Navigation */}
-      <div className="bg-gray-50 py-8 border-t border-gray-200">
+      <div className="bg-gray-50 py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-center">
+          <div className="flex justify-between items-center">
+            <button
+              onClick={handlePrevious}
+              className="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              <ChevronLeft className="w-5 h-5 mr-2" />
+              戻る
+            </button>
+
+            <div className="text-sm text-gray-500">
+              ページ {currentPageIndex + 1} / {totalPages}
+            </div>
+
             <button
               onClick={handleNext}
               disabled={!isCurrentPageComplete}
-              data-next-button={!isLastPage}
-              data-results-button={isLastPage}
-              className={`px-12 py-3 rounded-full font-medium transition-all ${
+              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-colors ${
                 isCurrentPageComplete
-                  ? 'bg-purple-500 text-white hover:bg-purple-600 shadow-lg hover:shadow-xl'
+                  ? 'bg-teal-500 text-white hover:bg-teal-600'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
+              data-next-button={!isLastPage}
+              data-results-button={isLastPage}
             >
               {isLastPage ? '結果を見る' : '次へ'}
+              <ChevronRight className="w-5 h-5 ml-2" />
             </button>
-          </div>
-          
-          <div className="text-center mt-6">
-            <div className="text-sm text-gray-500 mb-2">
-              質問 {answeredQuestions} / {questions.length} 回答済み
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2 max-w-md mx-auto">
-              <div
-                className="bg-gradient-to-r from-teal-400 to-green-500 h-2 rounded-full transition-all duration-500 ease-out"
-                style={{ width: `${progress}%` }}
-              ></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer section matching 16personalities */}
-      <div className="bg-white py-16 border-t border-gray-200">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Social sharing */}
-          <div className="text-center mb-12">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">511K</h3>
-            <div className="flex justify-center space-x-4">
-              <button className="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700">
-                f
-              </button>
-              <button className="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800">
-                X
-              </button>
-              <button className="w-10 h-10 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600">
-                P
-              </button>
-              <button className="w-10 h-10 bg-gray-400 text-white rounded-full flex items-center justify-center hover:bg-gray-500">
-                @
-              </button>
-              <button className="w-10 h-10 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center hover:bg-gray-400">
-                ⋯
-              </button>
-            </div>
-          </div>
-
-          {/* Footer links */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-4">Products</h4>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><a href="#" className="hover:text-teal-600">Premium Profile</a></li>
-                <li><a href="#" className="hover:text-teal-600">Team Assessments</a></li>
-                <li><a href="#" className="hover:text-teal-600">Reports for Professionals</a></li>
-                <li><a href="#" className="hover:text-teal-600">Testimonials</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-4">Resources</h4>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><a href="#" className="hover:text-teal-600">Personality Test</a></li>
-                <li><a href="#" className="hover:text-teal-600">Personality Types</a></li>
-                <li><a href="#" className="hover:text-teal-600">Articles</a></li>
-                <li><a href="#" className="hover:text-teal-600">Our Framework</a></li>
-                <li><a href="#" className="hover:text-teal-600">Country Profiles</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-4">Help</h4>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><a href="#" className="hover:text-teal-600">Contact Us</a></li>
-                <li><a href="#" className="hover:text-teal-600">FAQ</a></li>
-                <li><a href="#" className="hover:text-teal-600">Your Orders</a></li>
-                <li><a href="#" className="hover:text-teal-600">Change Language</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-4">Our Other Creations</h4>
-              <ul className="space-y-2 text-sm text-gray-600">
-                <li><a href="#" className="hover:text-teal-600">NPQE®</a></li>
-                <li><a href="#" className="hover:text-teal-600">MindTrackers®</a></li>
-                <li><a href="#" className="hover:text-teal-600">Leadership by 16Personalities</a></li>
-                <li><a href="#" className="hover:text-teal-600">INFJ by 16Personalities</a></li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="border-t border-gray-200 mt-12 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <div className="text-sm text-gray-500 mb-4 md:mb-0">
-                © 2011-2025 NERIS Analytics Limited
-              </div>
-              <div className="flex space-x-6">
-                <a href="#" className="text-gray-400 hover:text-gray-600">
-                  <span className="sr-only">Discord</span>
-                  <div className="w-5 h-5 bg-gray-400 rounded"></div>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-gray-600">
-                  <span className="sr-only">Facebook</span>
-                  <div className="w-5 h-5 bg-gray-400 rounded"></div>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-gray-600">
-                  <span className="sr-only">Instagram</span>
-                  <div className="w-5 h-5 bg-gray-400 rounded"></div>
-                </a>
-                <a href="#" className="text-gray-400 hover:text-gray-600">
-                  <span className="sr-only">Twitter</span>
-                  <div className="w-5 h-5 bg-gray-400 rounded"></div>
-                </a>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -368,4 +288,4 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   );
 };
 
-export default Quiz;
+export default Quiz; 

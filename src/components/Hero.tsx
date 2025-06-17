@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 
 interface HeroProps {
@@ -174,4 +176,4 @@ const Hero: React.FC<HeroProps> = ({ onStartTest }) => {
   );
 };
 
-export default Hero;
+export default Hero; 
