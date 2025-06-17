@@ -23,3 +23,10 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Next.js
+.next/
+out/
+
+# Old Vite app backup
+backup/
