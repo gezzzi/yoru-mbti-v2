@@ -162,16 +162,15 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
             <h3 className="text-xl font-bold text-gray-900 mb-6">性格特性の詳細分析</h3>
             
             <div className="space-y-6">
-              {['E', 'D', 'T', 'R', 'A'].map((axis) => {
-                const value = getAxisValue(axis);
-                const percentage = ((value + 2) / 4) * 100;
-                const isPositive = value > 0;
+              {['E', 'D', 'T', 'A', 'R'].map((axis) => {
+                const value = getAxisValue(axis); // これは既にパーセンテージ（0-100）
+                const isPositive = value >= 50;
                 
                 return (
                   <div key={axis} className="space-y-2">
                     <div className="flex justify-between items-center">
                       <span className="font-medium text-gray-700">{getAxisName(axis)}</span>
-                      <span className="text-sm text-gray-500">{Math.abs(value * 50).toFixed(0)}%</span>
+                      <span className="text-sm text-gray-500">{value}%</span>
                     </div>
                     
                     <div className="relative">
@@ -180,7 +179,7 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                           className={`h-3 rounded-full transition-all duration-1000 ease-out ${
                             isPositive ? 'bg-green-500' : 'bg-blue-500'
                           }`}
-                          style={{ width: `${percentage}%` }}
+                          style={{ width: `${value}%` }}
                         ></div>
                       </div>
                       

@@ -2,9 +2,10 @@ export interface Question {
   id: number;
   axis: 'EI' | 'DS' | 'TS' | 'RH' | 'AN';
   text: string;
+  isReverse: boolean; // 質問のベクトルが逆の場合true
   options: {
     text: string;
-    value: number; // -2 to 2 scale
+    value: number; // 0-6 scale (7段階評価)
   }[];
 }
 

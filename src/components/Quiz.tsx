@@ -112,7 +112,8 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   const isCurrentPageComplete = currentPageQuestions.every(q => answers[q.id] !== undefined);
 
   // Scale values from strongly agree to strongly disagree (7-point scale)
-  const scaleValues = [3, 2, 1, 0, -1, -2, -3];
+  // 0-6 scale to match questions.ts: 6=非常にそう思う, 3=どちらでもない, 0=全くそう思わない
+  const scaleValues = [6, 5, 4, 3, 2, 1, 0];
 
   const getCircleSize = (index: number) => {
     if (index === 0 || index === 6) return 'w-16 h-16'; // Largest circles (extreme ends)
@@ -123,17 +124,17 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
 
   const getCircleColor = (value: number, isSelected: boolean) => {
     if (isSelected) {
-      if (value >= 2) return 'bg-teal-500 border-teal-500 text-white';
-      if (value >= 1) return 'bg-teal-400 border-teal-400 text-white';
-      if (value === 0) return 'bg-gray-400 border-gray-400 text-white';
-      if (value >= -1) return 'bg-purple-400 border-purple-400 text-white';
-      return 'bg-purple-500 border-purple-500 text-white';
+      if (value >= 5) return 'bg-teal-500 border-teal-500 text-white';     // 5-6: 強く同意
+      if (value >= 4) return 'bg-teal-400 border-teal-400 text-white';     // 4: やや同意
+      if (value === 3) return 'bg-gray-400 border-gray-400 text-white';    // 3: どちらでもない
+      if (value >= 2) return 'bg-purple-400 border-purple-400 text-white'; // 2: やや反対
+      return 'bg-purple-500 border-purple-500 text-white';                 // 0-1: 強く反対
     }
     
-    if (value >= 2) return 'border-teal-500 hover:border-teal-600 bg-white text-teal-500';
-    if (value >= 1) return 'border-teal-400 hover:border-teal-500 bg-white text-teal-400';
-    if (value === 0) return 'border-gray-300 hover:border-gray-400 bg-white text-gray-300';
-    if (value >= -1) return 'border-purple-400 hover:border-purple-500 bg-white text-purple-400';
+    if (value >= 5) return 'border-teal-500 hover:border-teal-600 bg-white text-teal-500';
+    if (value >= 4) return 'border-teal-400 hover:border-teal-500 bg-white text-teal-400';
+    if (value === 3) return 'border-gray-300 hover:border-gray-400 bg-white text-gray-300';
+    if (value >= 2) return 'border-purple-400 hover:border-purple-500 bg-white text-purple-400';
     return 'border-purple-500 hover:border-purple-600 bg-white text-purple-500';
   };
 
