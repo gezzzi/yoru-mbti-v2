@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { questions } from '../data/questions';
 import { Question } from '../types/personality';
 import { getProgressPercentage } from '../utils/testLogic';
+import Footer from './Footer';
 
 interface QuizProps {
   onComplete: (answers: Record<string, number>) => void;
@@ -51,25 +52,25 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
         }
       } else if (!isLastPage) {
         // If it's the last question on the page and not the final page,
-        // scroll to the "次へ" button
+        // scroll to the "次へ" button positioned lower than center
         const nextButton = document.querySelector('[data-next-button]');
         if (nextButton) {
           nextButton.scrollIntoView({
             behavior: 'smooth',
-            block: 'center'
+            block: 'start'
           });
         }
       } else {
-        // If it's the last question overall, scroll to "結果を見る" button
+        // If it's the last question overall, scroll to "結果を見る" button positioned lower
         const resultsButton = document.querySelector('[data-results-button]');
         if (resultsButton) {
           resultsButton.scrollIntoView({
             behavior: 'smooth',
-            block: 'center'
+            block: 'start'
           });
         }
       }
-    }, 300); // Small delay to allow for visual feedback
+    }, 30); // Ultra fast response
   };
 
   const handleNext = () => {
@@ -90,23 +91,15 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
           if (firstQuestionElement) {
             firstQuestionElement.scrollIntoView({
               behavior: 'smooth',
-              block: 'start'
+              block: 'center'
             });
           }
         }
-      }, 100);
+      }, 30);
     }
   };
 
-  const handlePrevious = () => {
-    if (currentPageIndex > 0) {
-      setCurrentPageIndex(prev => prev - 1);
-      // Scroll to top of previous page
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      onBack();
-    }
-  };
+
 
   // Check if current page is complete
   const isCurrentPageComplete = currentPageQuestions.every(q => answers[q.id] !== undefined);
@@ -166,7 +159,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
               <button
                 key={value}
                 onClick={() => handleAnswerSelect(question.id, value)}
-                className={`${getCircleSize(index)} rounded-full border-2 transition-all duration-200 hover:scale-105 ${
+                className={`${getCircleSize(index)} rounded-full border-2 transition-all duration-100 hover:scale-105 ${
                   getCircleColor(value, isSelected)
                 } ${isSelected ? 'scale-105 shadow-lg' : 'hover:shadow-md'} flex items-center justify-center`}
               >
@@ -253,38 +246,33 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       </div>
 
       {/* Navigation */}
-      <div className="bg-gray-50 py-8">
+      <div className="bg-gray-50 py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center">
-            <button
-              onClick={handlePrevious}
-              className="flex items-center px-6 py-3 text-gray-600 hover:text-gray-800 transition-colors"
-            >
-              <ChevronLeft className="w-5 h-5 mr-2" />
-              戻る
-            </button>
-
-            <div className="text-sm text-gray-500">
-              ページ {currentPageIndex + 1} / {totalPages}
-            </div>
-
+          <div className="flex flex-col items-center space-y-4">
             <button
               onClick={handleNext}
               disabled={!isCurrentPageComplete}
-              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-colors ${
+              className={`flex items-center justify-center px-16 py-4 rounded-full text-lg font-medium transition-all duration-200 transform hover:scale-105 min-w-[200px] ${
                 isCurrentPageComplete
-                  ? 'bg-teal-500 text-white hover:bg-teal-600'
+                  ? 'bg-purple-600 text-white hover:bg-purple-700 shadow-lg hover:shadow-xl'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
               data-next-button={!isLastPage}
               data-results-button={isLastPage}
             >
               {isLastPage ? '結果を見る' : '次へ'}
-              <ChevronRight className="w-5 h-5 ml-2" />
+              <span className="ml-2">→</span>
             </button>
+
+            <div className="text-sm text-gray-500">
+              ページ {currentPageIndex + 1} / {totalPages}
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };

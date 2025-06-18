@@ -4,6 +4,7 @@ import React from 'react';
 import { TestResult } from '../types/personality';
 import { getCategoryColor, getCategoryName } from '../data/personalityTypes';
 import { Heart, Users, Sparkles, RefreshCw, Download, Share2 } from 'lucide-react';
+import Footer from './Footer';
 
 interface ResultsProps {
   result: TestResult;
@@ -13,13 +14,15 @@ interface ResultsProps {
 const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
   const { type } = result;
 
-  const getAxisName = (axis: string) => {
+  const getAxisName = (axis: string, value: number) => {
+    const isPositive = value >= 50;
+    
     switch (axis) {
-      case 'E': return '外向性';
-      case 'D': return '主導性';
-      case 'T': return '刺激志向';
-      case 'R': return '羞恥体制';
-      case 'A': return '愛着傾向';
+      case 'E': return isPositive ? '外向性' : '内向性';
+      case 'D': return isPositive ? '主導性' : '服従性';
+      case 'T': return isPositive ? '刺激志向' : '安心志向';
+      case 'R': return isPositive ? '羞恥体制' : '羞恥敏感';
+      case 'A': return isPositive ? '愛着傾向' : '非愛着傾向';
       default: return axis;
     }
   };
@@ -165,12 +168,13 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
               {['E', 'D', 'T', 'A', 'R'].map((axis) => {
                 const value = getAxisValue(axis); // これは既にパーセンテージ（0-100）
                 const isPositive = value >= 50;
+                const displayValue = isPositive ? value : (100 - value);
                 
                 return (
                   <div key={axis} className="space-y-2">
                     <div className="flex justify-between items-center">
-                      <span className="font-medium text-gray-700">{getAxisName(axis)}</span>
-                      <span className="text-sm text-gray-500">{value}%</span>
+                      <span className="font-medium text-gray-700">{getAxisName(axis, value)}</span>
+                      <span className="text-sm text-gray-500">{displayValue}%</span>
                     </div>
                     
                     <div className="relative">
@@ -179,7 +183,7 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                           className={`h-3 rounded-full transition-all duration-1000 ease-out ${
                             isPositive ? 'bg-green-500' : 'bg-blue-500'
                           }`}
-                          style={{ width: `${value}%` }}
+                          style={{ width: `${displayValue}%` }}
                         ></div>
                       </div>
                       
@@ -304,6 +308,9 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };

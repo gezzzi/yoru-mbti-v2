@@ -57,15 +57,23 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
   
   // Determine personality type code based on which side is stronger
   // 50%の場合は51%になっているため、通常の比較で判定
-  const typeCode = 
+  const baseTypeCode = 
     (E > 50 ? 'E' : 'I') +
     (D > 50 ? 'D' : 'S') +
     (T > 50 ? 'T' : 'S') +
-    (A > 50 ? 'A' : 'N') +
-    (R > 50 ? 'R' : 'H');
+    (A > 50 ? 'A' : 'N');
   
-  // Find matching personality type
-  const personalityType = personalityTypes.find(type => type.code === typeCode) || personalityTypes[0];
+  const rhSuffix = R > 50 ? 'R' : 'H';
+  const fullTypeCode = baseTypeCode + '-' + rhSuffix;
+  
+  // Find matching personality type using base 4-character code
+  const basePersonalityType = personalityTypes.find(type => type.code === baseTypeCode) || personalityTypes[0];
+  
+  // Create extended personality type with R/H suffix
+  const personalityType = {
+    ...basePersonalityType,
+    code: fullTypeCode
+  };
   
   return {
     E,
