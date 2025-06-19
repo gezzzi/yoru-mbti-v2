@@ -5,6 +5,7 @@ import { TestResult } from '../types/personality';
 import { getCategoryColor, getCategoryName } from '../data/personalityTypes';
 import { Heart, Users, Sparkles, RefreshCw, Download, Share2, User, Shield, Zap, Eye } from 'lucide-react';
 import Footer from './Footer';
+import Image from 'next/image';
 
 interface PersonalityDimension {
   id: string;
@@ -22,6 +23,32 @@ interface ResultsProps {
   result: TestResult;
   onRestart: () => void;
 }
+
+// 画像または絵文字を表示するコンポーネント
+const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = ({ typeCode, emoji, name }) => {
+  const [imageError, setImageError] = useState(false);
+  
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
+  if (imageError) {
+    return <span className="text-6xl md:text-8xl">{emoji}</span>;
+  }
+
+  return (
+    <div className="w-24 h-24 md:w-32 md:h-32 relative mx-auto">
+      <Image
+        src={`/images/personality-types/${typeCode}.jpg`}
+        alt={name}
+        width={128}
+        height={128}
+        className="w-full h-full object-cover rounded-2xl shadow-lg"
+        onError={handleImageError}
+      />
+    </div>
+  );
+};
 
 const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
   const { type } = result;
@@ -226,6 +253,11 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
               <span className="text-sm font-medium bg-white/20 px-3 py-1 rounded-full">
                 あなたの性格タイプ:
               </span>
+            </div>
+            
+            {/* 性格タイプの画像 */}
+            <div className="mb-6">
+              <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
             </div>
             
             <h1 className="text-5xl font-bold mb-4">{type.name}</h1>

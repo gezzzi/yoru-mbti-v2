@@ -2,6 +2,34 @@
 
 import { personalityTypes, getCategoryColor, getCategoryName } from '@/data/personalityTypes';
 import { PersonalityType } from '@/types/personality';
+import Image from 'next/image';
+import { useState } from 'react';
+
+// 画像または絵文字を表示するコンポーネント
+const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = ({ typeCode, emoji, name }) => {
+  const [imageError, setImageError] = useState(false);
+  
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
+  if (imageError) {
+    return <span className="text-4xl">{emoji}</span>;
+  }
+
+  return (
+    <div className="w-16 h-16 relative">
+      <Image
+        src={`/images/personality-types/${typeCode}.jpg`}
+        alt={name}
+        width={64}
+        height={64}
+        className="w-full h-full object-cover rounded-lg"
+        onError={handleImageError}
+      />
+    </div>
+  );
+};
 
 export default function PersonalityTypesPage() {
   const categories = ['dom', 'sub', 'introvert', 'fantasy'] as const;
@@ -11,7 +39,10 @@ export default function PersonalityTypesPage() {
       {/* Header */}
       <div className={`bg-gradient-to-r ${getCategoryColor(type.category)} p-6 text-white`}>
         <div className="flex items-center gap-4">
-          <span className="text-4xl">{type.emoji}</span>
+          {/* 画像または絵文字 */}
+          <div className="flex-shrink-0">
+            <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
+          </div>
           <div>
             <h3 className="text-2xl font-bold">{type.name}</h3>
             <p className="text-lg opacity-90">{type.code}</p>

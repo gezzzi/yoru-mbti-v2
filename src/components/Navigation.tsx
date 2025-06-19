@@ -7,9 +7,10 @@ interface NavigationProps {
   currentPage: 'home' | 'types' | 'quiz' | 'results';
   onShowTypes?: () => void;
   onBackToHome?: () => void;
+  onDebugShowResults?: () => void;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ currentPage, onShowTypes, onBackToHome }) => {
+const Navigation: React.FC<NavigationProps> = ({ currentPage, onShowTypes, onBackToHome, onDebugShowResults }) => {
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -55,6 +56,15 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, onShowTypes, onBac
               性格タイプ
             </button>
             <div className="flex items-center space-x-4">
+              {process.env.NODE_ENV === 'development' && onDebugShowResults && (
+                <button 
+                  onClick={onDebugShowResults}
+                  className="px-3 py-1 text-xs font-medium bg-red-100 text-red-600 border border-red-200 rounded-md hover:bg-red-200 transition-colors"
+                  title="デバッグ用：結果ページに直接ジャンプ"
+                >
+                  🔧 DEBUG: 結果表示
+                </button>
+              )}
               <button className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
                 ログイン
               </button>

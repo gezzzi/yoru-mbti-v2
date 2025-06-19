@@ -52,21 +52,21 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
         }
       } else if (!isLastPage) {
         // If it's the last question on the page and not the final page,
-        // scroll to the "次へ" button positioned lower than center
+        // scroll to the "次へ" button positioned at a comfortable viewing position
         const nextButton = document.querySelector('[data-next-button]');
         if (nextButton) {
           nextButton.scrollIntoView({
             behavior: 'smooth',
-            block: 'start'
+            block: 'center'
           });
         }
       } else {
-        // If it's the last question overall, scroll to "結果を見る" button positioned lower
+        // If it's the last question overall, scroll to "結果を見る" button at a comfortable position
         const resultsButton = document.querySelector('[data-results-button]');
         if (resultsButton) {
           resultsButton.scrollIntoView({
             behavior: 'smooth',
-            block: 'start'
+            block: 'center'
           });
         }
       }
