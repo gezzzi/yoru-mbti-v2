@@ -7,11 +7,12 @@ import PersonalityTypesPage from '@/components/PersonalityTypesPage';
 import Quiz from '@/components/Quiz';
 import Results from '@/components/Results';
 import Navigation from '@/components/Navigation';
+import CompatibilityPage from '@/components/CompatibilityPage';
 import { TestResult } from '@/types/personality';
 import { calculatePersonalityType } from '@/utils/testLogic';
 import { personalityTypes } from '@/data/personalityTypes';
 
-type AppState = 'home' | 'types' | 'quiz' | 'results';
+type AppState = 'home' | 'types' | 'quiz' | 'results' | 'compatibility';
 
 export default function Home() {
   const [currentState, setCurrentState] = useState<AppState>('home');
@@ -19,25 +20,35 @@ export default function Home() {
 
   const handleStartTest = () => {
     setCurrentState('quiz');
+    setTimeout(() => window.scrollTo(0, 0), 0);
   };
 
   const handleShowTypes = () => {
     setCurrentState('types');
+    setTimeout(() => window.scrollTo(0, 0), 0);
+  };
+
+  const handleShowCompatibility = () => {
+    setCurrentState('compatibility');
+    setTimeout(() => window.scrollTo(0, 0), 0);
   };
 
   const handleQuizComplete = (answers: Record<string, number>) => {
     const result = calculatePersonalityType(answers);
     setTestResult(result);
     setCurrentState('results');
+    setTimeout(() => window.scrollTo(0, 0), 0);
   };
 
   const handleBackToHome = () => {
     setCurrentState('home');
+    setTimeout(() => window.scrollTo(0, 0), 0);
   };
 
   const handleRestart = () => {
     setTestResult(null);
     setCurrentState('home');
+    setTimeout(() => window.scrollTo(0, 0), 0);
   };
 
   // デバッグ用：結果ページに直接ジャンプ
@@ -73,6 +84,8 @@ export default function Home() {
             onRestart={handleRestart}
           />
         ) : null;
+      case 'compatibility':
+        return <CompatibilityPage onStartTest={handleStartTest} />;
       default:
         return (
           <>
@@ -88,6 +101,8 @@ export default function Home() {
       <Navigation 
         currentPage={currentState} 
         onShowTypes={handleShowTypes}
+        onShowCompatibility={handleShowCompatibility}
+        onStartTest={handleStartTest}
         onBackToHome={handleBackToHome}
         onDebugShowResults={handleDebugShowResults}
       />

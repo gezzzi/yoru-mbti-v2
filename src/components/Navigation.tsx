@@ -4,13 +4,15 @@ import React from 'react';
 import { Heart } from 'lucide-react';
 
 interface NavigationProps {
-  currentPage: 'home' | 'types' | 'quiz' | 'results';
+  currentPage: 'home' | 'types' | 'quiz' | 'results' | 'compatibility';
   onShowTypes?: () => void;
   onBackToHome?: () => void;
+  onShowCompatibility?: () => void;
+  onStartTest?: () => void;
   onDebugShowResults?: () => void;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ currentPage, onShowTypes, onBackToHome, onDebugShowResults }) => {
+const Navigation: React.FC<NavigationProps> = ({ currentPage, onShowTypes, onBackToHome, onShowCompatibility, onStartTest, onDebugShowResults }) => {
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -38,11 +40,14 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, onShowTypes, onBac
             >
               あなたの結果
             </button>
-            <button className={`text-sm font-medium transition-colors ${
-              currentPage === 'quiz' 
-                ? 'text-teal-600' 
-                : 'text-gray-600 hover:text-gray-900'
-            }`}>
+            <button 
+              onClick={onStartTest}
+              className={`text-sm font-medium transition-colors ${
+                currentPage === 'quiz' 
+                  ? 'text-teal-600' 
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
               性格診断テスト
             </button>
             <button 
@@ -54,6 +59,16 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, onShowTypes, onBac
               }`}
             >
               性格タイプ
+            </button>
+            <button 
+              onClick={onShowCompatibility}
+              className={`text-sm font-medium transition-colors ${
+                currentPage === 'compatibility' 
+                  ? 'text-teal-600' 
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              相性診断
             </button>
             <div className="flex items-center space-x-4">
               {process.env.NODE_ENV === 'development' && onDebugShowResults && (

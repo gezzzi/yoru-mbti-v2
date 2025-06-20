@@ -7,7 +7,6 @@ import { Heart, Users, Sparkles, RefreshCw, Download, Share2, User, Shield, Zap,
 import Footer from './Footer';
 import Image from 'next/image';
 import SNSShareModal from './SNSShareModal';
-import CompatibilityChecker from './CompatibilityChecker';
 
 interface PersonalityDimension {
   id: string;
@@ -57,6 +56,13 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
   const [hoveredDimension, setHoveredDimension] = useState<PersonalityDimension | null>(null);
   const [selectedDimension, setSelectedDimension] = useState<PersonalityDimension | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
+
+  // 診断結果をローカルストレージに保存
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('personality_test_result', JSON.stringify(result));
+    }
+  }, [result]);
 
   const getAxisName = (axis: string, value: number) => {
     const isPositive = value >= 50;
@@ -528,9 +534,6 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
             </div>
           </div>
         </div>
-
-        {/* Compatibility Checker */}
-        <CompatibilityChecker currentResult={result} />
 
         {/* Call to Action */}
         <div className="text-center">
