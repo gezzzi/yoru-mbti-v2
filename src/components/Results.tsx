@@ -6,6 +6,8 @@ import { getCategoryColor, getCategoryName } from '../data/personalityTypes';
 import { Heart, Users, Sparkles, RefreshCw, Download, Share2, User, Shield, Zap, Eye } from 'lucide-react';
 import Footer from './Footer';
 import Image from 'next/image';
+import SNSShareModal from './SNSShareModal';
+import CompatibilityChecker from './CompatibilityChecker';
 
 interface PersonalityDimension {
   id: string;
@@ -54,6 +56,7 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
   const { type } = result;
   const [hoveredDimension, setHoveredDimension] = useState<PersonalityDimension | null>(null);
   const [selectedDimension, setSelectedDimension] = useState<PersonalityDimension | null>(null);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   const getAxisName = (axis: string, value: number) => {
     const isPositive = value >= 50;
@@ -268,7 +271,10 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                 <Download className="w-5 h-5" />
                 <span>結果をダウンロード</span>
               </button>
-              <button className="bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-lg hover:bg-white/30 transition-all flex items-center space-x-2">
+              <button 
+                onClick={() => setShowShareModal(true)}
+                className="bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-lg hover:bg-white/30 transition-all flex items-center space-x-2"
+              >
                 <Share2 className="w-5 h-5" />
                 <span>結果をシェア</span>
               </button>
@@ -523,6 +529,9 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
           </div>
         </div>
 
+        {/* Compatibility Checker */}
+        <CompatibilityChecker currentResult={result} />
+
         {/* Call to Action */}
         <div className="text-center">
           <div className="bg-gradient-to-r from-teal-500 to-green-500 rounded-2xl p-8 text-white">
@@ -543,6 +552,13 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
 
       {/* Footer */}
       <Footer />
+
+      {/* SNS Share Modal */}
+      <SNSShareModal 
+        result={result}
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+      />
     </div>
   );
 };
