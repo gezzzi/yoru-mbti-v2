@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { TestResult } from '../types/personality';
 import { getCategoryColor, getCategoryName } from '../data/personalityTypes';
 import { Heart, Users, Sparkles, RefreshCw, Download, Share2, User, Shield, Zap, Eye } from 'lucide-react';
 import Footer from './Footer';
 import Image from 'next/image';
 import SNSShareModal from './SNSShareModal';
+import html2canvas from 'html2canvas';
 
 interface PersonalityDimension {
   id: string;
@@ -56,6 +57,8 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
   const [hoveredDimension, setHoveredDimension] = useState<PersonalityDimension | null>(null);
   const [selectedDimension, setSelectedDimension] = useState<PersonalityDimension | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const downloadRef = useRef<HTMLDivElement>(null);
 
   // 診断結果をローカルストレージに保存
   React.useEffect(() => {
@@ -203,8 +206,36 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
     return colorMap[color] || 'from-blue-50 to-purple-50';
   };
 
+  // ダウンロード機能
+  const handleDownload = async () => {
+    if (!downloadRef.current) return;
+
+    setIsDownloading(true);
+    try {
+      const canvas = await html2canvas(downloadRef.current, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+      } as any);
+
+      // Canvasを画像として保存
+      const link = document.createElement('a');
+      link.download = `夜の性格診断結果_${type.name}_${type.code}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } catch (error) {
+      console.error('ダウンロードに失敗しました:', error);
+      alert('ダウンロードに失敗しました。もう一度お試しください。');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white pt-16">
+      {/* ダウンロード用のコンテナ */}
+      <div ref={downloadRef} className="bg-white">
       {/* Hero Section with Green Background */}
       <div className="bg-gradient-to-r from-green-400 to-teal-500 relative overflow-hidden">
         {/* Background illustration */}
@@ -273,9 +304,22 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
             <p className="text-xl mb-6 opacity-90">{type.code}</p>
             
             <div className="flex justify-center space-x-4 mb-8">
-              <button className="bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-lg hover:bg-white/30 transition-all flex items-center space-x-2">
-                <Download className="w-5 h-5" />
-                <span>結果をダウンロード</span>
+              <button 
+                onClick={handleDownload}
+                disabled={isDownloading}
+                className="bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-lg hover:bg-white/30 transition-all flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isDownloading ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>ダウンロード中...</span>
+                  </>
+                ) : (
+                  <>
+                    <Download className="w-5 h-5" />
+                    <span>結果をダウンロード</span>
+                  </>
+                )}
               </button>
               <button 
                 onClick={() => setShowShareModal(true)}
@@ -551,6 +595,7 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
             </button>
           </div>
         </div>
+      </div>
       </div>
 
       {/* Footer */}

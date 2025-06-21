@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { TestResult, PersonalityType } from '../types/personality';
 import { parseCompatibilityCode, generateCompatibilityCode } from '../utils/snsShare';
 import { personalityTypes } from '../data/personalityTypes';
-import { Heart, Users, AlertCircle, Check, HelpCircle, ArrowRight, TestTube, User } from 'lucide-react';
+import { Heart, AlertCircle, HelpCircle, TestTube, User } from 'lucide-react';
 import Footer from './Footer';
 
 interface CompatibilityResult {
@@ -15,12 +15,12 @@ interface CompatibilityResult {
 
 interface CompatibilityPageProps {
   onStartTest?: () => void;
+  onShowResults?: (myResult: TestResult, partnerResult: TestResult) => void;
 }
 
-const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest }) => {
+const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onShowResults }) => {
   const [partnerCode, setPartnerCode] = useState('');
   const [myResult, setMyResult] = useState<TestResult | null>(null);
-  const [partnerResult, setPartnerResult] = useState<TestResult | null>(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [myCode, setMyCode] = useState('');
@@ -163,7 +163,10 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest }) =>
         throw new Error('相性診断コードが無効です');
       }
 
-      setPartnerResult(parsedPartnerResult);
+      // 結果ページに遷移
+      if (onShowResults && myResult) {
+        onShowResults(myResult, parsedPartnerResult);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : '相性診断コードの解析に失敗しました');
     } finally {
@@ -173,23 +176,10 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest }) =>
 
   const handleReset = () => {
     setPartnerCode('');
-    setPartnerResult(null);
     setError('');
   };
 
-  const compatibility = myResult && partnerResult ? calculateCompatibility(myResult, partnerResult) : null;
 
-  const getCompatibilityColor = (score: number) => {
-    if (score >= 80) return 'text-green-600 bg-green-50 border-green-200';
-    if (score >= 60) return 'text-blue-600 bg-blue-50 border-blue-200';
-    if (score >= 40) return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-    return 'text-red-600 bg-red-50 border-red-200';
-  };
-
-  const getCompatibilityIcon = (score: number) => {
-    if (score >= 60) return <Heart className="w-8 h-8" />;
-    return <Users className="w-8 h-8" />;
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 pt-16">
@@ -344,120 +334,13 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest }) =>
                     </>
                   )}
                 </button>
-                
-                {partnerResult && (
-                  <button
-                    onClick={handleReset}
-                    className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    リセット
-                  </button>
-                )}
+
               </div>
             </div>
           </div>
         )}
 
-        {/* 結果表示 */}
-        {compatibility && myResult && partnerResult && (
-          <div className="space-y-8">
-            {/* 相性スコア */}
-            <div className={`rounded-xl p-8 border-2 ${getCompatibilityColor(compatibility.compatibility)} shadow-lg`}>
-              <div className="text-center">
-                <div className="flex items-center justify-center mb-6">
-                  {getCompatibilityIcon(compatibility.compatibility)}
-                  <span className="ml-4 text-5xl font-bold">
-                    {Math.round(compatibility.compatibility)}%
-                  </span>
-                </div>
-                <h3 className="text-2xl font-bold mb-4">相性診断結果</h3>
-                <p className="text-lg font-medium">
-                  {compatibility.description}
-                </p>
-              </div>
-            </div>
 
-            {/* 性格タイプ比較 */}
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-white rounded-xl shadow-lg p-6">
-                <h3 className="font-semibold text-gray-900 mb-4 text-center">あなたのタイプ</h3>
-                <div className="text-center">
-                  <span className="text-4xl mb-3 block">{myResult.type.emoji}</span>
-                  <h4 className="text-xl font-bold text-gray-900">{myResult.type.name}</h4>
-                  <p className="text-sm text-gray-600 mb-3">{myResult.type.code}</p>
-                  <p className="text-sm text-gray-700">{myResult.type.description}</p>
-                </div>
-              </div>
-              
-              <div className="bg-white rounded-xl shadow-lg p-6">
-                <h3 className="font-semibold text-gray-900 mb-4 text-center">相手のタイプ</h3>
-                <div className="text-center">
-                  <span className="text-4xl mb-3 block">{partnerResult.type.emoji}</span>
-                  <h4 className="text-xl font-bold text-gray-900">{partnerResult.type.name}</h4>
-                  <p className="text-sm text-gray-600 mb-3">{partnerResult.type.code}</p>
-                  <p className="text-sm text-gray-700">{partnerResult.type.description}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* アドバイス */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                <Check className="w-6 h-6 text-green-500 mr-3" />
-                関係を良くするためのアドバイス
-              </h3>
-              <ul className="space-y-3">
-                {compatibility.tips.map((tip, index) => (
-                  <li key={index} className="flex items-start space-x-3">
-                    <ArrowRight className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-700">{tip}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* 5軸比較 */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-6">性格特性の詳細比較</h3>
-              <div className="space-y-6">
-                {[
-                  { label: '外向性 vs 内向性', value1: myResult.E, value2: partnerResult.E },
-                  { label: '主導性 vs 服従性', value1: myResult.D, value2: partnerResult.D },
-                  { label: '刺激志向 vs 安心志向', value1: myResult.T, value2: partnerResult.T },
-                  { label: '羞恥体制 vs 羞恥敏感', value1: myResult.R, value2: partnerResult.R },
-                  { label: '愛着傾向 vs 非愛着傾向', value1: myResult.A, value2: partnerResult.A }
-                ].map((axis, index) => (
-                  <div key={index} className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="font-medium text-gray-900">{axis.label}</span>
-                      <span className="text-sm text-gray-600">
-                        差: {Math.abs(axis.value1 - axis.value2).toFixed(0)}%
-                      </span>
-                    </div>
-                    <div className="relative h-6 bg-gray-200 rounded-full">
-                      {/* 1つ目のマーカー */}
-                      <div 
-                        className="absolute top-1 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"
-                        style={{ left: `calc(${axis.value1}% - 8px)` }}
-                        title={`1つ目: ${Math.round(axis.value1)}%`}
-                      />
-                      {/* 2つ目のマーカー */}
-                      <div 
-                        className="absolute top-1 w-4 h-4 bg-pink-500 rounded-full border-2 border-white shadow-lg"
-                        style={{ left: `calc(${axis.value2}% - 8px)` }}
-                        title={`2つ目: ${Math.round(axis.value2)}%`}
-                      />
-                    </div>
-                    <div className="flex justify-between text-sm text-gray-600">
-                      <span>🔵 あなた: {Math.round(axis.value1)}%</span>
-                      <span>🟣 相手: {Math.round(axis.value2)}%</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Footer */}

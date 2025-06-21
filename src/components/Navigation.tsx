@@ -4,15 +4,17 @@ import React from 'react';
 import { Heart } from 'lucide-react';
 
 interface NavigationProps {
-  currentPage: 'home' | 'types' | 'quiz' | 'results' | 'compatibility';
+  currentPage: 'home' | 'types' | 'quiz' | 'results' | 'compatibility' | 'compatibility-results';
+  hasTestResult?: boolean;
   onShowTypes?: () => void;
   onBackToHome?: () => void;
   onShowCompatibility?: () => void;
   onStartTest?: () => void;
+  onShowResults?: () => void;
   onDebugShowResults?: () => void;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ currentPage, onShowTypes, onBackToHome, onShowCompatibility, onStartTest, onDebugShowResults }) => {
+const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult, onShowTypes, onBackToHome, onShowCompatibility, onStartTest, onShowResults, onDebugShowResults }) => {
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -30,16 +32,18 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, onShowTypes, onBac
           </div>
           
           <div className="flex items-center space-x-8">
-            <button 
-              onClick={onBackToHome}
-              className={`text-sm font-medium transition-colors ${
-                currentPage === 'home' 
-                  ? 'text-teal-600' 
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              あなたの結果
-            </button>
+            {hasTestResult && (
+              <button 
+                onClick={onShowResults}
+                className={`text-sm font-medium transition-colors ${
+                  currentPage === 'results' 
+                    ? 'text-teal-600' 
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                あなたの結果
+              </button>
+            )}
             <button 
               onClick={onStartTest}
               className={`text-sm font-medium transition-colors ${
@@ -63,7 +67,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, onShowTypes, onBac
             <button 
               onClick={onShowCompatibility}
               className={`text-sm font-medium transition-colors ${
-                currentPage === 'compatibility' 
+                currentPage === 'compatibility' || currentPage === 'compatibility-results'
                   ? 'text-teal-600' 
                   : 'text-gray-600 hover:text-gray-900'
               }`}
@@ -80,9 +84,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, onShowTypes, onBac
                   🔧 DEBUG: 結果表示
                 </button>
               )}
-              <button className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
-                ログイン
-              </button>
+
               <div className="flex items-center space-x-1">
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                 <span className="text-sm font-medium text-gray-700">日本語</span>
