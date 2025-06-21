@@ -43,17 +43,26 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest }) =>
   }, []);
 
   const calculateCompatibility = (user: TestResult, partner: TestResult): CompatibilityResult => {
-    // 5軸の差を計算（0-100で各軸の差を出し、平均して相性度を算出）
-    const diffs = [
-      Math.abs(user.E - partner.E),
-      Math.abs(user.D - partner.D),
-      Math.abs(user.T - partner.T),
-      Math.abs(user.R - partner.R),
-      Math.abs(user.A - partner.A)
-    ];
+    // 各軸の相性スコアを計算（類似軸と補完軸で異なる計算方法）
     
-    const averageDiff = diffs.reduce((sum, diff) => sum + diff, 0) / 5;
-    const compatibility = Math.max(0, 100 - averageDiff);
+    // 外向性(E)/内向性(I) - 類似軸 (重み: 0.15)
+    const eScore = (100 - Math.abs(user.E - partner.E)) * 0.15;
+    
+    // 主導(D)/服従(S) - 補完軸 (重み: 0.3)
+    // 合計値が100に近いほど良い
+    const dScore = (100 - Math.abs((user.D + partner.D) - 100)) * 0.3;
+    
+    // 刺激志向(T)/安心志向(S) - 類似軸 (重み: 0.25)
+    const tScore = (100 - Math.abs(user.T - partner.T)) * 0.25;
+    
+    // 愛着傾向(A)/非愛着傾向(N) - 類似軸 (重み: 0.2)
+    const aScore = (100 - Math.abs(user.A - partner.A)) * 0.2;
+    
+    // 羞恥体制(R)/羞恥敏感(H) - 類似軸 (重み: 0.1)
+    const rScore = (100 - Math.abs(user.R - partner.R)) * 0.1;
+    
+    // 総合相性度を計算
+    const compatibility = Math.max(0, Math.min(100, eScore + dScore + tScore + aScore + rScore));
 
     let description = '';
     let tips: string[] = [];
@@ -96,15 +105,31 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest }) =>
     const parsedResult = parseCompatibilityCode(code);
     if (!parsedResult) return null;
 
+    // 5軸すべてを含むタイプコードを生成（E-D-T-A-R形式）
     const typeCode = 
+      (parsedResult.E > 50 ? 'E' : 'I') +
+      (parsedResult.D > 50 ? 'D' : 'S') +
+      (parsedResult.T > 50 ? 'T' : 'S') +
+      (parsedResult.A > 50 ? 'A' : 'N') +
+      '-' +
+      (parsedResult.R > 50 ? 'R' : 'H');
+    
+    // 4軸のコードで性格タイプを検索（既存のpersonalityTypesは4軸ベース）
+    const fourAxisCode = 
       (parsedResult.E > 50 ? 'E' : 'I') +
       (parsedResult.D > 50 ? 'D' : 'S') +
       (parsedResult.T > 50 ? 'T' : 'S') +
       (parsedResult.A > 50 ? 'A' : 'N');
     
     const personalityType = personalityTypes.find(type => 
-      type.code === typeCode
+      type.code === fourAxisCode
     ) || personalityTypes[0];
+    
+    // 5軸のタイプコードを表示用に設定
+    const extendedPersonalityType = {
+      ...personalityType,
+      code: typeCode
+    };
     
     return {
       E: parsedResult.E,
@@ -112,7 +137,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest }) =>
       T: parsedResult.T,
       R: parsedResult.R,
       A: parsedResult.A,
-      type: personalityType
+      type: extendedPersonalityType
     };
   };
 
@@ -126,9 +151,9 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest }) =>
         throw new Error('あなたの診断結果が見つかりません。まず性格診断テストを受けてください。');
       }
 
-      // 相手のコードの検証
-      if (partnerCode.length !== 10) {
-        throw new Error('相性診断コードは10桁である必要があります');
+                    // 相手のコードの検証
+      if (partnerCode.length === 0) {
+        throw new Error('相性診断コードを入力してください');
       }
 
       // 相手のコードを解析
@@ -205,7 +230,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest }) =>
               <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
               <div>
                 <h3 className="font-semibold text-gray-900">相性診断コードを入手</h3>
-                <p className="text-sm text-gray-600">シェアされた投稿から、10桁の相性診断コードを見つけてください。</p>
+                <p className="text-sm text-gray-600">シェアされた投稿から、相性診断コード（英数字）を見つけてください。</p>
               </div>
             </div>
             <div className="flex items-start space-x-3">
@@ -282,13 +307,13 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest }) =>
                 <input
                   type="text"
                   value={partnerCode}
-                  onChange={(e) => setPartnerCode(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
-                  placeholder="0123456789"
+                  onChange={(e) => setPartnerCode(e.target.value.replace(/[^0-9A-Za-z]/g, '').toUpperCase().slice(0, 8))}
+                  placeholder="ABCD123"
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-center text-lg"
-                  maxLength={10}
+                  maxLength={8}
                 />
                 <p className="text-sm text-gray-600 mt-2">
-                  相手にシェアしてもらった投稿から、10桁の相性診断コードを入力してください。
+                  相手にシェアしてもらった投稿から、相性診断コード（英数字）を入力してください。
                 </p>
               </div>
 
@@ -304,7 +329,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest }) =>
               <div className="flex space-x-3">
                 <button
                   onClick={handleCheckCompatibility}
-                  disabled={partnerCode.length !== 10 || isLoading}
+                  disabled={partnerCode.length === 0 || isLoading}
                   className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all flex items-center justify-center space-x-2"
                 >
                   {isLoading ? (
