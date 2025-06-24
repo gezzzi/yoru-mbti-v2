@@ -122,22 +122,6 @@ export default function Home() {
     }
   };
 
-  // デバッグ用：結果ページに直接ジャンプ
-  const handleDebugShowResults = () => {
-    // ダミーの診断結果を作成
-    const dummyResult: TestResult = {
-      E: 25, // Extroversion vs Introversion (低い = Introversion)
-      D: 75, // Dominance vs Submission (高い = Dominance)  
-      T: 60, // Thrill-seeking vs Security-seeking (高い = Thrill-seeking)
-      R: 40, // Shame-resistant vs Shame-sensitive (低い = Shame-sensitive)
-      A: 80, // Attachment vs Non-attachment (高い = Attachment)
-      type: personalityTypes[0] // 最初のタイプを使用（EDTA - 快楽王）
-    };
-    setTestResult(dummyResult);
-    setHasTestResult(true);
-    setCurrentState('results');
-  };
-
   const renderCurrentPage = () => {
     switch (currentState) {
       case 'types':
@@ -182,7 +166,6 @@ export default function Home() {
         onStartTest={handleStartTest}
         onBackToHome={handleBackToHome}
         onShowResults={handleShowResults}
-        onDebugShowResults={handleDebugShowResults}
       />
       {renderCurrentPage()}
     </div>
