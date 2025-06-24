@@ -8,43 +8,43 @@ const Footer: React.FC = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="font-semibold text-gray-900 mb-4">Products</h3>
+            <h3 className="font-semibold text-gray-900 mb-4">プロダクト</h3>
             <ul className="space-y-2 text-sm text-gray-600">
-              <li><a href="#" className="hover:text-teal-600">Premium Profile</a></li>
-              <li><a href="#" className="hover:text-teal-600">Team Assessments</a></li>
-              <li><a href="#" className="hover:text-teal-600">Reports for Professionals</a></li>
-              <li><a href="#" className="hover:text-teal-600">Testimonials</a></li>
+              <li><a href="#" className="hover:text-teal-600">プレミアムプロフィール</a></li>
+              <li><a href="#" className="hover:text-teal-600">チーム診断</a></li>
+              <li><a href="#" className="hover:text-teal-600">専門家向けレポート</a></li>
+              <li><a href="#" className="hover:text-teal-600">お客様の声</a></li>
             </ul>
           </div>
           
           <div>
-            <h3 className="font-semibold text-gray-900 mb-4">Resources</h3>
+            <h3 className="font-semibold text-gray-900 mb-4">リソース</h3>
             <ul className="space-y-2 text-sm text-gray-600">
-              <li><a href="#" className="hover:text-teal-600">Personality Test</a></li>
-              <li><a href="#" className="hover:text-teal-600">Personality Types</a></li>
-              <li><a href="#" className="hover:text-teal-600">Articles</a></li>
-              <li><a href="#" className="hover:text-teal-600">Our Framework</a></li>
-              <li><a href="#" className="hover:text-teal-600">Country Profiles</a></li>
+              <li><a href="#" className="hover:text-teal-600">性格診断テスト</a></li>
+              <li><a href="#" className="hover:text-teal-600">性格タイプ</a></li>
+              <li><a href="#" className="hover:text-teal-600">記事</a></li>
+              <li><a href="#" className="hover:text-teal-600">診断フレームワーク</a></li>
+              <li><a href="#" className="hover:text-teal-600">国別プロフィール</a></li>
             </ul>
           </div>
           
           <div>
-            <h3 className="font-semibold text-gray-900 mb-4">Help</h3>
+            <h3 className="font-semibold text-gray-900 mb-4">ヘルプ</h3>
             <ul className="space-y-2 text-sm text-gray-600">
-              <li><a href="#" className="hover:text-teal-600">Contact Us</a></li>
-              <li><a href="#" className="hover:text-teal-600">FAQ</a></li>
-              <li><a href="#" className="hover:text-teal-600">Your Orders</a></li>
-              <li><a href="#" className="hover:text-teal-600">Change Language</a></li>
+              <li><a href="#" className="hover:text-teal-600">お問い合わせ</a></li>
+              <li><a href="#" className="hover:text-teal-600">よくある質問</a></li>
+              <li><a href="#" className="hover:text-teal-600">ご注文履歴</a></li>
+              <li><a href="#" className="hover:text-teal-600">言語変更</a></li>
             </ul>
           </div>
           
           <div>
-            <h3 className="font-semibold text-gray-900 mb-4">Our Other Creations</h3>
+            <h3 className="font-semibold text-gray-900 mb-4">その他のサービス</h3>
             <ul className="space-y-2 text-sm text-gray-600">
               <li><a href="#" className="hover:text-teal-600">NPQE®</a></li>
               <li><a href="#" className="hover:text-teal-600">MindTrackers®</a></li>
-              <li><a href="#" className="hover:text-teal-600">Leadership by 16Personalities</a></li>
-              <li><a href="#" className="hover:text-teal-600">INFJ by 16Personalities</a></li>
+              <li><a href="#" className="hover:text-teal-600">リーダーシップ診断</a></li>
+              <li><a href="#" className="hover:text-teal-600">INFJ専門診断</a></li>
             </ul>
           </div>
         </div>
@@ -52,7 +52,7 @@ const Footer: React.FC = () => {
         <div className="border-t border-gray-200 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-sm text-gray-500 mb-4 md:mb-0">
-              © 2011-2025 NERIS Analytics Limited
+              © 2025 夜の性格診断 - すべての権利を保有
             </div>
             <div className="flex space-x-6">
               <a href="#" className="text-gray-400 hover:text-gray-600">

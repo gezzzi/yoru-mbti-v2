@@ -11,10 +11,9 @@ interface NavigationProps {
   onShowCompatibility?: () => void;
   onStartTest?: () => void;
   onShowResults?: () => void;
-  onDebugShowResults?: () => void;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult, onShowTypes, onBackToHome, onShowCompatibility, onStartTest, onShowResults, onDebugShowResults }) => {
+const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult, onShowTypes, onBackToHome, onShowCompatibility, onStartTest, onShowResults }) => {
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -75,16 +74,6 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult, onS
               相性診断
             </button>
             <div className="flex items-center space-x-4">
-              {process.env.NODE_ENV === 'development' && onDebugShowResults && (
-                <button 
-                  onClick={onDebugShowResults}
-                  className="px-3 py-1 text-xs font-medium bg-red-100 text-red-600 border border-red-200 rounded-md hover:bg-red-200 transition-colors"
-                  title="デバッグ用：結果ページに直接ジャンプ"
-                >
-                  🔧 DEBUG: 結果表示
-                </button>
-              )}
-
               <div className="flex items-center space-x-1">
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                 <span className="text-sm font-medium text-gray-700">日本語</span>

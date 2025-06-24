@@ -4,6 +4,7 @@ import { personalityTypes, getCategoryColor, getCategoryName } from '@/data/pers
 import { PersonalityType } from '@/types/personality';
 import Image from 'next/image';
 import { useState } from 'react';
+import Footer from '@/components/Footer';
 
 // 画像または絵文字を表示するコンポーネント
 const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = ({ typeCode, emoji, name }) => {
@@ -90,8 +91,8 @@ export default function PersonalityTypesPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 py-12">
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
@@ -145,6 +146,8 @@ export default function PersonalityTypesPage() {
           </a>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 } 
