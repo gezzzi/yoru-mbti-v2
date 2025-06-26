@@ -73,12 +73,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult, onS
             >
               相性診断
             </button>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-1">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                <span className="text-sm font-medium text-gray-700">日本語</span>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>

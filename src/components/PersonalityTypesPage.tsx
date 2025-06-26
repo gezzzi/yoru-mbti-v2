@@ -52,7 +52,7 @@ const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = (
       alt={name}
       width={448}
       height={448}
-      className="w-112 h-112 object-contain group-hover:scale-110 transition-transform duration-300"
+      className="w-112 h-112 object-contain"
       onError={handleImageError}
     />
   );
@@ -67,7 +67,7 @@ export default function PersonalityTypesPage() {
     return (
       <div
         key={type.code}
-        className="rounded-2xl p-6 hover:shadow-lg transition-all duration-300 hover:scale-105 cursor-pointer group"
+        className="rounded-2xl p-6 transition-all duration-300 hover:-translate-y-2 cursor-pointer group"
       >
         <div className="text-center mb-6">
           <div className={`w-128 h-128 mx-auto mb-4 rounded-2xl overflow-hidden ${scheme.imageBg} flex items-center justify-center`}>
@@ -91,7 +91,7 @@ export default function PersonalityTypesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="py-12">
+      <div className="pt-28 pb-12">
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-gray-900 mb-4">
