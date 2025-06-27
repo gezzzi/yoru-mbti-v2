@@ -1,23 +1,23 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { Heart, Menu, X } from 'lucide-react';
 
 interface NavigationProps {
   currentPage: 'home' | 'types' | 'quiz' | 'results' | 'compatibility' | 'compatibility-results';
   hasTestResult?: boolean;
-  onShowTypes?: () => void;
-  onBackToHome?: () => void;
-  onShowCompatibility?: () => void;
-  onStartTest?: () => void;
-  onShowResults?: () => void;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult, onShowTypes, onBackToHome, onShowCompatibility, onStartTest, onShowResults }) => {
+const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
   };
 
   return (
@@ -25,15 +25,15 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult, onS
       <div className="relative">
         {/* アプリ名 - 完全に左端に配置 */}
         <div className="absolute left-4 top-0 h-16 flex items-center z-10">
-          <button 
-            onClick={onBackToHome}
+          <Link 
+            href="/"
             className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
           >
             <div className="w-8 h-8 bg-gradient-to-r from-teal-400 to-blue-500 rounded-lg flex items-center justify-center">
               <Heart className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold text-gray-900">夜の性格診断</span>
-          </button>
+          </Link>
         </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -42,8 +42,9 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult, onS
           {/* デスクトップメニュー - 中央配置 */}
           <div className="hidden tablet:flex items-center space-x-8">
             {hasTestResult && (
-              <button 
-                onClick={onShowResults}
+              <Link 
+                href="/results"
+                onClick={closeMenu}
                 className={`text-sm font-medium transition-colors ${
                   currentPage === 'results' 
                     ? 'text-teal-600' 
@@ -51,10 +52,11 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult, onS
                 }`}
               >
                 あなたの結果
-              </button>
+              </Link>
             )}
-            <button 
-              onClick={onStartTest}
+            <Link 
+              href="/test"
+              onClick={closeMenu}
               className={`text-sm font-medium transition-colors ${
                 currentPage === 'quiz' 
                   ? 'text-teal-600' 
@@ -62,9 +64,10 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult, onS
               }`}
             >
               性格診断テスト
-            </button>
-            <button 
-              onClick={onShowTypes}
+            </Link>
+            <Link 
+              href="/types"
+              onClick={closeMenu}
               className={`text-sm font-medium transition-colors ${
                 currentPage === 'types' 
                   ? 'text-teal-600' 
@@ -72,9 +75,10 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult, onS
               }`}
             >
               性格タイプ
-            </button>
-            <button 
-              onClick={onShowCompatibility}
+            </Link>
+            <Link 
+              href="/compatibility"
+              onClick={closeMenu}
               className={`text-sm font-medium transition-colors ${
                 currentPage === 'compatibility' || currentPage === 'compatibility-results'
                   ? 'text-teal-600' 
@@ -82,7 +86,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult, onS
               }`}
             >
               相性診断
-            </button>
+            </Link>
           </div>
 
           {/* ハンバーガーメニューボタン - 右端固定 */}
@@ -94,6 +98,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult, onS
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
+          </div>
         </div>
         
         {/* モバイルメニュー */}
@@ -101,11 +106,9 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult, onS
           <div className="tablet:hidden bg-white border-t border-gray-200">
             <div className="px-4 pt-2 pb-4 space-y-2">
               {hasTestResult && (
-                <button 
-                  onClick={() => {
-                    onShowResults?.();
-                    setIsMenuOpen(false);
-                  }}
+                <Link 
+                  href="/results"
+                  onClick={closeMenu}
                   className={`block w-full text-left py-2 text-sm font-medium transition-colors ${
                     currentPage === 'results' 
                       ? 'text-teal-600' 
@@ -113,13 +116,11 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult, onS
                   }`}
                 >
                   あなたの結果
-                </button>
+                </Link>
               )}
-              <button 
-                onClick={() => {
-                  onStartTest?.();
-                  setIsMenuOpen(false);
-                }}
+              <Link 
+                href="/test"
+                onClick={closeMenu}
                 className={`block w-full text-left py-2 text-sm font-medium transition-colors ${
                   currentPage === 'quiz' 
                     ? 'text-teal-600' 
@@ -127,12 +128,10 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult, onS
                 }`}
               >
                 性格診断テスト
-              </button>
-              <button 
-                onClick={() => {
-                  onShowTypes?.();
-                  setIsMenuOpen(false);
-                }}
+              </Link>
+              <Link 
+                href="/types"
+                onClick={closeMenu}
                 className={`block w-full text-left py-2 text-sm font-medium transition-colors ${
                   currentPage === 'types' 
                     ? 'text-teal-600' 
@@ -140,12 +139,10 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult, onS
                 }`}
               >
                 性格タイプ
-              </button>
-              <button 
-                onClick={() => {
-                  onShowCompatibility?.();
-                  setIsMenuOpen(false);
-                }}
+              </Link>
+              <Link 
+                href="/compatibility"
+                onClick={closeMenu}
                 className={`block w-full text-left py-2 text-sm font-medium transition-colors ${
                   currentPage === 'compatibility' || currentPage === 'compatibility-results'
                     ? 'text-teal-600' 
@@ -153,11 +150,10 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult, onS
                 }`}
               >
                 相性診断
-              </button>
+              </Link>
             </div>
           </div>
         )}
-        </div>
       </div>
     </nav>
   );

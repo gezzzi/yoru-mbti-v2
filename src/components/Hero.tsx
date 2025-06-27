@@ -1,13 +1,10 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import Footer from './Footer';
 
-interface HeroProps {
-  onStartTest: () => void;
-}
-
-const Hero: React.FC<HeroProps> = ({ onStartTest }) => {
+const Hero: React.FC = () => {
   return (
     <div className="relative bg-gradient-to-br from-teal-400 via-teal-500 to-blue-600 min-h-screen pt-16 overflow-hidden">
       {/* Background decorative elements */}
@@ -32,15 +29,15 @@ const Hero: React.FC<HeroProps> = ({ onStartTest }) => {
             で、不思議なくらい正確な説明を手に入れられます。
           </p>
           
-          <button
-            onClick={onStartTest}
+          <Link
+            href="/test"
             className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-full hover:from-purple-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl text-lg"
           >
             テストを受ける
             <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
-          </button>
+          </Link>
         </div>
 
         {/* Illustration area - simplified geometric shapes */}

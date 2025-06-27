@@ -3,6 +3,7 @@
 import { personalityTypes, getCategoryColor, getCategoryName } from '@/data/personalityTypes';
 import { PersonalityType } from '@/types/personality';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 import Footer from '@/components/Footer';
 
@@ -65,9 +66,10 @@ export default function PersonalityTypesPage() {
     const scheme = categoryColorSchemes[categoryColor];
     
     return (
-      <div
+      <Link
         key={type.code}
-        className="rounded-2xl p-6 transition-all duration-300 hover:-translate-y-2 cursor-pointer group"
+        href={`/types/${type.code.toLowerCase()}`}
+        className="block rounded-2xl p-6 transition-all duration-300 hover:-translate-y-2 cursor-pointer group"
       >
         <div className="text-center mb-6">
           <div className={`w-128 h-128 mx-auto mb-4 rounded-2xl overflow-hidden ${scheme.imageBg} flex items-center justify-center`}>
@@ -85,7 +87,7 @@ export default function PersonalityTypesPage() {
         </p>
         </div>
       </div>
-    </div>
+    </Link>
   );
   };
 
@@ -138,12 +140,12 @@ export default function PersonalityTypesPage() {
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             診断テストを受けて、あなたの本当の性格タイプを発見しましょう。
           </p>
-          <a
-            href="/"
+          <Link
+            href="/test"
             className="inline-block px-12 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-lg rounded-2xl hover:from-purple-700 hover:to-pink-700 transform hover:scale-105 transition-all duration-200 shadow-xl"
           >
             診断テストを受ける
-          </a>
+          </Link>
         </div>
       </div>
       

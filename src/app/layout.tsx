@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import NavigationWrapper from '@/components/NavigationWrapper';
 
 export const metadata: Metadata = {
   title: "夜の性格診断",
@@ -14,7 +15,10 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body>
-        {children}
+        <div className="min-h-screen bg-white">
+          <NavigationWrapper />
+          {children}
+        </div>
       </body>
     </html>
   );
