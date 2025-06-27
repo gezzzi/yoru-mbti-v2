@@ -47,14 +47,14 @@ const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = (
   }
 
   return (
-    <Image
+      <Image
       src={`/images/personality-types/${typeCode}.svg`}
-      alt={name}
+        alt={name}
       width={448}
       height={448}
       className="w-112 h-112 object-contain"
-      onError={handleImageError}
-    />
+        onError={handleImageError}
+      />
   );
 };
 
@@ -81,12 +81,12 @@ export default function PersonalityTypesPage() {
               {type.code}
             </p>
             <p className="text-sm text-gray-600 leading-relaxed">
-              {type.description}
-            </p>
-          </div>
+          {type.description}
+        </p>
         </div>
       </div>
-    );
+    </div>
+  );
   };
 
   return (
@@ -104,30 +104,30 @@ export default function PersonalityTypesPage() {
 
         {/* Categories */}
         <div className="space-y-20">
-          {categories.map((category) => {
-            const categoryTypes = personalityTypes.filter(type => type.category === category);
+        {categories.map((category) => {
+          const categoryTypes = personalityTypes.filter(type => type.category === category);
             const scheme = categoryColorSchemes[category];
-            
-            return (
+          
+          return (
               <section key={category} className={`${scheme.bg} rounded-3xl p-8 md:p-12`}>
                 <div className="text-center mb-12">
                   <h2 className="text-4xl font-bold text-gray-900 mb-2">
-                    {getCategoryName(category)}
-                  </h2>
+                  {getCategoryName(category)}
+                </h2>
                   <p className="text-lg text-gray-700 font-medium">
-                    {category === 'dom' && '主導権を握り、相手をリードすることを好むタイプ。積極的で支配的な傾向があります。'}
-                    {category === 'sub' && '受け身で、相手に従うことを好むタイプ。協調的で従属的な傾向があります。'}
-                    {category === 'introvert' && '内向的で控えめなタイプ。静かで深く考える傾向があります。'}
-                    {category === 'fantasy' && '妄想的で現実逃避の傾向があるタイプ。想像力豊かで独自の世界を持ちます。'}
-                  </p>
-                </div>
+                  {category === 'dom' && '主導権を握り、相手をリードすることを好むタイプ。積極的で支配的な傾向があります。'}
+                  {category === 'sub' && '受け身で、相手に従うことを好むタイプ。協調的で従属的な傾向があります。'}
+                  {category === 'introvert' && '内向的で控えめなタイプ。静かで深く考える傾向があります。'}
+                  {category === 'fantasy' && '妄想的で現実逃避の傾向があるタイプ。想像力豊かで独自の世界を持ちます。'}
+                </p>
+              </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                   {categoryTypes.map((type) => renderPersonalityType(type, category))}
-                </div>
+              </div>
               </section>
-            );
-          })}
+          );
+        })}
         </div>
 
         {/* Footer */}

@@ -6,25 +6,13 @@ const Footer: React.FC = () => {
   return (
     <div className="bg-white py-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-4">プロダクト</h3>
-            <ul className="space-y-2 text-sm text-gray-600">
-              <li><a href="#" className="hover:text-teal-600">プレミアムプロフィール</a></li>
-              <li><a href="#" className="hover:text-teal-600">チーム診断</a></li>
-              <li><a href="#" className="hover:text-teal-600">専門家向けレポート</a></li>
-              <li><a href="#" className="hover:text-teal-600">お客様の声</a></li>
-            </ul>
-          </div>
-          
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <h3 className="font-semibold text-gray-900 mb-4">リソース</h3>
             <ul className="space-y-2 text-sm text-gray-600">
               <li><a href="#" className="hover:text-teal-600">性格診断テスト</a></li>
               <li><a href="#" className="hover:text-teal-600">性格タイプ</a></li>
-              <li><a href="#" className="hover:text-teal-600">記事</a></li>
-              <li><a href="#" className="hover:text-teal-600">診断フレームワーク</a></li>
-              <li><a href="#" className="hover:text-teal-600">国別プロフィール</a></li>
+              <li><a href="#" className="hover:text-teal-600">相性診断</a></li>
             </ul>
           </div>
           
@@ -33,18 +21,6 @@ const Footer: React.FC = () => {
             <ul className="space-y-2 text-sm text-gray-600">
               <li><a href="#" className="hover:text-teal-600">お問い合わせ</a></li>
               <li><a href="#" className="hover:text-teal-600">よくある質問</a></li>
-              <li><a href="#" className="hover:text-teal-600">ご注文履歴</a></li>
-              <li><a href="#" className="hover:text-teal-600">言語変更</a></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h3 className="font-semibold text-gray-900 mb-4">その他のサービス</h3>
-            <ul className="space-y-2 text-sm text-gray-600">
-              <li><a href="#" className="hover:text-teal-600">NPQE®</a></li>
-              <li><a href="#" className="hover:text-teal-600">MindTrackers®</a></li>
-              <li><a href="#" className="hover:text-teal-600">リーダーシップ診断</a></li>
-              <li><a href="#" className="hover:text-teal-600">INFJ専門診断</a></li>
             </ul>
           </div>
         </div>
