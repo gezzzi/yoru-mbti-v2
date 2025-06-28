@@ -180,7 +180,6 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       <div className="bg-gradient-to-r from-teal-500 to-green-500 py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl font-bold text-white mb-4">無料性格診断テスト</h1>
-          <p className="text-white/90 text-sm">NERIS Type Explorer®</p>
         </div>
       </div>
 

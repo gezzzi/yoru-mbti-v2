@@ -77,11 +77,8 @@ const HelpPage: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-gray-900 mb-4">
-            ヘルプ・サポート
+            ヘルプ
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            ご質問やお困りのことがございましたら、お気軽にお問い合わせください。
-          </p>
         </div>
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -89,10 +86,10 @@ const HelpPage: React.FC = () => {
             
             {/* お問い合わせフォーム */}
             <div className="bg-white rounded-3xl p-8 shadow-lg">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
                 お問い合わせ
               </h2>
-              <p className="text-gray-600 mb-8">
+              <p className="text-gray-600 mb-8 text-center">
                 ご質問、ご意見、不具合の報告など、お気軽にお問い合わせください。
               </p>
               
@@ -177,10 +174,10 @@ const HelpPage: React.FC = () => {
 
             {/* よくある質問 */}
             <div id="faq" className="bg-white rounded-3xl p-8 shadow-lg scroll-mt-20">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
                 よくある質問
               </h2>
-              <p className="text-gray-600 mb-8">
+              <p className="text-gray-600 mb-8 text-center">
                 多くのお客様からお寄せいただくご質問とその回答をまとめました。
               </p>
 
@@ -216,19 +213,7 @@ const HelpPage: React.FC = () => {
             </div>
           </div>
 
-          {/* 追加情報セクション */}
-          <div className="mt-16 bg-gradient-to-r from-teal-500 to-blue-600 rounded-3xl p-8 text-center text-white">
-            <h3 className="text-2xl font-bold mb-4">
-              まだ解決しませんか？
-            </h3>
-            <p className="text-lg mb-6">
-              上記で解決しない場合は、お気軽にお問い合わせフォームからご連絡ください。
-            </p>
-            <div className="text-sm opacity-90">
-              <p>平日営業日：24時間以内に回答</p>
-              <p>土日祝日：48時間以内に回答</p>
-            </div>
-          </div>
+
         </div>
       </div>
       

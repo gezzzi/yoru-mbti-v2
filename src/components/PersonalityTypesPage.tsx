@@ -99,9 +99,6 @@ export default function PersonalityTypesPage() {
           <h1 className="text-5xl font-bold text-gray-900 mb-4">
             性格タイプ
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            各タイプの詳細な特徴と相性を確認して、自分や相手への理解を深めましょう。
-          </p>
         </div>
 
         {/* Categories */}
