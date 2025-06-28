@@ -109,10 +109,10 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   const scaleValues = [6, 5, 4, 3, 2, 1, 0];
 
   const getCircleSize = (index: number) => {
-    if (index === 0 || index === 6) return 'w-16 h-16'; // Largest circles (extreme ends)
-    if (index === 1 || index === 5) return 'w-14 h-14'; // Large circles
-    if (index === 2 || index === 4) return 'w-12 h-12'; // Medium circles
-    return 'w-10 h-10'; // Smallest circle (neutral center)
+    if (index === 0 || index === 6) return 'w-10 h-10 md:w-16 md:h-16'; // Largest circles (extreme ends)
+    if (index === 1 || index === 5) return 'w-9 h-9 md:w-14 md:h-14'; // Large circles
+    if (index === 2 || index === 4) return 'w-8 h-8 md:w-12 md:h-12'; // Medium circles
+    return 'w-7 h-7 md:w-10 md:h-10'; // Smallest circle (neutral center)
   };
 
   const getCircleColor = (value: number, isSelected: boolean) => {
@@ -151,7 +151,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
         </div>
 
         {/* Circle Scale */}
-        <div className="flex items-center justify-center space-x-5">
+        <div className="flex items-center justify-center space-x-2 md:space-x-5">
           {scaleValues.map((value, index) => {
             const isSelected = answers[question.id] === value;
             
@@ -164,7 +164,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
                 } ${isSelected ? 'scale-105 shadow-lg' : 'hover:shadow-md'} flex items-center justify-center`}
               >
                 {isSelected && (
-                  <Check className="w-5 h-5" strokeWidth={3} />
+                  <Check className="w-3 h-3 md:w-5 md:h-5" strokeWidth={3} />
                 )}
               </button>
             );
