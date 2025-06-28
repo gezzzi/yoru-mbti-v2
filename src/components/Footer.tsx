@@ -6,17 +6,17 @@ const Footer: React.FC = () => {
   return (
     <div className="bg-white py-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
+          <div className="text-center">
             <h3 className="font-semibold text-gray-900 mb-4">リソース</h3>
             <ul className="space-y-2 text-sm text-gray-600">
-              <li><a href="#" className="hover:text-teal-600">性格診断テスト</a></li>
-              <li><a href="#" className="hover:text-teal-600">性格タイプ</a></li>
-              <li><a href="#" className="hover:text-teal-600">相性診断</a></li>
+              <li><a href="/" className="hover:text-teal-600">性格診断テスト</a></li>
+              <li><a href="/types" className="hover:text-teal-600">性格タイプ</a></li>
+              <li><a href="/compatibility" className="hover:text-teal-600">相性診断</a></li>
             </ul>
           </div>
           
-          <div>
+          <div className="text-center">
             <h3 className="font-semibold text-gray-900 mb-4">ヘルプ</h3>
             <ul className="space-y-2 text-sm text-gray-600">
               <li><a href="#" className="hover:text-teal-600">お問い合わせ</a></li>

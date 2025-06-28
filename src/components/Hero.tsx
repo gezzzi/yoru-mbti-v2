@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Footer from './Footer';
 
 const Hero: React.FC = () => {
   return (
@@ -88,9 +87,6 @@ const Hero: React.FC = () => {
           <div className="absolute bottom-10 left-2/3 w-2 h-2 bg-red-400/60 rounded-full"></div>
         </div>
       </div>
-      
-      {/* Footer section */}
-      <Footer />
     </div>
   );
 };

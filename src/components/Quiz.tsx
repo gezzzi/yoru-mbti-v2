@@ -137,7 +137,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       className="bg-white p-8 mb-8 border-b border-gray-100"
     >
       <div className="text-center mb-8">
-        <h3 className="text-lg font-normal text-gray-700 leading-relaxed max-w-2xl mx-auto">
+        <h3 className="text-lg font-bold text-gray-700 leading-relaxed max-w-2xl mx-auto">
           {question.text}
         </h3>
       </div>
@@ -151,7 +151,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
         </div>
 
         {/* Circle Scale */}
-        <div className="flex items-center justify-center space-x-3">
+        <div className="flex items-center justify-center space-x-5">
           {scaleValues.map((value, index) => {
             const isSelected = answers[question.id] === value;
             
