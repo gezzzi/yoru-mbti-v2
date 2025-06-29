@@ -31,22 +31,29 @@ interface ResultsProps {
 const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = ({ typeCode, emoji, name }) => {
   const [imageError, setImageError] = useState(false);
   
+  // タイプコードから基本の4文字を抽出（例：EDTA-R → EDTA）
+  const getBaseTypeCode = (code: string): string => {
+    return code.split('-')[0].toUpperCase();
+  };
+  
   const handleImageError = () => {
     setImageError(true);
   };
+
+  const baseTypeCode = getBaseTypeCode(typeCode);
 
   if (imageError) {
     return <span className="text-6xl md:text-8xl">{emoji}</span>;
   }
 
   return (
-    <div className="w-24 h-24 md:w-32 md:h-32 relative mx-auto">
+    <div className="w-72 h-72 md:w-96 md:h-96 relative mx-auto">
       <Image
-        src={`/images/personality-types/${typeCode}.jpg`}
+        src={`/images/personality-types/${baseTypeCode}.svg`}
         alt={name}
-        width={128}
-        height={128}
-        className="w-full h-full object-cover rounded-2xl shadow-lg"
+        width={384}
+        height={384}
+        className="w-full h-full object-contain"
         onError={handleImageError}
       />
     </div>
@@ -237,74 +244,33 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
     <div className="min-h-screen bg-white pt-16">
       {/* ダウンロード用のコンテナ */}
       <div ref={downloadRef} className="bg-white">
-      {/* Hero Section with Green Background */}
-      <div className="bg-gradient-to-r from-green-400 to-teal-500 relative overflow-hidden">
-        {/* Background illustration */}
-        <div className="absolute inset-0">
-          {/* Mountains */}
-          <svg viewBox="0 0 800 400" className="absolute bottom-0 w-full h-full">
-            <polygon points="0,400 200,150 400,200 600,100 800,150 800,400" fill="rgba(255,255,255,0.1)" />
-            <polygon points="0,400 150,200 350,250 550,150 750,200 800,400" fill="rgba(255,255,255,0.05)" />
-          </svg>
-          
-          {/* Trees */}
-          <div className="absolute bottom-20 left-1/4 w-6 h-16 bg-green-600/60 transform rotate-12"></div>
-          <div className="absolute bottom-20 left-1/3 w-6 h-20 bg-green-700/60"></div>
-          <div className="absolute bottom-20 right-1/3 w-6 h-16 bg-green-600/60 transform -rotate-12"></div>
-          <div className="absolute bottom-20 right-1/4 w-6 h-18 bg-green-700/60"></div>
-          
-          {/* Character illustration */}
-          <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2">
-            <div className="flex items-end space-x-12">
-              {/* Main character */}
-              <div className="flex flex-col items-center">
-                <div className="w-16 h-16 bg-yellow-300 rounded-full mb-2 relative">
-                  <div className="absolute top-2 left-3 w-2 h-2 bg-black rounded-full"></div>
-                  <div className="absolute top-2 right-3 w-2 h-2 bg-black rounded-full"></div>
-                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-4 h-1 bg-black rounded-full"></div>
-                </div>
-                <div className="w-12 h-24 bg-green-500 rounded-sm mb-2"></div>
-                <div className="w-4 h-8 bg-brown-600"></div>
-              </div>
-              
-              {/* Side characters */}
-              <div className="flex flex-col items-center">
-                <div className="w-12 h-12 bg-orange-300 rounded-full mb-2"></div>
-                <div className="w-10 h-20 bg-blue-500 rounded-sm mb-2"></div>
-                <div className="w-3 h-6 bg-brown-600"></div>
-              </div>
-              
-              <div className="flex flex-col items-center">
-                <div className="w-12 h-12 bg-pink-300 rounded-full mb-2"></div>
-                <div className="w-10 h-20 bg-purple-500 rounded-sm mb-2"></div>
-                <div className="w-3 h-6 bg-brown-600"></div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Scattered objects */}
-          <div className="absolute bottom-12 left-1/4 w-4 h-4 bg-gray-500/60 rounded-sm transform rotate-45"></div>
-          <div className="absolute bottom-14 right-1/4 w-6 h-3 bg-yellow-500/60 rounded-sm"></div>
-          <div className="absolute bottom-10 left-2/3 w-3 h-3 bg-red-500/60 rounded-full"></div>
-        </div>
-        
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center text-white">
-            <div className="mb-6">
-              <span className="text-sm font-medium bg-white/20 px-3 py-1 rounded-full">
-                あなたの性格タイプ:
-              </span>
+      {/* Header Section */}
+      <header className="sp-typeheader relative mb-40">
+        <div className="section__wrap relative z-10 max-w-[1540px] justify-between pt-8 md:pt-12 lg:mx-20 lg:flex lg:min-h-[322px] lg:pt-16 xl:mx-auto xl:pt-20 bg-green-500">
+          {/* 左側：テキスト情報 */}
+          <div className="type-info px-15 pb-20 md:px-20 md:pb-40 lg:ms-[3.89%] lg:max-w-[50%] lg:px-0 lg:pb-60 xl:ms-[7.7922%] xl:max-w-[500px] xl:pb-80 flex flex-col justify-start items-center lg:pt-32">
+            <div className="font-head text-lg mb-10 mt-0 text-center text-white">
+              あなたの性格タイプ:
             </div>
             
-            {/* 性格タイプの画像 */}
-            <div className="mb-6">
+            {/* 性格タイプ名 */}
+            <div className="font-head text-3xl md:text-4xl lg:text-5xl mb-10 mt-0 text-center text-white font-bold">
+              {type.name}
+            </div>
+            
+            <div className="code text-center mb-6">
+              <h1 className="font-head text-2xl md:text-3xl m-0 text-green-900 font-bold">
+                {type.code}
+              </h1>
+            </div>
+            
+            {/* SVG画像をモバイルでのみ表示 */}
+            <div className="flex justify-center mb-8 lg:hidden">
               <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
             </div>
             
-            <h1 className="text-5xl font-bold mb-4">{type.name}</h1>
-            <p className="text-xl mb-6 opacity-90">{type.code}</p>
-            
-            <div className="flex justify-center space-x-4 mb-8">
+            {/* Action buttons */}
+            <div className="flex justify-center space-x-4 mt-8">
               <button 
                 onClick={handleDownload}
                 disabled={isDownloading}
@@ -331,8 +297,13 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
               </button>
             </div>
           </div>
+          
+          {/* 右側：SVG画像（PCでのみ表示） */}
+          <div className="hidden lg:flex lg:items-center lg:justify-center lg:flex-1 lg:px-8">
+            <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
+          </div>
         </div>
-      </div>
+      </header>
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
