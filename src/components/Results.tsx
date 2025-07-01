@@ -504,53 +504,6 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
           </div>
         </div>
 
-        {/* Career Paths */}
-        <div className="mb-16">
-          <div className="flex items-center mb-6">
-            <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
-              3
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900">適職</h2>
-          </div>
-          
-          <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {type.careers.map((career, index) => (
-                <div key={index} className="bg-white rounded-lg p-4 text-center border border-purple-100 hover:border-purple-300 transition-colors">
-                  <span className="text-purple-700 font-medium">{career}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Relationships */}
-        <div className="mb-16">
-          <div className="flex items-center mb-6">
-            <div className="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
-              4
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900">人間関係</h2>
-          </div>
-          
-          <div className="bg-pink-50 border border-pink-200 rounded-lg p-6">
-            <h3 className="font-semibold text-pink-800 mb-4 flex items-center">
-              <Users className="w-5 h-5 mr-2" />
-              相性の良いタイプ
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {type.compatibility.map((compatType, index) => (
-                <span
-                  key={index}
-                  className="bg-pink-200 text-pink-800 px-3 py-1 rounded-full text-sm font-mono"
-                >
-                  {compatType}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-
         {/* Call to Action */}
         <div className="text-center">
           <div className="bg-gradient-to-r from-teal-500 to-green-500 rounded-2xl p-8 text-white">

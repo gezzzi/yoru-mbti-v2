@@ -16,7 +16,7 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'EDTN',
-    name: '本能支配者',
+    name: '支配者',
     category: 'dom',
     emoji: '👑',
     description: '衝動的で支配的、感情よりも本能を重視するタイプ。刺激を求め、関係においても自由度を重視する。',
@@ -40,7 +40,7 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'EDSN',
-    name: '無感情調教師',
+    name: '調教師',
     category: 'dom',
     emoji: '👑',
     description: '感情を切り離し、技術的なスキルと支配に重点を置くタイプ。安定を求めながらも感情的な束縛は避ける。',
@@ -66,7 +66,7 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'ESTN',
-    name: '快楽狂',
+    name: '狂人者',
     category: 'sub',
     emoji: '💖',
     description: '刺激中毒でスリルを好み、受け身ながらも外向的。新しい体験を求め続ける快楽主義者。',
@@ -78,7 +78,7 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'ESSA',
-    name: '依存天使',
+    name: '依存者',
     category: 'sub',
     emoji: '💖',
     description: '恋愛依存傾向があり、甘えることが得意で一途なタイプ。安定した関係の中で愛情を求める。',
@@ -90,7 +90,7 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'ESSN',
-    name: '快楽主義者',
+    name: '主義者',
     category: 'sub',
     emoji: '💖',
     description: '快楽を優先し、感情を軽視して自由奔放に生きるタイプ。安定志向だが感情的な束縛は避ける。',
@@ -128,7 +128,7 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'IDSA',
-    name: '癒し提供者',
+    name: '提供者',
     category: 'introvert',
     emoji: '👤',
     description: '優しい主導でスキンシップを重視し、包容力のあるタイプ。安定志向で愛情深い。',
@@ -140,7 +140,7 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'IDSN',
-    name: '距離系ドS者',
+    name: 'ドS者',
     category: 'introvert',
     emoji: '👤',
     description: '無感情でプレイに特化し、孤高を保つタイプ。安定志向だが感情的な距離を保つ。',
@@ -166,7 +166,7 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'ISTN',
-    name: '逃避M者',
+    name: 'ドM者',
     category: 'fantasy',
     emoji: '💫',
     description: '孤独を好み、快楽を逃避手段として使い、感情をカットするタイプ。内向的で刺激志向。',
@@ -190,7 +190,7 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'ISSN',
-    name: '快楽貸屋',
+    name: '快楽貸し屋',
     category: 'fantasy',
     emoji: '💫',
     description: '感情が薄く、身体だけを差し出すクールなMタイプ。内向的で安定志向だが感情的な距離を保つ。',

@@ -2,9 +2,11 @@
 
 import React, { useState, useRef } from 'react';
 import { TestResult, PersonalityType } from '../types/personality';
-import { Heart, Users, ArrowRight, Check, Download, Share2, RefreshCw, User } from 'lucide-react';
+import { Heart, Users, ArrowRight, Check, Download, Share2, RefreshCw, User, Copy, Twitter, MessageCircle, X } from 'lucide-react';
 import Footer from './Footer';
 import html2canvas from 'html2canvas';
+import { generateCompatibilityShareText, copyToClipboard } from '../utils/snsShare';
+import Image from 'next/image';
 
 interface CompatibilityResult {
   compatibility: number;
@@ -19,6 +21,32 @@ interface CompatibilityResultsProps {
   onNewTest: () => void;
 }
 
+const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = ({ typeCode, emoji, name }) => {
+  const [imageError, setImageError] = useState(false);
+  const getBaseTypeCode = (code: string): string => {
+    return code.split('-')[0].toUpperCase();
+  };
+  const handleImageError = () => {
+    setImageError(true);
+  };
+  const baseTypeCode = getBaseTypeCode(typeCode);
+  if (imageError) {
+    return <span className="text-6xl md:text-8xl">{emoji}</span>;
+  }
+  return (
+    <div className="w-32 h-32 md:w-48 md:h-48 relative mx-auto mb-4">
+      <Image
+        src={`/images/personality-types/${baseTypeCode}.svg`}
+        alt={name}
+        width={192}
+        height={192}
+        className="w-full h-full object-contain"
+        onError={handleImageError}
+      />
+    </div>
+  );
+};
+
 const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({ 
   myResult, 
   partnerResult, 
@@ -27,6 +55,8 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
 }) => {
   const [isDownloading, setIsDownloading] = useState(false);
   const downloadRef = useRef<HTMLDivElement>(null);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const calculateCompatibility = (user: TestResult, partner: TestResult): CompatibilityResult => {
     // 各軸の相性スコアを計算（類似軸と補完軸で異なる計算方法）
@@ -88,6 +118,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   };
 
   const compatibility = calculateCompatibility(myResult, partnerResult);
+  const shareText = generateCompatibilityShareText(myResult, partnerResult, Math.round(compatibility.compatibility));
 
   const getCompatibilityColor = (score: number) => {
     if (score >= 80) return 'text-green-600 bg-green-50 border-green-200';
@@ -144,7 +175,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
               お二人の性格の相性を詳しく分析しました
             </p>
             
-            {/* ダウンロードボタン */}
+            {/* ダウンロード・シェアボタン */}
             <div className="flex justify-center space-x-4 mb-8">
               <button 
                 onClick={handleDownload}
@@ -162,6 +193,13 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     <span>結果をダウンロード</span>
                   </>
                 )}
+              </button>
+              <button
+                onClick={() => setShowShareModal(true)}
+                className="bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-lg hover:bg-white/30 transition-all flex items-center space-x-2"
+              >
+                <Share2 className="w-5 h-5" />
+                <span>結果をシェア</span>
               </button>
             </div>
           </div>
@@ -191,7 +229,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h3 className="font-semibold text-gray-900 mb-4 text-center">あなたのタイプ</h3>
               <div className="text-center">
-                <span className="text-4xl mb-3 block">{myResult.type.emoji}</span>
+                <TypeImage typeCode={myResult.type.code} emoji={myResult.type.emoji} name={myResult.type.name} />
                 <h4 className="text-xl font-bold text-gray-900">{myResult.type.name}</h4>
                 <p className="text-sm text-gray-600 mb-3">{myResult.type.code}</p>
                 <p className="text-sm text-gray-700">{myResult.type.description}</p>
@@ -201,7 +239,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h3 className="font-semibold text-gray-900 mb-4 text-center">相手のタイプ</h3>
               <div className="text-center">
-                <span className="text-4xl mb-3 block">{partnerResult.type.emoji}</span>
+                <TypeImage typeCode={partnerResult.type.code} emoji={partnerResult.type.emoji} name={partnerResult.type.name} />
                 <h4 className="text-xl font-bold text-gray-900">{partnerResult.type.name}</h4>
                 <p className="text-sm text-gray-600 mb-3">{partnerResult.type.code}</p>
                 <p className="text-sm text-gray-700">{partnerResult.type.description}</p>
@@ -286,6 +324,69 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
 
       {/* Footer */}
       <Footer />
+
+      {/* シェアモーダル */}
+      {showShareModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b">
+              <h2 className="text-xl font-bold text-gray-900">相性診断結果をシェア</h2>
+              <button onClick={() => setShowShareModal(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="p-6 space-y-6">
+              <textarea
+                value={shareText}
+                readOnly
+                className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                rows={8}
+              />
+              <div className="space-y-3">
+                <h3 className="font-medium text-gray-900">シェア方法を選択</h3>
+                <div className="grid grid-cols-1 gap-3">
+                  {/* Twitter */}
+                  <button
+                    onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank', 'width=550,height=420')}
+                    className="flex items-center justify-center space-x-3 w-full bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 transition-colors"
+                  >
+                    <Twitter className="w-5 h-5" />
+                    <span>Twitterでシェア</span>
+                  </button>
+                  {/* LINE */}
+                  <button
+                    onClick={() => window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(window.location.origin)}&text=${encodeURIComponent(shareText)}`, '_blank', 'width=550,height=420')}
+                    className="flex items-center justify-center space-x-3 w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 transition-colors"
+                  >
+                    <MessageCircle className="w-5 h-5" />
+                    <span>LINEでシェア</span>
+                  </button>
+                  {/* コピー */}
+                  <button
+                    onClick={async () => {
+                      await copyToClipboard(shareText);
+                      setCopied(true);
+                      setTimeout(() => setCopied(false), 2000);
+                    }}
+                    className={`flex items-center justify-center space-x-3 w-full py-3 px-4 rounded-lg transition-colors ${copied ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300'}`}
+                  >
+                    {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+                    <span>{copied ? 'コピーしました！' : 'テキストをコピー'}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="p-6 border-t bg-gray-50 rounded-b-xl">
+              <button
+                onClick={() => setShowShareModal(false)}
+                className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors"
+              >
+                閉じる
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

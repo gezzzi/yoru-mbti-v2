@@ -2,10 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { TestResult, PersonalityType } from '../types/personality';
-import { parseCompatibilityCode, generateCompatibilityCode } from '../utils/snsShare';
+import { parseCompatibilityCode, generateCompatibilityCode, copyToClipboard } from '../utils/snsShare';
 import { personalityTypes } from '../data/personalityTypes';
-import { Heart, AlertCircle, HelpCircle, TestTube, User } from 'lucide-react';
+import { Heart, AlertCircle, HelpCircle, TestTube, User, Share2, Copy, Check } from 'lucide-react';
 import Footer from './Footer';
+import SNSShareModal from './SNSShareModal';
+import Image from 'next/image';
 
 interface CompatibilityResult {
   compatibility: number;
@@ -18,12 +20,40 @@ interface CompatibilityPageProps {
   onShowResults?: (myResult: TestResult, partnerResult: TestResult) => void;
 }
 
+const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = ({ typeCode, emoji, name }) => {
+  const [imageError, setImageError] = useState(false);
+  const getBaseTypeCode = (code: string): string => {
+    return code.split('-')[0].toUpperCase();
+  };
+  const handleImageError = () => {
+    setImageError(true);
+  };
+  const baseTypeCode = getBaseTypeCode(typeCode);
+  if (imageError) {
+    return <span className="text-6xl md:text-8xl">{emoji}</span>;
+  }
+  return (
+    <div className="w-32 h-32 md:w-48 md:h-48 relative mx-auto mb-4">
+      <Image
+        src={`/images/personality-types/${baseTypeCode}.svg`}
+        alt={name}
+        width={192}
+        height={192}
+        className="w-full h-full object-contain"
+        onError={handleImageError}
+      />
+    </div>
+  );
+};
+
 const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onShowResults }) => {
   const [partnerCode, setPartnerCode] = useState('');
   const [myResult, setMyResult] = useState<TestResult | null>(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [myCode, setMyCode] = useState('');
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   // ローカルストレージから自分の診断結果を読み込む
   useEffect(() => {
@@ -256,29 +286,48 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
         {/* 自分の診断結果表示 */}
         {myResult && (
           <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-            <div className="flex items-center mb-4">
-              <User className="w-6 h-6 text-blue-500 mr-3" />
-              <h2 className="text-xl font-bold text-gray-900">あなたの診断結果</h2>
+            <div className="flex flex-col items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-900 text-center">あなたの診断結果</h2>
             </div>
             
             <div className="grid md:grid-cols-2 gap-6">
               <div className="text-center">
-                <span className="text-4xl mb-3 block">{myResult.type.emoji}</span>
+                <TypeImage typeCode={myResult.type.code} emoji={myResult.type.emoji} name={myResult.type.name} />
                 <h3 className="text-xl font-bold text-gray-900">{myResult.type.name}</h3>
                 <p className="text-sm text-gray-600 mb-3">{myResult.type.code}</p>
                 <p className="text-sm text-gray-700">{myResult.type.description}</p>
               </div>
               
               <div>
-                <h4 className="font-semibold text-gray-900 mb-3">あなたの相性診断コード</h4>
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                  <code className="text-2xl font-mono text-center block text-blue-600 font-bold">
+                <h4 className="font-semibold text-gray-900 mb-3 text-center">あなたの相性診断コード</h4>
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-center gap-2">
+                  <code className="text-2xl font-mono text-blue-600 font-bold flex-1 text-center">
                     {myCode}
                   </code>
+                  <div className="flex-0 ml-auto">
+                    <button
+                      onClick={async () => {
+                        await copyToClipboard(myCode);
+                        setCopied(true);
+                        setTimeout(() => setCopied(false), 2000);
+                      }}
+                      className={`p-2 rounded-full border ${copied ? 'bg-green-100 border-green-300' : 'bg-gray-100 border-gray-300 hover:bg-gray-200'} transition-colors`}
+                      title="コピー"
+                    >
+                      {copied ? <Check className="w-5 h-5 text-green-600" /> : <Copy className="w-5 h-5 text-gray-600" />}
+                    </button>
+                  </div>
                 </div>
                 <p className="text-sm text-gray-600 mt-2">
                   このコードを相手に教えて、お互いの相性を診断してもらいましょう。
                 </p>
+                <button
+                  onClick={() => setShowShareModal(true)}
+                  className="mt-4 bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-all flex items-center justify-center mx-auto"
+                >
+                  <Share2 className="w-5 h-5 mr-2" />
+                  コードをシェア
+                </button>
               </div>
             </div>
           </div>
@@ -345,6 +394,14 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
 
       {/* Footer */}
       <Footer />
+      {/* SNS Share Modal */}
+      {myResult && (
+        <SNSShareModal
+          result={myResult}
+          isOpen={showShareModal}
+          onClose={() => setShowShareModal(false)}
+        />
+      )}
     </div>
   );
 };

@@ -18,14 +18,13 @@ const Hero: React.FC = () => {
         {/* Main content */}
         <div className="mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-            「やっと自分のことを理解してもらえました」
+            「やっと自分の&ldquo;性&rdquo;のカタチがわかりました」
           </h1>
           
           <p className="text-xl text-white/90 mb-4 leading-relaxed max-w-3xl mx-auto">
-            たった10分で、自分がどんな人間か、自らの願望や行動の理由について
+            たった10分で、自分がどんな性癖を持っていて、なぜそのプレイや関係性に惹かれるのか、不思議なくらいしっくりくる説明が手に入ります。
           </p>
           <p className="text-xl text-white/90 mb-12 leading-relaxed max-w-3xl mx-auto">
-            で、不思議なくらい正確な説明を手に入れられます。
           </p>
           
           <Link
