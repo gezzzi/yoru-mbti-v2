@@ -39,7 +39,7 @@ const Hero: React.FC = () => {
         alt="ランディングページイラスト"
         width={1920}
         height={600}
-        className="w-full object-cover select-none pointer-events-none"
+        className="w-full object-cover select-none pointer-events-none -mb-1"
         sizes="100vw"
       />
     </div>
