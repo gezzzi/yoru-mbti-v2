@@ -49,7 +49,7 @@ const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = (
 
   return (
       <Image
-      src={`/images/personality-types/${typeCode}.svg`}
+      src={`/images/personality-types/${typeCode.toUpperCase()}.svg`}
         alt={name}
       width={448}
       height={448}

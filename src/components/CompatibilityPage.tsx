@@ -283,56 +283,6 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
           </div>
         )}
 
-        {/* 自分の診断結果表示 */}
-        {myResult && (
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-            <div className="flex flex-col items-center mb-4">
-              <h2 className="text-xl font-bold text-gray-900 text-center">あなたの診断結果</h2>
-            </div>
-            
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="text-center">
-                <TypeImage typeCode={myResult.type.code} emoji={myResult.type.emoji} name={myResult.type.name} />
-                <h3 className="text-xl font-bold text-gray-900">{myResult.type.name}</h3>
-                <p className="text-sm text-gray-600 mb-3">{myResult.type.code}</p>
-                <p className="text-sm text-gray-700">{myResult.type.description}</p>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold text-gray-900 mb-3 text-center">あなたの相性診断コード</h4>
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-center gap-2">
-                  <code className="text-2xl font-mono text-blue-600 font-bold flex-1 text-center">
-                    {myCode}
-                  </code>
-                  <div className="flex-0 ml-auto">
-                    <button
-                      onClick={async () => {
-                        await copyToClipboard(myCode);
-                        setCopied(true);
-                        setTimeout(() => setCopied(false), 2000);
-                      }}
-                      className={`p-2 rounded-full border ${copied ? 'bg-green-100 border-green-300' : 'bg-gray-100 border-gray-300 hover:bg-gray-200'} transition-colors`}
-                      title="コピー"
-                    >
-                      {copied ? <Check className="w-5 h-5 text-green-600" /> : <Copy className="w-5 h-5 text-gray-600" />}
-                    </button>
-                  </div>
-                </div>
-                <p className="text-sm text-gray-600 mt-2">
-                  このコードを相手に教えて、お互いの相性を診断してもらいましょう。
-                </p>
-                <button
-                  onClick={() => setShowShareModal(true)}
-                  className="mt-4 bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-all flex items-center justify-center mx-auto"
-                >
-                  <Share2 className="w-5 h-5 mr-2" />
-                  コードをシェア
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* 相手のコード入力フォーム */}
         {myResult && (
           <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
@@ -384,6 +334,56 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                   )}
                 </button>
 
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 自分の診断結果表示 */}
+        {myResult && (
+          <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <div className="flex flex-col items-center mb-4">
+              <h2 className="text-xl font-bold text-gray-900 text-center">あなたの性格診断結果</h2>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="text-center">
+                <TypeImage typeCode={myResult.type.code} emoji={myResult.type.emoji} name={myResult.type.name} />
+                <h3 className="text-xl font-bold text-gray-900">{myResult.type.name}</h3>
+                <p className="text-sm text-gray-600 mb-3">{myResult.type.code}</p>
+                <p className="text-sm text-gray-700">{myResult.type.description}</p>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-3 text-center">あなたの相性診断コード</h4>
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-center gap-2">
+                  <code className="text-2xl font-mono text-blue-600 font-bold flex-1 text-center">
+                    {myCode}
+                  </code>
+                  <div className="flex-0 ml-auto">
+                    <button
+                      onClick={async () => {
+                        await copyToClipboard(myCode);
+                        setCopied(true);
+                        setTimeout(() => setCopied(false), 2000);
+                      }}
+                      className={`p-2 rounded-full border ${copied ? 'bg-green-100 border-green-300' : 'bg-gray-100 border-gray-300 hover:bg-gray-200'} transition-colors`}
+                      title="コピー"
+                    >
+                      {copied ? <Check className="w-5 h-5 text-green-600" /> : <Copy className="w-5 h-5 text-gray-600" />}
+                    </button>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-600 mt-2">
+                  このコードを相手に教えて、お互いの相性を診断してもらいましょう。
+                </p>
+                <button
+                  onClick={() => setShowShareModal(true)}
+                  className="mt-4 bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-all flex items-center justify-center mx-auto"
+                >
+                  <Share2 className="w-5 h-5 mr-2" />
+                  コードをシェア
+                </button>
               </div>
             </div>
           </div>

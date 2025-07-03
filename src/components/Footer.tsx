@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
           <div className="text-center">
             <h3 className="font-semibold text-gray-900 mb-4">リソース</h3>
             <ul className="space-y-2 text-sm text-gray-600">
-              <li><a href="/" className="hover:text-teal-600">性格診断テスト</a></li>
+              <li><a href="/test" className="hover:text-teal-600">性格診断テスト</a></li>
               <li><a href="/types" className="hover:text-teal-600">性格タイプ</a></li>
               <li><a href="/compatibility" className="hover:text-teal-600">相性診断</a></li>
             </ul>

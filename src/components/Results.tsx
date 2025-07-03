@@ -246,29 +246,25 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
       <div ref={downloadRef} className="bg-white">
       {/* Header Section */}
       <header className="sp-typeheader relative mb-40">
-        <div className="section__wrap relative z-10 max-w-[1540px] justify-between pt-8 md:pt-12 lg:mx-20 lg:flex lg:min-h-[322px] lg:pt-16 xl:mx-auto xl:pt-20 bg-green-500">
+        <div className="section__wrap relative z-10 justify-between pt-8 md:pt-12 lg:flex lg:min-h-[322px] lg:pt-16 xl:pt-20 bg-gradient-to-br from-blue-600 via-teal-500 to-teal-400">
           {/* 左側：テキスト情報 */}
           <div className="type-info px-15 pb-20 md:px-20 md:pb-40 lg:ms-[3.89%] lg:max-w-[50%] lg:px-0 lg:pb-60 xl:ms-[7.7922%] xl:max-w-[500px] xl:pb-80 flex flex-col justify-start items-center lg:pt-32">
             <div className="font-head text-lg mb-10 mt-0 text-center text-white">
               あなたの性格タイプ:
             </div>
-            
             {/* 性格タイプ名 */}
             <div className="font-head text-3xl md:text-4xl lg:text-5xl mb-10 mt-0 text-center text-white font-bold">
               {type.name}
             </div>
-            
             <div className="code text-center mb-6">
               <h1 className="font-head text-2xl md:text-3xl m-0 text-green-900 font-bold">
                 {type.code}
               </h1>
             </div>
-            
             {/* SVG画像をモバイルでのみ表示 */}
             <div className="flex justify-center mb-8 lg:hidden">
               <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
             </div>
-            
             {/* Action buttons */}
             <div className="flex justify-center space-x-4 mt-8">
               <button 
@@ -435,22 +431,28 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
               <div className="flex flex-col justify-center">
                 <div className={`bg-gradient-to-br ${getGradientColors(currentDimension.color)} rounded-xl p-6 text-center transition-all duration-300`}>
                   <div className="mb-4">
-                    <span className={`text-sm font-medium ${getResultColor(currentDimension.color)}`}>
-                      {currentDimension.category}
-                    </span>
+                    {/* Character Illustration Placeholder */}
+                    <h3 className={`text-2xl font-bold mb-4 ${getResultColor(currentDimension.color)}`}>
+                      {currentDimension.percentage}% {currentDimension.resultLabel}
+                    </h3>
                   </div>
-                  
-                  <h3 className={`text-2xl font-bold mb-6 ${getResultColor(currentDimension.color)}`}>
-                    {currentDimension.percentage}% {currentDimension.resultLabel}
-                  </h3>
-                  
-                  {/* Character Illustration Placeholder */}
-                  <div className={`w-32 h-32 mx-auto mb-6 bg-gradient-to-br ${getGradientColors(currentDimension.color)} rounded-full flex items-center justify-center shadow-lg transition-all duration-300`}>
-                    <div className={`w-24 h-24 ${getBackgroundColor(currentDimension.color)} rounded-full flex items-center justify-center`}>
-                      <div className="text-white text-3xl">
-                        {currentDimension.icon}
-                      </div>
-                    </div>
+                  <div className="w-[187px] h-[187px] mx-auto mb-4 flex items-center justify-center">
+                    <Image
+                      src={(() => {
+                        switch (currentDimension.id) {
+                          case 'extraversion': return '/images/axis/extraversion.svg';
+                          case 'dominance': return '/images/axis/dominance.svg';
+                          case 'stimulation': return '/images/axis/thrill.svg';
+                          case 'attachment': return '/images/axis/attachment.svg';
+                          case 'shame': return '/images/axis/resistance.svg';
+                          default: return '';
+                        }
+                      })()}
+                      alt={currentDimension.leftLabel + '軸画像'}
+                      width={187}
+                      height={187}
+                      className="object-contain w-[187px] h-[187px]"
+                    />
                   </div>
                   
                   <p className="text-sm text-gray-700 leading-relaxed mb-6 transition-all duration-300">
