@@ -440,12 +440,18 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                     <Image
                       src={(() => {
                         switch (currentDimension.id) {
-                          case 'extraversion': return '/images/axis/extraversion.svg';
-                          case 'dominance': return '/images/axis/dominance.svg';
-                          case 'stimulation': return '/images/axis/thrill.svg';
-                          case 'attachment': return '/images/axis/attachment.svg';
-                          case 'shame': return '/images/axis/resistance.svg';
-                          default: return '';
+                          case 'extraversion':
+                            return result.E >= 50 ? '/images/axis/extraversion.svg' : '/images/axis/introversion.svg';
+                          case 'dominance':
+                            return result.D >= 50 ? '/images/axis/dominance.svg' : '/images/axis/submissiveness.svg';
+                          case 'stimulation':
+                            return result.T >= 50 ? '/images/axis/thrill.svg' : '/images/axis/stability.svg';
+                          case 'attachment':
+                            return result.A >= 50 ? '/images/axis/attachment.svg' : '/images/axis/non-attachment.svg';
+                          case 'shame':
+                            return result.R >= 50 ? '/images/axis/resistance.svg' : '/images/axis/hypersensitivity.svg';
+                          default:
+                            return '';
                         }
                       })()}
                       alt={currentDimension.leftLabel + '軸画像'}
@@ -508,18 +514,25 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
 
         {/* Call to Action */}
         <div className="text-center">
-          <div className="bg-gradient-to-r from-teal-500 to-green-500 rounded-2xl p-8 text-white">
-            <h3 className="text-2xl font-bold mb-4">診断を再び受けますか？</h3>
-            <p className="mb-6 opacity-90">
-              時間が経つにつれて、あなたの性格や考え方も変化する可能性があります。
-            </p>
-            <button
-              onClick={onRestart}
-              className="bg-white text-teal-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center mx-auto"
-            >
-              <RefreshCw className="w-5 h-5 mr-2" />
-              もう一度診断する
-            </button>
+          <div className="bg-white rounded-2xl p-8">
+            <h3 className="text-2xl font-bold mb-4 text-gray-900">次のステップに進みますか？</h3>
+            <div className="flex flex-col md:flex-row justify-center items-center gap-4">
+              <button
+                onClick={onRestart}
+                className="bg-white text-teal-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center border border-teal-600"
+              >
+                <RefreshCw className="w-5 h-5 mr-2" />
+                もう一度診断する
+              </button>
+              <a
+                href="/compatibility"
+                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all flex items-center justify-center"
+                style={{ textDecoration: 'none' }}
+              >
+                <Heart className="w-5 h-5 mr-2" />
+                相性診断をする
+              </a>
+            </div>
           </div>
         </div>
       </div>
