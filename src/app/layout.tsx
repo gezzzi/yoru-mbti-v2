@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import NavigationWrapper from '@/components/NavigationWrapper';
 import Footer from '@/components/Footer';
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "夜の性格診断",
@@ -18,6 +19,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
+      <head>
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-HLM13T0M2K" strategy="afterInteractive" />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-HLM13T0M2K');
+          `}
+        </Script>
+      </head>
       <body>
         <div className="flex flex-col min-h-screen bg-white">
           <NavigationWrapper />

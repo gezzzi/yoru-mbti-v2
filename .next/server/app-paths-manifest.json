@@ -1,9 +1,9 @@
 {
-  "/compatibility/results/page": "app/compatibility/results/page.js",
+  "/compatibility/page": "app/compatibility/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/help/page": "app/help/page.js",
   "/page": "app/page.js",
-  "/_not-found/page": "app/_not-found/page.js",
-  "/compatibility/page": "app/compatibility/page.js",
+  "/compatibility/results/page": "app/compatibility/results/page.js",
   "/results/page": "app/results/page.js",
   "/test/page": "app/test/page.js",
   "/types/page": "app/types/page.js",
