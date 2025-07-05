@@ -6,6 +6,9 @@ import Footer from '@/components/Footer';
 export const metadata: Metadata = {
   title: "夜の性格診断",
   description: "あなたの隠された夜の性格を診断します",
+  alternates: {
+    canonical: "https://nightpersonality.com",
+  },
 };
 
 export default function RootLayout({
