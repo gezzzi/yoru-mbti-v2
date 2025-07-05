@@ -116,18 +116,9 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
 
   const getCircleColor = (value: number, isSelected: boolean) => {
     if (isSelected) {
-      if (value >= 5) return 'bg-teal-500 border-teal-500 text-white';     // 5-6: 強く同意
-      if (value >= 4) return 'bg-teal-400 border-teal-400 text-white';     // 4: やや同意
-      if (value === 3) return 'bg-gray-400 border-gray-400 text-white';    // 3: どちらでもない
-      if (value >= 2) return 'bg-purple-400 border-purple-400 text-white'; // 2: やや反対
-      return 'bg-purple-500 border-purple-500 text-white';                 // 0-1: 強く反対
+      return 'bg-yellow-400 border-yellow-500 text-white'; // 選択時は濃い黄色
     }
-    
-    if (value >= 5) return 'border-teal-500 hover:border-teal-600 bg-white text-teal-500';
-    if (value >= 4) return 'border-teal-400 hover:border-teal-500 bg-white text-teal-400';
-    if (value === 3) return 'border-gray-300 hover:border-gray-400 bg-white text-gray-300';
-    if (value >= 2) return 'border-purple-400 hover:border-purple-500 bg-white text-purple-400';
-    return 'border-purple-500 hover:border-purple-600 bg-white text-purple-500';
+    return 'border-yellow-400 hover:border-yellow-500 bg-white text-yellow-500'; // 未選択時は薄い黄色
   };
 
   const QuestionItem: React.FC<{ question: Question }> = ({ question }) => (
@@ -145,8 +136,8 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       <div className="flex flex-col items-center space-y-6">
         {/* Scale Labels */}
         <div className="flex justify-between items-center w-full max-w-2xl">
-          <span className="text-sm font-medium text-teal-600">そう思う</span>
-          <span className="text-sm font-medium text-purple-600">そう思わない</span>
+          <span className="text-base font-bold text-teal-600">Yes</span>
+          <span className="text-base font-bold text-purple-600">No</span>
         </div>
 
         {/* Circle Scale */}

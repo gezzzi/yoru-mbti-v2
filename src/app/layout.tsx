@@ -6,12 +6,6 @@ import Footer from '@/components/Footer';
 export const metadata: Metadata = {
   title: "夜の性格診断",
   description: "あなたの隠された夜の性格を診断します",
-  keywords: ["性格診断", "心理テスト", "夜の性格"],
-  openGraph: {
-    title: "夜の性格診断",
-    description: "あなたの隠された夜の性格を診断します",
-    type: "website",
-  },
 };
 
 export default function RootLayout({
