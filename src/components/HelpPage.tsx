@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import Footer from './Footer';
 
 const HelpPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -212,7 +211,6 @@ const HelpPage: React.FC = () => {
         </div>
       </div>
       
-      <Footer />
     </div>
   );
 };

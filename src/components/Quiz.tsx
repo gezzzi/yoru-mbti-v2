@@ -5,7 +5,6 @@ import { Check } from 'lucide-react';
 import { questions } from '../data/questions';
 import { Question } from '../types/personality';
 import { getProgressPercentage } from '../utils/testLogic';
-import Footer from './Footer';
 
 interface QuizProps {
   onComplete: (answers: Record<string, number>) => void;
@@ -245,7 +244,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       </div>
 
       {/* Navigation */}
-      <div className="bg-gray-50 py-12">
+      <div className="bg-white py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center space-y-4">
             <button
@@ -269,9 +268,6 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <Footer />
     </div>
   );
 };

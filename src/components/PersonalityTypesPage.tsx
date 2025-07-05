@@ -5,7 +5,6 @@ import { PersonalityType } from '@/types/personality';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import Footer from '@/components/Footer';
 
 // カテゴリごとの色設定
 const categoryColorSchemes = {
@@ -146,7 +145,6 @@ export default function PersonalityTypesPage() {
         </div>
       </div>
       
-      <Footer />
     </div>
   );
 } 

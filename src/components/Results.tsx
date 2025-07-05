@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { TestResult } from '../types/personality';
 import { getCategoryColor, getCategoryName } from '../data/personalityTypes';
 import { Heart, Users, Sparkles, RefreshCw, Download, Share2, User, Shield, Zap, Eye } from 'lucide-react';
-import Footer from './Footer';
 import Image from 'next/image';
 import SNSShareModal from './SNSShareModal';
 import html2canvas from 'html2canvas';
@@ -539,8 +538,6 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
       </div>
 
       {/* Footer */}
-      <Footer />
-
       {/* SNS Share Modal */}
       <SNSShareModal 
         result={result}

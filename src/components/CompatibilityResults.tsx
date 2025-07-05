@@ -3,7 +3,6 @@
 import React, { useState, useRef } from 'react';
 import { TestResult, PersonalityType } from '../types/personality';
 import { Heart, Users, ArrowRight, Check, Download, Share2, RefreshCw, User, Copy, Twitter, MessageCircle, X } from 'lucide-react';
-import Footer from './Footer';
 import html2canvas from 'html2canvas';
 import { generateCompatibilityShareText, copyToClipboard } from '../utils/snsShare';
 import Image from 'next/image';
@@ -323,7 +322,11 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       </div>
 
       {/* Footer */}
-      <Footer />
+      <div className="bg-gray-100 py-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-600 text-sm">
+          © {new Date().getFullYear()} 相性診断. All rights reserved.
+        </div>
+      </div>
 
       {/* シェアモーダル */}
       {showShareModal && (

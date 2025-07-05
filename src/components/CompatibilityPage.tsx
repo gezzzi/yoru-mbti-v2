@@ -5,7 +5,6 @@ import { TestResult, PersonalityType } from '../types/personality';
 import { parseCompatibilityCode, generateCompatibilityCode, copyToClipboard } from '../utils/snsShare';
 import { personalityTypes } from '../data/personalityTypes';
 import { Heart, AlertCircle, HelpCircle, TestTube, User, Share2, Copy, Check } from 'lucide-react';
-import Footer from './Footer';
 import SNSShareModal from './SNSShareModal';
 import Image from 'next/image';
 
@@ -393,7 +392,6 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
       </div>
 
       {/* Footer */}
-      <Footer />
       {/* SNS Share Modal */}
       {myResult && (
         <SNSShareModal

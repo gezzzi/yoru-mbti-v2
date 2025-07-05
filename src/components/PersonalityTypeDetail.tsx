@@ -5,7 +5,6 @@ import { getCategoryColor } from '@/data/personalityTypes';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import Footer from '@/components/Footer';
 
 interface PersonalityTypeDetailProps {
   type: PersonalityType;
@@ -180,7 +179,6 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
         </div>
       </div>
       
-      <Footer />
     </div>
   );
 };
