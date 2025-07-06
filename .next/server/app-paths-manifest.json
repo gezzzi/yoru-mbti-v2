@@ -1,7 +1,6 @@
 {
-  "/test/page": "app/test/page.js",
+  "/page": "app/page.js",
   "/types/page": "app/types/page.js",
   "/types/[typeCode]/page": "app/types/[typeCode]/page.js",
-  "/page": "app/page.js",
-  "/results/page": "app/results/page.js"
+  "/test/page": "app/test/page.js"
 }

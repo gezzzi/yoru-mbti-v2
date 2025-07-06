@@ -6,6 +6,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
+// カテゴリごとの色設定をインポート
+const categoryColorSchemes = {
+  dom: 'bg-red-200',
+  sub: 'bg-pink-200',
+  introvert: 'bg-purple-200',
+  fantasy: 'bg-blue-200',
+};
+
 interface PersonalityTypeDetailProps {
   type: PersonalityType;
 }
@@ -19,20 +27,20 @@ const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = (
 
   if (imageError) {
     return (
-      <div className="w-32 h-32 flex items-center justify-center bg-gray-100 rounded-2xl">
+      <div className="w-64 h-64 flex items-center justify-center bg-gray-100 rounded-2xl">
         <span className="text-6xl">{emoji}</span>
       </div>
     );
   }
 
   return (
-    <div className="w-32 h-32 relative">
+    <div className="w-64 h-64 relative">
       <Image
         src={`/images/personality-types/${typeCode}.svg`}
         alt={name}
-        width={128}
-        height={128}
-        className="w-full h-full object-cover rounded-2xl shadow-lg"
+        width={256}
+        height={256}
+        className="w-full h-full object-cover rounded-2xl"
         onError={handleImageError}
       />
     </div>
@@ -58,24 +66,19 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
 
         {/* メインコンテンツ */}
         <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
-          {/* ヘッダー */}
-          <div className={`bg-gradient-to-r ${getCategoryColor(type.category)} p-8 text-white`}>
-            <div className="flex items-center gap-6">
-              <div className="flex-shrink-0 bg-white/20 p-3 rounded-2xl">
-                <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
-              </div>
-              <div>
-                <h1 className="text-4xl font-bold mb-2">{type.name}</h1>
-                <p className="text-2xl opacity-90 mb-4">{type.code}</p>
-                <p className="text-lg opacity-90 leading-relaxed max-w-2xl">
-                  {type.description}
-                </p>
-              </div>
+          {/* 画像をカテゴリごとの背景色でグラデーションdivに配置 */}
+          <div className={`p-8 text-white flex justify-center ${categoryColorSchemes[type.category]}`}>
+            <div className={`${categoryColorSchemes[type.category]} rounded-2xl p-6 flex items-center justify-center`}>
+              <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
             </div>
           </div>
 
           {/* コンテンツエリア */}
           <div className="p-8">
+            {/* タイプ説明文を追加 */}
+            <div className="mb-8">
+              <p className="text-lg text-gray-700 leading-relaxed">{type.description}</p>
+            </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* 主な特徴 */}
               <div>
@@ -131,28 +134,15 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">相性の良いタイプ</h2>
                 <div className="flex flex-wrap gap-3">
                   {type.compatibility.map((compat, index) => (
-                    <Link
-                      key={index}
-                      href={`/types/${compat.toLowerCase()}`}
-                      className="px-4 py-2 rounded-full text-sm bg-pink-100 text-pink-800 border border-pink-200 hover:bg-pink-200 transition-colors"
-                    >
-                      {compat}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-              {/* 適性のあるキャリア */}
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">適性のあるキャリア</h2>
-                <div className="flex flex-wrap gap-3">
-                  {type.careers.map((career, index) => (
-                    <span
-                      key={index}
-                      className="px-4 py-2 rounded-full text-sm bg-blue-100 text-blue-800 border border-blue-200"
-                    >
-                      {career}
-                    </span>
+                    <div key={index} className="flex items-center gap-2">
+                      <span className="font-bold text-pink-700">{index + 1}位</span>
+                      <Link
+                        href={`/types/${compat.toLowerCase()}`}
+                        className="px-4 py-2 rounded-full text-sm bg-pink-100 text-pink-800 border border-pink-200 hover:bg-pink-200 transition-colors"
+                      >
+                        {compat}
+                      </Link>
+                    </div>
                   ))}
                 </div>
               </div>
