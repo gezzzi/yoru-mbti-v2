@@ -29,6 +29,30 @@ export default function RootLayout({
             gtag('config', 'G-HLM13T0M2K');
           `}
         </Script>
+        <Script id="structured-data-site-name-ja" type="application/ld+json">
+          {`
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "夜の性格診断",
+              "alternateName": "夜MBTI",
+              "url": "https://nightpersonality.com",
+              "inLanguage": "ja"
+            }
+          `}
+        </Script>
+        <Script id="structured-data-site-name-en" type="application/ld+json">
+          {`
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "Night Personality",
+              "alternateName": "Night Personality",
+              "url": "https://nightpersonality.com",
+              "inLanguage": "en"
+            }
+          `}
+        </Script>
         {/* favicon & icons */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />

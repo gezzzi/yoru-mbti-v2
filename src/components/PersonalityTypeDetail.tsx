@@ -168,7 +168,6 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
           </div>
         </div>
       </div>
-      
     </div>
   );
 };
