@@ -173,40 +173,6 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
         </div>
       </div>
 
-      {/* Three info cards */}
-      <div className="bg-gray-50 py-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-blue-100 rounded-lg p-6 text-center">
-              <div className="w-16 h-16 bg-blue-200 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <div className="w-8 h-8 bg-blue-400 rounded-full"></div>
-              </div>
-              <p className="text-sm text-gray-700 leading-relaxed">
-                自分の性格タイプを深く理解するため、最高の自己啓発ツールと言えるでしょう。
-              </p>
-            </div>
-            
-            <div className="bg-green-100 rounded-lg p-6 text-center">
-              <div className="w-16 h-16 bg-green-200 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <div className="w-8 h-8 bg-green-400 rounded-full"></div>
-              </div>
-              <p className="text-sm text-gray-700 leading-relaxed">
-                人間関係を改善し、より良いコミュニケーションを築くためのガイダンスを提供します。
-              </p>
-            </div>
-            
-            <div className="bg-purple-100 rounded-lg p-6 text-center">
-              <div className="w-16 h-16 bg-purple-200 rounded-full mx-auto mb-4 flex items-center justify-center">
-                <div className="w-8 h-8 bg-purple-400 rounded-full"></div>
-              </div>
-              <p className="text-sm text-gray-700 leading-relaxed">
-                キャリアや人生の重要な決断を下す際に、より確信を持てるようになります。
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Progress Bar */}
       <div className="bg-white border-b border-gray-200 py-4">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
