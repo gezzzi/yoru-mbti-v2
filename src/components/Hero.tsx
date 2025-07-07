@@ -6,7 +6,7 @@ import Image from 'next/image';
 
 const Hero: React.FC = () => {
   return (
-    <div className="relative bg-gradient-to-br from-teal-400 via-teal-500 to-blue-600 min-h-[30vh] pt-8 overflow-hidden">
+    <div className="relative bg-gradient-to-br from-teal-400 via-teal-500 to-blue-600 min-h-[30vh] pt-8 overflow-hidden flex flex-col justify-between flex-grow">
       {/* Background decorative elements */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-10 w-4 h-4 bg-white/20 rounded-full"></div>
@@ -14,11 +14,17 @@ const Hero: React.FC = () => {
         <div className="absolute bottom-40 left-20 w-3 h-3 bg-white/25 rounded-full"></div>
         <div className="absolute bottom-60 right-40 w-5 h-5 bg-white/20 rounded-full"></div>
       </div>
-      
       {/* テキスト部分 */}
       <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 pt-8 md:pt-12 text-center">
-        <h1 className="mt-8 md:mt-12 text-3xl md:text-5xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
-          「やっと自分の&ldquo;性&rdquo;のカタチがわかりました」
+        <h1 className="mt-8 md:mt-12 text-3xl md:text-5xl font-bold text-white mb-6 leading-tight drop-shadow-lg flex justify-center gap-1 select-none">
+          <span className="neon-pink" style={{color:'#ff1493',textShadow:'0 0 10px #ff1493,0 0 20px #ff1493,0 0 30px #ff1493,0 0 40px #ff0080',animation:'pulsePink 2s ease-in-out infinite'}}>【</span>
+          <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>夜</span>
+          <span className="neon-blue" style={{color:'#00ffff',textShadow:'0 0 10px #00ffff,0 0 20px #00e5ff,0 0 30px #00acc1',animation:'electricBlue 1.5s ease-in-out infinite'}}>の</span>
+          <span className="neon-green" style={{color:'#00ff00',textShadow:'0 0 10px #00ff00,0 0 20px #64ff00,0 0 30px #76ff03',animation:'glowGreen 2.5s ease-in-out infinite'}}>性</span>
+          <span className="neon-pink" style={{color:'#ff1493',textShadow:'0 0 10px #ff1493,0 0 20px #ff1493,0 0 30px #ff1493,0 0 40px #ff0080',animation:'pulsePink 2s ease-in-out infinite'}}>格</span>
+          <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>診</span>
+          <span className="neon-blue" style={{color:'#00ffff',textShadow:'0 0 10px #00ffff,0 0 20px #00e5ff,0 0 30px #00acc1',animation:'electricBlue 1.5s ease-in-out infinite'}}>断</span>
+          <span className="neon-green" style={{color:'#00ff00',textShadow:'0 0 10px #00ff00,0 0 20px #64ff00,0 0 30px #76ff03',animation:'glowGreen 2.5s ease-in-out infinite'}}>】</span>
         </h1>
         <p className="text-base md:text-xl text-white/90 mb-4 leading-relaxed max-w-3xl mx-auto drop-shadow">
           たった10分で、自分がどんな性癖を持っていて、なぜそのプレイや関係性に惹かれるのか、不思議なくらいしっくりくる説明が手に入ります。
@@ -34,14 +40,16 @@ const Hero: React.FC = () => {
         </Link>
       </div>
       {/* 画像部分 */}
-      <Image
-        src="/images/page/landing-page.svg"
-        alt="ランディングページイラスト"
-        width={1920}
-        height={600}
-        className="w-full object-cover select-none pointer-events-none -mb-1"
-        sizes="100vw"
-      />
+      <div className="w-full flex-shrink-0">
+        <Image
+          src="/images/page/landing-page.svg"
+          alt="ランディングページイラスト"
+          width={1920}
+          height={600}
+          className="w-full object-cover select-none pointer-events-none -mb-1"
+          sizes="100vw"
+        />
+      </div>
     </div>
   );
 };
