@@ -220,11 +220,11 @@ export const getCategoryColor = (category: PersonalityType['category']) => {
 export const getCategoryName = (category: PersonalityType['category']) => {
   switch (category) {
     case 'dom':
-      return '主導者（Dom）系';
+      return '主導者系';
     case 'sub':
-      return '従属者（Sub）系';
+      return '従属者系';
     case 'introvert':
-      return '隠密（Introvert）系';
+      return '隠密系';
     case 'fantasy':
       return '妄想・回避系';
     default:

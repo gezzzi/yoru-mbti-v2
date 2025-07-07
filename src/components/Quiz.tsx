@@ -118,16 +118,16 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
     if (isSelected) {
       return 'bg-yellow-400 border-yellow-500 text-white'; // 選択時は濃い黄色
     }
-    return 'border-yellow-400 hover:border-yellow-500 bg-white text-yellow-500'; // 未選択時は薄い黄色
+    return 'border-gray-400 bg-gray-800 text-gray-300'; // 未選択時は薄いグレー
   };
 
   const QuestionItem: React.FC<{ question: Question }> = ({ question }) => (
     <div 
       ref={(el) => { questionRefs.current[question.id] = el; }}
-      className="bg-white p-8 mb-8 border-b border-gray-100"
+      className="p-8 mb-8 border-b border-gray-100"
     >
       <div className="text-center mb-8">
-        <h3 className="text-lg font-bold text-gray-700 leading-relaxed max-w-2xl mx-auto">
+        <h3 className="text-lg font-bold text-gray-100 leading-relaxed max-w-2xl mx-auto">
           {question.text}
         </h3>
       </div>
@@ -136,8 +136,8 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       <div className="flex flex-col items-center space-y-6">
         {/* Scale Labels */}
         <div className="flex justify-between items-center w-full max-w-2xl">
-          <span className="text-base font-bold text-teal-600">Yes</span>
-          <span className="text-base font-bold text-purple-600">No</span>
+          <span className="text-base font-bold text-cyan-300">Yes</span>
+          <span className="text-base font-bold text-pink-300">No</span>
         </div>
 
         {/* Circle Scale */}
@@ -154,7 +154,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
                 } ${isSelected ? 'scale-105 shadow-lg' : 'hover:shadow-md'} flex items-center justify-center`}
               >
                 {isSelected && (
-                  <Check className="w-3 h-3 md:w-5 md:h-5" strokeWidth={3} />
+                  <Check className="w-3 h-3 md:w-5 md:h-5 text-white" strokeWidth={3} />
                 )}
               </button>
             );
@@ -165,31 +165,36 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   );
 
   return (
-    <div className="min-h-screen bg-white pt-16">
-      {/* Header with green background */}
-      <div className="bg-gradient-to-r from-teal-500 to-green-500 py-12">
+    <div className="min-h-screen pt-16">
+      {/* Header with transparent background */}
+      <div className="py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-3xl font-bold text-white mb-4">無料性格診断テスト</h1>
+          <h1 className="mt-12 text-3xl font-bold text-white mb-4 flex justify-center gap-1 select-none">
+            <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>夜</span>
+            <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>の</span>
+            <span className="neon-pink" style={{color:'#f472b6',textShadow:'0 0 10px #f472b6,0 0 20px #ec4899,0 0 30px #be185d',animation:'pulsePink 2s ease-in-out infinite'}}>性</span>
+            <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>格</span>
+            <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>診</span>
+            <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>断</span>
+          </h1>
         </div>
       </div>
 
       {/* Progress Bar */}
-      <div className="bg-white border-b border-gray-200 py-4">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-gray-700">
-              質問 {currentPageIndex * questionsPerPage + 1}-{Math.min((currentPageIndex + 1) * questionsPerPage, questions.length)} / {questions.length}
-            </span>
-            <span className="text-sm font-medium text-gray-700">
-              {progress}% 完了
-            </span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div
-              className="bg-teal-500 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm font-medium text-gray-100">
+            質問 {currentPageIndex * questionsPerPage + 1}-{Math.min((currentPageIndex + 1) * questionsPerPage, questions.length)} / {questions.length}
+          </span>
+          <span className="text-sm font-medium text-gray-100">
+            {progress}% 完了
+          </span>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div
+            className="bg-[#818cf8] h-2 rounded-full transition-all duration-300"
+            style={{ width: `${progress}%` }}
+          />
         </div>
       </div>
 
@@ -201,7 +206,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       </div>
 
       {/* Navigation */}
-      <div className="bg-white py-12">
+      <div className="py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center space-y-4">
             <button
@@ -209,7 +214,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
               disabled={!isCurrentPageComplete}
               className={`flex items-center justify-center px-16 py-4 rounded-full text-lg font-medium transition-all duration-200 transform hover:scale-105 min-w-[200px] ${
                 isCurrentPageComplete
-                  ? 'bg-purple-600 text-white hover:bg-purple-700 shadow-lg hover:shadow-xl'
+                  ? 'bg-[#818cf8] text-white hover:bg-[#a78bfa] shadow-lg hover:shadow-xl'
                   : 'bg-gray-300 text-gray-500 cursor-not-allowed'
               }`}
               data-next-button={!isLastPage}
@@ -219,7 +224,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
               <span className="ml-2">→</span>
             </button>
 
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-gray-200">
               ページ {currentPageIndex + 1} / {totalPages}
             </div>
           </div>

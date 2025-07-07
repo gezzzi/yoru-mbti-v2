@@ -81,13 +81,10 @@ export default function PersonalityTypesPage() {
             <p className="text-sm font-medium text-gray-700 mb-3">
               {type.code}
             </p>
-            <p className="text-sm text-gray-600 leading-relaxed">
-          {type.description}
-        </p>
+          </div>
         </div>
-      </div>
-    </Link>
-  );
+      </Link>
+    );
   };
 
   return (

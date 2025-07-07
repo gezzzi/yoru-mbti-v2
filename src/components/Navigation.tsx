@@ -21,18 +21,19 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
   };
 
   return (
-    <nav className="bg-white shadow-sm border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
+    <nav className="bg-slate-600 shadow-sm fixed top-0 left-0 right-0 z-50">
       <div className="relative">
         {/* アプリ名 - 完全に左端に配置 */}
         <div className="absolute left-4 top-0 h-16 flex items-center z-10">
           <Link 
             href="/"
-            className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+            className="flex items-center space-x-2"
+            onClick={closeMenu}
           >
             <div className="w-8 h-8 bg-gradient-to-r from-teal-400 to-blue-500 rounded-lg flex items-center justify-center">
               <Heart className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-gray-900">夜の性格診断</span>
+            <span className={`text-xl font-bold transition-colors ${currentPage === 'home' ? 'text-teal-300' : 'text-white'}`}>夜の性格診断</span>
           </Link>
         </div>
         
@@ -47,8 +48,8 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
                 onClick={closeMenu}
                 className={`text-sm font-medium transition-colors ${
                   currentPage === 'results' 
-                    ? 'text-teal-600' 
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'text-teal-300' 
+                    : 'text-white'
                 }`}
               >
                 あなたの結果
@@ -59,8 +60,8 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
               onClick={closeMenu}
               className={`text-sm font-medium transition-colors ${
                 currentPage === 'quiz' 
-                  ? 'text-teal-600' 
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'text-teal-300' 
+                  : 'text-white'
               }`}
             >
               性格診断テスト
@@ -70,8 +71,8 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
               onClick={closeMenu}
               className={`text-sm font-medium transition-colors ${
                 currentPage === 'types' 
-                  ? 'text-teal-600' 
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'text-teal-300' 
+                  : 'text-white'
               }`}
             >
               性格タイプ
@@ -81,8 +82,8 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
               onClick={closeMenu}
               className={`text-sm font-medium transition-colors ${
                 currentPage === 'compatibility' || currentPage === 'compatibility-results'
-                  ? 'text-teal-600' 
-                  : 'text-gray-600 hover:text-gray-900'
+                  ? 'text-teal-300' 
+                  : 'text-white'
               }`}
             >
               相性診断
@@ -93,7 +94,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
           <div className="absolute right-0 tablet:hidden">
             <button
               onClick={toggleMenu}
-              className="text-gray-600 hover:text-gray-900 focus:outline-none focus:text-gray-900"
+              className="text-gray-100 hover:text-gray-100 focus:outline-none focus:text-gray-100"
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -103,7 +104,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
         
         {/* モバイルメニュー */}
         {isMenuOpen && (
-          <div className="tablet:hidden bg-white border-t border-gray-200">
+          <div className="tablet:hidden bg-slate-600">
             <div className="px-4 pt-2 pb-4 space-y-2">
               {hasTestResult && (
                 <Link 
@@ -111,8 +112,8 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
                   onClick={closeMenu}
                   className={`block w-full text-left py-2 text-sm font-medium transition-colors ${
                     currentPage === 'results' 
-                      ? 'text-teal-600' 
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? 'text-teal-300' 
+                      : 'text-white'
                   }`}
                 >
                   あなたの結果
@@ -123,8 +124,8 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
                 onClick={closeMenu}
                 className={`block w-full text-left py-2 text-sm font-medium transition-colors ${
                   currentPage === 'quiz' 
-                    ? 'text-teal-600' 
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'text-teal-300' 
+                    : 'text-white'
                 }`}
               >
                 性格診断テスト
@@ -134,8 +135,8 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
                 onClick={closeMenu}
                 className={`block w-full text-left py-2 text-sm font-medium transition-colors ${
                   currentPage === 'types' 
-                    ? 'text-teal-600' 
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'text-teal-300' 
+                    : 'text-white'
                 }`}
               >
                 性格タイプ
@@ -145,8 +146,8 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
                 onClick={closeMenu}
                 className={`block w-full text-left py-2 text-sm font-medium transition-colors ${
                   currentPage === 'compatibility' || currentPage === 'compatibility-results'
-                    ? 'text-teal-600' 
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'text-teal-300' 
+                    : 'text-white'
                 }`}
               >
                 相性診断
