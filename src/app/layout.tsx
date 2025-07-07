@@ -64,9 +64,33 @@ export default function RootLayout({
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body>
-        <div className="flex flex-col min-h-screen bg-white">
+        {/* 背景と星 */}
+        <div className="fixed inset-0 -z-10 w-full h-full overflow-hidden">
+          <div className="absolute inset-0" style={{background: 'linear-gradient(135deg, #1a1b3a 0%, #0f172a 100%)'}} />
+          {[...Array(50)].map((_, i) => (
+            <div
+              key={i}
+              className="star"
+              style={{
+                position: 'absolute',
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                width: '2px',
+                height: '2px',
+                background: 'white',
+                borderRadius: '50%',
+                opacity: 0.8,
+                filter: 'blur(0.5px)',
+                animation: 'twinkle 3s infinite',
+                animationDelay: `${Math.random() * 3}s`,
+              }}
+            />
+          ))}
+        </div>
+        {/* 通常のレイアウト */}
+        <div className="flex flex-col min-h-screen">
           <NavigationWrapper />
-          <main className="flex-1 flex flex-col items-center justify-center w-full">
+          <main className="flex-1 flex flex-col items-center justify-center w-full p-0 m-0">
             {children}
           </main>
           <Footer />
