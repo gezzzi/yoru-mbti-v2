@@ -3,6 +3,8 @@ import "./globals.css";
 import NavigationWrapper from '@/components/NavigationWrapper';
 import Footer from '@/components/Footer';
 import Script from "next/script";
+// フィードバックボタンを全ページ右下に表示
+import FeedbackButton from '../components/FeedbackButton';
 
 export const metadata: Metadata = {
   title: "夜の性格診断",
@@ -92,6 +94,10 @@ export default function RootLayout({
           <NavigationWrapper />
           <main className="flex-1 flex flex-col items-center justify-center w-full p-0 m-0">
             {children}
+            {/* 右下固定のフィードバックボタン */}
+            <div style={{position:'fixed',right:'2rem',bottom:'2rem',zIndex:50}}>
+              <FeedbackButton />
+            </div>
           </main>
           <Footer />
         </div>
