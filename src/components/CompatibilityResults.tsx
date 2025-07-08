@@ -158,18 +158,20 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 pt-16">
+    <div className="min-h-screen pt-16">
       {/* ダウンロード用のコンテナ */}
-      <div ref={downloadRef} className="bg-white">
+      <div ref={downloadRef}>
         {/* Hero Section */}
-        <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-16">
+        <div className="text-white py-16">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div className="flex justify-center mb-6">
-              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-                <Heart className="w-8 h-8 text-white" />
-              </div>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">相性診断結果</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 flex justify-center gap-1 select-none">
+              <span style={{color:'#38bdf8',textShadow:'0 0 10px #38bdf8,0 0 20px #38bdf8,0 0 30px #0ea5e9',animation:'shimmerGold 3s ease-in-out infinite'}}>相</span>
+              <span style={{color:'#f472b6',textShadow:'0 0 10px #f472b6,0 0 20px #ec4899,0 0 30px #be185d',animation:'pulsePink 2s ease-in-out infinite'}}>性</span>
+              <span style={{color:'#38bdf8',textShadow:'0 0 10px #38bdf8,0 0 20px #38bdf8,0 0 30px #0ea5e9',animation:'electricBlue 1.5s ease-in-out infinite'}}>診</span>
+              <span style={{color:'#38bdf8',textShadow:'0 0 10px #38bdf8,0 0 20px #38bdf8,0 0 30px #0ea5e9',animation:'glowGreen 2.5s ease-in-out infinite'}}>断</span>
+              <span style={{color:'#fde047',textShadow:'0 0 10px #fde047,0 0 20px #facc15,0 0 30px #ca8a04',animation:'pulsePink 2s ease-in-out infinite'}}>結</span>
+              <span style={{color:'#fde047',textShadow:'0 0 10px #fde047,0 0 20px #facc15,0 0 30px #ca8a04',animation:'electricBlue 1.5s ease-in-out infinite'}}>果</span>
+            </h1>
             <p className="text-xl opacity-90 mb-8">
               お二人の性格の相性を詳しく分析しました
             </p>
@@ -208,7 +210,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           
           {/* 相性スコア */}
-          <div className={`rounded-xl p-8 border-2 ${getCompatibilityColor(compatibility.compatibility)} shadow-lg mb-8`}>
+          <div className={`bg-white rounded-xl shadow-lg p-6 mb-8 border-2 ${getCompatibilityColor(compatibility.compatibility)}`}>
             <div className="text-center">
               <div className="flex items-center justify-center mb-6">
                 {getCompatibilityIcon(compatibility.compatibility)}
@@ -303,7 +305,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={onBack}
-                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2"
+                className="px-6 py-3 border border-gray-300 text-white rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2"
               >
                 <ArrowRight className="w-5 h-5 transform rotate-180" />
                 <span>相性診断に戻る</span>
@@ -318,13 +320,6 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
               </button>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="bg-gray-100 py-8">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-600 text-sm">
-          © {new Date().getFullYear()} 相性診断. All rights reserved.
         </div>
       </div>
 
