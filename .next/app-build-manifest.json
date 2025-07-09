@@ -21,15 +21,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/not-found.js"
     ],
-    "/_not-found/page": [
+    "/results/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/_not-found/page.js"
+      "static/chunks/app/results/page.js"
     ],
-    "/help/page": [
+    "/test/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/help/page.js"
+      "static/chunks/app/test/page.js"
     ],
     "/types/page": [
       "static/chunks/webpack.js",
@@ -41,20 +41,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/compatibility/page.js"
     ],
-    "/test/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/test/page.js"
-    ],
     "/types/[typeCode]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/types/[typeCode]/page.js"
     ],
-    "/results/page": [
+    "/_not-found/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/results/page.js"
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }

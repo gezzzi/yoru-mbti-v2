@@ -130,7 +130,7 @@ export default function FeedbackModal({ onClose }: { onClose: () => void }) {
           <form onSubmit={handleSubmit} className="p-5 space-y-4">
             {/* 5段階評価 */}
             <div className="mb-5">
-              <p className="text-gray-700 font-medium mb-3">総合的な満足度を教えてください <span className="text-red-500">*</span></p>
+              <p className="text-gray-700 font-medium mb-3">総合的な満足度を教えてください</p>
               <div className="flex justify-center items-center space-x-2 mb-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
@@ -154,7 +154,7 @@ export default function FeedbackModal({ onClose }: { onClose: () => void }) {
 
             </div>
 
-            <p className="text-gray-700 font-medium mb-3">どの機能についてのフィードバックですか？ <span className="text-red-500">*</span></p>
+            <p className="text-gray-700 font-medium mb-3">どの機能についてのフィードバックですか？</p>
             
             {/* クイックオプション */}
             <div className="flex flex-wrap gap-2 mb-5">
@@ -177,7 +177,7 @@ export default function FeedbackModal({ onClose }: { onClose: () => void }) {
               ))}
             </div>
 
-            <p className="text-gray-700 font-medium mb-3">詳細や感想を自由にお書きください <span className="text-red-500">*</span></p>
+            <p className="text-gray-700 font-medium mb-3">詳細や感想を自由にお書きください</p>
             <textarea
               className="w-full border-2 border-gray-300 rounded-lg p-3 min-h-[100px] text-sm focus:outline-none focus:border-blue-400 focus:shadow-lg transition-all duration-300 resize-none"
               placeholder="使いやすさ、改善点、ご感想など"
