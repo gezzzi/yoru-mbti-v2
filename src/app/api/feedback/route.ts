@@ -6,7 +6,7 @@ const TO = process.env.FEEDBACK_TO!;
 const FROM = process.env.FEEDBACK_FROM!;
 
 export async function POST(req: NextRequest) {
-  const { message, email } = await req.json();
+  const { message } = await req.json();
   if (!message || typeof message !== 'string') {
     return NextResponse.json({ error: 'メッセージは必須です' }, { status: 400 });
   }
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
       from: FROM,
       to: TO,
       subject: 'ユーザーフィードバック',
-      text: `メール: ${email || '未入力'}\n\n${message}`,
+      text: message,
     });
     return NextResponse.json({ ok: true });
   } catch (e) {

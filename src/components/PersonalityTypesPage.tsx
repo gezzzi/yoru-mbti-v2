@@ -88,28 +88,33 @@ export default function PersonalityTypesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="pt-0 pb-12">
+    <div className="min-h-screen bg-transparent">
+      <div className="pt-0 pb-12 px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="space-y-0 pt-12 bg-gradient-to-r from-red-400 via-pink-400 to-blue-400">
+        <div className="space-y-0 pt-12 bg-transparent">
           <div className="text-center mb-16">
-            <h1 className="text-5xl font-bold text-white mb-4 pt-24">
-              性格タイプ
+            <h1 className="text-5xl font-bold text-white mb-4 pt-24 flex justify-center gap-1 select-none">
+              <span className="neon-pink" style={{color:'#f472b6',textShadow:'0 0 10px #f472b6,0 0 20px #ec4899,0 0 30px #be185d',animation:'pulsePink 2s ease-in-out infinite'}}>性</span>
+              <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>格</span>
+              <span className="neon-blue" style={{color:'#3b82f6',textShadow:'0 0 10px #3b82f6,0 0 20px #60a5fa,0 0 30px #93c5fd',animation:'pulseBlue 2.5s ease-in-out infinite'}}>タ</span>
+              <span className="neon-blue" style={{color:'#3b82f6',textShadow:'0 0 10px #3b82f6,0 0 20px #60a5fa,0 0 30px #93c5fd',animation:'pulseBlue 2.5s ease-in-out infinite'}}>イ</span>
+              <span className="neon-blue" style={{color:'#3b82f6',textShadow:'0 0 10px #3b82f6,0 0 20px #60a5fa,0 0 30px #93c5fd',animation:'pulseBlue 2.5s ease-in-out infinite'}}>プ</span>
             </h1>
           </div>
 
           {/* Categories */}
-          {categories.map((category) => {
+          {categories.map((category, index) => {
             const categoryTypes = personalityTypes.filter(type => type.category === category);
               const scheme = categoryColorSchemes[category];
             
             return (
-                <section key={category} className={`${scheme.bg} pt-12 relative category-diagonal`}>
+              <div key={category}>
+                <section className={`${scheme.bg} pt-12 relative rounded-3xl`}>
                   <div className="text-center mb-12">
-                    <h2 className="text-4xl font-bold text-gray-900 mb-2 mt-20">
+                    <h2 className="text-4xl font-bold text-gray-900 mb-2 mt-8">
                     {getCategoryName(category)}
                   </h2>
-                    <p className="text-lg text-gray-700 font-medium">
+                    <p className="text-lg text-gray-700 font-medium px-4 sm:px-6 lg:px-8">
                     {category === 'dom' && '主導権を握り、相手をリードすることを好むタイプ。積極的で支配的な傾向があります。'}
                     {category === 'sub' && '受け身で、相手に従うことを好むタイプ。協調的で従属的な傾向があります。'}
                     {category === 'introvert' && '内向的で控えめなタイプ。静かで深く考える傾向があります。'}
@@ -121,6 +126,12 @@ export default function PersonalityTypesPage() {
                   {categoryTypes.map((type) => renderPersonalityType(type, category))}
               </div>
               </section>
+              
+              {/* セクション間の隙間 */}
+              {index < categories.length - 1 && (
+                <div className="h-8 bg-transparent"></div>
+              )}
+            </div>
           );
         })}
         </div>
