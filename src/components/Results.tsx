@@ -364,7 +364,7 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
               {/* New Graph Design */}
               <div className="grid lg:grid-cols-2 gap-12">
                 {/* Personality Dimensions */}
-                <div className="space-y-4">
+                <div>
                     <h2 className="text-2xl font-bold text-gray-800 mb-6">性格診断結果</h2>
                     
                     {dimensions.map((dimension) => (
@@ -379,30 +379,13 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                           setSelectedDimension(dimension);
                         }}
                       >
-                        <div className="relative py-3">
-                          {/* Percentage text above the graph */}
-                          {(() => {
-                            // Determine if this is a "reverse" axis (I, S, N, H)
-                            const isReverse = dimension.resultLabel.includes('内向性') || 
-                                            dimension.resultLabel.includes('服従') || 
-                                            dimension.resultLabel.includes('安心志向') ||
-                                            dimension.resultLabel.includes('非愛着傾向') || 
-                                            dimension.resultLabel.includes('羞恥敏感');
-                            
-                            // For reverse axes, position text from the opposite side
-                            const textPosition = isReverse ? (100 - dimension.percentage) : dimension.percentage;
-                            
-                            return (
-                              <div 
-                                className="absolute -top-6 transform -translate-x-1/2"
-                                style={{ left: `${textPosition}%` }}
-                              >
-                                <span className={`text-sm font-bold ${getResultColor(dimension.color)}`}>
-                                  {dimension.percentage}% {dimension.resultLabel}
-                                </span>
-                              </div>
-                            );
-                          })()}
+                        <div className="relative py-1">
+                          {/* Percentage text above the graph - centered */}
+                          <div className="text-center mb-2">
+                            <span className={`text-sm font-bold ${getResultColor(dimension.color)}`}>
+                              {dimension.percentage}% {dimension.resultLabel}
+                            </span>
+                          </div>
                           
                           <div className={`w-full ${getBackgroundColor(dimension.color)} rounded-full h-4 overflow-hidden relative transition-all duration-200 ${hoveredDimension?.id === dimension.id ? 'shadow-lg' : ''}`}>
                             <div className="absolute inset-0 bg-white/20"></div>
