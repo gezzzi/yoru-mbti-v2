@@ -8,12 +8,15 @@ export default function FeedbackButton() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="bg-pink-500 hover:bg-pink-600 text-white rounded-full shadow-lg px-5 py-3 font-bold text-lg flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-pink-400"
-        style={{ boxShadow: "0 4px 24px 0 rgba(236,72,153,0.2)" }}
+        className="relative w-14 h-14 rounded-full bg-gradient-to-br from-pink-400 via-blue-400 to-green-400 text-white shadow-xl hover:scale-110 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-300 flex items-center justify-center text-2xl overflow-hidden"
+        style={{ 
+          boxShadow: "0 5px 20px rgba(0,0,0,0.2)"
+        }}
         aria-label="フィードバックを送る"
       >
-        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-message-circle"><path d="M21 11.5a8.38 8.38 0 0 1-1.9 5.4 8.5 8.5 0 0 1-6.6 3.1 8.38 8.38 0 0 1-5.4-1.9L3 21l1.9-4.1A8.38 8.38 0 0 1 3 11.5a8.5 8.5 0 0 1 3.1-6.6A8.38 8.38 0 0 1 11.5 3h1A8.5 8.5 0 0 1 21 11.5Z"></path></svg>
-        フィードバック
+        <svg className="relative z-10 w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
       </button>
       {open && <FeedbackModal onClose={() => setOpen(false)} />}
     </>
