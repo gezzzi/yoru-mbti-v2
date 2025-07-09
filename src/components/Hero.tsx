@@ -6,24 +6,22 @@ import Image from 'next/image';
 
 const Hero: React.FC = () => {
   useEffect(() => {
-    // 動的ビューポートの高さを計算してCSS変数に設定
-    const setViewportHeight = () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    // ページ読み込み時に一度だけビューポートタイプを決定
+    const determineViewportType = () => {
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(userAgent);
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+      
+      // モバイルでスタンドアロンモード（PWA）の場合はsvhを使用
+      // それ以外の場合はlvhを使用
+      const viewportType = isMobile && !isStandalone ? 'svh' : 'lvh';
+      
+      document.documentElement.style.setProperty('--viewport-type', viewportType);
+      document.documentElement.classList.add(`viewport-${viewportType}`);
     };
 
-    // 初期設定
-    setViewportHeight();
-
-    // リサイズ時とオリエンテーション変更時に再計算
-    window.addEventListener('resize', setViewportHeight);
-    window.addEventListener('orientationchange', setViewportHeight);
-
-    // クリーンアップ
-    return () => {
-      window.removeEventListener('resize', setViewportHeight);
-      window.removeEventListener('orientationchange', setViewportHeight);
-    };
+    // 初期設定（一度だけ実行）
+    determineViewportType();
   }, []);
 
   return (

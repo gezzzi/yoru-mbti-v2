@@ -20,25 +20,37 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* 動的ビューポート対応 */
+/* 静的ビューポート対応 */
 :root {
-  --vh: 1vh;
-  --dvh: 1dvh;
+  --viewport-type: 'lvh';
 }
 
-/* モバイルブラウザのアドレスバー対応 */
-@supports (height: 100dvh) {
-  .min-h-dvh {
-    min-height: 100dvh;
-  }
+/* Small Viewport Height (svh) - モバイルブラウザで最小の表示領域 */
+.viewport-svh .min-h-dvh {
+  min-height: 100svh;
 }
 
-/* フォールバック: 動的ビューポートがサポートされていない場合 */
-@supports not (height: 100dvh) {
-  .min-h-dvh {
+/* Large Viewport Height (lvh) - モバイルブラウザで最大の表示領域 */
+.viewport-lvh .min-h-dvh {
+  min-height: 100lvh;
+}
+
+/* フォールバック: 新しいビューポート単位がサポートされていない場合 */
+@supports not (height: 100svh) {
+  .viewport-svh .min-h-dvh {
     min-height: 100vh;
-    min-height: calc(var(--vh, 1vh) * 100);
   }
+}
+
+@supports not (height: 100lvh) {
+  .viewport-lvh .min-h-dvh {
+    min-height: 100vh;
+  }
+}
+
+/* デフォルト（クラスが適用される前） */
+.min-h-dvh {
+  min-height: 100vh;
 }
 
 .category-diagonal::after {
