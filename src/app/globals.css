@@ -20,6 +20,27 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* 動的ビューポート対応 */
+:root {
+  --vh: 1vh;
+  --dvh: 1dvh;
+}
+
+/* モバイルブラウザのアドレスバー対応 */
+@supports (height: 100dvh) {
+  .min-h-dvh {
+    min-height: 100dvh;
+  }
+}
+
+/* フォールバック: 動的ビューポートがサポートされていない場合 */
+@supports not (height: 100dvh) {
+  .min-h-dvh {
+    min-height: 100vh;
+    min-height: calc(var(--vh, 1vh) * 100);
+  }
+}
+
 .category-diagonal::after {
   content: '';
   position: absolute;

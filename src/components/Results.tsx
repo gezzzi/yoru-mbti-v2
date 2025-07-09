@@ -50,16 +50,16 @@ const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = (
   const baseTypeCode = getBaseTypeCode(typeCode);
 
   if (imageError) {
-    return <span className="text-6xl md:text-8xl">{emoji}</span>;
+    return <span className="text-5xl">{emoji}</span>;
   }
 
   return (
-    <div className="w-64 h-64 relative mx-auto">
+    <div className="w-52 h-52 relative mx-auto">
       <Image
         src={`/images/personality-types/${baseTypeCode}.svg`}
         alt={name}
-        width={256}
-        height={256}
+        width={208}
+        height={208}
         className="w-full h-full object-contain"
         onError={handleImageError}
       />

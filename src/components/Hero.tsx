@@ -1,14 +1,35 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
 const Hero: React.FC = () => {
+  useEffect(() => {
+    // 動的ビューポートの高さを計算してCSS変数に設定
+    const setViewportHeight = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    // 初期設定
+    setViewportHeight();
+
+    // リサイズ時とオリエンテーション変更時に再計算
+    window.addEventListener('resize', setViewportHeight);
+    window.addEventListener('orientationchange', setViewportHeight);
+
+    // クリーンアップ
+    return () => {
+      window.removeEventListener('resize', setViewportHeight);
+      window.removeEventListener('orientationchange', setViewportHeight);
+    };
+  }, []);
+
   return (
-    <div className="relative min-h-[30vh] pt-8 overflow-hidden flex flex-col justify-between flex-grow">
+    <main className="flex-1 flex flex-col items-center justify-center w-full p-0 m-0 min-h-dvh overflow-hidden">
       {/* テキスト部分 */}
-      <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 pt-8 md:pt-12 text-center">
+      <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 text-center flex-1">
         {/* ここは既存のまま */}
         <h1 className="mt-8 md:mt-12 text-3xl md:text-5xl font-bold text-white mb-6 leading-tight drop-shadow-lg flex justify-center gap-1 select-none">
           <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>夜</span>
@@ -32,17 +53,18 @@ const Hero: React.FC = () => {
         </Link>
       </div>
       {/* 画像部分 */}
-      <div className="w-full flex-shrink-0">
+      <div className="w-full flex-shrink-0 max-w-6xl mx-auto">
         <Image
           src="/images/page/landing-page.svg"
           alt="ランディングページイラスト"
-          width={1920}
-          height={600}
-          className="w-full object-cover select-none pointer-events-none -mb-1"
-          sizes="100vw"
+          width={1152}
+          height={360}
+          className="w-full h-auto max-h-96 object-contain select-none pointer-events-none"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1152px"
+          priority
         />
       </div>
-    </div>
+    </main>
   );
 };
 
