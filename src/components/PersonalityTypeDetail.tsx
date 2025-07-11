@@ -27,23 +27,21 @@ const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = (
 
   if (imageError) {
     return (
-      <div className="w-64 h-64 flex items-center justify-center bg-gray-100 rounded-2xl">
-        <span className="text-6xl">{emoji}</span>
+      <div className="w-64 h-64 flex items-center justify-center">
+        <span className="text-8xl">{emoji}</span>
       </div>
     );
   }
 
   return (
-    <div className="w-64 h-64 relative">
       <Image
-        src={`/images/personality-types/${typeCode}.svg`}
+      src={`/images/personality-types/${typeCode.toUpperCase()}.svg`}
         alt={name}
-        width={256}
-        height={256}
-        className="w-full h-full object-cover rounded-2xl"
+      width={256}
+      height={256}
+      className="w-64 h-64 object-contain"
         onError={handleImageError}
       />
-    </div>
   );
 };
 
@@ -68,7 +66,7 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
         <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
           {/* 画像をカテゴリごとの背景色でグラデーションdivに配置 */}
           <div className={`p-8 text-white flex justify-center ${categoryColorSchemes[type.category]}`}>
-            <div className={`${categoryColorSchemes[type.category]} rounded-2xl p-6 flex items-center justify-center`}>
+            <div className={`w-72 h-72 mx-auto rounded-2xl overflow-hidden ${categoryColorSchemes[type.category]} flex items-center justify-center`}>
               <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
             </div>
           </div>

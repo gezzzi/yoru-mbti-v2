@@ -4,7 +4,7 @@ import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { TestResult } from '../types/personality';
 import { getCategoryColor, getCategoryName } from '../data/personalityTypes';
-import { Heart, Users, Sparkles, RefreshCw, Download, Share2, User, Shield, Zap, Eye } from 'lucide-react';
+import { Heart, Users, RefreshCw, Download, Share2, User, Shield, Zap, Eye } from 'lucide-react';
 import Image from 'next/image';
 import SNSShareModal from './SNSShareModal';
 import html2canvas from 'html2canvas';
@@ -284,33 +284,7 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
               <div className="flex justify-center mb-8">
                 <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
               </div>
-              {/* Action buttons */}
-              <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
-                <button 
-                  onClick={handleDownload}
-                  disabled={isDownloading}
-                  className="bg-gray-900/20 backdrop-blur-sm text-gray-900 px-6 py-3 rounded-lg hover:bg-gray-900/30 transition-all flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isDownloading ? (
-                    <>
-                      <div className="w-5 h-5 border-2 border-gray-900 border-t-transparent rounded-full animate-spin"></div>
-                      <span>ダウンロード中...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Download className="w-5 h-5" />
-                      <span>結果をダウンロード</span>
-                    </>
-                  )}
-                </button>
-                <button 
-                  onClick={() => setShowShareModal(true)}
-                  className="bg-gray-900/20 backdrop-blur-sm text-gray-900 px-6 py-3 rounded-lg hover:bg-gray-900/30 transition-all flex items-center space-x-2"
-                >
-                  <Share2 className="w-5 h-5" />
-                  <span>結果をシェア</span>
-                </button>
-              </div>
+
             </div>
             
           </div>
@@ -467,45 +441,35 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                 </div>
             </div>
 
-            {/* Strengths & Weaknesses */}
-            <div className="mb-16">
-              <div className="flex items-center mb-6">
-                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
-                  2
-                </div>
-                <h2 className="text-2xl font-bold text-gray-900">長所と短所</h2>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="bg-green-50 border border-green-200 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-green-800 mb-4 flex items-center">
-                    <Sparkles className="w-5 h-5 mr-2" />
-                    長所
-                  </h3>
-                  <ul className="space-y-2">
-                    {type.strengths.map((strength, index) => (
-                      <li key={index} className="text-green-700 flex items-start">
-                        <div className="w-2 h-2 bg-green-500 rounded-full mr-3 mt-2"></div>
-                        {strength}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                
-                <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-red-800 mb-4 flex items-center">
-                    <RefreshCw className="w-5 h-5 mr-2" />
-                    改善点
-                  </h3>
-                  <ul className="space-y-2">
-                    {type.weaknesses.map((weakness, index) => (
-                      <li key={index} className="text-red-700 flex items-start">
-                        <div className="w-2 h-2 bg-red-500 rounded-full mr-3 mt-2"></div>
-                        {weakness}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+
+
+            {/* Action buttons - Download and Share */}
+            <div className="text-center mb-8">
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <button 
+                  onClick={handleDownload}
+                  disabled={isDownloading}
+                  className="bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-lg hover:from-green-700 hover:to-green-800 transition-all flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                >
+                  {isDownloading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>ダウンロード中...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Download className="w-5 h-5" />
+                      <span>結果をダウンロード</span>
+                    </>
+                  )}
+                </button>
+                <button 
+                  onClick={() => setShowShareModal(true)}
+                  className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all flex items-center space-x-2 shadow-lg"
+                >
+                  <Share2 className="w-5 h-5" />
+                  <span>結果をシェア</span>
+                </button>
               </div>
             </div>
 
