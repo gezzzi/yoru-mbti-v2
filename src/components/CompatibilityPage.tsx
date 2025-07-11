@@ -340,9 +340,7 @@ ${typeof window !== 'undefined' ? window.location.origin : ''} #夜の性格診�
             <span style={{color:'#38bdf8',textShadow:'0 0 10px #38bdf8,0 0 20px #38bdf8,0 0 30px #0ea5e9',animation:'electricBlue 1.5s ease-in-out infinite'}}>診</span>
             <span style={{color:'#38bdf8',textShadow:'0 0 10px #38bdf8,0 0 20px #38bdf8,0 0 30px #0ea5e9',animation:'glowGreen 2.5s ease-in-out infinite'}}>断</span>
           </h1>
-          <p className="text-xl opacity-90 mb-8">
-            相性診断QRコードを読み取って、お互いの性格の相性を詳しく分析しましょう
-          </p>
+
         </div>
       </div>
 
@@ -371,121 +369,16 @@ ${typeof window !== 'undefined' ? window.location.origin : ''} #夜の性格診�
           </div>
         )}
 
-        {/* 相手のコード入力フォーム */}
+        {/* 相性診断QRコード */}
         {myResult && (
           <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">相手の相性診断QRコード読み取り</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">相性診断QRコード</h2>
             
-            <div className="space-y-6">
-              {/* QRコードアップロード */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  QRコードから読み取る
-                </label>
-                <div className="flex flex-col items-center gap-4">
-                  <div className="w-full">
-                    <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
-                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                        {isQRUploading ? (
-                          <div className="flex items-center space-x-2">
-                            <div className="w-6 h-6 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
-                            <span className="text-sm text-gray-600">読み取り中...</span>
-                          </div>
-                        ) : (
-                          <>
-                            <Camera className="w-8 h-8 text-gray-400 mb-2" />
-                            <p className="text-sm text-gray-600">QRコード画像をアップロード</p>
-                          </>
-                        )}
-                      </div>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleQRUpload}
-                        className="hidden"
-                        disabled={isQRUploading}
-                      />
-                    </label>
-                  </div>
-                </div>
-              </div>
-
-              {/* または */}
-              <div className="flex items-center">
-                <div className="flex-1 border-t border-gray-300"></div>
-                <div className="px-4 text-sm text-gray-500 bg-white">または</div>
-                <div className="flex-1 border-t border-gray-300"></div>
-              </div>
-
-              {/* テキスト入力 */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  相性診断コードを直接入力
-                </label>
-                <input
-                  type="text"
-                  value={partnerCode}
-                  onChange={(e) => setPartnerCode(e.target.value.replace(/[^0-9A-Za-z]/g, '').toUpperCase().slice(0, 8))}
-                  placeholder="ABCD123"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-center text-lg"
-                  maxLength={8}
-                />
-                <p className="text-sm text-gray-600 mt-2">
-                  相手のQRコードの下に表示されているコード（英数字）を入力してください。
-                </p>
-              </div>
-
-              {/* エラー表示 */}
-              {error && (
-                <div className="flex items-center space-x-2 text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">
-                  <AlertCircle className="w-5 h-5" />
-                  <span className="text-sm">{error}</span>
-                </div>
-              )}
-
-              {/* ボタン */}
-              <div className="flex space-x-3">
-                <button
-                  onClick={handleCheckCompatibility}
-                  disabled={partnerCode.length === 0 || isLoading}
-                  className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all flex items-center justify-center space-x-2"
-                >
-                  {isLoading ? (
-                    <>
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>診断中...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Heart className="w-5 h-5" />
-                      <span>相性診断開始</span>
-                    </>
-                  )}
-                </button>
-
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* 自分の診断結果表示 */}
-        {myResult && (
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-            <div className="flex flex-col items-center mb-4">
-              <h2 className="text-xl font-bold text-gray-900 text-center">あなたの性格診断結果</h2>
-            </div>
-            
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="text-center">
-                <TypeImage typeCode={myResult.type.code} emoji={myResult.type.emoji} name={myResult.type.name} />
-                <h3 className="text-xl font-bold text-gray-900">{myResult.type.name}</h3>
-                <p className="text-sm text-gray-600 mb-3">{myResult.type.code}</p>
-                <p className="text-sm text-gray-700">{myResult.type.description}</p>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold text-gray-900 mb-3 text-center">あなたの相性診断QRコード</h4>
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex flex-col items-center gap-4">
+            <div className="grid lg:grid-cols-2 gap-8">
+                             {/* 左側：あなたの相性診断QRコード */}
+               <div className="space-y-4">
+                 <h3 className="text-lg font-semibold text-gray-900 text-center">あなたの相性診断QRコード</h3>
+                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex flex-col items-center gap-4">
                   <div className="bg-white p-4 rounded-lg shadow-sm" ref={qrRef}>
                     <QRCode
                       value={myCode}
@@ -528,10 +421,8 @@ ${typeof window !== 'undefined' ? window.location.origin : ''} #夜の性格診�
                     )}
                   </button>
                 </div>
-                <p className="text-sm text-gray-600 mt-2 text-center">
-                  このQRコードを相手に見せて、お互いの相性を診断してもらいましょう。
-                </p>
-                <div className="mt-4 flex flex-col sm:flex-row gap-2 justify-center">
+                
+                <div className="flex flex-col gap-2">
                   {webShareSupported && (
                     <button
                       onClick={handleWebShare}
@@ -560,9 +451,105 @@ ${typeof window !== 'undefined' ? window.location.origin : ''} #夜の性格診�
                   </button>
                 </div>
               </div>
+
+              {/* 右側：相手の相性診断QRコード入力 */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-900 text-center">相手の相性診断QRコード読み取り</h3>
+                
+                <div className="space-y-6">
+                  {/* QRコードアップロード */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      QRコードから読み取る
+                    </label>
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="w-full">
+                        <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                          <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                            {isQRUploading ? (
+                              <div className="flex items-center space-x-2">
+                                <div className="w-6 h-6 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+                                <span className="text-sm text-gray-600">読み取り中...</span>
+                              </div>
+                            ) : (
+                              <>
+                                <Camera className="w-8 h-8 text-gray-400 mb-2" />
+                                <p className="text-sm text-gray-600">QRコード画像をアップロード</p>
+                              </>
+                            )}
+                          </div>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleQRUpload}
+                            className="hidden"
+                            disabled={isQRUploading}
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* または */}
+                  <div className="flex items-center">
+                    <div className="flex-1 border-t border-gray-300"></div>
+                    <div className="px-4 text-sm text-gray-500 bg-white">または</div>
+                    <div className="flex-1 border-t border-gray-300"></div>
+                  </div>
+
+                  {/* テキスト入力 */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      相性診断コードを直接入力
+                    </label>
+                    <input
+                      type="text"
+                      value={partnerCode}
+                      onChange={(e) => setPartnerCode(e.target.value.replace(/[^0-9A-Za-z]/g, '').toUpperCase().slice(0, 8))}
+                      placeholder="ABCD123"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-center text-lg"
+                      maxLength={8}
+                    />
+                    <p className="text-sm text-gray-600 mt-2">
+                      相手のQRコードの下に表示されているコード（英数字）を入力してください。
+                    </p>
+                  </div>
+
+                  {/* エラー表示 */}
+                  {error && (
+                    <div className="flex items-center space-x-2 text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">
+                      <AlertCircle className="w-5 h-5" />
+                      <span className="text-sm">{error}</span>
+                    </div>
+                  )}
+
+                  {/* ボタン */}
+                  <div className="flex space-x-3">
+                    <button
+                      onClick={handleCheckCompatibility}
+                      disabled={partnerCode.length === 0 || isLoading}
+                      className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all flex items-center justify-center space-x-2"
+                    >
+                      {isLoading ? (
+                        <>
+                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          <span>診断中...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Heart className="w-5 h-5" />
+                          <span>相性診断開始</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}
+
+
 
 
       </div>

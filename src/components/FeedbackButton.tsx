@@ -1,9 +1,17 @@
 "use client";
 import React, { useState } from "react";
+import { usePathname } from "next/navigation";
 import FeedbackModal from "./FeedbackModal";
 
 export default function FeedbackButton() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  
+  // ランディングページ（"/"）では表示しない
+  if (pathname === "/") {
+    return null;
+  }
+
   return (
     <>
       <button

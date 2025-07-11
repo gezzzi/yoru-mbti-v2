@@ -75,77 +75,9 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
 
           {/* コンテンツエリア */}
           <div className="p-8">
-            {/* タイプ説明文を追加 */}
+            {/* タイプ説明文 */}
             <div className="mb-8">
               <p className="text-lg text-gray-700 leading-relaxed">{type.description}</p>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* 主な特徴 */}
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">主な特徴</h2>
-                <div className="space-y-3">
-                  {type.traits.map((trait, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center p-3 rounded-xl bg-blue-50 text-gray-900 border border-blue-200"
-                    >
-                      <span className="font-medium">{trait}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* 強みと弱み */}
-              <div className="space-y-8">
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">強み</h2>
-                  <div className="space-y-2">
-                    {type.strengths.map((strength, index) => (
-                      <div key={index} className="flex items-center p-3 bg-green-50 rounded-xl border border-green-200">
-                        <svg className="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                        <span className="text-gray-900">{strength}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">改善点</h2>
-                  <div className="space-y-2">
-                    {type.weaknesses.map((weakness, index) => (
-                      <div key={index} className="flex items-center p-3 bg-orange-50 rounded-xl border border-orange-200">
-                        <svg className="w-5 h-5 text-orange-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                        </svg>
-                        <span className="text-gray-900">{weakness}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 相性とキャリア */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
-              {/* 相性の良いタイプ */}
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">相性の良いタイプ</h2>
-                <div className="flex flex-wrap gap-3">
-                  {type.compatibility.map((compat, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <span className="font-bold text-pink-700">{index + 1}位</span>
-                      <Link
-                        href={`/types/${compat.toLowerCase()}`}
-                        className="px-4 py-2 rounded-full text-sm bg-pink-100 text-pink-800 border border-pink-200 hover:bg-pink-200 transition-colors"
-                      >
-                        {compat}
-                      </Link>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
 
             {/* アクションボタン */}

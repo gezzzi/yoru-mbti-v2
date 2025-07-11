@@ -114,12 +114,6 @@ export default function PersonalityTypesPage() {
                     <h2 className="text-4xl font-bold text-gray-900 mb-2 mt-8">
                     {getCategoryName(category)}
                   </h2>
-                    <p className="text-lg text-gray-700 font-medium px-4 sm:px-6 lg:px-8">
-                    {category === 'dom' && '主導権を握り、相手をリードすることを好むタイプ。積極的で支配的な傾向があります。'}
-                    {category === 'sub' && '受け身で、相手に従うことを好むタイプ。協調的で従属的な傾向があります。'}
-                    {category === 'introvert' && '内向的で控えめなタイプ。静かで深く考える傾向があります。'}
-                    {category === 'fantasy' && '妄想的で現実逃避の傾向があるタイプ。想像力豊かで独自の世界を持ちます。'}
-                  </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0">
