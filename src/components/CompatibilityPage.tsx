@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { TestResult, PersonalityType } from '../types/personality';
-import { parseCompatibilityCode, generateCompatibilityCode, copyToClipboard } from '../utils/snsShare';
+import { parseCompatibilityCode, generateCompatibilityCode, copyToClipboard, shareWithWebAPI, isWebShareAPILevel2Supported } from '../utils/snsShare';
 import { personalityTypes } from '../data/personalityTypes';
-import { Heart, AlertCircle, HelpCircle, TestTube, User, Share2, Copy, Check } from 'lucide-react';
+import { Heart, AlertCircle, TestTube, User, Share2, Copy, Check, Upload, Camera, Download, Share } from 'lucide-react';
 import SNSShareModal from './SNSShareModal';
 import Image from 'next/image';
+import QRCode from 'react-qr-code';
+import QrScanner from 'qr-scanner';
 
 interface CompatibilityResult {
   compatibility: number;
@@ -53,6 +55,11 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
   const [myCode, setMyCode] = useState('');
   const [showShareModal, setShowShareModal] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isQRUploading, setIsQRUploading] = useState(false);
+  const [isQRDownloading, setIsQRDownloading] = useState(false);
+  const [isWebSharing, setIsWebSharing] = useState(false);
+  const [webShareSupported, setWebShareSupported] = useState(false);
+  const qrRef = useRef<HTMLDivElement>(null);
 
   // ローカルストレージから自分の診断結果を読み込む
   useEffect(() => {
@@ -69,6 +76,11 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
         }
       }
     }
+  }, []);
+
+  // Web Share API Level 2のサポート状況をチェック
+  useEffect(() => {
+    setWebShareSupported(isWebShareAPILevel2Supported());
   }, []);
 
   const calculateCompatibility = (user: TestResult, partner: TestResult): CompatibilityResult => {
@@ -182,14 +194,14 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
 
                     // 相手のコードの検証
       if (partnerCode.length === 0) {
-        throw new Error('相性診断コードを入力してください');
+        throw new Error('相性診断QRコードを読み取るか、コードを入力してください');
       }
 
       // 相手のコードを解析
       const parsedPartnerResult = parseCode(partnerCode);
       
       if (!parsedPartnerResult) {
-        throw new Error('相性診断コードが無効です');
+        throw new Error('相性診断QRコード/コードが無効です');
       }
 
       // 結果ページに遷移
@@ -197,7 +209,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
         onShowResults(myResult, parsedPartnerResult);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : '相性診断コードの解析に失敗しました');
+      setError(err instanceof Error ? err.message : '相性診断QRコード/コードの解析に失敗しました');
     } finally {
       setIsLoading(false);
     }
@@ -208,6 +220,108 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
     setError('');
   };
 
+  const handleQRUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsQRUploading(true);
+    setError('');
+
+    try {
+      // QRコードを読み取る
+      const result = await QrScanner.scanImage(file);
+      
+      // 読み取った結果がコードの形式かチェック
+      if (result && result.match(/^[A-Za-z0-9]{1,8}$/)) {
+        setPartnerCode(result.toUpperCase());
+      } else {
+        throw new Error('QRコードから有効な相性診断コードを読み取れませんでした');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'QRコードの読み取りに失敗しました');
+    } finally {
+      setIsQRUploading(false);
+      // ファイル入力をリセット
+      event.target.value = '';
+    }
+  };
+
+  const handleQRDownload = async () => {
+    if (!qrRef.current) return;
+
+    setIsQRDownloading(true);
+    try {
+      // QRコードのSVGをCanvasに変換
+      const svg = qrRef.current.querySelector('svg');
+      if (!svg) throw new Error('QRコードが見つかりません');
+
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = document.createElement('img') as HTMLImageElement;
+      
+      // SVGをData URLに変換
+      const svgData = new XMLSerializer().serializeToString(svg);
+      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+      const svgUrl = URL.createObjectURL(svgBlob);
+
+      img.onload = () => {
+        canvas.width = 400;
+        canvas.height = 400;
+        ctx?.drawImage(img, 0, 0, 400, 400);
+        
+        // 画像をダウンロード
+        const link = document.createElement('a');
+        link.download = `相性診断QRコード_${myResult?.type.code}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        
+        URL.revokeObjectURL(svgUrl);
+        setIsQRDownloading(false);
+      };
+
+      img.onerror = () => {
+        console.error('QRコードの画像変換に失敗しました');
+        setIsQRDownloading(false);
+      };
+
+      img.src = svgUrl;
+    } catch (error) {
+      console.error('QRコードのダウンロードに失敗しました:', error);
+      setIsQRDownloading(false);
+    }
+  };
+
+  const handleWebShare = async () => {
+    if (!qrRef.current || !myResult) return;
+
+    setIsWebSharing(true);
+    try {
+      const shareText = `【夜の性格診断】
+🌙 私の性格診断結果 🌙
+タイプ: ${myResult.type.name}（${myResult.type.code}）
+相性診断してみて！
+[相性診断コード: ${myCode}]
+${typeof window !== 'undefined' ? window.location.origin : ''} #夜の性格診断 #相性チェック`;
+
+      const success = await shareWithWebAPI(
+        shareText,
+        qrRef.current,
+        `相性診断QRコード_${myResult.type.code}.png`,
+        '夜の性格診断 - 相性診断コード'
+      );
+      
+      if (!success) {
+        // フォールバック: SNSシェアモーダルを表示
+        setShowShareModal(true);
+      }
+    } catch (error) {
+      console.error('Web Share APIでのシェアに失敗しました:', error);
+      // フォールバック: SNSシェアモーダルを表示
+      setShowShareModal(true);
+    } finally {
+      setIsWebSharing(false);
+    }
+  };
 
 
   return (
@@ -227,7 +341,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
             <span style={{color:'#38bdf8',textShadow:'0 0 10px #38bdf8,0 0 20px #38bdf8,0 0 30px #0ea5e9',animation:'glowGreen 2.5s ease-in-out infinite'}}>断</span>
           </h1>
           <p className="text-xl opacity-90 mb-8">
-            相性診断コードを入力して、お互いの性格の相性を詳しく分析しましょう
+            相性診断QRコードを読み取って、お互いの性格の相性を詳しく分析しましょう
           </p>
         </div>
       </div>
@@ -235,37 +349,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         
-        {/* 使い方の説明 */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-          <div className="flex items-center mb-4">
-            <HelpCircle className="w-6 h-6 text-blue-500 mr-3" />
-            <h2 className="text-xl font-bold text-gray-900">使い方</h2>
-          </div>
-          
-          <div className="space-y-4">
-            <div className="flex items-start space-x-3">
-              <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
-              <div>
-                <h3 className="font-semibold text-gray-900">診断結果をシェアしてもらう</h3>
-                <p className="text-sm text-gray-600">相性を知りたい相手に、性格診断を受けてもらい、結果をシェアしてもらいましょう。</p>
-              </div>
-            </div>
-            <div className="flex items-start space-x-3">
-              <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
-              <div>
-                <h3 className="font-semibold text-gray-900">相性診断コードを入手</h3>
-                <p className="text-sm text-gray-600">シェアされた投稿から、相性診断コード（英数字）を見つけてください。</p>
-              </div>
-            </div>
-            <div className="flex items-start space-x-3">
-              <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
-              <div>
-                <h3 className="font-semibold text-gray-900">相手のコードを入力して診断</h3>
-                <p className="text-sm text-gray-600">相手の相性診断コードを入力して、お互いの相性を診断してみましょう。</p>
-              </div>
-            </div>
-          </div>
-        </div>
+
 
         {/* 自分の診断結果がない場合の警告 */}
         {!myResult && (
@@ -290,12 +374,53 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
         {/* 相手のコード入力フォーム */}
         {myResult && (
           <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">相手の相性診断コード入力</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">相手の相性診断QRコード読み取り</h2>
             
             <div className="space-y-6">
+              {/* QRコードアップロード */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  相手の相性診断コード
+                  QRコードから読み取る
+                </label>
+                <div className="flex flex-col items-center gap-4">
+                  <div className="w-full">
+                    <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        {isQRUploading ? (
+                          <div className="flex items-center space-x-2">
+                            <div className="w-6 h-6 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+                            <span className="text-sm text-gray-600">読み取り中...</span>
+                          </div>
+                        ) : (
+                          <>
+                            <Camera className="w-8 h-8 text-gray-400 mb-2" />
+                            <p className="text-sm text-gray-600">QRコード画像をアップロード</p>
+                          </>
+                        )}
+                      </div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleQRUpload}
+                        className="hidden"
+                        disabled={isQRUploading}
+                      />
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* または */}
+              <div className="flex items-center">
+                <div className="flex-1 border-t border-gray-300"></div>
+                <div className="px-4 text-sm text-gray-500 bg-white">または</div>
+                <div className="flex-1 border-t border-gray-300"></div>
+              </div>
+
+              {/* テキスト入力 */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  相性診断コードを直接入力
                 </label>
                 <input
                   type="text"
@@ -306,7 +431,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                   maxLength={8}
                 />
                 <p className="text-sm text-gray-600 mt-2">
-                  相手にシェアしてもらった投稿から、相性診断コード（英数字）を入力してください。
+                  相手のQRコードの下に表示されているコード（英数字）を入力してください。
                 </p>
               </div>
 
@@ -359,35 +484,81 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
               </div>
               
               <div>
-                <h4 className="font-semibold text-gray-900 mb-3 text-center">あなたの相性診断コード</h4>
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-center gap-2">
-                  <code className="text-2xl font-mono text-blue-600 font-bold flex-1 text-center">
-                    {myCode}
-                  </code>
-                  <div className="flex-0 ml-auto">
+                <h4 className="font-semibold text-gray-900 mb-3 text-center">あなたの相性診断QRコード</h4>
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex flex-col items-center gap-4">
+                  <div className="bg-white p-4 rounded-lg shadow-sm" ref={qrRef}>
+                    <QRCode
+                      value={myCode}
+                      size={200}
+                      level="M"
+                      className="w-full h-auto max-w-[200px]"
+                    />
+                  </div>
+                  <div className="text-center">
+                    <code className="text-sm font-mono text-blue-600 font-bold">
+                      {myCode}
+                    </code>
                     <button
                       onClick={async () => {
                         await copyToClipboard(myCode);
                         setCopied(true);
                         setTimeout(() => setCopied(false), 2000);
                       }}
-                      className={`p-2 rounded-full border ${copied ? 'bg-green-100 border-green-300' : 'bg-gray-100 border-gray-300 hover:bg-gray-200'} transition-colors`}
+                      className={`ml-2 p-2 rounded-full border ${copied ? 'bg-green-100 border-green-300' : 'bg-gray-100 border-gray-300 hover:bg-gray-200'} transition-colors`}
                       title="コピー"
                     >
-                      {copied ? <Check className="w-5 h-5 text-green-600" /> : <Copy className="w-5 h-5 text-gray-600" />}
+                      {copied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4 text-gray-600" />}
                     </button>
                   </div>
+                  <button
+                    onClick={handleQRDownload}
+                    disabled={isQRDownloading}
+                    className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {isQRDownloading ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <span>保存中...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Download className="w-4 h-4" />
+                        <span>QRコードを保存</span>
+                      </>
+                    )}
+                  </button>
                 </div>
-                <p className="text-sm text-gray-600 mt-2">
-                  このコードを相手に教えて、お互いの相性を診断してもらいましょう。
+                <p className="text-sm text-gray-600 mt-2 text-center">
+                  このQRコードを相手に見せて、お互いの相性を診断してもらいましょう。
                 </p>
-                <button
-                  onClick={() => setShowShareModal(true)}
-                  className="mt-4 bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-all flex items-center justify-center mx-auto"
-                >
-                  <Share2 className="w-5 h-5 mr-2" />
-                  コードをシェア
-                </button>
+                <div className="mt-4 flex flex-col sm:flex-row gap-2 justify-center">
+                  {webShareSupported && (
+                    <button
+                      onClick={handleWebShare}
+                      disabled={isWebSharing}
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center"
+                    >
+                      {isWebSharing ? (
+                        <>
+                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                          <span>シェア中...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Share className="w-5 h-5 mr-2" />
+                          <span>✨ ワンタップシェア</span>
+                        </>
+                      )}
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setShowShareModal(true)}
+                    className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-all flex items-center justify-center"
+                  >
+                    <Share2 className="w-5 h-5 mr-2" />
+                    QRコードをシェア
+                  </button>
+                </div>
               </div>
             </div>
           </div>

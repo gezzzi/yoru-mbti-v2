@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{}"
+self.__REACT_LOADABLE_MANIFEST="{\"..\\\\node_modules\\\\qr-scanner\\\\qr-scanner.min.js -> ./qr-scanner-worker.min.js\":{\"id\":\"..\\\\node_modules\\\\qr-scanner\\\\qr-scanner.min.js -> ./qr-scanner-worker.min.js\",\"files\":[\"static/chunks/_app-pages-browser_node_modules_qr-scanner_qr-scanner-worker_min_js.js\"]}}"
