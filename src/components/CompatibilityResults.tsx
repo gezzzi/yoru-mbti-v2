@@ -172,45 +172,19 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
               <span style={{color:'#fde047',textShadow:'0 0 10px #fde047,0 0 20px #facc15,0 0 30px #ca8a04',animation:'pulsePink 2s ease-in-out infinite'}}>結</span>
               <span style={{color:'#fde047',textShadow:'0 0 10px #fde047,0 0 20px #facc15,0 0 30px #ca8a04',animation:'electricBlue 1.5s ease-in-out infinite'}}>果</span>
             </h1>
-            <p className="text-xl opacity-90 mb-8">
-              お二人の性格の相性を詳しく分析しました
-            </p>
-            
-            {/* ダウンロード・シェアボタン */}
-            <div className="flex justify-center space-x-4 mb-8">
-              <button 
-                onClick={handleDownload}
-                disabled={isDownloading}
-                className="bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-lg hover:bg-white/30 transition-all flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isDownloading ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>ダウンロード中...</span>
-                  </>
-                ) : (
-                  <>
-                    <Download className="w-5 h-5" />
-                    <span>結果をダウンロード</span>
-                  </>
-                )}
-              </button>
-              <button
-                onClick={() => setShowShareModal(true)}
-                className="bg-white/20 backdrop-blur-sm text-white px-6 py-3 rounded-lg hover:bg-white/30 transition-all flex items-center space-x-2"
-              >
-                <Share2 className="w-5 h-5" />
-                <span>結果をシェア</span>
-              </button>
-            </div>
+
           </div>
         </div>
 
         {/* Main Content */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           
-          {/* 相性スコア */}
-          <div className={`bg-white rounded-xl shadow-lg p-6 mb-8 border-2 ${getCompatibilityColor(compatibility.compatibility)}`}>
+          {/* 相性診断結果ページコンテナ */}
+          <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <div className="p-8 space-y-8">
+              
+              {/* 相性スコア */}
+              <div className={`rounded-xl shadow-lg p-6 border-2 ${getCompatibilityColor(compatibility.compatibility)}`}>
             <div className="text-center">
               <div className="flex items-center justify-center mb-6">
                 {getCompatibilityIcon(compatibility.compatibility)}
@@ -225,8 +199,8 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
             </div>
           </div>
 
-          {/* 性格タイプ比較 */}
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
+              {/* 性格タイプ比較 */}
+              <div className="grid md:grid-cols-2 gap-6">
             <div className="bg-white rounded-xl shadow-lg p-6">
               <h3 className="font-semibold text-gray-900 mb-4 text-center">あなたのタイプ</h3>
               <div className="text-center">
@@ -248,76 +222,109 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
             </div>
           </div>
 
-          {/* アドバイス */}
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-              <Check className="w-6 h-6 text-green-500 mr-3" />
-              関係を良くするためのアドバイス
-            </h3>
-            <ul className="space-y-3">
-              {compatibility.tips.map((tip, index) => (
-                <li key={index} className="flex items-start space-x-3">
-                  <ArrowRight className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
-                  <span className="text-gray-700">{tip}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
+              {/* アドバイス */}
+              <div className="rounded-xl shadow-lg p-6 bg-gray-50">
+                <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                  <Check className="w-6 h-6 text-green-500 mr-3" />
+                  関係を良くするためのアドバイス
+                </h3>
+                <ul className="space-y-3">
+                  {compatibility.tips.map((tip, index) => (
+                    <li key={index} className="flex items-start space-x-3">
+                      <ArrowRight className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-700">{tip}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-          {/* 5軸比較 */}
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-            <h3 className="text-xl font-bold text-gray-900 mb-6">性格特性の詳細比較</h3>
-            <div className="space-y-6">
-              {[
-                { label: '外向性 vs 内向性', value1: myResult.E, value2: partnerResult.E, key: 'E' },
-                { label: '主導性 vs 服従性', value1: myResult.D, value2: partnerResult.D, key: 'D' },
-                { label: 'スリル追求 vs 安全志向', value1: myResult.T, value2: partnerResult.T, key: 'T' },
-                { label: '恥耐性 vs 恥敏感', value1: myResult.R, value2: partnerResult.R, key: 'R' },
-                { label: '愛着 vs 非愛着', value1: myResult.A, value2: partnerResult.A, key: 'A' }
-              ].map((dimension, index) => (
-                <div key={index} className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium text-gray-700">{dimension.label}</span>
-                    <div className="flex space-x-4 text-sm">
-                      <span className="text-blue-600">あなた: {Math.round(dimension.value1)}%</span>
-                      <span className="text-pink-600">相手: {Math.round(dimension.value2)}%</span>
+              {/* 5軸比較 */}
+              <div className="rounded-xl shadow-lg p-6 bg-gray-50">
+                <h3 className="text-xl font-bold text-gray-900 mb-6">性格特性の詳細比較</h3>
+                <div className="space-y-6">
+                  {[
+                    { label: '外向性 vs 内向性', value1: myResult.E, value2: partnerResult.E, key: 'E' },
+                    { label: '主導性 vs 服従性', value1: myResult.D, value2: partnerResult.D, key: 'D' },
+                    { label: 'スリル追求 vs 安全志向', value1: myResult.T, value2: partnerResult.T, key: 'T' },
+                    { label: '恥耐性 vs 恥敏感', value1: myResult.R, value2: partnerResult.R, key: 'R' },
+                    { label: '愛着 vs 非愛着', value1: myResult.A, value2: partnerResult.A, key: 'A' }
+                  ].map((dimension, index) => (
+                    <div key={index} className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium text-gray-700">{dimension.label}</span>
+                        <div className="flex space-x-4 text-sm">
+                          <span className="text-blue-600">あなた: {Math.round(dimension.value1)}%</span>
+                          <span className="text-pink-600">相手: {Math.round(dimension.value2)}%</span>
+                        </div>
+                      </div>
+                      <div className="relative h-6 bg-gray-200 rounded-full overflow-hidden">
+                        {/* あなたのバー */}
+                        <div 
+                          className="absolute top-0 left-0 h-3 bg-blue-500 rounded-full transition-all duration-500"
+                          style={{ width: `${dimension.value1}%` }}
+                        ></div>
+                        {/* 相手のバー */}
+                        <div 
+                          className="absolute bottom-0 left-0 h-3 bg-pink-500 rounded-full transition-all duration-500"
+                          style={{ width: `${dimension.value2}%` }}
+                        ></div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="relative h-6 bg-gray-200 rounded-full overflow-hidden">
-                    {/* あなたのバー */}
-                    <div 
-                      className="absolute top-0 left-0 h-3 bg-blue-500 rounded-full transition-all duration-500"
-                      style={{ width: `${dimension.value1}%` }}
-                    ></div>
-                    {/* 相手のバー */}
-                    <div 
-                      className="absolute bottom-0 left-0 h-3 bg-pink-500 rounded-full transition-all duration-500"
-                      style={{ width: `${dimension.value2}%` }}
-                    ></div>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
 
-          {/* アクションボタン */}
-          <div className="text-center space-y-4">
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                onClick={onBack}
-                className="px-6 py-3 border border-gray-300 text-white rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2"
-              >
-                <ArrowRight className="w-5 h-5 transform rotate-180" />
-                <span>相性診断に戻る</span>
-              </button>
+              {/* ダウンロード・シェアボタン */}
+              <div className="text-center">
+                <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+                  <button 
+                    onClick={handleDownload}
+                    disabled={isDownloading}
+                    className="bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-lg hover:from-green-700 hover:to-green-800 transition-all flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                  >
+                    {isDownloading ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <span>ダウンロード中...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Download className="w-5 h-5" />
+                        <span>結果をダウンロード</span>
+                      </>
+                    )}
+                  </button>
+                  <button
+                    onClick={() => setShowShareModal(true)}
+                    className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all flex items-center space-x-2 shadow-lg"
+                  >
+                    <Share2 className="w-5 h-5" />
+                    <span>結果をシェア</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* アクションボタン */}
+              <div className="text-center space-y-4">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <button
+                    onClick={onBack}
+                    className="px-6 py-3 border border-gray-300 text-gray-700 bg-white rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <ArrowRight className="w-5 h-5 transform rotate-180" />
+                    <span>相性診断に戻る</span>
+                  </button>
+                  
+                  <button
+                    onClick={onNewTest}
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all flex items-center justify-center space-x-2"
+                  >
+                    <RefreshCw className="w-5 h-5" />
+                    <span>新しい相性診断</span>
+                  </button>
+                </div>
+              </div>
               
-              <button
-                onClick={onNewTest}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all flex items-center justify-center space-x-2"
-              >
-                <RefreshCw className="w-5 h-5" />
-                <span>新しい相性診断</span>
-              </button>
             </div>
           </div>
         </div>
