@@ -4,8 +4,10 @@ import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { TestResult } from '../types/personality';
 import { getCategoryColor, getCategoryName } from '../data/personalityTypes';
-import { Heart, Users, RefreshCw, Download, Share2, User, Shield, Zap, Eye } from 'lucide-react';
+import { generateCompatibilityCode, copyToClipboard } from '../utils/snsShare';
+import { Heart, Users, RefreshCw, Download, Share2, User, Shield, Zap, Eye, Copy, Check } from 'lucide-react';
 import Image from 'next/image';
+import QRCode from 'react-qr-code';
 import SNSShareModal from './SNSShareModal';
 import html2canvas from 'html2canvas';
 
@@ -73,7 +75,13 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
   const [selectedDimension, setSelectedDimension] = useState<PersonalityDimension | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [isQRDownloading, setIsQRDownloading] = useState(false);
   const downloadRef = useRef<HTMLDivElement>(null);
+  const qrRef = useRef<HTMLDivElement>(null);
+  
+  // 相性診断コードを生成
+  const compatibilityCode = generateCompatibilityCode(result);
 
   // 診断結果をローカルストレージに保存
   React.useEffect(() => {
@@ -443,6 +451,85 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
 
 
 
+            {/* QRコードセクション */}
+            <div className="bg-gray-50 rounded-xl p-8 mb-8">
+              <div className="flex items-center mb-6">
+                <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                  2
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">相性診断用QRコード</h2>
+              </div>
+              
+              <div className="grid lg:grid-cols-2 gap-8">
+                {/* 左側：QRコード表示 */}
+                <div className="flex flex-col items-center">
+                  <div className="bg-white p-6 rounded-lg shadow-sm mb-4" ref={qrRef}>
+                    <QRCode
+                      value={compatibilityCode}
+                      size={200}
+                      level="M"
+                      className="w-full h-auto max-w-[200px]"
+                    />
+                  </div>
+                  <button
+                    onClick={async () => {
+                      if (!qrRef.current) return;
+                      setIsQRDownloading(true);
+                      try {
+                        const svg = qrRef.current.querySelector('svg');
+                        if (!svg) throw new Error('QRコードが見つかりません');
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const img = document.createElement('img') as HTMLImageElement;
+                        const svgData = new XMLSerializer().serializeToString(svg);
+                        const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+                        const svgUrl = URL.createObjectURL(svgBlob);
+                        img.onload = () => {
+                          canvas.width = 400;
+                          canvas.height = 400;
+                          ctx?.drawImage(img, 0, 0, 400, 400);
+                          const link = document.createElement('a');
+                          link.download = `相性診断QRコード_${type.code}.png`;
+                          link.href = canvas.toDataURL('image/png');
+                          link.click();
+                          URL.revokeObjectURL(svgUrl);
+                          setIsQRDownloading(false);
+                        };
+                        img.onerror = () => {
+                          setIsQRDownloading(false);
+                        };
+                        img.src = svgUrl;
+                      } catch (error) {
+                        setIsQRDownloading(false);
+                      }
+                    }}
+                    disabled={isQRDownloading}
+                    className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {isQRDownloading ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <span>保存中...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Download className="w-4 h-4" />
+                        <span>QRコードを保存</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+                
+                {/* 右側：説明 */}
+                <div className="flex flex-col justify-center">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">相性診断で使用しましょう</h3>
+                  <p className="text-gray-700 mb-6 leading-relaxed">
+                    このQRコードを使って、気になる人との相性を診断できます。相手にこのQRコードをシェアして、相性診断ページで読み取ってもらいましょう。
+                  </p>
+                </div>
+              </div>
+            </div>
+            
             {/* Action buttons - Download and Share */}
             <div className="text-center mb-8">
               <div className="flex flex-col sm:flex-row justify-center items-center gap-4">

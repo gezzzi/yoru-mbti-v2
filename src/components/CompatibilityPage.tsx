@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { TestResult, PersonalityType } from '../types/personality';
-import { parseCompatibilityCode, generateCompatibilityCode, copyToClipboard, shareWithWebAPI, isWebShareAPILevel2Supported } from '../utils/snsShare';
+import { parseCompatibilityCode, generateCompatibilityCode, copyToClipboard } from '../utils/snsShare';
 import { personalityTypes } from '../data/personalityTypes';
-import { Heart, AlertCircle, TestTube, User, Share2, Copy, Check, Upload, Camera, Download, Share } from 'lucide-react';
+import { Heart, AlertCircle, TestTube, User, Share2, Copy, Check, Upload, Camera, Download } from 'lucide-react';
 import SNSShareModal from './SNSShareModal';
 import Image from 'next/image';
 import QRCode from 'react-qr-code';
@@ -57,8 +57,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
   const [copied, setCopied] = useState(false);
   const [isQRUploading, setIsQRUploading] = useState(false);
   const [isQRDownloading, setIsQRDownloading] = useState(false);
-  const [isWebSharing, setIsWebSharing] = useState(false);
-  const [webShareSupported, setWebShareSupported] = useState(false);
+  const [isMyQRUploading, setIsMyQRUploading] = useState(false);
   const qrRef = useRef<HTMLDivElement>(null);
 
   // ローカルストレージから自分の診断結果を読み込む
@@ -78,10 +77,6 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
     }
   }, []);
 
-  // Web Share API Level 2のサポート状況をチェック
-  useEffect(() => {
-    setWebShareSupported(isWebShareAPILevel2Supported());
-  }, []);
 
   const calculateCompatibility = (user: TestResult, partner: TestResult): CompatibilityResult => {
     // 各軸の相性スコアを計算（類似軸と補完軸で異なる計算方法）
@@ -194,14 +189,14 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
 
                     // 相手のコードの検証
       if (partnerCode.length === 0) {
-        throw new Error('相性診断QRコードを読み取るか、コードを入力してください');
+        throw new Error('相手のQRコードを読み取ってください');
       }
 
       // 相手のコードを解析
       const parsedPartnerResult = parseCode(partnerCode);
       
       if (!parsedPartnerResult) {
-        throw new Error('相性診断QRコード/コードが無効です');
+        throw new Error('QRコードが無効です');
       }
 
       // 結果ページに遷移
@@ -209,7 +204,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
         onShowResults(myResult, parsedPartnerResult);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : '相性診断QRコード/コードの解析に失敗しました');
+      setError(err instanceof Error ? err.message : 'QRコードの解析に失敗しました');
     } finally {
       setIsLoading(false);
     }
@@ -235,12 +230,60 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
       if (result && result.match(/^[A-Za-z0-9]{1,8}$/)) {
         setPartnerCode(result.toUpperCase());
       } else {
-        throw new Error('QRコードから有効な相性診断コードを読み取れませんでした');
+        throw new Error('QRコードから有効なコードを読み取れませんでした');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'QRコードの読み取りに失敗しました');
     } finally {
       setIsQRUploading(false);
+      // ファイル入力をリセット
+      event.target.value = '';
+    }
+  };
+
+  const handleMyQRUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsMyQRUploading(true);
+    setError('');
+
+    try {
+      // QRコードを読み取る
+      const result = await QrScanner.scanImage(file);
+      
+      // 読み取った結果がコードの形式かチェック
+      if (result && result.match(/^[A-Za-z0-9]{1,8}$/)) {
+        const code = result.toUpperCase();
+        
+        // コードを解析して診断結果を復元
+        const parsedResult = parseCode(code);
+        
+        if (!parsedResult) {
+          throw new Error('QRコードから有効な診断結果を読み取れませんでした');
+        }
+
+        // 自分の結果として設定
+        setMyResult(parsedResult);
+        setMyCode(code);
+        
+        // ローカルストレージにも保存
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('personality_test_result', JSON.stringify(parsedResult));
+        }
+        
+        setError('');
+        
+        // 成功メッセージを表示（既存の結果がある場合は更新メッセージ）
+        const message = myResult ? 'QRコードが正常に更新されました！' : 'QRコードが正常に読み込まれました！';
+        // 一時的に成功状態を表示するためのロジックを追加することも可能
+      } else {
+        throw new Error('QRコードから有効なコードを読み取れませんでした');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'QRコードの読み取りに失敗しました');
+    } finally {
+      setIsMyQRUploading(false);
       // ファイル入力をリセット
       event.target.value = '';
     }
@@ -291,91 +334,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
     }
   };
 
-  const handleWebShare = async () => {
-    if (!qrRef.current || !myResult) return;
 
-    setIsWebSharing(true);
-    try {
-      const shareText = `【夜の性格診断】
-🌙 私の性格診断結果 🌙
-タイプ: ${myResult.type.name}（${myResult.type.code}）
-相性診断してみて！
-[相性診断コード: ${myCode}]
-${typeof window !== 'undefined' ? window.location.origin : ''} #夜の性格診断 #相性チェック`;
-
-      const success = await shareWithWebAPI(
-        shareText,
-        qrRef.current,
-        `相性診断QRコード_${myResult.type.code}.png`,
-        '夜の性格診断 - 相性診断コード'
-      );
-      
-      if (!success) {
-        // フォールバック: SNSシェアモーダルを表示
-        setShowShareModal(true);
-      }
-    } catch (error) {
-      console.error('Web Share APIでのシェアに失敗しました:', error);
-      // フォールバック: SNSシェアモーダルを表示
-      setShowShareModal(true);
-    } finally {
-      setIsWebSharing(false);
-    }
-  };
-
-  const handleTwitterShare = async () => {
-    if (!qrRef.current || !myResult) return;
-
-    try {
-      // QRコードを画像として保存
-      const svg = qrRef.current.querySelector('svg');
-      if (!svg) throw new Error('QRコードが見つかりません');
-
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const img = document.createElement('img') as HTMLImageElement;
-      
-      // SVGをData URLに変換
-      const svgData = new XMLSerializer().serializeToString(svg);
-      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-      const svgUrl = URL.createObjectURL(svgBlob);
-
-      img.onload = () => {
-        canvas.width = 400;
-        canvas.height = 400;
-        ctx?.drawImage(img, 0, 0, 400, 400);
-        
-        // 画像をダウンロード
-        const link = document.createElement('a');
-        link.download = `相性診断QRコード_${myResult.type.code}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-        
-        URL.revokeObjectURL(svgUrl);
-
-        // 少し遅延してからTwitterページを開く（ダウンロード完了を待つため）
-        setTimeout(() => {
-          const shareText = `【夜の性格診断】
-🌙 私の性格診断結果 🌙
-タイプ: ${myResult.type.name}（${myResult.type.code}）
-相性診断してみて！
-[相性診断コード: ${myCode}]
-${typeof window !== 'undefined' ? window.location.origin : ''} #夜の性格診断 #相性チェック`;
-          const encodedText = encodeURIComponent(shareText);
-          window.open(`https://twitter.com/intent/tweet?text=${encodedText}`, '_blank', 'width=550,height=420');
-        }, 500);
-      };
-
-      img.onerror = () => {
-        console.error('QRコードの画像変換に失敗しました');
-        URL.revokeObjectURL(svgUrl);
-      };
-
-      img.src = svgUrl;
-    } catch (error) {
-      console.error('Twitterシェアの準備に失敗しました:', error);
-    }
-  };
 
 
   return (
@@ -408,18 +367,65 @@ ${typeof window !== 'undefined' ? window.location.origin : ''} #夜の性格診�
           <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 mb-8">
             <div className="flex items-center mb-4">
               <AlertCircle className="w-6 h-6 text-yellow-600 mr-3" />
-              <h2 className="text-xl font-bold text-yellow-800">まず性格診断テストを受けてください</h2>
+              <h2 className="text-xl font-bold text-yellow-800">性格診断結果が必要です</h2>
             </div>
-            <p className="text-yellow-700 mb-4">
-              相性診断を行うには、まずあなた自身の性格診断結果が必要です。
+            <p className="text-yellow-700 mb-6">
+              相性診断を行うには、あなた自身の性格診断結果が必要です。以下のいずれかの方法で設定してください。
             </p>
-            <button
-              onClick={onStartTest}
-              className="bg-yellow-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-yellow-700 transition-colors flex items-center space-x-2"
-            >
-              <TestTube className="w-5 h-5" />
-              <span>性格診断テストを受ける</span>
-            </button>
+            
+            <div className="grid md:grid-cols-2 gap-4">
+              {/* 新しく診断を受ける */}
+              <div className="bg-white rounded-lg p-4 border border-yellow-200">
+                <h3 className="font-semibold text-yellow-800 mb-2 flex items-center">
+                  <TestTube className="w-5 h-5 mr-2" />
+                  新しく診断を受ける
+                </h3>
+                <p className="text-yellow-700 text-sm mb-3">
+                  25の質問に答えて、あなたの性格タイプを診断します。
+                </p>
+                <button
+                  onClick={onStartTest}
+                  className="w-full bg-yellow-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-yellow-700 transition-colors"
+                >
+                  性格診断テストを受ける
+                </button>
+              </div>
+
+              {/* 過去のQRコードをアップロード */}
+              <div className="bg-white rounded-lg p-4 border border-yellow-200">
+                <h3 className="font-semibold text-yellow-800 mb-2 flex items-center">
+                  <Upload className="w-5 h-5 mr-2" />
+                  過去の診断結果を使用
+                </h3>
+                <p className="text-yellow-700 text-sm mb-3">
+                  以前に診断したQRコードをアップロードして結果を復元します。
+                </p>
+                <div className="w-full">
+                  <label className="flex flex-col items-center justify-center w-full h-20 border-2 border-yellow-300 border-dashed rounded-lg cursor-pointer bg-yellow-50 hover:bg-yellow-100 transition-colors">
+                    <div className="flex flex-col items-center justify-center pt-2 pb-2">
+                      {isMyQRUploading ? (
+                        <div className="flex items-center space-x-2">
+                          <div className="w-5 h-5 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
+                          <span className="text-sm text-yellow-600">読み取り中...</span>
+                        </div>
+                      ) : (
+                        <>
+                          <Camera className="w-6 h-6 text-yellow-400 mb-1" />
+                          <p className="text-xs text-yellow-600">QRコード画像をアップロード</p>
+                        </>
+                      )}
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleMyQRUpload}
+                      className="hidden"
+                      disabled={isMyQRUploading}
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
@@ -441,22 +447,6 @@ ${typeof window !== 'undefined' ? window.location.origin : ''} #夜の性格診�
                       className="w-full h-auto max-w-[200px]"
                     />
                   </div>
-                  <div className="text-center">
-                    <code className="text-sm font-mono text-blue-600 font-bold">
-                      {myCode}
-                    </code>
-                    <button
-                      onClick={async () => {
-                        await copyToClipboard(myCode);
-                        setCopied(true);
-                        setTimeout(() => setCopied(false), 2000);
-                      }}
-                      className={`ml-2 p-2 rounded-full border ${copied ? 'bg-green-100 border-green-300' : 'bg-gray-100 border-gray-300 hover:bg-gray-200'} transition-colors`}
-                      title="コピー"
-                    >
-                      {copied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4 text-gray-600" />}
-                    </button>
-                  </div>
                   <button
                     onClick={handleQRDownload}
                     disabled={isQRDownloading}
@@ -477,56 +467,57 @@ ${typeof window !== 'undefined' ? window.location.origin : ''} #夜の性格診�
                 </div>
                 
                 <div className="flex flex-col gap-2">
-                  {webShareSupported && (
-                    <button
-                      onClick={handleWebShare}
-                      disabled={isWebSharing}
-                      className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center"
-                    >
-                      {isWebSharing ? (
-                        <>
-                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                          <span>シェア中...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Share className="w-5 h-5 mr-2" />
-                          <span>✨ ワンタップシェア</span>
-                        </>
-                      )}
-                    </button>
-                  )}
-                  <button
-                    onClick={handleTwitterShare}
-                    className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-all flex items-center justify-center"
-                  >
-                    <Share2 className="w-5 h-5 mr-2" />
-                    X(Twitter)でシェア
-                  </button>
                   <button
                     onClick={() => setShowShareModal(true)}
                     className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-all flex items-center justify-center"
                   >
                     <Share2 className="w-5 h-5 mr-2" />
-                    その他の方法でシェア
+                    QRコードをシェア
                   </button>
+                  
+                  {/* 自分のQRコードを更新 */}
+                  <div className="border-t pt-3 mt-2">
+                    <label className="cursor-pointer">
+                      <button
+                        type="button"
+                        disabled={isMyQRUploading}
+                        className="w-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition-colors flex items-center justify-center space-x-2 border border-gray-300"
+                      >
+                        {isMyQRUploading ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin"></div>
+                            <span className="text-sm">更新中...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="w-4 h-4" />
+                            <span className="text-sm">新しいQRコードに更新</span>
+                          </>
+                        )}
+                      </button>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleMyQRUpload}
+                        className="hidden"
+                        disabled={isMyQRUploading}
+                      />
+                    </label>
+                  </div>
                 </div>
               </div>
 
-              {/* 右側：相手の相性診断QRコード入力 */}
+              {/* 右側：相手の相性診断QRコード読み取り */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-gray-900 text-center">相手の相性診断QRコード読み取り</h3>
+                <h3 className="text-lg font-semibold text-gray-900 text-center">相手のQRコードを読み取り</h3>
                 
                 <div className="space-y-6">
                   {/* QRコードアップロード */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      QRコードから読み取る
-                    </label>
                     <div className="flex flex-col items-center gap-4">
                       <div className="w-full">
-                        <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
-                          <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                          <div className="flex flex-col items-center justify-center pt-6 pb-6">
                             {isQRUploading ? (
                               <div className="flex items-center space-x-2">
                                 <div className="w-6 h-6 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
@@ -534,8 +525,9 @@ ${typeof window !== 'undefined' ? window.location.origin : ''} #夜の性格診�
                               </div>
                             ) : (
                               <>
-                                <Camera className="w-8 h-8 text-gray-400 mb-2" />
-                                <p className="text-sm text-gray-600">QRコード画像をアップロード</p>
+                                <Camera className="w-10 h-10 text-gray-400 mb-3" />
+                                <p className="text-lg font-medium text-gray-700 mb-1">QRコード画像をアップロード</p>
+                                <p className="text-sm text-gray-500 text-center px-4">相手の診断結果QRコードの画像をアップロードしてください</p>
                               </>
                             )}
                           </div>
@@ -549,31 +541,6 @@ ${typeof window !== 'undefined' ? window.location.origin : ''} #夜の性格診�
                         </label>
                       </div>
                     </div>
-                  </div>
-
-                  {/* または */}
-                  <div className="flex items-center">
-                    <div className="flex-1 border-t border-gray-300"></div>
-                    <div className="px-4 text-sm text-gray-500 bg-white">または</div>
-                    <div className="flex-1 border-t border-gray-300"></div>
-                  </div>
-
-                  {/* テキスト入力 */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      相性診断コードを直接入力
-                    </label>
-                    <input
-                      type="text"
-                      value={partnerCode}
-                      onChange={(e) => setPartnerCode(e.target.value.replace(/[^0-9A-Za-z]/g, '').toUpperCase().slice(0, 8))}
-                      placeholder="ABCD123"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-center text-lg"
-                      maxLength={8}
-                    />
-                    <p className="text-sm text-gray-600 mt-2">
-                      相手のQRコードの下に表示されているコード（英数字）を入力してください。
-                    </p>
                   </div>
 
                   {/* エラー表示 */}

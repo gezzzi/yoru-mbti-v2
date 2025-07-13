@@ -191,6 +191,35 @@ export const generateLineShareURL = (result: TestResult): string => {
   return `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.origin : '')}&text=${encodedText}`;
 };
 
+// Instagramでシェアするためのテキスト（アプリで開く）
+export const shareToInstagram = (text: string): void => {
+  if (navigator.share) {
+    navigator.share({
+      text: text,
+      url: typeof window !== 'undefined' ? window.location.origin : ''
+    }).catch(console.error);
+  } else {
+    // フォールバック: テキストをクリップボードにコピー
+    copyToClipboard(text);
+    alert('テキストをコピーしました。Instagramアプリで投稿してください。');
+  }
+};
+
+// FacebookでシェアするためのURL生成
+export const generateFacebookShareURL = (result: TestResult): string => {
+  const siteUrl = typeof window !== 'undefined' ? window.location.origin : '';
+  const encodedUrl = encodeURIComponent(siteUrl);
+  const text = generateSNSShareText(result);
+  const encodedText = encodeURIComponent(text);
+  return `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`;
+};
+
+// Discordでシェアするためのテキスト（クリップボードにコピー）
+export const shareToDiscord = (text: string): void => {
+  copyToClipboard(text);
+  alert('テキストをコピーしました。Discordで貼り付けてください。');
+};
+
 // クリップボードにコピー
 export const copyToClipboard = async (text: string): Promise<boolean> => {
   try {
