@@ -108,12 +108,15 @@ body {
 /* Ruby text (furigana) styling */
 .ruby-text {
   ruby-position: over;
+  line-height: 1.8;
 }
 
 .ruby-text rt {
-  font-size: 0.5em;
-  color: #6b7280;
-  font-weight: 400;
-  line-height: 1;
+  font-size: 0.6em;
+  color: #374151;
+  font-weight: 500;
+  line-height: 1.2;
   text-align: center;
+  letter-spacing: 0.05em;
+  margin-top: 0.1em;
 } 

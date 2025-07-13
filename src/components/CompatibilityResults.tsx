@@ -21,6 +21,144 @@ interface CompatibilityResultsProps {
   onNewTest: () => void;
 }
 
+// レーダーチャートコンポーネント
+const RadarChart: React.FC<{ axisScores: { E: number, D: number, T: number, A: number, R: number }, totalScore: number }> = ({ axisScores, totalScore }) => {
+  const size = 360;
+  const center = size / 2;
+  const radius = 80;
+  
+  // 5角形の各頂点の角度（上から時計回り）
+  const angles = [
+    -Math.PI / 2,          // E (上)
+    -Math.PI / 2 + (2 * Math.PI / 5),     // D (右上)
+    -Math.PI / 2 + (4 * Math.PI / 5),     // T (右下)
+    -Math.PI / 2 + (6 * Math.PI / 5),     // A (左下)
+    -Math.PI / 2 + (8 * Math.PI / 5),     // R (左上)
+  ];
+  
+  const axisLabels = ['外向性', '主導性', '刺激', '愛着', '羞恥耐性'];
+  const axisValues = [axisScores.E, axisScores.D, axisScores.T, axisScores.A, axisScores.R];
+  
+  // 座標計算関数
+  const getPoint = (angle: number, distance: number) => ({
+    x: center + Math.cos(angle) * distance,
+    y: center + Math.sin(angle) * distance
+  });
+  
+  // 背景の5角形（グリッド）を生成
+  const backgroundPentagons = [20, 40, 60, 80, 100].map(percentage => {
+    const points = angles.map(angle => {
+      const point = getPoint(angle, (radius * percentage) / 100);
+      return `${point.x},${point.y}`;
+    }).join(' ');
+    return { percentage, points };
+  });
+  
+  // データの5角形を生成
+  const dataPoints = angles.map((angle, index) => {
+    const value = axisValues[index];
+    const distance = (radius * value) / 100;
+    return getPoint(angle, distance);
+  });
+  
+  const dataPolygonPoints = dataPoints.map(point => `${point.x},${point.y}`).join(' ');
+  
+  return (
+    <div className="flex flex-col items-center">
+      <svg width={size} height={size} className="mb-4">
+        {/* 背景グリッド */}
+        {backgroundPentagons.map(({ percentage, points }) => (
+          <polygon
+            key={percentage}
+            points={points}
+            fill="none"
+            stroke="#e5e7eb"
+            strokeWidth="1"
+          />
+        ))}
+        
+        {/* 軸線 */}
+        {angles.map((angle, index) => {
+          const endPoint = getPoint(angle, radius);
+          return (
+            <line
+              key={index}
+              x1={center}
+              y1={center}
+              x2={endPoint.x}
+              y2={endPoint.y}
+              stroke="#e5e7eb"
+              strokeWidth="1"
+            />
+          );
+        })}
+        
+        {/* データポリゴン */}
+        <polygon
+          points={dataPolygonPoints}
+          fill="rgba(59, 130, 246, 0.3)"
+          stroke="#3b82f6"
+          strokeWidth="2"
+        />
+        
+        {/* データポイント */}
+        {dataPoints.map((point, index) => (
+          <circle
+            key={index}
+            cx={point.x}
+            cy={point.y}
+            r="4"
+            fill="#3b82f6"
+          />
+        ))}
+        
+        {/* 軸ラベル */}
+        {angles.map((angle, index) => {
+          const labelPoint = getPoint(angle, radius + 50);
+          // 位置に応じてテキストアンカーを調整
+          let textAnchor = "middle";
+          let dominantBaseline = "middle";
+          
+          if (index === 1) { // 主導性（右上）
+            textAnchor = "start";
+            dominantBaseline = "middle";
+          } else if (index === 4) { // 羞恥耐性（左上）
+            textAnchor = "end";
+            dominantBaseline = "middle";
+          } else if (index === 0) { // 外向性（上）
+            dominantBaseline = "auto";
+          }
+          
+          return (
+            <text
+              key={index}
+              x={labelPoint.x}
+              y={labelPoint.y}
+              textAnchor={textAnchor}
+              dominantBaseline={dominantBaseline}
+              className="text-sm font-medium fill-gray-700"
+            >
+              {axisLabels[index]}
+            </text>
+          );
+        })}
+        
+      </svg>
+      
+      {/* 凡例 */}
+      <div className="text-center">
+        <div className="mb-3">
+          <h4 className="text-sm font-semibold text-gray-700">各軸の相性スコア</h4>
+        </div>
+        <div className="text-xs text-gray-600 space-y-1">
+          <div>外向性: {Math.round(axisScores.E)}% | 主導性: {Math.round(axisScores.D)}%</div>
+          <div>刺激: {Math.round(axisScores.T)}% | 愛着: {Math.round(axisScores.A)}% | 羞恥耐性: {Math.round(axisScores.R)}%</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = ({ typeCode, emoji, name }) => {
   const [imageError, setImageError] = useState(false);
   const getBaseTypeCode = (code: string): string => {
@@ -74,27 +212,29 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   const [showShareModal, setShowShareModal] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const calculateCompatibility = (user: TestResult, partner: TestResult): CompatibilityResult => {
+  const calculateCompatibility = (user: TestResult, partner: TestResult): CompatibilityResult & { axisScores: { E: number, D: number, T: number, A: number, R: number } } => {
     // 各軸の相性スコアを計算（類似軸と補完軸で異なる計算方法）
     
-    // 外向性(E)/内向性(I) - 類似軸 (重み: 0.15)
-    const eScore = (100 - Math.abs(user.E - partner.E)) * 0.15;
+    // 外向性(E)/内向性(I) - 類似軸
+    const eScore = 100 - Math.abs(user.E - partner.E);
     
-    // 主導(D)/服従(S) - 補完軸 (重み: 0.3)
+    // 主導(D)/服従(S) - 補完軸
     // 合計値が100に近いほど良い
-    const dScore = (100 - Math.abs((user.D + partner.D) - 100)) * 0.3;
+    const dScore = 100 - Math.abs((user.D + partner.D) - 100);
     
-    // 刺激志向(T)/安心志向(S) - 類似軸 (重み: 0.25)
-    const tScore = (100 - Math.abs(user.T - partner.T)) * 0.25;
+    // 刺激志向(T)/安心志向(S) - 類似軸
+    const tScore = 100 - Math.abs(user.T - partner.T);
     
-    // 愛着傾向(A)/非愛着傾向(N) - 類似軸 (重み: 0.2)
-    const aScore = (100 - Math.abs(user.A - partner.A)) * 0.2;
+    // 愛着傾向(A)/非愛着傾向(N) - 類似軸
+    const aScore = 100 - Math.abs(user.A - partner.A);
     
-    // 羞恥体制(R)/羞恥敏感(H) - 類似軸 (重み: 0.1)
-    const rScore = (100 - Math.abs(user.R - partner.R)) * 0.1;
+    // 羞恥体制(R)/羞恥敏感(H) - 類似軸
+    const rScore = 100 - Math.abs(user.R - partner.R);
     
-    // 総合相性度を計算
-    const compatibility = Math.max(0, Math.min(100, eScore + dScore + tScore + aScore + rScore));
+    // 総合相性度を計算（重み付き平均）
+    const compatibility = Math.max(0, Math.min(100, 
+      (eScore * 0.15) + (dScore * 0.3) + (tScore * 0.25) + (aScore * 0.2) + (rScore * 0.1)
+    ));
 
     let description = '';
     let tips: string[] = [];
@@ -130,7 +270,18 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       ];
     }
 
-    return { compatibility, description, tips };
+    return { 
+      compatibility, 
+      description, 
+      tips,
+      axisScores: {
+        E: Math.max(0, Math.min(100, eScore)),
+        D: Math.max(0, Math.min(100, dScore)),
+        T: Math.max(0, Math.min(100, tScore)),
+        A: Math.max(0, Math.min(100, aScore)),
+        R: Math.max(0, Math.min(100, rScore))
+      }
+    };
   };
 
   const compatibility = calculateCompatibility(myResult, partnerResult);
@@ -273,41 +424,14 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                 </ul>
               </div>
 
-              {/* 5軸比較 */}
+              {/* 相性レーダーチャート */}
               <div className="rounded-xl shadow-lg p-6 bg-gray-50">
-                <h3 className="text-xl font-bold text-gray-900 mb-6">性格特性の詳細比較</h3>
-                <div className="space-y-6">
-                  {[
-                    { label: '外向性 vs 内向性', value1: myResult.E, value2: partnerResult.E, key: 'E' },
-                    { label: '主導性 vs 服従性', value1: myResult.D, value2: partnerResult.D, key: 'D' },
-                    { label: 'スリル追求 vs 安全志向', value1: myResult.T, value2: partnerResult.T, key: 'T' },
-                    { label: '恥耐性 vs 恥敏感', value1: myResult.R, value2: partnerResult.R, key: 'R' },
-                    { label: '愛着 vs 非愛着', value1: myResult.A, value2: partnerResult.A, key: 'A' }
-                  ].map((dimension, index) => (
-                    <div key={index} className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm font-medium text-gray-700">{dimension.label}</span>
-                        <div className="flex space-x-4 text-sm">
-                          <span className="text-blue-600">あなた: {Math.round(dimension.value1)}%</span>
-                          <span className="text-pink-600">相手: {Math.round(dimension.value2)}%</span>
-                        </div>
-                      </div>
-                      <div className="relative h-6 bg-gray-200 rounded-full overflow-hidden">
-                        {/* あなたのバー */}
-                        <div 
-                          className="absolute top-0 left-0 h-3 bg-blue-500 rounded-full transition-all duration-500"
-                          style={{ width: `${dimension.value1}%` }}
-                        ></div>
-                        {/* 相手のバー */}
-                        <div 
-                          className="absolute bottom-0 left-0 h-3 bg-pink-500 rounded-full transition-all duration-500"
-                          style={{ width: `${dimension.value2}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  ))}
+                <h3 className="text-xl font-bold text-gray-900 mb-6 text-center">相性分析チャート: {Math.round(compatibility.compatibility)}%</h3>
+                <div className="flex justify-center">
+                  <RadarChart axisScores={compatibility.axisScores} totalScore={compatibility.compatibility} />
                 </div>
               </div>
+
 
               {/* ダウンロード・シェアボタン */}
               <div className="text-center">
