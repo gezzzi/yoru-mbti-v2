@@ -1,7 +1,7 @@
 {
-  "/compatibility/page": "app/compatibility/page.js",
-  "/compatibility/results/page": "app/compatibility/results/page.js",
+  "/page": "app/page.js",
   "/test/page": "app/test/page.js",
   "/results/page": "app/results/page.js",
-  "/types/[typeCode]/page": "app/types/[typeCode]/page.js"
+  "/compatibility/page": "app/compatibility/page.js",
+  "/compatibility/results/page": "app/compatibility/results/page.js"
 }

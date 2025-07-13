@@ -323,6 +323,60 @@ ${typeof window !== 'undefined' ? window.location.origin : ''} #夜の性格診�
     }
   };
 
+  const handleTwitterShare = async () => {
+    if (!qrRef.current || !myResult) return;
+
+    try {
+      // QRコードを画像として保存
+      const svg = qrRef.current.querySelector('svg');
+      if (!svg) throw new Error('QRコードが見つかりません');
+
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = document.createElement('img') as HTMLImageElement;
+      
+      // SVGをData URLに変換
+      const svgData = new XMLSerializer().serializeToString(svg);
+      const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+      const svgUrl = URL.createObjectURL(svgBlob);
+
+      img.onload = () => {
+        canvas.width = 400;
+        canvas.height = 400;
+        ctx?.drawImage(img, 0, 0, 400, 400);
+        
+        // 画像をダウンロード
+        const link = document.createElement('a');
+        link.download = `相性診断QRコード_${myResult.type.code}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        
+        URL.revokeObjectURL(svgUrl);
+
+        // 少し遅延してからTwitterページを開く（ダウンロード完了を待つため）
+        setTimeout(() => {
+          const shareText = `【夜の性格診断】
+🌙 私の性格診断結果 🌙
+タイプ: ${myResult.type.name}（${myResult.type.code}）
+相性診断してみて！
+[相性診断コード: ${myCode}]
+${typeof window !== 'undefined' ? window.location.origin : ''} #夜の性格診断 #相性チェック`;
+          const encodedText = encodeURIComponent(shareText);
+          window.open(`https://twitter.com/intent/tweet?text=${encodedText}`, '_blank', 'width=550,height=420');
+        }, 500);
+      };
+
+      img.onerror = () => {
+        console.error('QRコードの画像変換に失敗しました');
+        URL.revokeObjectURL(svgUrl);
+      };
+
+      img.src = svgUrl;
+    } catch (error) {
+      console.error('Twitterシェアの準備に失敗しました:', error);
+    }
+  };
+
 
   return (
     <div className="min-h-screen pt-16">
@@ -443,11 +497,18 @@ ${typeof window !== 'undefined' ? window.location.origin : ''} #夜の性格診�
                     </button>
                   )}
                   <button
+                    onClick={handleTwitterShare}
+                    className="bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-all flex items-center justify-center"
+                  >
+                    <Share2 className="w-5 h-5 mr-2" />
+                    X(Twitter)でシェア
+                  </button>
+                  <button
                     onClick={() => setShowShareModal(true)}
                     className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-all flex items-center justify-center"
                   >
                     <Share2 className="w-5 h-5 mr-2" />
-                    QRコードをシェア
+                    その他の方法でシェア
                   </button>
                 </div>
               </div>
