@@ -5,6 +5,7 @@ import { TestResult, PersonalityType } from '../types/personality';
 import { Heart, Users, ArrowRight, Check, Download, Share2, RefreshCw, User, Copy, Twitter, MessageCircle, X } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { generateCompatibilityShareText, copyToClipboard } from '../utils/snsShare';
+import { personalityTypes } from '../data/personalityTypes';
 import Image from 'next/image';
 
 interface CompatibilityResult {
@@ -52,6 +53,22 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   onBack, 
   onNewTest 
 }) => {
+  // あなたのタイプのrubyプロパティを取得
+  const myBaseTypeCode = myResult.type.code.split('-')[0];
+  const myBasePersonalityType = personalityTypes.find(pt => pt.code === myBaseTypeCode);
+  const myTypeWithRuby = {
+    ...myResult.type,
+    ruby: myBasePersonalityType?.ruby
+  };
+
+  // 相手のタイプのrubyプロパティを取得
+  const partnerBaseTypeCode = partnerResult.type.code.split('-')[0];
+  const partnerBasePersonalityType = personalityTypes.find(pt => pt.code === partnerBaseTypeCode);
+  const partnerTypeWithRuby = {
+    ...partnerResult.type,
+    ruby: partnerBasePersonalityType?.ruby
+  };
+
   const [isDownloading, setIsDownloading] = useState(false);
   const downloadRef = useRef<HTMLDivElement>(null);
   const [showShareModal, setShowShareModal] = useState(false);
@@ -205,7 +222,16 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
               <h3 className="font-semibold text-gray-900 mb-4 text-center">あなたのタイプ</h3>
               <div className="text-center">
                 <TypeImage typeCode={myResult.type.code} emoji={myResult.type.emoji} name={myResult.type.name} />
-                <h4 className="text-xl font-bold text-gray-900">{myResult.type.name}</h4>
+                <h4 className="text-xl font-bold text-gray-900">
+                  {myTypeWithRuby && myTypeWithRuby.ruby ? (
+                    <ruby className="ruby-text">
+                      {myTypeWithRuby.name}
+                      <rt>{myTypeWithRuby.ruby}</rt>
+                    </ruby>
+                  ) : (
+                    myTypeWithRuby?.name || 'タイプ名なし'
+                  )}
+                </h4>
                 <p className="text-sm text-gray-600 mb-3">{myResult.type.code}</p>
                 <p className="text-sm text-gray-700">{myResult.type.description}</p>
               </div>
@@ -215,7 +241,16 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
               <h3 className="font-semibold text-gray-900 mb-4 text-center">相手のタイプ</h3>
               <div className="text-center">
                 <TypeImage typeCode={partnerResult.type.code} emoji={partnerResult.type.emoji} name={partnerResult.type.name} />
-                <h4 className="text-xl font-bold text-gray-900">{partnerResult.type.name}</h4>
+                <h4 className="text-xl font-bold text-gray-900">
+                  {partnerTypeWithRuby && partnerTypeWithRuby.ruby ? (
+                    <ruby className="ruby-text">
+                      {partnerTypeWithRuby.name}
+                      <rt>{partnerTypeWithRuby.ruby}</rt>
+                    </ruby>
+                  ) : (
+                    partnerTypeWithRuby?.name || 'タイプ名なし'
+                  )}
+                </h4>
                 <p className="text-sm text-gray-600 mb-3">{partnerResult.type.code}</p>
                 <p className="text-sm text-gray-700">{partnerResult.type.description}</p>
               </div>

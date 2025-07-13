@@ -1,5 +1,7 @@
 {
-  "/results/page": "app/results/page.js",
   "/compatibility/page": "app/compatibility/page.js",
+  "/types/page": "app/types/page.js",
+  "/results/page": "app/results/page.js",
+  "/types/[typeCode]/page": "app/types/[typeCode]/page.js",
   "/compatibility/results/page": "app/compatibility/results/page.js"
 }

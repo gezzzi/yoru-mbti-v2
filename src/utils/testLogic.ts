@@ -70,7 +70,7 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
   const basePersonalityType = personalityTypes.find(type => type.code === baseTypeCode) || personalityTypes[0];
   
   // Create extended personality type with R/H suffix
-  const personalityType = {
+  const personalityType: PersonalityType = {
     ...basePersonalityType,
     code: fullTypeCode
   };

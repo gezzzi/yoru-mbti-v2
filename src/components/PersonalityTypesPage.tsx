@@ -76,7 +76,14 @@ export default function PersonalityTypesPage() {
           </div>
           <div className={`${scheme.textBg} rounded-xl p-4 mx-auto`}>
             <h3 className="text-xl font-bold text-gray-900 mb-1">
-              {type.name}
+              {type.ruby ? (
+                <ruby className="ruby-text">
+                  {type.name}
+                  <rt>{type.ruby}</rt>
+                </ruby>
+              ) : (
+                type.name
+              )}
             </h3>
             <p className="text-sm font-medium text-gray-700 mb-3">
               {type.code}

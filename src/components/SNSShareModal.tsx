@@ -107,7 +107,16 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose }
             <div className="flex items-center space-x-3 mb-3">
               <span className="text-3xl">{result.type.emoji}</span>
               <div>
-                <h3 className="font-bold text-gray-900">{result.type.name}</h3>
+                <h3 className="font-bold text-gray-900">
+                  {result.type.ruby ? (
+                    <ruby>
+                      {result.type.name}
+                      <rt className="text-xs font-normal">{result.type.ruby}</rt>
+                    </ruby>
+                  ) : (
+                    result.type.name
+                  )}
+                </h3>
                 <p className="text-sm text-gray-600">{result.type.code}</p>
               </div>
             </div>

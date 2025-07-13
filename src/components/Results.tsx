@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react';
 import Link from 'next/link';
 import { TestResult } from '../types/personality';
-import { getCategoryColor, getCategoryName } from '../data/personalityTypes';
+import { getCategoryColor, getCategoryName, personalityTypes } from '../data/personalityTypes';
 import { generateCompatibilityCode, copyToClipboard } from '../utils/snsShare';
 import { Heart, Users, RefreshCw, Download, Share2, User, Shield, Zap, Eye, Copy, Check } from 'lucide-react';
 import Image from 'next/image';
@@ -71,6 +71,17 @@ const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = (
 
 const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
   const { type } = result;
+  
+  // コードから基本の4文字を抽出（例：IDSA-R → IDSA）
+  const baseTypeCode = type.code.split('-')[0];
+  
+  // personalityTypesから直接rubyプロパティを取得
+  const basePersonalityType = personalityTypes.find(pt => pt.code === baseTypeCode);
+  const typeWithRuby = {
+    ...type,
+    ruby: basePersonalityType?.ruby
+  };
+  
   const [hoveredDimension, setHoveredDimension] = useState<PersonalityDimension | null>(null);
   const [selectedDimension, setSelectedDimension] = useState<PersonalityDimension | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
@@ -275,13 +286,20 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
         {/* ダウンロード用のコンテナ */}
         <div ref={downloadRef}>
         {/* Header Section */}
-        <header className="sp-typeheader relative rounded-t-3xl overflow-hidden">
-          <div className={`section__wrap relative z-10 ${categoryColorSchemes[type.category]} rounded-t-3xl overflow-hidden`}>
+        <header className="sp-typeheader relative rounded-t-3xl">
+          <div className={`section__wrap relative z-10 ${categoryColorSchemes[type.category]} rounded-t-3xl`}>
             {/* 中央配置：すべての要素 */}
             <div className="type-info px-8 py-12 flex flex-col items-center justify-center text-center w-full max-w-2xl mx-auto">
               {/* 性格タイプ名 */}
               <div className="font-head text-3xl md:text-4xl lg:text-5xl mb-10 mt-0 text-center text-gray-900 font-bold">
-                {type.name}
+                {typeWithRuby && typeWithRuby.ruby ? (
+                  <ruby className="ruby-text">
+                    {typeWithRuby.name}
+                    <rt>{typeWithRuby.ruby}</rt>
+                  </ruby>
+                ) : (
+                  typeWithRuby?.name || 'タイプ名なし'
+                )}
               </div>
               <div className="code text-center mb-6">
                 <h1 className="font-head text-2xl md:text-3xl m-0 text-green-900 font-bold">
