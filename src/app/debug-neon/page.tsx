@@ -4,6 +4,37 @@ import React from 'react';
 import NeonText from '../../components/NeonText';
 import SimpleNeonText from '../../components/SimpleNeonText';
 
+// デバイス情報コンポーネント（クライアントサイドのみ）
+const DeviceInfo: React.FC = () => {
+  const [deviceInfo, setDeviceInfo] = React.useState({
+    userAgent: 'Loading...',
+    devicePixelRatio: 'Loading...',
+    screenWidth: 'Loading...',
+    screenHeight: 'Loading...'
+  });
+
+  React.useEffect(() => {
+    setDeviceInfo({
+      userAgent: navigator.userAgent,
+      devicePixelRatio: window.devicePixelRatio.toString(),
+      screenWidth: window.screen.width.toString(),
+      screenHeight: window.screen.height.toString()
+    });
+  }, []);
+
+  return (
+    <div className="bg-gray-800 p-6 rounded-lg">
+      <h2 className="text-white text-xl mb-4">デバイス情報</h2>
+      <div className="text-white text-sm space-y-2">
+        <div>User Agent: {deviceInfo.userAgent}</div>
+        <div>Device Pixel Ratio: {deviceInfo.devicePixelRatio}</div>
+        <div>Screen Width: {deviceInfo.screenWidth}</div>
+        <div>Screen Height: {deviceInfo.screenHeight}</div>
+      </div>
+    </div>
+  );
+};
+
 const DebugNeonPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-900 p-8">
@@ -289,15 +320,7 @@ const DebugNeonPage: React.FC = () => {
         </div>
 
         {/* iPhone専用デバイス情報 */}
-        <div className="bg-gray-800 p-6 rounded-lg">
-          <h2 className="text-white text-xl mb-4">デバイス情報</h2>
-          <div className="text-white text-sm space-y-2">
-            <div>User Agent: {typeof window !== 'undefined' ? navigator.userAgent : 'N/A'}</div>
-            <div>Device Pixel Ratio: {typeof window !== 'undefined' ? window.devicePixelRatio : 'N/A'}</div>
-            <div>Screen Width: {typeof window !== 'undefined' ? window.screen.width : 'N/A'}</div>
-            <div>Screen Height: {typeof window !== 'undefined' ? window.screen.height : 'N/A'}</div>
-          </div>
-        </div>
+        <DeviceInfo />
 
         {/* 戻るボタン */}
         <div className="text-center">
