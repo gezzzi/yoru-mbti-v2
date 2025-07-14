@@ -242,6 +242,180 @@ const DebugNeonPage: React.FC = () => {
             </div>
           </div>
 
+          {/* 新しい動的テスト - iPhone最適化版 */}
+          <div className="bg-gray-900 p-6 rounded-lg border-2 border-green-500">
+            <h2 className="text-white text-xl mb-6 text-center">🚀 iPhone最適化 - より動きのあるテスト</h2>
+            
+            {/* テスト13: 強化されたパルス */}
+            <div className="mb-8">
+              <h3 className="text-green-400 text-md mb-3">テスト13: 強化されたパルス</h3>
+              <div className="text-center">
+                <div 
+                  className="text-4xl font-bold enhanced-pulse-text"
+                  style={{
+                    color: 'transparent',
+                    WebkitTextStrokeWidth: '1px',
+                    WebkitTextStrokeColor: '#ffeb3b'
+                  } as React.CSSProperties}
+                >
+                  夜の性格診断
+                </div>
+              </div>
+            </div>
+
+            {/* テスト14: ストローク幅の変化 */}
+            <div className="mb-8">
+              <h3 className="text-green-400 text-md mb-3">テスト14: ストローク幅の変化</h3>
+              <div className="text-center">
+                <div 
+                  className="text-4xl font-bold stroke-pulse-text"
+                  style={{
+                    color: 'transparent',
+                    WebkitTextStrokeColor: '#ff6b35'
+                  } as React.CSSProperties}
+                >
+                  夜の性格診断
+                </div>
+              </div>
+            </div>
+
+            {/* テスト15: 波状運動 */}
+            <div className="mb-8">
+              <h3 className="text-green-400 text-md mb-3">テスト15: 波状運動</h3>
+              <div className="text-center">
+                <div className="text-4xl font-bold">
+                  {['夜', 'の', '性', '格', '診', '断'].map((char, index) => (
+                    <span
+                      key={index}
+                      className="wave-char"
+                      style={{
+                        color: 'transparent',
+                        WebkitTextStrokeWidth: '1px',
+                        WebkitTextStrokeColor: '#9945ff',
+                        animationDelay: `${index * 0.1}s`
+                      } as React.CSSProperties}
+                    >
+                      {char}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* テスト16: 色の変化 */}
+            <div className="mb-8">
+              <h3 className="text-green-400 text-md mb-3">テスト16: 色の変化</h3>
+              <div className="text-center">
+                <div 
+                  className="text-4xl font-bold color-shift-text"
+                  style={{
+                    color: 'transparent'
+                  } as React.CSSProperties}
+                >
+                  夜の性格診断
+                </div>
+              </div>
+            </div>
+
+            {/* テスト17: 微細な回転 */}
+            <div className="mb-8">
+              <h3 className="text-green-400 text-md mb-3">テスト17: 微細な回転</h3>
+              <div className="text-center">
+                <div 
+                  className="text-4xl font-bold rotate-gentle-text"
+                  style={{
+                    color: 'transparent',
+                    WebkitTextStrokeWidth: '1px',
+                    WebkitTextStrokeColor: '#ff1493'
+                  } as React.CSSProperties}
+                >
+                  夜の性格診断
+                </div>
+              </div>
+            </div>
+
+            {/* テスト18: 透明度の波 */}
+            <div className="mb-8">
+              <h3 className="text-green-400 text-md mb-3">テスト18: 透明度の波</h3>
+              <div className="text-center">
+                <div className="text-4xl font-bold">
+                  {['夜', 'の', '性', '格', '診', '断'].map((char, index) => (
+                    <span
+                      key={index}
+                      className="opacity-wave-char"
+                      style={{
+                        color: 'transparent',
+                        WebkitTextStrokeWidth: '1px',
+                        WebkitTextStrokeColor: '#00ff00',
+                        animationDelay: `${index * 0.2}s`
+                      } as React.CSSProperties}
+                    >
+                      {char}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* テスト19: 組み合わせ1 (パルス + 波) */}
+            <div className="mb-8">
+              <h3 className="text-green-400 text-md mb-3">テスト19: 組み合わせ1 (パルス + 波)</h3>
+              <div className="text-center">
+                <div className="text-4xl font-bold">
+                  {['夜', 'の', '性', '格', '診', '断'].map((char, index) => (
+                    <span
+                      key={index}
+                      className="enhanced-pulse-text wave-char"
+                      style={{
+                        color: 'transparent',
+                        WebkitTextStrokeWidth: '1px',
+                        WebkitTextStrokeColor: '#ffeb3b',
+                        animationDelay: `${index * 0.15}s`
+                      } as React.CSSProperties}
+                    >
+                      {char}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* テスト20: 組み合わせ2 (色変化 + 回転) */}
+            <div className="mb-8">
+              <h3 className="text-green-400 text-md mb-3">テスト20: 組み合わせ2 (色変化 + 回転)</h3>
+              <div className="text-center">
+                <div 
+                  className="text-4xl font-bold color-shift-text rotate-gentle-text"
+                  style={{
+                    color: 'transparent'
+                  } as React.CSSProperties}
+                >
+                  夜の性格診断
+                </div>
+              </div>
+            </div>
+
+            {/* テスト21: フル組み合わせ */}
+            <div className="mb-8">
+              <h3 className="text-green-400 text-md mb-3">テスト21: フル組み合わせ (注意: 過度な動き)</h3>
+              <div className="text-center">
+                <div className="text-4xl font-bold">
+                  {['夜', 'の', '性', '格', '診', '断'].map((char, index) => (
+                    <span
+                      key={index}
+                      className="enhanced-pulse-text color-shift-text opacity-wave-char"
+                      style={{
+                        animationDelay: `${index * 0.1}s`
+                      } as React.CSSProperties}
+                    >
+                      {char}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* デバイス情報 */}
           <div className="bg-gray-800 p-6 rounded-lg">
             <h2 className="text-white text-lg mb-4">デバイス情報</h2>

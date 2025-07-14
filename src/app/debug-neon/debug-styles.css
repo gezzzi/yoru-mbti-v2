@@ -42,6 +42,51 @@
   }
 }
 
+/* iPhone最適化された新しいアニメーション */
+@keyframes enhanced-pulse {
+  0%, 100% { 
+    transform: scale(1) translateZ(0);
+    filter: drop-shadow(0 0 3px currentColor);
+  }
+  50% { 
+    transform: scale(1.05) translateZ(0);
+    filter: drop-shadow(0 0 6px currentColor);
+  }
+}
+
+@keyframes stroke-pulse {
+  0%, 100% { 
+    -webkit-text-stroke-width: 1px;
+    transform: translateZ(0);
+  }
+  50% { 
+    -webkit-text-stroke-width: 1.5px;
+    transform: translateZ(0);
+  }
+}
+
+@keyframes wave-motion {
+  0%, 100% { transform: translateY(0) translateZ(0); }
+  50% { transform: translateY(-8px) translateZ(0); }
+}
+
+@keyframes color-shift {
+  0%, 100% { -webkit-text-stroke-color: #ffeb3b; }
+  33% { -webkit-text-stroke-color: #ff6b35; }
+  66% { -webkit-text-stroke-color: #9945ff; }
+}
+
+@keyframes rotate-gentle {
+  0%, 100% { transform: rotate(0deg) translateZ(0); }
+  50% { transform: rotate(2deg) translateZ(0); }
+}
+
+@keyframes opacity-wave {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* 組み合わせクラス */
 .blink-text {
   animation: blink 2s infinite;
 }
@@ -67,4 +112,34 @@
 
 .filter-text {
   animation: filter-change 2s ease-in-out infinite;
+}
+
+.enhanced-pulse-text {
+  animation: enhanced-pulse 2.5s ease-in-out infinite;
+  display: inline-block;
+}
+
+.stroke-pulse-text {
+  animation: stroke-pulse 3s ease-in-out infinite;
+  display: inline-block;
+}
+
+.wave-char {
+  display: inline-block;
+  animation: wave-motion 2s ease-in-out infinite;
+}
+
+.color-shift-text {
+  animation: color-shift 4s ease-in-out infinite;
+  display: inline-block;
+}
+
+.rotate-gentle-text {
+  animation: rotate-gentle 3s ease-in-out infinite;
+  display: inline-block;
+}
+
+.opacity-wave-char {
+  display: inline-block;
+  animation: opacity-wave 2s ease-in-out infinite;
 }

@@ -3,7 +3,6 @@
   "/compatibility/page": "app/compatibility/page.js",
   "/results/page": "app/results/page.js",
   "/test/page": "app/test/page.js",
-  "/page": "app/page.js",
   "/_not-found/page": "app/_not-found/page.js",
   "/debug-neon/page": "app/debug-neon/page.js"
 }
