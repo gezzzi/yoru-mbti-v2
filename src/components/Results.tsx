@@ -10,6 +10,7 @@ import Image from 'next/image';
 import QRCode from 'react-qr-code';
 import SNSShareModal from './SNSShareModal';
 import html2canvas from 'html2canvas';
+import NeonText from './NeonText';
 
 // カテゴリごとの色設定を追加
 const categoryColorSchemes = {
@@ -271,15 +272,8 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* タイトル */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-6 leading-tight drop-shadow-lg flex justify-center gap-1 select-none">
-            <span className="neon-pink" style={{color:'#f472b6',textShadow:'0 0 10px #f472b6,0 0 20px #ec4899,0 0 30px #be185d',animation:'pulsePink 2s ease-in-out infinite'}}>あ</span>
-            <span className="neon-pink" style={{color:'#f472b6',textShadow:'0 0 10px #f472b6,0 0 20px #ec4899,0 0 30px #be185d',animation:'pulsePink 2s ease-in-out infinite'}}>な</span>
-            <span className="neon-pink" style={{color:'#f472b6',textShadow:'0 0 10px #f472b6,0 0 20px #ec4899,0 0 30px #be185d',animation:'pulsePink 2s ease-in-out infinite'}}>た</span>
-            <span className="neon-pink" style={{color:'#f472b6',textShadow:'0 0 10px #f472b6,0 0 20px #ec4899,0 0 30px #be185d',animation:'pulsePink 2s ease-in-out infinite'}}>の</span>
-            <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>診</span>
-            <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>断</span>
-            <span className="neon-blue" style={{color:'#60a5fa',textShadow:'0 0 10px #60a5fa,0 0 20px #3b82f6,0 0 30px #1d4ed8',animation:'pulseBlue 2.5s ease-in-out infinite'}}>結</span>
-            <span className="neon-blue" style={{color:'#60a5fa',textShadow:'0 0 10px #60a5fa,0 0 20px #3b82f6,0 0 30px #1d4ed8',animation:'pulseBlue 2.5s ease-in-out infinite'}}>果</span>
+          <h1 className="text-3xl md:text-4xl font-bold mb-6 leading-tight drop-shadow-lg select-none text-center">
+            <NeonText text={["あなたの", "診断結果"]} specialCharIndex={5} className="gap-1" />
           </h1>
         </div>
         

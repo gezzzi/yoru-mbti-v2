@@ -9,6 +9,7 @@ import SNSShareModal from './SNSShareModal';
 import Image from 'next/image';
 import QRCode from 'react-qr-code';
 import QrScanner from 'qr-scanner';
+import NeonText from './NeonText';
 
 interface CompatibilityResult {
   compatibility: number;
@@ -347,11 +348,8 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
               <Heart className="w-8 h-8 text-white" />
             </div>
           </div> */}
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 flex justify-center gap-1 select-none">
-            <span style={{color:'#38bdf8',textShadow:'0 0 10px #38bdf8,0 0 20px #38bdf8,0 0 30px #0ea5e9',animation:'shimmerGold 3s ease-in-out infinite'}}>相</span>
-            <span style={{color:'#f472b6',textShadow:'0 0 10px #f472b6,0 0 20px #ec4899,0 0 30px #be185d',animation:'pulsePink 2s ease-in-out infinite'}}>性</span>
-            <span style={{color:'#38bdf8',textShadow:'0 0 10px #38bdf8,0 0 20px #38bdf8,0 0 30px #0ea5e9',animation:'electricBlue 1.5s ease-in-out infinite'}}>診</span>
-            <span style={{color:'#38bdf8',textShadow:'0 0 10px #38bdf8,0 0 20px #38bdf8,0 0 30px #0ea5e9',animation:'glowGreen 2.5s ease-in-out infinite'}}>断</span>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 select-none">
+            <NeonText text="相性診断" specialCharIndex={1} className="flex justify-center gap-1" />
           </h1>
 
         </div>

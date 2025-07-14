@@ -7,6 +7,7 @@ import html2canvas from 'html2canvas';
 import { generateCompatibilityShareText, copyToClipboard } from '../utils/snsShare';
 import { personalityTypes } from '../data/personalityTypes';
 import Image from 'next/image';
+import NeonText from './NeonText';
 
 interface CompatibilityResult {
   compatibility: number;
@@ -332,13 +333,8 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         {/* Hero Section */}
         <div className="text-white py-16">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 flex justify-center gap-1 select-none">
-              <span style={{color:'#38bdf8',textShadow:'0 0 10px #38bdf8,0 0 20px #38bdf8,0 0 30px #0ea5e9',animation:'shimmerGold 3s ease-in-out infinite'}}>相</span>
-              <span style={{color:'#f472b6',textShadow:'0 0 10px #f472b6,0 0 20px #ec4899,0 0 30px #be185d',animation:'pulsePink 2s ease-in-out infinite'}}>性</span>
-              <span style={{color:'#38bdf8',textShadow:'0 0 10px #38bdf8,0 0 20px #38bdf8,0 0 30px #0ea5e9',animation:'electricBlue 1.5s ease-in-out infinite'}}>診</span>
-              <span style={{color:'#38bdf8',textShadow:'0 0 10px #38bdf8,0 0 20px #38bdf8,0 0 30px #0ea5e9',animation:'glowGreen 2.5s ease-in-out infinite'}}>断</span>
-              <span style={{color:'#fde047',textShadow:'0 0 10px #fde047,0 0 20px #facc15,0 0 30px #ca8a04',animation:'pulsePink 2s ease-in-out infinite'}}>結</span>
-              <span style={{color:'#fde047',textShadow:'0 0 10px #fde047,0 0 20px #facc15,0 0 30px #ca8a04',animation:'electricBlue 1.5s ease-in-out infinite'}}>果</span>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 select-none text-center">
+              <NeonText text={["相性", "診断結果"]} specialCharIndex={1} className="gap-1" />
             </h1>
 
           </div>

@@ -3,6 +3,7 @@
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import NeonText from './NeonText';
 
 const Hero: React.FC = () => {
   useEffect(() => {
@@ -29,13 +30,8 @@ const Hero: React.FC = () => {
       {/* テキスト部分 */}
       <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 text-center flex-1">
         {/* ここは既存のまま */}
-        <h1 className="mt-8 md:mt-12 text-3xl md:text-5xl font-bold text-white mb-6 leading-tight drop-shadow-lg flex justify-center gap-1 select-none">
-          <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>夜</span>
-          <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>の</span>
-          <span className="neon-pink" style={{color:'#f472b6',textShadow:'0 0 10px #f472b6,0 0 20px #ec4899,0 0 30px #be185d',animation:'pulsePink 2s ease-in-out infinite'}}>性</span>
-          <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>格</span>
-          <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>診</span>
-          <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>断</span>
+        <h1 className="mt-8 md:mt-12 text-3xl md:text-5xl font-bold text-white mb-6 leading-tight drop-shadow-lg select-none text-center">
+          <NeonText text={["夜の", "性格診断"]} specialCharIndex={2} className="gap-1" />
         </h1>
         <p className="text-base md:text-xl text-white/90 mb-4 leading-relaxed max-w-3xl mx-auto drop-shadow">
           たった10分で、自分がどんな性癖を持っていて、なぜそのプレイや関係性に惹かれるのか、不思議なくらいしっくりくる説明が手に入ります。

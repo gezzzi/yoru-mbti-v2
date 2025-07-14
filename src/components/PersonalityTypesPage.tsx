@@ -5,6 +5,7 @@ import { PersonalityType } from '@/types/personality';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import NeonText from './NeonText';
 
 // カテゴリごとの色設定
 const categoryColorSchemes = {
@@ -100,12 +101,8 @@ export default function PersonalityTypesPage() {
         {/* Header */}
         <div className="space-y-0 pt-12 bg-transparent">
           <div className="text-center mb-16">
-            <h1 className="text-5xl font-bold text-white mb-4 pt-24 flex justify-center gap-1 select-none">
-              <span className="neon-pink" style={{color:'#f472b6',textShadow:'0 0 10px #f472b6,0 0 20px #ec4899,0 0 30px #be185d',animation:'pulsePink 2s ease-in-out infinite'}}>性</span>
-              <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>格</span>
-              <span className="neon-blue" style={{color:'#3b82f6',textShadow:'0 0 10px #3b82f6,0 0 20px #60a5fa,0 0 30px #93c5fd',animation:'pulseBlue 2.5s ease-in-out infinite'}}>タ</span>
-              <span className="neon-blue" style={{color:'#3b82f6',textShadow:'0 0 10px #3b82f6,0 0 20px #60a5fa,0 0 30px #93c5fd',animation:'pulseBlue 2.5s ease-in-out infinite'}}>イ</span>
-              <span className="neon-blue" style={{color:'#3b82f6',textShadow:'0 0 10px #3b82f6,0 0 20px #60a5fa,0 0 30px #93c5fd',animation:'pulseBlue 2.5s ease-in-out infinite'}}>プ</span>
+            <h1 className="text-5xl font-bold text-white mb-4 pt-24 select-none">
+              <NeonText text="性格タイプ" specialCharIndex={0} className="flex justify-center gap-1" />
             </h1>
           </div>
 

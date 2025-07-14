@@ -5,6 +5,7 @@ import { Check } from 'lucide-react';
 import { questions } from '../data/questions';
 import { Question } from '../types/personality';
 import { getProgressPercentage } from '../utils/testLogic';
+import NeonText from './NeonText';
 
 interface QuizProps {
   onComplete: (answers: Record<string, number>) => void;
@@ -169,13 +170,8 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       {/* Header with transparent background */}
       <div className="py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="mt-12 text-3xl font-bold text-white mb-4 flex justify-center gap-1 select-none">
-            <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>夜</span>
-            <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>の</span>
-            <span className="neon-pink" style={{color:'#f472b6',textShadow:'0 0 10px #f472b6,0 0 20px #ec4899,0 0 30px #be185d',animation:'pulsePink 2s ease-in-out infinite'}}>性</span>
-            <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>格</span>
-            <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>診</span>
-            <span className="neon-gold" style={{color:'#ffd700',textShadow:'0 0 10px #ffd700,0 0 20px #ffed4e,0 0 30px #fff59d',animation:'shimmerGold 3s ease-in-out infinite'}}>断</span>
+          <h1 className="mt-12 text-3xl font-bold text-white mb-4 select-none text-center">
+            <NeonText text={["夜の", "性格診断"]} specialCharIndex={2} className="gap-1" />
           </h1>
         </div>
       </div>
