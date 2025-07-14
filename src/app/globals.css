@@ -147,6 +147,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transform: translateZ(0);
+  font-weight: bold;
+  will-change: transform, opacity;
 }
 
 .neon-char::before {
@@ -279,46 +281,131 @@ body {
   50% { transform: rotate(5deg) scale(1.1); }
 }
 
-/* Mobile optimizations for crisp neon text */
+/* iPhone specific optimizations for crisp neon text */
 @media screen and (-webkit-min-device-pixel-ratio: 2) {
   .neon-char {
-    -webkit-text-stroke-width: 1px;
-    text-stroke-width: 1px;
+    -webkit-text-stroke-width: 0.5px;
+    text-stroke-width: 0.5px;
     text-shadow: 
-      0 0 10px #ffeb3b,
-      0 0 20px #ffc107;
+      0 0 5px #ffeb3b,
+      0 0 10px #ffc107;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-perspective: 1000;
+    perspective: 1000;
   }
   
   .neon-char::before {
-    -webkit-text-stroke-width: 3px;
-    text-stroke-width: 3px;
+    -webkit-text-stroke-width: 1.5px;
+    text-stroke-width: 1.5px;
     text-shadow: 
-      0 0 20px #9945ff,
-      0 0 40px #7733dd;
+      0 0 10px #9945ff,
+      0 0 20px #7733dd;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
   
   .neon-char.special {
-    -webkit-text-stroke-width: 2px;
-    text-stroke-width: 2px;
-    text-shadow: 
-      0 0 15px #ff1493,
-      0 0 30px #ff69b4;
-  }
-  
-  .neon-char.special::before {
-    -webkit-text-stroke-width: 4px;
-    text-stroke-width: 4px;
-    text-shadow: 
-      0 0 25px #ff6b35,
-      0 0 50px #ff4500;
-  }
-  
-  .neon-char.special::after {
     -webkit-text-stroke-width: 1px;
     text-stroke-width: 1px;
     text-shadow: 
-      0 0 10px #9370db,
-      0 0 20px #ba55d3,
-      0 0 30px #da70d6;
+      0 0 8px #ff1493,
+      0 0 15px #ff69b4;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
-} 
+  
+  .neon-char.special::before {
+    -webkit-text-stroke-width: 2px;
+    text-stroke-width: 2px;
+    text-shadow: 
+      0 0 12px #ff6b35,
+      0 0 25px #ff4500;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+  
+  .neon-char.special::after {
+    -webkit-text-stroke-width: 0.5px;
+    text-stroke-width: 0.5px;
+    text-shadow: 
+      0 0 5px #9370db,
+      0 0 10px #ba55d3,
+      0 0 15px #da70d6;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+}
+
+/* Additional iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+  .neon-char {
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: auto;
+    text-rendering: optimizeSpeed;
+    will-change: transform;
+  }
+  
+  .neon-char::before,
+  .neon-char.special::before,
+  .neon-char.special::after {
+    -webkit-font-smoothing: subpixel-antialiased;
+    will-change: transform;
+  }
+}
+
+/* Debug styles for iPhone blur testing - uncomment one at a time to test */
+
+/* Test 1: Minimal stroke approach */
+.debug-test-1 .neon-char {
+  color: transparent !important;
+  -webkit-text-stroke: 1px #ffeb3b !important;
+  text-stroke: 1px #ffeb3b !important;
+  text-shadow: none !important;
+  -webkit-font-smoothing: antialiased !important;
+  font-weight: bold !important;
+  animation: none !important;
+}
+
+.debug-test-1 .neon-char::before,
+.debug-test-1 .neon-char::after {
+  display: none !important;
+}
+
+/* Test 2: Solid color approach */
+.debug-test-2 .neon-char {
+  color: #ffeb3b !important;
+  -webkit-text-stroke: none !important;
+  text-stroke: none !important;
+  text-shadow: 
+    0 0 5px #ffeb3b,
+    0 0 10px #ffc107 !important;
+  -webkit-font-smoothing: antialiased !important;
+  animation: none !important;
+}
+
+.debug-test-2 .neon-char::before,
+.debug-test-2 .neon-char::after {
+  display: none !important;
+}
+
+/* Test 3: Box shadow approach *//*
+.debug-test-3 .neon-char {
+  color: transparent;
+  background: linear-gradient(transparent, transparent);
+  background-clip: text;
+  -webkit-background-clip: text;
+  border: 1px solid #ffeb3b;
+  box-shadow: 
+    0 0 5px #ffeb3b,
+    0 0 10px #ffc107;
+}
+
+/* Test 4: SVG filter approach *//*
+.debug-test-4 .neon-char {
+  color: #ffeb3b;
+  filter: url(#neon-glow);
+}
+*/ 
