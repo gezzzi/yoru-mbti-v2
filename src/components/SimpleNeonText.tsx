@@ -22,12 +22,11 @@ const SimpleNeonText: React.FC<SimpleNeonTextProps> = ({ text, className = '' })
                 color: 'transparent',
                 WebkitTextStrokeWidth: '1px',
                 WebkitTextStrokeColor: '#ffeb3b',
-                textStroke: '1px #ffeb3b',
                 textShadow: '0 0 10px #ffeb3b',
                 WebkitFontSmoothing: 'antialiased',
                 fontWeight: 'bold',
                 display: 'inline-block'
-              }}
+              } as React.CSSProperties}
             >
               {char}
             </span>

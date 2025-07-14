@@ -169,12 +169,11 @@ const DebugNeonPage: React.FC = () => {
               style={{
                 color: 'transparent',
                 WebkitTextStroke: '1px #ffeb3b',
-                textStroke: '1px #ffeb3b',
                 textShadow: '0 0 10px #ffeb3b',
                 WebkitFontSmoothing: 'antialiased',
                 position: 'relative',
                 zIndex: 1
-              }}
+              } as React.CSSProperties}
             >
               夜の性格診断
             </div>
