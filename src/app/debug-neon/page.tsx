@@ -2,6 +2,7 @@
 
 import React from 'react';
 import NeonText from '../../components/NeonText';
+import SimpleNeonText from '../../components/SimpleNeonText';
 
 const DebugNeonPage: React.FC = () => {
   return (
@@ -125,6 +126,165 @@ const DebugNeonPage: React.FC = () => {
                 夜の性格診断
               </span>
             </div>
+          </div>
+        </div>
+
+        {/* テスト7: シングルレイヤー */}
+        <div className="bg-gray-800 p-6 rounded-lg">
+          <h2 className="text-white text-xl mb-4">テスト7: シングルレイヤー（beforeなし）</h2>
+          <div className="text-center">
+            <div 
+              className="text-4xl font-bold"
+              style={{
+                color: 'transparent',
+                WebkitTextStroke: '1px #ffeb3b',
+                textStroke: '1px #ffeb3b',
+                textShadow: '0 0 10px #ffeb3b',
+                WebkitFontSmoothing: 'antialiased',
+                position: 'relative',
+                zIndex: 1
+              }}
+            >
+              夜の性格診断
+            </div>
+          </div>
+        </div>
+
+        {/* テスト8: 擬似要素なし + アニメーションなし */}
+        <div className="bg-gray-800 p-6 rounded-lg">
+          <h2 className="text-white text-xl mb-4">テスト8: 擬似要素なし + アニメーションなし</h2>
+          <div className="text-center">
+            <div 
+              className="text-4xl font-bold"
+              style={{
+                color: 'transparent',
+                WebkitTextStrokeWidth: '1px',
+                WebkitTextStrokeColor: '#ffeb3b',
+                textShadow: '0 0 8px rgba(255, 235, 59, 0.8)',
+                WebkitFontSmoothing: 'antialiased',
+                MozOsxFontSmoothing: 'grayscale'
+              }}
+            >
+              夜の性格診断
+            </div>
+          </div>
+        </div>
+
+        {/* テスト9: アウトラインベース */}
+        <div className="bg-gray-800 p-6 rounded-lg">
+          <h2 className="text-white text-xl mb-4">テスト9: text-shadowのみ（複数レイヤー）</h2>
+          <div className="text-center">
+            <div 
+              className="text-4xl font-bold"
+              style={{
+                color: '#ffeb3b',
+                textShadow: `
+                  0 0 3px #ffeb3b,
+                  0 0 6px #ffeb3b,
+                  0 0 9px #ffeb3b,
+                  0 0 12px #ffc107
+                `,
+                WebkitFontSmoothing: 'antialiased'
+              }}
+            >
+              夜の性格診断
+            </div>
+          </div>
+        </div>
+
+        {/* テスト10: Outline + Shadow */}
+        <div className="bg-gray-800 p-6 rounded-lg">
+          <h2 className="text-white text-xl mb-4">テスト10: Outline + Shadow</h2>
+          <div className="text-center">
+            <div 
+              className="text-4xl font-bold"
+              style={{
+                color: '#ffeb3b',
+                textShadow: '0 0 10px #ffeb3b',
+                WebkitTextFillColor: 'transparent',
+                WebkitTextStrokeWidth: '1px',
+                WebkitTextStrokeColor: '#ffeb3b',
+                WebkitFontSmoothing: 'antialiased'
+              }}
+            >
+              夜の性格診断
+            </div>
+          </div>
+        </div>
+
+        {/* テスト11: SVGフィルター */}
+        <div className="bg-gray-800 p-6 rounded-lg">
+          <h2 className="text-white text-xl mb-4">テスト11: SVGフィルター</h2>
+          <div className="text-center">
+            <svg width="0" height="0" style={{ position: 'absolute' }}>
+              <defs>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+            </svg>
+            <div 
+              className="text-4xl font-bold"
+              style={{
+                color: '#ffeb3b',
+                filter: 'url(#glow)',
+                WebkitFontSmoothing: 'antialiased'
+              }}
+            >
+              夜の性格診断
+            </div>
+          </div>
+        </div>
+
+        {/* テスト12: Paint APIフォールバック */}
+        <div className="bg-gray-800 p-6 rounded-lg">
+          <h2 className="text-white text-xl mb-4">テスト12: -webkit-text-fill-color</h2>
+          <div className="text-center">
+            <div 
+              className="text-4xl font-bold"
+              style={{
+                WebkitTextFillColor: 'transparent',
+                background: 'linear-gradient(#ffeb3b, #ffeb3b)',
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+                filter: 'drop-shadow(0 0 10px #ffeb3b)',
+                WebkitFontSmoothing: 'antialiased'
+              }}
+            >
+              夜の性格診断
+            </div>
+          </div>
+        </div>
+
+        {/* テスト13: CSS Paint API風 */}
+        <div className="bg-gray-800 p-6 rounded-lg">
+          <h2 className="text-white text-xl mb-4">テスト13: グラデーション + ストローク</h2>
+          <div className="text-center">
+            <div 
+              className="text-4xl font-bold"
+              style={{
+                background: 'linear-gradient(45deg, #ffeb3b, #ffc107)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                WebkitTextStroke: '0.5px #ffeb3b',
+                filter: 'drop-shadow(0 0 8px #ffeb3b)',
+                WebkitFontSmoothing: 'antialiased'
+              }}
+            >
+              夜の性格診断
+            </div>
+          </div>
+        </div>
+
+        {/* テスト14: 簡素化バージョン（擬似要素なし） */}
+        <div className="bg-gray-800 p-6 rounded-lg">
+          <h2 className="text-white text-xl mb-4">テスト14: 簡素化バージョン（擬似要素なし）</h2>
+          <div className="text-center text-4xl font-bold">
+            <SimpleNeonText text={["夜の", "性格診断"]} />
           </div>
         </div>
 
