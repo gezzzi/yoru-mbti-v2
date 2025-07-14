@@ -209,12 +209,7 @@ const DebugNeonPage: React.FC = () => {
               className="text-4xl font-bold"
               style={{
                 color: '#ffeb3b',
-                textShadow: `
-                  0 0 3px #ffeb3b,
-                  0 0 6px #ffeb3b,
-                  0 0 9px #ffeb3b,
-                  0 0 12px #ffc107
-                `,
+                textShadow: '0 0 3px #ffeb3b, 0 0 6px #ffeb3b, 0 0 9px #ffeb3b, 0 0 12px #ffc107',
                 WebkitFontSmoothing: 'antialiased'
               }}
             >

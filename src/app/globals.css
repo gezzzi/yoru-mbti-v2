@@ -379,9 +379,7 @@ body {
   color: #ffeb3b !important;
   -webkit-text-stroke: none !important;
   text-stroke: none !important;
-  text-shadow: 
-    0 0 5px #ffeb3b,
-    0 0 10px #ffc107 !important;
+  text-shadow: 0 0 5px #ffeb3b, 0 0 10px #ffc107 !important;
   -webkit-font-smoothing: antialiased !important;
   animation: none !important;
 }
