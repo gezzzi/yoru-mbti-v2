@@ -492,16 +492,21 @@ const DebugNeonPage: React.FC = () => {
               <div className="mb-8">
                 <h3 className="text-purple-300 text-md mb-3">iPhone Demo 4: 色変化点滅</h3>
                 <div className="text-center">
-                  <div 
-                    className="text-4xl font-bold iphone-color-blink"
-                    style={{
-                      color: 'transparent',
-                      WebkitTextStrokeWidth: '1px',
-                      WebkitFontSmoothing: 'antialiased',
-                      transform: 'translateZ(0)'
-                    } as React.CSSProperties}
-                  >
-                    夜の性格診断
+                  <div className="text-4xl font-bold">
+                    {['夜', 'の', '性', '格', '診', '断'].map((char, index) => (
+                      <span
+                        key={index}
+                        className={index === 2 ? "iphone-color-blink-special" : "iphone-color-blink"}
+                        style={{
+                          color: 'transparent',
+                          WebkitTextStrokeWidth: '1px',
+                          WebkitFontSmoothing: 'antialiased',
+                          transform: 'translateZ(0)'
+                        } as React.CSSProperties}
+                      >
+                        {char}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </div>

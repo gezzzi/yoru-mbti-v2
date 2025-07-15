@@ -215,6 +215,33 @@
   }
 }
 
+@keyframes iphone-color-blink-special {
+  0%, 100% { 
+    -webkit-text-stroke-color: #ff0066;
+    opacity: 1;
+    filter: drop-shadow(0 0 5px #ff0066);
+    transform: scale(1.1) translateZ(0);
+  }
+  25% { 
+    -webkit-text-stroke-color: #ff1493;
+    opacity: 0.9;
+    filter: drop-shadow(0 0 7px #ff1493);
+    transform: scale(1.15) translateZ(0);
+  }
+  50% { 
+    -webkit-text-stroke-color: #ff69b4;
+    opacity: 0.7;
+    filter: drop-shadow(0 0 10px #ff69b4);
+    transform: scale(1.2) translateZ(0);
+  }
+  75% { 
+    -webkit-text-stroke-color: #ff00ff;
+    opacity: 0.9;
+    filter: drop-shadow(0 0 7px #ff00ff);
+    transform: scale(1.15) translateZ(0);
+  }
+}
+
 @keyframes iphone-wave-blink {
   0%, 100% { 
     transform: translateY(0) scale(1) translateZ(0);
@@ -271,6 +298,13 @@
 
 .iphone-color-blink {
   animation: iphone-color-blink 4s ease-in-out infinite;
+  display: inline-block;
+  -webkit-backface-visibility: hidden;
+  will-change: transform, filter;
+}
+
+.iphone-color-blink-special {
+  animation: iphone-color-blink-special 4s ease-in-out infinite;
   display: inline-block;
   -webkit-backface-visibility: hidden;
   will-change: transform, filter;
