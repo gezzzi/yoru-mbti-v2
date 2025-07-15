@@ -365,7 +365,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
               <Heart className="w-8 h-8 text-white" />
             </div>
           </div> */}
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 select-none">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 select-none">
             <NeonText text="相性診断" specialCharIndex={1} className="flex justify-center gap-1" />
           </h1>
 

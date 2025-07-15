@@ -9,6 +9,13 @@ interface NeonTextProps {
 }
 
 const NeonText: React.FC<NeonTextProps> = ({ text, specialCharIndex, className = '' }) => {
+  const [isIPhone, setIsIPhone] = React.useState(false);
+
+  React.useEffect(() => {
+    const userAgent = navigator.userAgent;
+    const checkIsIPhone = /iPhone|iPod/.test(userAgent) && !(window as any).MSStream;
+    setIsIPhone(checkIsIPhone);
+  }, []);
   // 配列の場合は改行で表示、文字列の場合は従来通り
   if (Array.isArray(text)) {
     let charIndex = 0;
@@ -21,7 +28,7 @@ const NeonText: React.FC<NeonTextProps> = ({ text, specialCharIndex, className =
               return (
                 <span
                   key={`${lineIndex}-${index}`}
-                  className={`neon-char ${currentCharIndex === specialCharIndex ? 'special' : ''}`}
+                  className={`${isIPhone ? 'neon-char-iphone' : 'neon-char'} ${currentCharIndex === specialCharIndex ? 'special' : ''}`}
                   data-char={char}
                   style={{ '--char-index': currentCharIndex } as React.CSSProperties}
                 >
@@ -42,7 +49,7 @@ const NeonText: React.FC<NeonTextProps> = ({ text, specialCharIndex, className =
       {characters.map((char, index) => (
         <span
           key={index}
-          className={`neon-char ${index === specialCharIndex ? 'special' : ''}`}
+          className={`${isIPhone ? 'neon-char-iphone' : 'neon-char'} ${index === specialCharIndex ? 'special' : ''}`}
           data-char={char}
           style={{ '--char-index': index } as React.CSSProperties}
         >

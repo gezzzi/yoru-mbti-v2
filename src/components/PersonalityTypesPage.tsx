@@ -101,7 +101,7 @@ export default function PersonalityTypesPage() {
         {/* Header */}
         <div className="space-y-0 pt-12 bg-transparent">
           <div className="text-center mb-16">
-            <h1 className="text-5xl font-bold text-white mb-4 pt-24 select-none">
+            <h1 className="text-6xl md:text-7xl font-bold text-white mb-4 pt-24 select-none">
               <NeonText text="性格タイプ" specialCharIndex={0} className="flex justify-center gap-1" />
             </h1>
           </div>

@@ -170,7 +170,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       {/* Header with transparent background */}
       <div className="py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="mt-12 text-3xl font-bold text-white mb-4 select-none text-center">
+          <h1 className="mt-12 text-5xl md:text-6xl font-bold text-white mb-4 select-none text-center">
             <NeonText text={["夜の", "性格診断"]} specialCharIndex={2} className="gap-1" />
           </h1>
         </div>

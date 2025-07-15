@@ -30,7 +30,7 @@ const Hero: React.FC = () => {
       {/* テキスト部分 */}
       <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 text-center flex-1">
         {/* ここは既存のまま */}
-        <h1 className="mt-8 md:mt-12 text-3xl md:text-5xl font-bold text-white mb-6 leading-tight drop-shadow-lg select-none text-center">
+        <h1 className="mt-8 md:mt-12 text-5xl md:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-lg select-none text-center">
           <NeonText text={["夜の", "性格診断"]} specialCharIndex={2} className="gap-1" />
         </h1>
         <p className="text-base md:text-xl text-white/90 mb-4 leading-relaxed max-w-3xl mx-auto drop-shadow">

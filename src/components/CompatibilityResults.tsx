@@ -333,7 +333,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         {/* Hero Section */}
         <div className="text-white py-16">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 select-none text-center">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 select-none text-center">
               <NeonText text={["相性", "診断結果"]} specialCharIndex={1} className="gap-1" />
             </h1>
 

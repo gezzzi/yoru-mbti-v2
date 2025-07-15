@@ -129,19 +129,33 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* '夜の'の文字を少し左に寄せる */
+.neon-text > div:first-child {
+  position: relative;
+  left: -0.5em;
+}
+
 .neon-char {
   display: inline-block;
   position: relative;
   color: transparent;
   -webkit-text-stroke: 1px #ffeb3b;
   text-stroke: 1px #ffeb3b;
-  animation: gentle-pulse 2s ease-in-out infinite;
-  animation-delay: calc(var(--char-index) * 0.1s);
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+  animation: 
+    sequential-blink 3s infinite,
+    gentle-pulse 2s ease-in-out infinite;
+  animation-delay: 
+    calc(var(--char-index) * 0.2s),
+    calc(var(--char-index) * 0.1s);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transform: translateZ(0);
   font-weight: bold;
   will-change: transform;
+  transform-style: preserve-3d;
+  perspective: 1000px;
 }
 
 .neon-char::before {
@@ -149,12 +163,18 @@ body {
   position: absolute;
   left: 0;
   top: 0;
-  -webkit-text-stroke: 2px #9945ff;
-  text-stroke: 2px #9945ff;
+  -webkit-text-stroke: 3px #9945ff;
+  text-stroke: 3px #9945ff;
   color: transparent;
+  -webkit-text-fill-color: transparent;
   z-index: -1;
-  animation: outline-pulse 2s ease-in-out infinite;
-  animation-delay: calc(var(--char-index) * 0.3s);
+  text-shadow: none;
+  animation: 
+    rotate-slow 8s linear infinite,
+    outline-pulse 2s ease-in-out infinite;
+  animation-delay: 
+    calc(var(--char-index) * 0.3s),
+    calc(var(--char-index) * 0.1s);
   -webkit-font-smoothing: antialiased;
   transform: translateZ(0);
 }
@@ -162,21 +182,90 @@ body {
 /* Special character style (for key characters like 性) */
 .neon-char.special {
   color: transparent;
-  -webkit-text-stroke: 1.5px #ff1493;
-  text-stroke: 1.5px #ff1493;
-  animation: gentle-pulse 2s ease-in-out infinite;
-  animation-delay: calc(var(--char-index) * 0.1s);
+  -webkit-text-stroke: 2px #ff00ff;
+  text-stroke: 2px #ff00ff;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+  animation: 
+    sequential-blink 3s infinite,
+    flip-3d 4s ease-in-out infinite;
+  animation-delay:
+    calc(var(--char-index) * 0.2s),
+    0s;
   -webkit-font-smoothing: antialiased;
   transform: translateZ(0);
 }
 
 .neon-char.special::before {
-  -webkit-text-stroke: 3px #ff6b35;
-  text-stroke: 3px #ff6b35;
+  display: none;
+}
+
+.neon-char.special::after {
+  display: none;
+}
+
+/* iPhone最適化されたネオンスタイル - 3Dフリップエフェクト */
+.neon-char-iphone {
+  display: inline-block;
+  position: relative;
   color: transparent;
-  animation: outline-pulse 2s ease-in-out infinite;
+  -webkit-text-stroke: 1px #ffeb3b;
+  text-stroke: 1px #ffeb3b;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+  font-weight: bold;
+  margin: 0 2px;
+  animation: 
+    sequential-blink 3s infinite,
+    gentle-pulse 2s ease-in-out infinite;
+  animation-delay: 
+    calc(var(--char-index) * 0.2s),
+    calc(var(--char-index) * 0.1s);
   -webkit-font-smoothing: antialiased;
   transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.neon-char-iphone::before {
+  content: attr(data-char);
+  position: absolute;
+  left: 0;
+  top: 0;
+  -webkit-text-stroke: 2px #9945ff;
+  text-stroke: 2px #9945ff;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+  z-index: -1;
+  filter: drop-shadow(0 0 5px #9945ff);
+  animation: 
+    rotate-slow 8s linear infinite,
+    outline-pulse 2s ease-in-out infinite;
+  animation-delay: 
+    calc(var(--char-index) * 0.3s),
+    calc(var(--char-index) * 0.1s);
+}
+
+.neon-char-iphone.special {
+  -webkit-text-stroke: 2px #ff00ff;
+  text-stroke: 2px #ff00ff;
+  filter: drop-shadow(0 0 5px #ff00ff);
+  animation: 
+    sequential-blink 3s infinite,
+    flip-3d 4s ease-in-out infinite;
+  animation-delay:
+    calc(var(--char-index) * 0.2s),
+    0s;
+}
+
+.neon-char-iphone.special::before {
+  display: none;
+}
+
+.neon-char-iphone.special::after {
+  display: none;
 }
 
 /* Neon animations */
