@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { ScrollAnimation } from './ScrollAnimation';
 
 const HelpPage: React.FC = () => {
   const faqData = [
@@ -54,17 +55,19 @@ const HelpPage: React.FC = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-12">
             {/* よくある質問 */}
-            <div id="faq" className="bg-white rounded-3xl p-8 shadow-lg scroll-mt-20">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
-                よくある質問
-              </h2>
-              <p className="text-gray-600 mb-8 text-center">
-                多くのお客様からお寄せいただくご質問とその回答をまとめました。
-              </p>
+            <ScrollAnimation animation="fadeIn" duration={800}>
+              <div id="faq" className="bg-white rounded-3xl p-8 shadow-lg scroll-mt-20">
+                <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+                  よくある質問
+                </h2>
+                <p className="text-gray-600 mb-8 text-center">
+                  多くのお客様からお寄せいただくご質問とその回答をまとめました。
+                </p>
 
               <div className="space-y-4">
                 {faqData.map((faq, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg">
+                  <ScrollAnimation key={index} animation="fadeInUp" delay={200 + index * 100}>
+                    <div className="border border-gray-200 rounded-lg">
                     <button
                       onClick={() => toggleFaq(index)}
                       className="w-full px-6 py-4 text-left font-medium text-gray-900 hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition-colors duration-150 flex justify-between items-center"
@@ -89,9 +92,11 @@ const HelpPage: React.FC = () => {
                       </div>
                     )}
                   </div>
+                  </ScrollAnimation>
                 ))}
               </div>
             </div>
+            </ScrollAnimation>
           </div>
         </div>
       </div>

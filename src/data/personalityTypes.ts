@@ -6,6 +6,7 @@ export const personalityTypes: PersonalityType[] = [
     code: 'EDTA',
     name: '快楽王',
     ruby: 'かいらくおう',
+    summary: '夜を制するカリスマ',
     category: 'dom',
     emoji: '👑',
     description: '独占欲が強く、主導権を握りながらも深い愛着を持つタイプ。パートナーを独占したいという強い欲求と、相手への深い愛情を併せ持つ。',
@@ -19,6 +20,7 @@ export const personalityTypes: PersonalityType[] = [
     code: 'EDTN',
     name: '支配者',
     ruby: 'しはいしゃ',
+    summary: '自由奔放な遊び上手',
     category: 'dom',
     emoji: '👑',
     description: '衝動的で支配的、感情よりも本能を重視するタイプ。刺激を求め、関係においても自由度を重視する。',
@@ -30,8 +32,9 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'EDSA',
-    name: '献愛者',
-    ruby: 'けんあいしゃ',
+    name: '愛情家',
+    ruby: 'あいじょうか',
+    summary: '面倒見のいい愛情家',
     category: 'dom',
     emoji: '👑',
     description: '尽くす系のドSで、安定した関係を求めながらも主導権を握るタイプ。恋愛を重視し、相手に尽くすことで愛情を表現する。',
@@ -45,6 +48,7 @@ export const personalityTypes: PersonalityType[] = [
     code: 'EDSN',
     name: '調教師',
     ruby: 'ちょうきょうし',
+    summary: '頼れるけど情が薄い',
     category: 'dom',
     emoji: '👑',
     description: '感情を切り離し、技術的なスキルと支配に重点を置くタイプ。安定を求めながらも感情的な束縛は避ける。',
@@ -58,8 +62,9 @@ export const personalityTypes: PersonalityType[] = [
   // Sub系タイプ
   {
     code: 'ESTA',
-    name: '従愛者',
-    ruby: 'じゅうあいしゃ',
+    name: '恋愛者',
+    ruby: 'れんあいしゃ',
+    summary: '場を盛り上げる恋愛派',
     category: 'sub',
     emoji: '💖',
     description: '甘えん坊で愛されたい欲求が強く、明るい従属的な性格。外向的で愛着を重視するタイプ。',
@@ -71,8 +76,9 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'ESTN',
-    name: '狂人者',
-    ruby: 'きょうじんしゃ',
+    name: 'パーティーピーポー',
+    ruby: 'ぱーてぃーぴーぽー',
+    summary: 'パーティ好きの自由人',
     category: 'sub',
     emoji: '💖',
     description: '刺激中毒でスリルを好み、受け身ながらも外向的。新しい体験を求め続ける快楽主義者。',
@@ -86,6 +92,7 @@ export const personalityTypes: PersonalityType[] = [
     code: 'ESSA',
     name: '依存者',
     ruby: 'いぞんしゃ',
+    summary: '和ませ系の愛情家',
     category: 'sub',
     emoji: '💖',
     description: '恋愛依存傾向があり、甘えることが得意で一途なタイプ。安定した関係の中で愛情を求める。',
@@ -97,8 +104,9 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'ESSN',
-    name: '主義者',
-    ruby: 'しゅぎしゃ',
+    name: 'ムードメーカー',
+    ruby: 'むーどめーかー',
+    summary: '緩く楽しむムードメーカー',
     category: 'sub',
     emoji: '💖',
     description: '快楽を優先し、感情を軽視して自由奔放に生きるタイプ。安定志向だが感情的な束縛は避ける。',
@@ -112,8 +120,9 @@ export const personalityTypes: PersonalityType[] = [
   // Introvert系タイプ
   {
     code: 'IDTA',
-    name: '隠王者',
-    ruby: 'いんおうしゃ',
+    name: '情熱家',
+    ruby: 'じょうねつか',
+    summary: '寡黙だが情熱家',
     category: 'introvert',
     emoji: '👤',
     description: '無口で威圧感があり、静かながらも主導権を握るタイプ。内向的だが強いリーダーシップを持つ。',
@@ -127,6 +136,7 @@ export const personalityTypes: PersonalityType[] = [
     code: 'IDTN',
     name: '変態分析者',
     ruby: 'へんたいぶんせきしゃ',
+    summary: '静かな狩人',
     category: 'introvert',
     emoji: '👤',
     description: '研究熱心で観察力に優れ、変態的な探究心を持つ理系タイプ。刺激を求めながらも内向的。',
@@ -138,8 +148,9 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'IDSA',
-    name: '提供者',
-    ruby: 'ていきょうしゃ',
+    name: '守護者',
+    ruby: 'しゅごしゃ',
+    summary: '静かに守る恋人',
     category: 'introvert',
     emoji: '👤',
     description: '優しい主導でスキンシップを重視し、包容力のあるタイプ。安定志向で愛情深い。',
@@ -151,8 +162,9 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'IDSN',
-    name: 'ドS者',
-    ruby: 'ドエスしゃ',
+    name: '指揮者',
+    ruby: 'しきしゃ',
+    summary: '淡々とした自由人',
     category: 'introvert',
     emoji: '👤',
     description: '無感情でプレイに特化し、孤高を保つタイプ。安定志向だが感情的な距離を保つ。',
@@ -168,6 +180,7 @@ export const personalityTypes: PersonalityType[] = [
     code: 'ISTA',
     name: '妄想者',
     ruby: 'もうそうしゃ',
+    summary: '秘めた情熱家',
     category: 'fantasy',
     emoji: '💫',
     description: '空想癖があり、従属願望を持ち、自己投影型のタイプ。内向的で刺激を求めながらも愛着を重視する。',
@@ -181,6 +194,7 @@ export const personalityTypes: PersonalityType[] = [
     code: 'ISTN',
     name: 'ドM者',
     ruby: 'ドエムしゃ',
+    summary: '影で遊ぶタイプ',
     category: 'fantasy',
     emoji: '💫',
     description: '孤独を好み、快楽を逃避手段として使い、感情をカットするタイプ。内向的で刺激志向。',
@@ -192,8 +206,9 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'ISSA',
-    name: '重愛者',
-    ruby: 'じゅうあいしゃ',
+    name: 'ヒーラー',
+    ruby: 'ひーらー',
+    summary: '静かな癒し手',
     category: 'fantasy',
     emoji: '💫',
     description: '依存傾向があり、一途で愛されたい欲求が強いタイプ。内向的で安定志向、愛着を重視する。',
@@ -205,8 +220,9 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'ISSN',
-    name: '快楽貸し屋',
-    ruby: 'かいらくかししや',
+    name: '提供者',
+    ruby: 'ていきょうしゃ',
+    summary: 'マイペースで従順',
     category: 'fantasy',
     emoji: '💫',
     description: '感情が薄く、身体だけを差し出すクールなMタイプ。内向的で安定志向だが感情的な距離を保つ。',
@@ -236,13 +252,13 @@ export const getCategoryColor = (category: PersonalityType['category']) => {
 export const getCategoryName = (category: PersonalityType['category']) => {
   switch (category) {
     case 'dom':
-      return '主導者系';
+      return '先導者タイプ';
     case 'sub':
-      return '従属者系';
+      return '調和家タイプ';
     case 'introvert':
-      return '隠密系';
+      return '戦略家タイプ';
     case 'fantasy':
-      return '妄想・回避系';
+      return '献身家タイプ';
     default:
       return '';
   }

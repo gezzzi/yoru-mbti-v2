@@ -13,6 +13,7 @@ export interface PersonalityType {
   code: string;
   name: string;
   ruby?: string; // フリガナ
+  summary?: string; // 要約
   category: 'dom' | 'sub' | 'introvert' | 'fantasy';
   emoji: string;
   description: string;

@@ -12,7 +12,9 @@
       "Bash(pkill:*)",
       "Bash(true)",
       "Bash(rm:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(grep:*)",
+      "Bash(npx eslint:*)"
     ],
     "deny": []
   }

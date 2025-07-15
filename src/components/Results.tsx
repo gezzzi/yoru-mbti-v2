@@ -11,6 +11,7 @@ import QRCode from 'react-qr-code';
 import SNSShareModal from './SNSShareModal';
 import html2canvas from 'html2canvas';
 import NeonText from './NeonText';
+import { ScrollAnimation } from './ScrollAnimation';
 
 // カテゴリごとの色設定を追加
 const categoryColorSchemes = {
@@ -271,19 +272,22 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
     <div className="min-h-screen pt-28 pb-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* タイトル */}
-        <div className="text-center mb-8">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight drop-shadow-lg select-none text-center">
-            <NeonText text={["あなたの", "診断結果"]} specialCharIndex={5} className="gap-1" />
-          </h1>
-        </div>
+        <ScrollAnimation animation="fadeIn" duration={800}>
+          <div className="text-center mb-8">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight drop-shadow-lg select-none text-center">
+              <NeonText text={["あなたの", "診断結果"]} specialCharIndex={5} className="gap-1" />
+            </h1>
+          </div>
+        </ScrollAnimation>
         
         {/* ダウンロード用のコンテナ */}
         <div ref={downloadRef}>
         {/* Header Section */}
-        <header className="sp-typeheader relative rounded-t-3xl">
-          <div className={`section__wrap relative z-10 ${categoryColorSchemes[type.category]} rounded-t-3xl`}>
-            {/* 中央配置：すべての要素 */}
-            <div className="type-info px-8 py-12 flex flex-col items-center justify-center text-center w-full max-w-2xl mx-auto">
+        <ScrollAnimation animation="scaleIn" delay={200}>
+          <header className="sp-typeheader relative rounded-t-3xl">
+            <div className={`section__wrap relative z-10 ${categoryColorSchemes[type.category]} rounded-t-3xl`}>
+              {/* 中央配置：すべての要素 */}
+              <div className="type-info px-8 py-12 flex flex-col items-center justify-center text-center w-full max-w-2xl mx-auto">
               {/* 性格タイプ名 */}
               <div className="font-head text-3xl md:text-4xl lg:text-5xl mb-10 mt-0 text-center text-gray-900 font-bold">
                 {typeWithRuby && typeWithRuby.ruby ? (
@@ -307,21 +311,23 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
 
             </div>
             
-          </div>
-        </header>
+            </div>
+          </header>
+        </ScrollAnimation>
 
         {/* Main Content */}
-        <div className="bg-white rounded-b-3xl shadow-xl overflow-hidden">
-          <div className="p-8">
-            
-            {/* Introduction Section */}
-            <div className="mb-16">
-              <div className="flex items-center mb-6">
-                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
-                  1
+        <ScrollAnimation animation="fadeInUp" delay={400}>
+          <div className="bg-white rounded-b-3xl shadow-xl overflow-hidden">
+            <div className="p-8">
+              
+              {/* Introduction Section */}
+              <div className="mb-16">
+                <div className="flex items-center mb-6">
+                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                    1
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900">性格特性</h2>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">性格特性</h2>
-              </div>
               
               <div className="bg-gray-50 rounded-lg p-8 mb-8">
                 <p className="text-gray-700 leading-relaxed mb-6">
@@ -354,12 +360,13 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                   </div>
                 </div>
               </div>
+            </div>
 
-              {/* New Graph Design */}
+            {/* New Graph Design */}
               <div className="grid lg:grid-cols-2 gap-12">
                 {/* Personality Dimensions */}
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-800 mb-6">性格診断結果</h2>
+                  <h2 className="text-2xl font-bold text-gray-800 mb-6">性格診断結果</h2>
                     
                     {dimensions.map((dimension) => (
                       <div 
@@ -459,18 +466,17 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                     </div>
                   </div>
                 </div>
-            </div>
 
 
 
             {/* QRコードセクション */}
-            <div className="bg-gray-50 rounded-xl p-8 mb-8">
-              <div className="flex items-center mb-6">
-                <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
-                  2
+              <div className="bg-gray-50 rounded-xl p-8 mb-8">
+                <div className="flex items-center mb-6">
+                  <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                    2
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900">相性診断用QRコード</h2>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">相性診断用QRコード</h2>
-              </div>
               
               <div className="grid lg:grid-cols-2 gap-8">
                 {/* 左側：QRコード表示 */}
@@ -543,7 +549,7 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
             </div>
             
             {/* Action buttons - Download and Share */}
-            <div className="text-center mb-8">
+              <div className="text-center mb-8">
               <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
                 <button 
                   onClick={handleDownload}
@@ -573,9 +579,9 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
             </div>
 
             {/* Call to Action */}
-            <div className="text-center">
-              <div className="bg-white rounded-2xl p-8">
-                <h3 className="text-2xl font-bold mb-4 text-gray-900">次のステップに進みますか？</h3>
+              <div className="text-center">
+                <div className="bg-white rounded-2xl p-8">
+                  <h3 className="text-2xl font-bold mb-4 text-gray-900">次のステップに進みますか？</h3>
                 <div className="flex flex-col md:flex-row justify-center items-center gap-4">
                   <button
                     onClick={onRestart}
@@ -595,8 +601,9 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                 </div>
               </div>
             </div>
+            </div>
           </div>
-        </div>
+        </ScrollAnimation>
       </div>
       </div>
 

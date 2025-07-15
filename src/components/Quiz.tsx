@@ -6,6 +6,7 @@ import { questions } from '../data/questions';
 import { Question } from '../types/personality';
 import { getProgressPercentage } from '../utils/testLogic';
 import NeonText from './NeonText';
+import { ScrollAnimation } from './ScrollAnimation';
 
 interface QuizProps {
   onComplete: (answers: Record<string, number>) => void;
@@ -123,10 +124,11 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   };
 
   const QuestionItem: React.FC<{ question: Question }> = ({ question }) => (
-    <div 
-      ref={(el) => { questionRefs.current[question.id] = el; }}
-      className="p-8 mb-8 border-b border-gray-100"
-    >
+    <ScrollAnimation animation="fadeInUp" delay={100}>
+      <div 
+        ref={(el) => { questionRefs.current[question.id] = el; }}
+        className="p-8 mb-8 border-b border-gray-100"
+      >
       <div className="text-center mb-8">
         <h3 className="text-lg font-bold text-gray-100 leading-relaxed max-w-2xl mx-auto">
           {question.text}
@@ -163,6 +165,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
         </div>
       </div>
     </div>
+    </ScrollAnimation>
   );
 
   return (
@@ -170,29 +173,33 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       {/* Header with transparent background */}
       <div className="py-8">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="mt-12 text-5xl md:text-6xl font-bold text-white mb-4 select-none text-center">
-            <NeonText text={["夜の", "性格診断"]} specialCharIndex={2} className="gap-1" />
-          </h1>
+          <ScrollAnimation animation="fadeIn" duration={800}>
+            <h1 className="mt-12 text-5xl md:text-6xl font-bold text-white mb-4 select-none text-center">
+              <NeonText text={["夜の", "性格診断"]} specialCharIndex={2} className="gap-1" />
+            </h1>
+          </ScrollAnimation>
         </div>
       </div>
 
       {/* Progress Bar */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-100">
-            質問 {currentPageIndex * questionsPerPage + 1}-{Math.min((currentPageIndex + 1) * questionsPerPage, questions.length)} / {questions.length}
-          </span>
-          <span className="text-sm font-medium text-gray-100">
-            {progress}% 完了
-          </span>
+      <ScrollAnimation animation="fadeInUp" delay={200}>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-gray-100">
+              質問 {currentPageIndex * questionsPerPage + 1}-{Math.min((currentPageIndex + 1) * questionsPerPage, questions.length)} / {questions.length}
+            </span>
+            <span className="text-sm font-medium text-gray-100">
+              {progress}% 完了
+            </span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div
+              className="bg-[#818cf8] h-2 rounded-full transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div
-            className="bg-[#818cf8] h-2 rounded-full transition-all duration-300"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-      </div>
+      </ScrollAnimation>
 
       {/* Questions */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import NeonText from './NeonText';
+import { ScrollAnimation } from './ScrollAnimation';
 
 // カテゴリごとの色設定
 const categoryColorSchemes = {
@@ -62,15 +63,15 @@ const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = (
 export default function PersonalityTypesPage() {
   const categories = ['dom', 'sub', 'introvert', 'fantasy'] as const;
 
-  const renderPersonalityType = (type: PersonalityType, categoryColor: keyof typeof categoryColorSchemes) => {
+  const renderPersonalityType = (type: PersonalityType, categoryColor: keyof typeof categoryColorSchemes, delay: number) => {
     const scheme = categoryColorSchemes[categoryColor];
     
     return (
-      <Link
-        key={type.code}
-        href={`/types/${type.code.toLowerCase()}`}
-        className="block rounded-2xl p-6 transition-all duration-300 hover:-translate-y-2 cursor-pointer group"
-      >
+      <ScrollAnimation key={type.code} animation="fadeInUp" delay={delay}>
+        <Link
+          href={`/types/${type.code.toLowerCase()}`}
+          className="block rounded-2xl p-6 transition-all duration-300 hover:-translate-y-2 cursor-pointer group"
+        >
         <div className="text-center mb-6">
           <div className={`w-72 h-72 mx-auto mb-4 rounded-2xl overflow-hidden ${scheme.imageBg} flex items-center justify-center`}>
             <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
@@ -86,12 +87,18 @@ export default function PersonalityTypesPage() {
                 type.name
               )}
             </h3>
-            <p className="text-sm font-medium text-gray-700 mb-3">
+            <p className="text-sm font-medium text-gray-700 mb-1">
               {type.code}
             </p>
+            {type.summary && (
+              <p className="text-xs text-gray-600">
+                {type.summary}
+              </p>
+            )}
           </div>
         </div>
-      </Link>
+        </Link>
+      </ScrollAnimation>
     );
   };
 
@@ -100,11 +107,13 @@ export default function PersonalityTypesPage() {
       <div className="pt-0 pb-12 px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="space-y-0 pt-12 bg-transparent">
-          <div className="text-center mb-16">
-            <h1 className="text-6xl md:text-7xl font-bold text-white mb-4 pt-24 select-none">
-              <NeonText text="性格タイプ" specialCharIndex={0} className="flex justify-center gap-1" />
-            </h1>
-          </div>
+          <ScrollAnimation animation="fadeIn" duration={800}>
+            <div className="text-center mb-16">
+              <h1 className="text-6xl md:text-7xl font-bold text-white mb-4 pt-24 select-none">
+                <NeonText text="性格タイプ" specialCharIndex={0} className="flex justify-center gap-1" />
+              </h1>
+            </div>
+          </ScrollAnimation>
 
           {/* Categories */}
           {categories.map((category, index) => {
@@ -113,17 +122,19 @@ export default function PersonalityTypesPage() {
             
             return (
               <div key={category}>
-                <section className={`${scheme.bg} pt-12 relative rounded-3xl`}>
-                  <div className="text-center mb-12">
-                    <h2 className="text-4xl font-bold text-gray-900 mb-2 mt-8">
-                    {getCategoryName(category)}
-                  </h2>
-                </div>
+                <ScrollAnimation animation="fadeIn" delay={100 + index * 200}>
+                  <section className={`${scheme.bg} pt-12 relative rounded-3xl`}>
+                    <div className="text-center mb-12">
+                      <h2 className="text-4xl font-bold text-gray-900 mb-2 mt-8">
+                      {getCategoryName(category)}
+                    </h2>
+                  </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0">
-                  {categoryTypes.map((type) => renderPersonalityType(type, category))}
+                  {categoryTypes.map((type, idx) => renderPersonalityType(type, category, 200 + idx * 100))}
               </div>
-              </section>
+                </section>
+                </ScrollAnimation>
               
               {/* セクション間の隙間 */}
               {index < categories.length - 1 && (
@@ -135,20 +146,22 @@ export default function PersonalityTypesPage() {
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-20 bg-white rounded-3xl p-12 shadow-xl">
-          <h3 className="text-3xl font-bold text-gray-900 mb-6">
-            自分のタイプを知りたい？
-          </h3>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            診断テストを受けて、あなたの本当の性格タイプを発見しましょう。
-          </p>
-          <Link
-            href="/test"
-            className="inline-block px-12 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-lg rounded-2xl hover:from-purple-700 hover:to-pink-700 transform hover:scale-105 transition-all duration-200 shadow-xl"
-          >
-            診断テストを受ける
-          </Link>
-        </div>
+        <ScrollAnimation animation="fadeInUp" delay={1000}>
+          <div className="text-center mt-20 bg-white rounded-3xl p-12 shadow-xl">
+            <h3 className="text-3xl font-bold text-gray-900 mb-6">
+              自分のタイプを知りたい？
+            </h3>
+            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+              診断テストを受けて、あなたの本当の性格タイプを発見しましょう。
+            </p>
+            <Link
+              href="/test"
+              className="inline-block px-12 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-lg rounded-2xl hover:from-purple-700 hover:to-pink-700 transform hover:scale-105 transition-all duration-200 shadow-xl"
+            >
+              診断テストを受ける
+            </Link>
+          </div>
+        </ScrollAnimation>
       </div>
       
     </div>

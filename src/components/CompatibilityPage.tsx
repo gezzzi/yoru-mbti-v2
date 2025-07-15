@@ -10,6 +10,7 @@ import Image from 'next/image';
 import QRCode from 'react-qr-code';
 import QrScanner from 'qr-scanner';
 import NeonText from './NeonText';
+import { ScrollAnimation } from './ScrollAnimation';
 
 interface CompatibilityResult {
   compatibility: number;
@@ -365,9 +366,11 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
               <Heart className="w-8 h-8 text-white" />
             </div>
           </div> */}
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 select-none">
-            <NeonText text="相性診断" specialCharIndex={1} className="flex justify-center gap-1" />
-          </h1>
+          <ScrollAnimation animation="fadeIn" duration={800}>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 select-none">
+              <NeonText text="相性診断" specialCharIndex={1} className="flex justify-center gap-1" />
+            </h1>
+          </ScrollAnimation>
 
         </div>
       </div>
@@ -379,11 +382,12 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
 
         {/* 自分の診断結果がない場合の警告 */}
         {!myResult && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 mb-8">
-            <div className="flex items-center mb-4">
-              <AlertCircle className="w-6 h-6 text-yellow-600 mr-3" />
-              <h2 className="text-xl font-bold text-yellow-800">性格診断結果が必要です</h2>
-            </div>
+          <ScrollAnimation animation="fadeInUp" delay={200}>
+            <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 mb-8">
+              <div className="flex items-center mb-4">
+                <AlertCircle className="w-6 h-6 text-yellow-600 mr-3" />
+                <h2 className="text-xl font-bold text-yellow-800">性格診断結果が必要です</h2>
+              </div>
             <p className="text-yellow-700 mb-6">
               相性診断を行うには、あなた自身の性格診断結果が必要です。以下のいずれかの方法で設定してください。
             </p>
@@ -442,11 +446,13 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
               </div>
             </div>
           </div>
+          </ScrollAnimation>
         )}
 
         {/* 相性診断QRコード */}
         {myResult && (
-          <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+          <ScrollAnimation animation="fadeInUp" delay={400}>
+            <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">相性診断QRコード</h2>
             
             <div className="grid lg:grid-cols-2 gap-8">
@@ -608,6 +614,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
               </div>
             </div>
           </div>
+          </ScrollAnimation>
         )}
 
 
