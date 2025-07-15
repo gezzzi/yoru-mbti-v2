@@ -59,6 +59,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
   const [isQRUploading, setIsQRUploading] = useState(false);
   const [isQRDownloading, setIsQRDownloading] = useState(false);
   const [isMyQRUploading, setIsMyQRUploading] = useState(false);
+  const [uploadedQRImage, setUploadedQRImage] = useState<string | null>(null);
   const qrRef = useRef<HTMLDivElement>(null);
 
   // ローカルストレージから自分の診断結果を読み込む
@@ -214,6 +215,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
   const handleReset = () => {
     setPartnerCode('');
     setError('');
+    setUploadedQRImage(null);
   };
 
   const handleQRUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -224,19 +226,34 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
     setError('');
 
     try {
-      // QRコードを読み取る
-      const result = await QrScanner.scanImage(file);
-      
-      // 読み取った結果がコードの形式かチェック
-      if (result && result.match(/^[A-Za-z0-9]{1,8}$/)) {
-        setPartnerCode(result.toUpperCase());
-      } else {
-        throw new Error('QRコードから有効なコードを読み取れませんでした');
-      }
+      // ファイルをData URLに変換
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const imageDataUrl = e.target?.result as string;
+        setUploadedQRImage(imageDataUrl);
+        
+        try {
+          // QRコードを読み取る
+          const result = await QrScanner.scanImage(file);
+          
+          // 読み取った結果がコードの形式かチェック
+          if (result && result.match(/^[A-Za-z0-9]{1,8}$/)) {
+            setPartnerCode(result.toUpperCase());
+          } else {
+            throw new Error('QRコードから有効なコードを読み取れませんでした');
+          }
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'QRコードの読み取りに失敗しました');
+          setUploadedQRImage(null);
+        } finally {
+          setIsQRUploading(false);
+        }
+      };
+      reader.readAsDataURL(file);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'QRコードの読み取りに失敗しました');
-    } finally {
       setIsQRUploading(false);
+    } finally {
       // ファイル入力をリセット
       event.target.value = '';
     }
@@ -382,7 +399,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                   25の質問に答えて、あなたの性格タイプを診断します。
                 </p>
                 <button
-                  onClick={onStartTest}
+                  onClick={() => onStartTest?.()}
                   className="w-full bg-yellow-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-yellow-700 transition-colors"
                 >
                   性格診断テストを受ける
@@ -514,29 +531,47 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                   <div>
                     <div className="flex flex-col items-center gap-4">
                       <div className="w-full">
-                        <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
-                          <div className="flex flex-col items-center justify-center pt-6 pb-6">
-                            {isQRUploading ? (
-                              <div className="flex items-center space-x-2">
-                                <div className="w-6 h-6 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
-                                <span className="text-sm text-gray-600">読み取り中...</span>
-                              </div>
-                            ) : (
-                              <>
-                                <Camera className="w-10 h-10 text-gray-400 mb-3" />
-                                <p className="text-lg font-medium text-gray-700 mb-1">QRコード画像をアップロード</p>
-                                <p className="text-sm text-gray-500 text-center px-4">相手の診断結果QRコードの画像をアップロードしてください</p>
-                              </>
-                            )}
+                        {uploadedQRImage ? (
+                          <div className="flex flex-col items-center gap-4">
+                            <div className="w-full max-w-xs bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                              <img
+                                src={uploadedQRImage}
+                                alt="アップロードされたQRコード"
+                                className="w-full h-auto rounded-lg"
+                              />
+                            </div>
+                            <button
+                              onClick={handleReset}
+                              className="text-sm text-gray-600 hover:text-gray-800 underline"
+                            >
+                              別のQRコードを選択
+                            </button>
                           </div>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleQRUpload}
-                            className="hidden"
-                            disabled={isQRUploading}
-                          />
-                        </label>
+                        ) : (
+                          <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                            <div className="flex flex-col items-center justify-center pt-6 pb-6">
+                              {isQRUploading ? (
+                                <div className="flex items-center space-x-2">
+                                  <div className="w-6 h-6 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+                                  <span className="text-sm text-gray-600">読み取り中...</span>
+                                </div>
+                              ) : (
+                                <>
+                                  <Camera className="w-10 h-10 text-gray-400 mb-3" />
+                                  <p className="text-lg font-medium text-gray-700 mb-1">QRコード画像をアップロード</p>
+                                  <p className="text-sm text-gray-500 text-center px-4">相手の診断結果QRコードの画像をアップロードしてください</p>
+                                </>
+                              )}
+                            </div>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleQRUpload}
+                              className="hidden"
+                              disabled={isQRUploading}
+                            />
+                          </label>
+                        )}
                       </div>
                     </div>
                   </div>

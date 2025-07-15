@@ -143,3 +143,152 @@
   display: inline-block;
   animation: opacity-wave 2s ease-in-out infinite;
 }
+
+/* iPhone最適化アニメーション - text-shadowを使用しない */
+@keyframes iphone-simple-blink {
+  0%, 100% { 
+    opacity: 1;
+    filter: drop-shadow(0 0 2px currentColor);
+  }
+  50% { 
+    opacity: 0.3;
+    filter: none;
+  }
+}
+
+@keyframes iphone-seq-blink {
+  0%, 60%, 100% { 
+    opacity: 1;
+    transform: scale(1) translateZ(0);
+    filter: drop-shadow(0 0 3px currentColor);
+  }
+  70%, 90% { 
+    opacity: 0.2;
+    transform: scale(0.95) translateZ(0);
+    filter: none;
+  }
+}
+
+@keyframes iphone-stroke-anim {
+  0%, 100% { 
+    -webkit-text-stroke-width: 1px;
+    filter: drop-shadow(0 0 2px currentColor);
+    transform: translateZ(0);
+  }
+  25% { 
+    -webkit-text-stroke-width: 1.5px;
+    filter: drop-shadow(0 0 4px currentColor);
+    transform: translateZ(0);
+  }
+  50% { 
+    -webkit-text-stroke-width: 2px;
+    filter: drop-shadow(0 0 6px currentColor);
+    transform: translateZ(0);
+  }
+  75% { 
+    -webkit-text-stroke-width: 1.5px;
+    filter: drop-shadow(0 0 4px currentColor);
+    transform: translateZ(0);
+  }
+}
+
+@keyframes iphone-color-blink {
+  0%, 100% { 
+    -webkit-text-stroke-color: #ffeb3b;
+    opacity: 1;
+    filter: drop-shadow(0 0 3px #ffeb3b);
+  }
+  25% { 
+    -webkit-text-stroke-color: #ff6b35;
+    opacity: 0.8;
+    filter: drop-shadow(0 0 3px #ff6b35);
+  }
+  50% { 
+    -webkit-text-stroke-color: #9945ff;
+    opacity: 0.6;
+    filter: drop-shadow(0 0 3px #9945ff);
+  }
+  75% { 
+    -webkit-text-stroke-color: #ff1493;
+    opacity: 0.8;
+    filter: drop-shadow(0 0 3px #ff1493);
+  }
+}
+
+@keyframes iphone-wave-blink {
+  0%, 100% { 
+    transform: translateY(0) scale(1) translateZ(0);
+    opacity: 1;
+    filter: drop-shadow(0 0 4px currentColor);
+  }
+  50% { 
+    transform: translateY(-5px) scale(1.1) translateZ(0);
+    opacity: 0.5;
+    filter: none;
+  }
+}
+
+/* 通常デバイス用の高度なアニメーション */
+@keyframes normal-full-glow {
+  0%, 100% { 
+    filter: brightness(1) drop-shadow(0 0 10px currentColor);
+  }
+  50% { 
+    filter: brightness(1.3) drop-shadow(0 0 20px currentColor);
+  }
+}
+
+@keyframes normal-multi-glow {
+  0%, 100% { 
+    filter: brightness(1) blur(0px);
+  }
+  50% { 
+    filter: brightness(1.5) blur(0.5px);
+  }
+}
+
+/* クラス定義 */
+.iphone-simple-blink {
+  animation: iphone-simple-blink 2s ease-in-out infinite;
+  display: inline-block;
+  -webkit-backface-visibility: hidden;
+  will-change: transform, filter;
+}
+
+.iphone-seq-blink {
+  animation: iphone-seq-blink 3s ease-in-out infinite;
+  display: inline-block;
+  -webkit-backface-visibility: hidden;
+  will-change: transform, filter;
+}
+
+.iphone-stroke-anim {
+  animation: iphone-stroke-anim 3s ease-in-out infinite;
+  display: inline-block;
+  -webkit-backface-visibility: hidden;
+  will-change: transform, filter;
+}
+
+.iphone-color-blink {
+  animation: iphone-color-blink 4s ease-in-out infinite;
+  display: inline-block;
+  -webkit-backface-visibility: hidden;
+  will-change: transform, filter;
+}
+
+.iphone-wave-blink {
+  animation: iphone-wave-blink 2.5s ease-in-out infinite;
+  display: inline-block;
+  -webkit-backface-visibility: hidden;
+  will-change: transform, filter;
+}
+
+.normal-full-glow {
+  animation: normal-full-glow 2.5s ease-in-out infinite;
+  display: inline-block;
+}
+
+.normal-multi-glow {
+  animation: normal-multi-glow 3s ease-in-out infinite;
+  display: inline-block;
+}
