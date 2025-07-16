@@ -344,7 +344,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           
           {/* 相性診断結果ページコンテナ */}
-          <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+          <div className="rounded-2xl shadow-2xl overflow-hidden border-2 border-white/30" style={{backgroundColor: 'rgba(255, 255, 255, 0)', boxShadow: '0 0 20px rgba(255, 255, 255, 0.1)'}}>
             <div className="p-8 space-y-8">
               
               {/* 相性スコア */}
@@ -365,11 +365,11 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
 
               {/* 性格タイプ比較 */}
               <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl shadow-lg p-6">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-white/5">
               <h3 className="font-semibold text-gray-900 mb-4 text-center">あなたのタイプ</h3>
               <div className="text-center">
                 <TypeImage typeCode={myResult.type.code} emoji={myResult.type.emoji} name={myResult.type.name} />
-                <h4 className="text-xl font-bold text-gray-900">
+                <h4 className="text-xl font-bold text-[#e0e7ff]">
                   {myTypeWithRuby && myTypeWithRuby.ruby ? (
                     <ruby className="ruby-text">
                       {myTypeWithRuby.name}
@@ -379,16 +379,16 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     myTypeWithRuby?.name || 'タイプ名なし'
                   )}
                 </h4>
-                <p className="text-sm text-gray-600 mb-3">{myResult.type.code}</p>
-                <p className="text-sm text-gray-700">{myResult.type.description}</p>
+                <p className="text-sm text-[#e0e7ff]/80 mb-3">{myResult.type.code}</p>
+                <p className="text-sm text-[#e0e7ff]">{myResult.type.description}</p>
               </div>
             </div>
             
-            <div className="bg-white rounded-xl shadow-lg p-6">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-white/5">
               <h3 className="font-semibold text-gray-900 mb-4 text-center">相手のタイプ</h3>
               <div className="text-center">
                 <TypeImage typeCode={partnerResult.type.code} emoji={partnerResult.type.emoji} name={partnerResult.type.name} />
-                <h4 className="text-xl font-bold text-gray-900">
+                <h4 className="text-xl font-bold text-[#e0e7ff]">
                   {partnerTypeWithRuby && partnerTypeWithRuby.ruby ? (
                     <ruby className="ruby-text">
                       {partnerTypeWithRuby.name}
@@ -398,14 +398,14 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     partnerTypeWithRuby?.name || 'タイプ名なし'
                   )}
                 </h4>
-                <p className="text-sm text-gray-600 mb-3">{partnerResult.type.code}</p>
-                <p className="text-sm text-gray-700">{partnerResult.type.description}</p>
+                <p className="text-sm text-[#e0e7ff]/80 mb-3">{partnerResult.type.code}</p>
+                <p className="text-sm text-[#e0e7ff]">{partnerResult.type.description}</p>
               </div>
             </div>
           </div>
 
               {/* アドバイス */}
-              <div className="rounded-xl shadow-lg p-6 bg-gray-50">
+              <div className="rounded-xl shadow-lg p-6 bg-white/10 backdrop-blur-sm border border-white/5">
                 <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
                   <Check className="w-6 h-6 text-green-500 mr-3" />
                   関係を良くするためのアドバイス
@@ -421,7 +421,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
               </div>
 
               {/* 相性レーダーチャート */}
-              <div className="rounded-xl shadow-lg p-6 bg-gray-50">
+              <div className="rounded-xl shadow-lg p-6 bg-white/10 backdrop-blur-sm border border-white/5">
                 <h3 className="text-xl font-bold text-gray-900 mb-6 text-center">相性分析チャート: {Math.round(compatibility.compatibility)}%</h3>
                 <div className="flex justify-center">
                   <RadarChart axisScores={compatibility.axisScores} totalScore={compatibility.compatibility} />

@@ -67,7 +67,7 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
 
         {/* メインコンテンツ */}
         <ScrollAnimation animation="fadeInUp" delay={200}>
-          <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
+          <div className="rounded-3xl shadow-xl overflow-hidden border-2 border-white/30" style={{backgroundColor: 'rgba(255, 255, 255, 0)', boxShadow: '0 0 20px rgba(255, 255, 255, 0.1)'}}>
             {/* 画像をカテゴリごとの背景色でグラデーションdivに配置 */}
             <ScrollAnimation animation="fadeIn" delay={400}>
               <div className={`p-8 text-white flex justify-center ${categoryColorSchemes[type.category]}`}>
@@ -82,7 +82,7 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
               <div className="p-8">
                 {/* 性格タイプ名とコード */}
                 <div className="text-center mb-8">
-                  <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                  <h1 className="text-4xl md:text-5xl font-bold text-[#e0e7ff] mb-4">
                     {type.ruby ? (
                       <ruby>
                         {type.name}
@@ -92,12 +92,12 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
                       type.name
                     )}
                   </h1>
-                  <p className="text-2xl font-mono text-green-700 font-bold">{type.code}</p>
+                  <p className="text-2xl font-mono text-green-400 font-bold">{type.code}</p>
                 </div>
                 
                 {/* タイプ説明文 */}
-                <div className="mb-8 bg-gray-50 rounded-xl p-6">
-                  <p className="text-lg text-gray-900 leading-relaxed font-medium">{type.description}</p>
+                <div className="mb-8 bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
+                  <p className="text-lg text-[#e0e7ff] leading-relaxed font-medium">{type.description}</p>
                 </div>
 
                 {/* アクションボタン */}

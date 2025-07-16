@@ -312,7 +312,7 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
               </div>
             </header>
             {/* Main Content */}
-            <div className="bg-white rounded-b-3xl shadow-xl overflow-hidden">
+            <div className="rounded-b-3xl shadow-xl overflow-hidden border-2 border-white/30" style={{backgroundColor: 'rgba(255, 255, 255, 0)', boxShadow: '0 0 20px rgba(255, 255, 255, 0.1)'}}>
               <div className="p-8">
                 {/* Introduction Section */}
                 <div className="mb-16">
@@ -320,11 +320,11 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                       <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
                         1
                       </div>
-                      <h2 className="text-2xl font-bold text-gray-900">性格特性</h2>
+                      <h2 className="text-2xl font-bold text-[#e0e7ff]">性格特性</h2>
                     </div>
                     
-                    <div className="bg-gray-50 rounded-lg p-8 mb-8">
-                      <p className="text-gray-700 leading-relaxed mb-6">
+                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 mb-8 border border-white/5">
+                      <p className="text-[#e0e7ff] leading-relaxed mb-6">
                         {type.description}
                       </p>
                     </div>
@@ -334,13 +334,13 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                 <div className="grid lg:grid-cols-2 gap-12">
                     {/* Personality Dimensions */}
                     <div>
-                      <h2 className="text-2xl font-bold text-gray-800 mb-6">性格診断結果</h2>
+                      <h2 className="text-2xl font-bold text-[#e0e7ff] mb-6">性格診断結果</h2>
                       
                       {dimensions.map((dimension) => (
                         <div 
                           key={dimension.id} 
                           className={`space-y-3 cursor-pointer transition-all duration-200 hover:scale-105 py-2 px-3 rounded-lg ${
-                            currentDimension.id === dimension.id ? 'bg-gray-100' : 'hover:bg-gray-50'
+                            currentDimension.id === dimension.id ? 'bg-white/10' : 'hover:bg-white/5'
                           }`}
                           onMouseEnter={() => setHoveredDimension(dimension)}
                           onMouseLeave={() => {
@@ -382,10 +382,10 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                             
                             {/* Labels below the graph */}
                             <div className="flex items-center justify-between mt-1">
-                              <span className="text-sm font-medium text-gray-600">
+                              <span className="text-sm font-medium text-[#e0e7ff]">
                                 {dimension.leftLabel}
                               </span>
-                              <span className="text-sm font-medium text-gray-600">
+                              <span className="text-sm font-medium text-[#e0e7ff]">
                                 {dimension.rightLabel}
                               </span>
                             </div>
@@ -428,7 +428,7 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                           />
                         </div>
                         
-                        <p className="text-sm text-gray-700 leading-relaxed mb-6 transition-all duration-300">
+                        <p className="text-sm text-[#e0e7ff] leading-relaxed mb-6 transition-all duration-300">
                           {currentDimension.description}
                         </p>
                       </div>
@@ -436,12 +436,12 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                 </div>
 
                 {/* QRコードセクション */}
-                <div className="bg-gray-50 rounded-xl p-8 mb-8 mt-12">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 mb-8 mt-12 border border-white/5">
                     <div className="flex items-center mb-6">
                       <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
                         2
                       </div>
-                      <h2 className="text-2xl font-bold text-gray-900">相性診断用QRコード</h2>
+                      <h2 className="text-2xl font-bold text-[#e0e7ff]">相性診断用QRコード</h2>
                     </div>
                     
                     <div className="grid lg:grid-cols-2 gap-8">
@@ -506,8 +506,8 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                       
                       {/* 右側：説明 */}
                       <div className="flex flex-col justify-center">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">相性診断で使用しましょう</h3>
-                        <p className="text-gray-700 mb-6 leading-relaxed">
+                        <h3 className="text-xl font-bold text-[#e0e7ff] mb-4">相性診断で使用しましょう</h3>
+                        <p className="text-[#e0e7ff] mb-6 leading-relaxed">
                           このQRコードを使って、気になる人との相性を診断できます。相手にこのQRコードをシェアして、相性診断ページで読み取ってもらいましょう。
                         </p>
                       </div>
@@ -546,8 +546,8 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
 
                 {/* Call to Action */}
                 <div className="text-center">
-                    <div className="bg-white rounded-2xl p-8">
-                      <h3 className="text-2xl font-bold mb-4 text-gray-900">次のステップに進みますか？</h3>
+                    <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8">
+                      <h3 className="text-2xl font-bold mb-4 text-[#e0e7ff]">次のステップに進みますか？</h3>
                       <div className="flex flex-col md:flex-row justify-center items-center gap-4">
                         <button
                           onClick={onRestart}

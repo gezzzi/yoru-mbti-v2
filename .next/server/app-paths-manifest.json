@@ -1,8 +1,8 @@
 {
-  "/page": "app/page.js",
-  "/results/page": "app/results/page.js",
-  "/types/page": "app/types/page.js",
   "/compatibility/page": "app/compatibility/page.js",
+  "/results/page": "app/results/page.js",
   "/test/page": "app/test/page.js",
+  "/types/[typeCode]/page": "app/types/[typeCode]/page.js",
+  "/types/page": "app/types/page.js",
   "/_not-found/page": "app/_not-found/page.js"
 }
