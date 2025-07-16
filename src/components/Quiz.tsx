@@ -16,6 +16,7 @@ interface QuizProps {
 const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
+  const [hasTransitioned, setHasTransitioned] = useState(false);
   const questionRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   
   const questionsPerPage = 6;
@@ -83,6 +84,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
     if (isLastPage) {
       onComplete(answers);
     } else {
+      setHasTransitioned(true);
       setCurrentPageIndex(prev => prev + 1);
       // Scroll to first question of new page after a short delay
       setTimeout(() => {
@@ -124,11 +126,10 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   };
 
   const QuestionItem: React.FC<{ question: Question }> = ({ question }) => (
-    <ScrollAnimation animation="fadeInUp" delay={100}>
-      <div 
-        ref={(el) => { questionRefs.current[question.id] = el; }}
-        className="p-8 mb-8 border-b border-gray-100"
-      >
+    <div 
+      ref={(el) => { questionRefs.current[question.id] = el; }}
+      className="p-8 mb-8 border-b border-gray-100"
+    >
       <div className="text-center mb-8">
         <h3 className="text-lg font-bold text-gray-100 leading-relaxed max-w-2xl mx-auto">
           {question.text}
@@ -165,7 +166,6 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
         </div>
       </div>
     </div>
-    </ScrollAnimation>
   );
 
   return (
@@ -202,11 +202,21 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       </ScrollAnimation>
 
       {/* Questions */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {currentPageQuestions.map((question) => (
-          <QuestionItem key={question.id} question={question} />
-        ))}
-      </div>
+      {hasTransitioned ? (
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {currentPageQuestions.map((question) => (
+            <QuestionItem key={question.id} question={question} />
+          ))}
+        </div>
+      ) : (
+        <ScrollAnimation animation="fadeInUp" delay={400}>
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {currentPageQuestions.map((question) => (
+              <QuestionItem key={question.id} question={question} />
+            ))}
+          </div>
+        </ScrollAnimation>
+      )}
 
       {/* Navigation */}
       <div className="py-12">

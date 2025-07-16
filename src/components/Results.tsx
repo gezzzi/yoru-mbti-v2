@@ -281,333 +281,298 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
         </ScrollAnimation>
         
         {/* ダウンロード用のコンテナ */}
-        <div ref={downloadRef}>
-        {/* Header Section */}
-        <ScrollAnimation animation="scaleIn" delay={200}>
-          <header className="sp-typeheader relative rounded-t-3xl">
-            <div className={`section__wrap relative z-10 ${categoryColorSchemes[type.category]} rounded-t-3xl`}>
-              {/* 中央配置：すべての要素 */}
-              <div className="type-info px-8 py-12 flex flex-col items-center justify-center text-center w-full max-w-2xl mx-auto">
-              {/* 性格タイプ名 */}
-              <div className="font-head text-3xl md:text-4xl lg:text-5xl mb-10 mt-0 text-center text-gray-900 font-bold">
-                {typeWithRuby && typeWithRuby.ruby ? (
-                  <ruby className="ruby-text">
-                    {typeWithRuby.name}
-                    <rt>{typeWithRuby.ruby}</rt>
-                  </ruby>
-                ) : (
-                  typeWithRuby?.name || 'タイプ名なし'
-                )}
-              </div>
-              <div className="code text-center mb-6">
-                <h1 className="font-head text-2xl md:text-3xl m-0 text-green-900 font-bold">
-                  {type.code}
-                </h1>
-              </div>
-              {/* SVG画像 */}
-              <div className="flex justify-center mb-8">
-                <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
-              </div>
-
-            </div>
-            
-            </div>
-          </header>
-        </ScrollAnimation>
-
-        {/* Main Content */}
-        <ScrollAnimation animation="fadeInUp" delay={400}>
-          <div className="bg-white rounded-b-3xl shadow-xl overflow-hidden">
-            <div className="p-8">
-              
-              {/* Introduction Section */}
-              <div className="mb-16">
-                <div className="flex items-center mb-6">
-                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
-                    1
+        <ScrollAnimation animation="fadeInUp" delay={200}>
+          <div ref={downloadRef}>
+            {/* Header Section */}
+            <header className="sp-typeheader relative rounded-t-3xl">
+              <div className={`section__wrap relative z-10 ${categoryColorSchemes[type.category]} rounded-t-3xl`}>
+                {/* 中央配置：すべての要素 */}
+                <div className="type-info px-8 py-12 flex flex-col items-center justify-center text-center w-full max-w-2xl mx-auto">
+                  {/* 性格タイプ名 */}
+                  <div className="font-head text-3xl md:text-4xl lg:text-5xl mb-10 mt-0 text-center text-gray-900 font-bold">
+                    {typeWithRuby && typeWithRuby.ruby ? (
+                      <ruby className="ruby-text">
+                        {typeWithRuby.name}
+                        <rt>{typeWithRuby.ruby}</rt>
+                      </ruby>
+                    ) : (
+                      typeWithRuby?.name || 'タイプ名なし'
+                    )}
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-900">性格特性</h2>
-                </div>
-              
-              <div className="bg-gray-50 rounded-lg p-8 mb-8">
-                <p className="text-gray-700 leading-relaxed mb-6">
-                  {type.description}
-                </p>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-4">主な特徴:</h3>
-                    <ul className="space-y-2">
-                      {type.traits.map((trait, index) => (
-                        <li key={index} className="flex items-center text-gray-700">
-                          <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
-                          {trait}
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="code text-center mb-6">
+                    <h1 className="font-head text-2xl md:text-3xl m-0 text-green-900 font-bold">
+                      {type.code}
+                    </h1>
                   </div>
-                  
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-4">相性の良いタイプ:</h3>
-                    <ul className="space-y-2">
-                      {type.compatibility.map((compatType, index) => (
-                        <li key={index} className="flex items-center text-gray-700">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
-                          <span className="font-mono">{compatType}</span>
-                        </li>
-                      ))}
-                    </ul>
+                  {/* SVG画像 */}
+                  <div className="flex justify-center mb-8">
+                    <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* New Graph Design */}
-              <div className="grid lg:grid-cols-2 gap-12">
-                {/* Personality Dimensions */}
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-800 mb-6">性格診断結果</h2>
+            </header>
+            {/* Main Content */}
+            <div className="bg-white rounded-b-3xl shadow-xl overflow-hidden">
+              <div className="p-8">
+                {/* Introduction Section */}
+                <div className="mb-16">
+                    <div className="flex items-center mb-6">
+                      <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                        1
+                      </div>
+                      <h2 className="text-2xl font-bold text-gray-900">性格特性</h2>
+                    </div>
                     
-                    {dimensions.map((dimension) => (
-                      <div 
-                        key={dimension.id} 
-                        className={`space-y-3 cursor-pointer transition-all duration-200 hover:scale-105 py-2 px-3 rounded-lg ${
-                          currentDimension.id === dimension.id ? 'bg-gray-100' : 'hover:bg-gray-50'
-                        }`}
-                        onMouseEnter={() => setHoveredDimension(dimension)}
-                        onMouseLeave={() => {
-                          setHoveredDimension(null);
-                          setSelectedDimension(dimension);
-                        }}
-                      >
-                        <div className="relative py-1">
-                          {/* Percentage text above the graph - centered */}
-                          <div className="text-center mb-2">
-                            <span className={`text-sm font-bold ${getResultColor(dimension.color)}`}>
-                              {dimension.percentage}% {dimension.resultLabel}
-                            </span>
-                          </div>
-                          
-                          <div className={`w-full ${getBackgroundColor(dimension.color)} rounded-full h-4 overflow-hidden relative transition-all duration-200 ${hoveredDimension?.id === dimension.id ? 'shadow-lg' : ''}`}>
-                            <div className="absolute inset-0 bg-white/20"></div>
-                            {(() => {
-                              // Determine if this is a "reverse" axis (I, S, N, H)
-                              const isReverse = dimension.resultLabel.includes('内向性') || 
-                                              dimension.resultLabel.includes('服従') || 
-                                              dimension.resultLabel.includes('安心志向') ||
-                                              dimension.resultLabel.includes('非愛着傾向') || 
-                                              dimension.resultLabel.includes('羞恥敏感');
-                              
-                              // For reverse axes, we need to position the circle from the opposite side
-                              const circlePosition = isReverse ? (100 - dimension.percentage) : dimension.percentage;
-                              
-                              return (
-                                <div 
-                                  className={`absolute top-1/2 transform -translate-y-1/2 w-5 h-5 bg-white rounded-full shadow-lg border-2 border-white transition-all duration-300 flex items-center justify-center ${hoveredDimension?.id === dimension.id ? 'scale-125' : 'hover:scale-110'}`}
-                                  style={{ left: `calc(${circlePosition}% - 10px)` }}
-                                >
-                                  <div className={`w-3 h-3 ${getIndicatorCenterColor(dimension.color)} rounded-full`}></div>
-                                </div>
-                              );
-                            })()}
-                          </div>
-                          
-                          {/* Labels below the graph */}
-                          <div className="flex items-center justify-between mt-1">
-                            <span className="text-sm font-medium text-gray-600">
-                              {dimension.leftLabel}
-                            </span>
-                            <span className="text-sm font-medium text-gray-600">
-                              {dimension.rightLabel}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Character & Results - Now on the right side */}
-                  <div className="flex flex-col justify-center">
-                    <div className={`bg-gradient-to-br ${getGradientColors(currentDimension.color)} rounded-xl p-6 text-center transition-all duration-300`}>
-                      <div className="mb-4">
-                        {/* Character Illustration Placeholder */}
-                        <h3 className={`text-2xl font-bold mb-4 ${getResultColor(currentDimension.color)}`}>
-                          {currentDimension.percentage}% {currentDimension.resultLabel}
-                        </h3>
-                      </div>
-                      <div className="w-[187px] h-[187px] mx-auto mb-4 flex items-center justify-center">
-                        <Image
-                          src={(() => {
-                            switch (currentDimension.id) {
-                              case 'extraversion':
-                                return result.E >= 50 ? '/images/axis/extraversion.svg' : '/images/axis/introversion.svg';
-                              case 'dominance':
-                                return result.D >= 50 ? '/images/axis/dominance.svg' : '/images/axis/submissiveness.svg';
-                              case 'stimulation':
-                                return result.T >= 50 ? '/images/axis/thrill.svg' : '/images/axis/stability.svg';
-                              case 'attachment':
-                                return result.A >= 50 ? '/images/axis/attachment.svg' : '/images/axis/non-attachment.svg';
-                              case 'shame':
-                                return result.R >= 50 ? '/images/axis/resistance.svg' : '/images/axis/hypersensitivity.svg';
-                              default:
-                                return '';
-                            }
-                          })()}
-                          alt={currentDimension.leftLabel + '軸画像'}
-                          width={187}
-                          height={187}
-                          className="object-contain w-[187px] h-[187px]"
-                        />
-                      </div>
-                      
-                      <p className="text-sm text-gray-700 leading-relaxed mb-6 transition-all duration-300">
-                        {currentDimension.description}
+                    <div className="bg-gray-50 rounded-lg p-8 mb-8">
+                      <p className="text-gray-700 leading-relaxed mb-6">
+                        {type.description}
                       </p>
                     </div>
-                  </div>
                 </div>
 
+                {/* New Graph Design */}
+                <div className="grid lg:grid-cols-2 gap-12">
+                    {/* Personality Dimensions */}
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-800 mb-6">性格診断結果</h2>
+                      
+                      {dimensions.map((dimension) => (
+                        <div 
+                          key={dimension.id} 
+                          className={`space-y-3 cursor-pointer transition-all duration-200 hover:scale-105 py-2 px-3 rounded-lg ${
+                            currentDimension.id === dimension.id ? 'bg-gray-100' : 'hover:bg-gray-50'
+                          }`}
+                          onMouseEnter={() => setHoveredDimension(dimension)}
+                          onMouseLeave={() => {
+                            setHoveredDimension(null);
+                            setSelectedDimension(dimension);
+                          }}
+                        >
+                          <div className="relative py-1">
+                            {/* Percentage text above the graph - centered */}
+                            <div className="text-center mb-2">
+                              <span className={`text-sm font-bold ${getResultColor(dimension.color)}`}>
+                                {dimension.percentage}% {dimension.resultLabel}
+                              </span>
+                            </div>
+                            
+                            <div className={`w-full ${getBackgroundColor(dimension.color)} rounded-full h-4 overflow-hidden relative transition-all duration-200 ${hoveredDimension?.id === dimension.id ? 'shadow-lg' : ''}`}>
+                              <div className="absolute inset-0 bg-white/20"></div>
+                              {(() => {
+                                // Determine if this is a "reverse" axis (I, S, N, H)
+                                const isReverse = dimension.resultLabel.includes('内向性') || 
+                                                dimension.resultLabel.includes('服従') || 
+                                                dimension.resultLabel.includes('安心志向') ||
+                                                dimension.resultLabel.includes('非愛着傾向') || 
+                                                dimension.resultLabel.includes('羞恥敏感');
+                                
+                                // For reverse axes, we need to position the circle from the opposite side
+                                const circlePosition = isReverse ? (100 - dimension.percentage) : dimension.percentage;
+                                
+                                return (
+                                  <div 
+                                    className={`absolute top-1/2 transform -translate-y-1/2 w-5 h-5 bg-white rounded-full shadow-lg border-2 border-white transition-all duration-300 flex items-center justify-center ${hoveredDimension?.id === dimension.id ? 'scale-125' : 'hover:scale-110'}`}
+                                    style={{ left: `calc(${circlePosition}% - 10px)` }}
+                                  >
+                                    <div className={`w-3 h-3 ${getIndicatorCenterColor(dimension.color)} rounded-full`}></div>
+                                  </div>
+                                );
+                              })()}
+                            </div>
+                            
+                            {/* Labels below the graph */}
+                            <div className="flex items-center justify-between mt-1">
+                              <span className="text-sm font-medium text-gray-600">
+                                {dimension.leftLabel}
+                              </span>
+                              <span className="text-sm font-medium text-gray-600">
+                                {dimension.rightLabel}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
 
-
-            {/* QRコードセクション */}
-              <div className="bg-gray-50 rounded-xl p-8 mb-8">
-                <div className="flex items-center mb-6">
-                  <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
-                    2
-                  </div>
-                  <h2 className="text-2xl font-bold text-gray-900">相性診断用QRコード</h2>
+                    {/* Character & Results - Now on the right side */}
+                    <div className="flex flex-col justify-center">
+                      <div className={`bg-gradient-to-br ${getGradientColors(currentDimension.color)} rounded-xl p-6 text-center transition-all duration-300`}>
+                        <div className="mb-4">
+                          {/* Character Illustration Placeholder */}
+                          <h3 className={`text-2xl font-bold mb-4 ${getResultColor(currentDimension.color)}`}>
+                            {currentDimension.percentage}% {currentDimension.resultLabel}
+                          </h3>
+                        </div>
+                        <div className="w-[187px] h-[187px] mx-auto mb-4 flex items-center justify-center">
+                          <Image
+                            src={(() => {
+                              switch (currentDimension.id) {
+                                case 'extraversion':
+                                  return result.E >= 50 ? '/images/axis/extraversion.svg' : '/images/axis/introversion.svg';
+                                case 'dominance':
+                                  return result.D >= 50 ? '/images/axis/dominance.svg' : '/images/axis/submissiveness.svg';
+                                case 'stimulation':
+                                  return result.T >= 50 ? '/images/axis/thrill.svg' : '/images/axis/stability.svg';
+                                case 'attachment':
+                                  return result.A >= 50 ? '/images/axis/attachment.svg' : '/images/axis/non-attachment.svg';
+                                case 'shame':
+                                  return result.R >= 50 ? '/images/axis/resistance.svg' : '/images/axis/hypersensitivity.svg';
+                                default:
+                                  return '';
+                              }
+                            })()}
+                            alt={currentDimension.leftLabel + '軸画像'}
+                            width={187}
+                            height={187}
+                            className="object-contain w-[187px] h-[187px]"
+                          />
+                        </div>
+                        
+                        <p className="text-sm text-gray-700 leading-relaxed mb-6 transition-all duration-300">
+                          {currentDimension.description}
+                        </p>
+                      </div>
+                    </div>
                 </div>
-              
-              <div className="grid lg:grid-cols-2 gap-8">
-                {/* 左側：QRコード表示 */}
-                <div className="flex flex-col items-center">
-                  <div className="bg-white p-6 rounded-lg shadow-sm mb-4" ref={qrRef}>
-                    <QRCode
-                      value={compatibilityCode}
-                      size={200}
-                      level="M"
-                      className="w-full h-auto max-w-[200px]"
-                    />
-                  </div>
-                  <button
-                    onClick={async () => {
-                      if (!qrRef.current) return;
-                      setIsQRDownloading(true);
-                      try {
-                        const svg = qrRef.current.querySelector('svg');
-                        if (!svg) throw new Error('QRコードが見つかりません');
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-                        const img = document.createElement('img') as HTMLImageElement;
-                        const svgData = new XMLSerializer().serializeToString(svg);
-                        const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-                        const svgUrl = URL.createObjectURL(svgBlob);
-                        img.onload = () => {
-                          canvas.width = 400;
-                          canvas.height = 400;
-                          ctx?.drawImage(img, 0, 0, 400, 400);
-                          const link = document.createElement('a');
-                          link.download = `相性診断QRコード_${type.code}.png`;
-                          link.href = canvas.toDataURL('image/png');
-                          link.click();
-                          URL.revokeObjectURL(svgUrl);
-                          setIsQRDownloading(false);
-                        };
-                        img.onerror = () => {
-                          setIsQRDownloading(false);
-                        };
-                        img.src = svgUrl;
-                      } catch (error) {
-                        setIsQRDownloading(false);
-                      }
-                    }}
-                    disabled={isQRDownloading}
-                    className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-                  >
-                    {isQRDownloading ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        <span>保存中...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Download className="w-4 h-4" />
-                        <span>QRコードを保存</span>
-                      </>
-                    )}
-                  </button>
+
+                {/* QRコードセクション */}
+                <div className="bg-gray-50 rounded-xl p-8 mb-8 mt-12">
+                    <div className="flex items-center mb-6">
+                      <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
+                        2
+                      </div>
+                      <h2 className="text-2xl font-bold text-gray-900">相性診断用QRコード</h2>
+                    </div>
+                    
+                    <div className="grid lg:grid-cols-2 gap-8">
+                      {/* 左側：QRコード表示 */}
+                      <div className="flex flex-col items-center">
+                        <div className="bg-white p-6 rounded-lg shadow-sm mb-4" ref={qrRef}>
+                          <QRCode
+                            value={compatibilityCode}
+                            size={200}
+                            level="M"
+                            className="w-full h-auto max-w-[200px]"
+                          />
+                        </div>
+                        <button
+                          onClick={async () => {
+                            if (!qrRef.current) return;
+                            setIsQRDownloading(true);
+                            try {
+                              const svg = qrRef.current.querySelector('svg');
+                              if (!svg) throw new Error('QRコードが見つかりません');
+                              const canvas = document.createElement('canvas');
+                              const ctx = canvas.getContext('2d');
+                              const img = document.createElement('img') as HTMLImageElement;
+                              const svgData = new XMLSerializer().serializeToString(svg);
+                              const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+                              const svgUrl = URL.createObjectURL(svgBlob);
+                              img.onload = () => {
+                                canvas.width = 400;
+                                canvas.height = 400;
+                                ctx?.drawImage(img, 0, 0, 400, 400);
+                                const link = document.createElement('a');
+                                link.download = `相性診断QRコード_${type.code}.png`;
+                                link.href = canvas.toDataURL('image/png');
+                                link.click();
+                                URL.revokeObjectURL(svgUrl);
+                                setIsQRDownloading(false);
+                              };
+                              img.onerror = () => {
+                                setIsQRDownloading(false);
+                              };
+                              img.src = svgUrl;
+                            } catch (error) {
+                              setIsQRDownloading(false);
+                            }
+                          }}
+                          disabled={isQRDownloading}
+                          className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                        >
+                          {isQRDownloading ? (
+                            <>
+                              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                              <span>保存中...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Download className="w-4 h-4" />
+                              <span>QRコードを保存</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                      
+                      {/* 右側：説明 */}
+                      <div className="flex flex-col justify-center">
+                        <h3 className="text-xl font-bold text-gray-900 mb-4">相性診断で使用しましょう</h3>
+                        <p className="text-gray-700 mb-6 leading-relaxed">
+                          このQRコードを使って、気になる人との相性を診断できます。相手にこのQRコードをシェアして、相性診断ページで読み取ってもらいましょう。
+                        </p>
+                      </div>
+                    </div>
                 </div>
                 
-                {/* 右側：説明 */}
-                <div className="flex flex-col justify-center">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">相性診断で使用しましょう</h3>
-                  <p className="text-gray-700 mb-6 leading-relaxed">
-                    このQRコードを使って、気になる人との相性を診断できます。相手にこのQRコードをシェアして、相性診断ページで読み取ってもらいましょう。
-                  </p>
+                {/* Action buttons - Download and Share */}
+                <div className="text-center mb-8">
+                    <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+                      <button 
+                        onClick={handleDownload}
+                        disabled={isDownloading}
+                        className="bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-lg hover:from-green-700 hover:to-green-800 transition-all flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                      >
+                        {isDownloading ? (
+                          <>
+                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            <span>ダウンロード中...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Download className="w-5 h-5" />
+                            <span>結果をダウンロード</span>
+                          </>
+                        )}
+                      </button>
+                      <button 
+                        onClick={() => setShowShareModal(true)}
+                        className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all flex items-center space-x-2 shadow-lg"
+                      >
+                        <Share2 className="w-5 h-5" />
+                        <span>結果をシェア</span>
+                      </button>
+                    </div>
                 </div>
-              </div>
-            </div>
-            
-            {/* Action buttons - Download and Share */}
-              <div className="text-center mb-8">
-              <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-                <button 
-                  onClick={handleDownload}
-                  disabled={isDownloading}
-                  className="bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-lg hover:from-green-700 hover:to-green-800 transition-all flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-                >
-                  {isDownloading ? (
-                    <>
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>ダウンロード中...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Download className="w-5 h-5" />
-                      <span>結果をダウンロード</span>
-                    </>
-                  )}
-                </button>
-                <button 
-                  onClick={() => setShowShareModal(true)}
-                  className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all flex items-center space-x-2 shadow-lg"
-                >
-                  <Share2 className="w-5 h-5" />
-                  <span>結果をシェア</span>
-                </button>
-              </div>
-            </div>
 
-            {/* Call to Action */}
-              <div className="text-center">
-                <div className="bg-white rounded-2xl p-8">
-                  <h3 className="text-2xl font-bold mb-4 text-gray-900">次のステップに進みますか？</h3>
-                <div className="flex flex-col md:flex-row justify-center items-center gap-4">
-                  <button
-                    onClick={onRestart}
-                    className="bg-white text-teal-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center border border-teal-600"
-                  >
-                    <RefreshCw className="w-5 h-5 mr-2" />
-                    もう一度診断する
-                  </button>
-                  <a
-                    href="/compatibility"
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all flex items-center justify-center"
-                    style={{ textDecoration: 'none' }}
-                  >
-                    <Heart className="w-5 h-5 mr-2" />
-                    相性診断をする
-                  </a>
+                {/* Call to Action */}
+                <div className="text-center">
+                    <div className="bg-white rounded-2xl p-8">
+                      <h3 className="text-2xl font-bold mb-4 text-gray-900">次のステップに進みますか？</h3>
+                      <div className="flex flex-col md:flex-row justify-center items-center gap-4">
+                        <button
+                          onClick={onRestart}
+                          className="bg-white text-teal-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center border border-teal-600"
+                        >
+                          <RefreshCw className="w-5 h-5 mr-2" />
+                          もう一度診断する
+                        </button>
+                        <a
+                          href="/compatibility"
+                          className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all flex items-center justify-center"
+                          style={{ textDecoration: 'none' }}
+                        >
+                          <Heart className="w-5 h-5 mr-2" />
+                          相性診断をする
+                        </a>
+                      </div>
+                    </div>
                 </div>
               </div>
-            </div>
             </div>
           </div>
         </ScrollAnimation>
       </div>
-      </div>
 
-      {/* Footer */}
       {/* SNS Share Modal */}
       <SNSShareModal 
         result={result}
@@ -618,4 +583,4 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
   );
 };
 
-export default Results; 
+export default Results;

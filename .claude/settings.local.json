@@ -14,7 +14,11 @@
       "Bash(rm:*)",
       "Bash(curl:*)",
       "Bash(grep:*)",
-      "Bash(npx eslint:*)"
+      "Bash(npx eslint:*)",
+      "Bash(node:*)",
+      "Bash(npm:*)",
+      "Bash(claude auth:*)",
+      "Bash(lsof:*)"
     ],
     "deny": []
   }

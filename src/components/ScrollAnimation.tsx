@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 interface ScrollAnimationProps {
@@ -10,6 +10,7 @@ interface ScrollAnimationProps {
   duration?: number;
   threshold?: number;
   className?: string;
+  triggerOnMount?: boolean;
 }
 
 export const ScrollAnimation = ({
@@ -19,8 +20,18 @@ export const ScrollAnimation = ({
   duration = 600,
   threshold = 0.1,
   className = '',
+  triggerOnMount = false,
 }: ScrollAnimationProps) => {
-  const { ref, isVisible } = useScrollAnimation({ threshold });
+  const { ref, isVisible: scrollVisible } = useScrollAnimation({ threshold });
+  const [isMounted, setIsMounted] = useState(false);
+  
+  useEffect(() => {
+    if (triggerOnMount) {
+      setIsMounted(true);
+    }
+  }, [triggerOnMount]);
+  
+  const isVisible = triggerOnMount ? isMounted : scrollVisible;
 
   const getInitialStyles = () => {
     switch (animation) {
