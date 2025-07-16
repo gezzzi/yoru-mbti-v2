@@ -91,7 +91,7 @@ export default function PersonalityTypesPage() {
               {type.code}
             </p>
             {type.summary && (
-              <p className="text-xs text-gray-600">
+              <p className="text-sm font-semibold text-gray-800 mt-2">
                 {type.summary}
               </p>
             )}

@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { TestResult, PersonalityType } from '../types/personality';
 import { parseCompatibilityCode, generateCompatibilityCode, copyToClipboard } from '../utils/snsShare';
 import { personalityTypes } from '../data/personalityTypes';
-import { Heart, AlertCircle, TestTube, User, Share2, Copy, Check, Upload, Camera, Download } from 'lucide-react';
+import { Heart, AlertCircle, TestTube, User, Share2, Copy, Check, Upload, Camera, Download, RefreshCw } from 'lucide-react';
 import SNSShareModal from './SNSShareModal';
 import Image from 'next/image';
 import QRCode from 'react-qr-code';
@@ -468,62 +468,61 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                       className="w-full h-auto max-w-[200px]"
                     />
                   </div>
-                  <button
-                    onClick={handleQRDownload}
-                    disabled={isQRDownloading}
-                    className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
-                  >
-                    {isQRDownloading ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        <span>保存中...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Download className="w-4 h-4" />
-                        <span>QRコードを保存</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-                
-                <div className="flex flex-col gap-2">
-                  <button
-                    onClick={() => setShowShareModal(true)}
-                    className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-all flex items-center justify-center"
-                  >
-                    <Share2 className="w-5 h-5 mr-2" />
-                    QRコードをシェア
-                  </button>
-                  
-                  {/* 自分のQRコードを更新 */}
-                  <div className="border-t pt-3 mt-2">
-                    <label className="cursor-pointer">
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    <div className="flex gap-2">
                       <button
-                        type="button"
-                        disabled={isMyQRUploading}
-                        className="w-full bg-gray-100 hover:bg-gray-200 disabled:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg transition-colors flex items-center justify-center space-x-2 border border-gray-300"
+                        onClick={handleQRDownload}
+                        disabled={isQRDownloading}
+                        className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
                       >
-                        {isMyQRUploading ? (
+                        {isQRDownloading ? (
                           <>
-                            <div className="w-4 h-4 border-2 border-gray-500 border-t-transparent rounded-full animate-spin"></div>
-                            <span className="text-sm">更新中...</span>
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            <span>保存中...</span>
                           </>
                         ) : (
                           <>
-                            <Upload className="w-4 h-4" />
-                            <span className="text-sm">新しいQRコードに更新</span>
+                            <Download className="w-4 h-4" />
+                            <span>保存</span>
                           </>
                         )}
                       </button>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleMyQRUpload}
-                        className="hidden"
-                        disabled={isMyQRUploading}
-                      />
-                    </label>
+                      
+                      <label className="cursor-pointer">
+                        <button
+                          type="button"
+                          disabled={isMyQRUploading}
+                          className="flex items-center space-x-2 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+                        >
+                          {isMyQRUploading ? (
+                            <>
+                              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                              <span>更新中...</span>
+                            </>
+                          ) : (
+                            <>
+                              <RefreshCw className="w-4 h-4" />
+                              <span>更新</span>
+                            </>
+                          )}
+                        </button>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleMyQRUpload}
+                          className="hidden"
+                          disabled={isMyQRUploading}
+                        />
+                      </label>
+                    </div>
+                    
+                    <button
+                      onClick={() => setShowShareModal(true)}
+                      className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors whitespace-nowrap"
+                    >
+                      <Share2 className="w-4 h-4" />
+                      <span>シェア</span>
+                    </button>
                   </div>
                 </div>
               </div>
