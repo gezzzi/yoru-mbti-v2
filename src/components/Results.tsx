@@ -15,10 +15,10 @@ import { ScrollAnimation } from './ScrollAnimation';
 
 // カテゴリごとの色設定を追加
 const categoryColorSchemes = {
-  dom: 'bg-red-200',
-  sub: 'bg-pink-200',
-  introvert: 'bg-purple-200',
-  fantasy: 'bg-blue-200',
+  dom: 'bg-purple-400/50',
+  sub: 'bg-pink-400/50',
+  introvert: 'bg-cyan-400/50',
+  fantasy: 'bg-blue-400/50',
 };
 
 interface PersonalityDimension {
@@ -58,12 +58,12 @@ const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = (
   }
 
   return (
-    <div className="w-52 h-52 relative mx-auto">
+    <div className="w-72 h-72 mx-auto rounded-2xl overflow-hidden bg-transparent flex items-center justify-center">
       <Image
         src={`/images/personality-types/${baseTypeCode}.svg`}
         alt={name}
-        width={208}
-        height={208}
+        width={288}
+        height={288}
         className="w-full h-full object-contain"
         onError={handleImageError}
       />
@@ -84,8 +84,6 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
     ruby: basePersonalityType?.ruby
   };
   
-  const [hoveredDimension, setHoveredDimension] = useState<PersonalityDimension | null>(null);
-  const [selectedDimension, setSelectedDimension] = useState<PersonalityDimension | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -195,18 +193,15 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
     }
   ];
 
-  // Default to the first dimension (extraversion), then to selected, then to hovered
-  const currentDimension = hoveredDimension || selectedDimension || dimensions[0];
-
   const getResultColor = (color: string) => {
     const colorMap: { [key: string]: string } = {
-      'bg-blue-500': 'text-blue-600',
-      'bg-orange-500': 'text-orange-600',
-      'bg-green-500': 'text-green-600',
-      'bg-purple-500': 'text-purple-600',
-      'bg-red-500': 'text-red-600'
+      'bg-blue-500': 'text-blue-400',
+      'bg-orange-500': 'text-orange-400',
+      'bg-green-500': 'text-green-400',
+      'bg-purple-500': 'text-purple-400',
+      'bg-red-500': 'text-red-400'
     };
-    return colorMap[color] || 'text-gray-600';
+    return colorMap[color] || 'text-gray-400';
   };
 
   const getBackgroundColor = (color: string) => {
@@ -229,17 +224,6 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
       'bg-red-500': 'bg-red-500'
     };
     return colorMap[color] || 'bg-gray-500';
-  };
-
-  const getGradientColors = (color: string) => {
-    const colorMap: { [key: string]: string } = {
-      'bg-blue-500': 'from-blue-50 to-blue-100',
-      'bg-orange-500': 'from-orange-50 to-orange-100',
-      'bg-green-500': 'from-green-50 to-green-100',
-      'bg-purple-500': 'from-purple-50 to-purple-100',
-      'bg-red-500': 'from-red-50 to-red-100'
-    };
-    return colorMap[color] || 'from-blue-50 to-purple-50';
   };
 
   // ダウンロード機能
@@ -284,12 +268,11 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
         <ScrollAnimation animation="fadeInUp" delay={200}>
           <div ref={downloadRef}>
             {/* Header Section */}
-            <header className="sp-typeheader relative rounded-t-3xl">
-              <div className={`section__wrap relative z-10 ${categoryColorSchemes[type.category]} rounded-t-3xl`}>
-                {/* 中央配置：すべての要素 */}
-                <div className="type-info px-8 py-12 flex flex-col items-center justify-center text-center w-full max-w-2xl mx-auto">
+            <div className="rounded-t-3xl shadow-xl overflow-hidden border-2 border-white/40 bg-gradient-to-br from-white/25 via-white/15 to-white/20 backdrop-blur-sm" style={{boxShadow: '0 0 40px rgba(255, 255, 255, 0.3)'}}>
+              <div className={`p-8 text-white flex justify-center ${categoryColorSchemes[type.category]} backdrop-blur-md`}>
+                <div className="w-full">
                   {/* 性格タイプ名 */}
-                  <div className="font-head text-3xl md:text-4xl lg:text-5xl mb-10 mt-0 text-center text-gray-900 font-bold">
+                  <div className="font-head text-3xl md:text-4xl lg:text-5xl mb-10 mt-0 text-center text-white font-bold">
                     {typeWithRuby && typeWithRuby.ruby ? (
                       <ruby className="ruby-text">
                         {typeWithRuby.name}
@@ -300,38 +283,21 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                     )}
                   </div>
                   <div className="code text-center mb-6">
-                    <h1 className="font-head text-2xl md:text-3xl m-0 text-green-900 font-bold">
+                    <h1 className="font-head text-2xl md:text-3xl m-0 text-white font-bold">
                       {type.code}
                     </h1>
                   </div>
                   {/* SVG画像 */}
-                  <div className="flex justify-center mb-8">
-                    <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
-                  </div>
+                  <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
                 </div>
               </div>
-            </header>
+            </div>
             {/* Main Content */}
             <div className="rounded-b-3xl shadow-xl overflow-hidden border-2 border-white/30" style={{backgroundColor: 'rgba(255, 255, 255, 0)', boxShadow: '0 0 20px rgba(255, 255, 255, 0.1)'}}>
               <div className="p-8">
-                {/* Introduction Section */}
-                <div className="mb-16">
-                    <div className="flex items-center mb-6">
-                      <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
-                        1
-                      </div>
-                      <h2 className="text-2xl font-bold text-[#e0e7ff]">性格特性</h2>
-                    </div>
-                    
-                    <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 mb-8 border border-white/5">
-                      <p className="text-[#e0e7ff] leading-relaxed mb-6">
-                        {type.description}
-                      </p>
-                    </div>
-                </div>
 
                 {/* New Graph Design */}
-                <div className="grid lg:grid-cols-2 gap-12">
+                <div className="mb-12">
                     {/* Personality Dimensions */}
                     <div>
                       <h2 className="text-2xl font-bold text-[#e0e7ff] mb-6">性格診断結果</h2>
@@ -339,25 +305,20 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                       {dimensions.map((dimension) => (
                         <div 
                           key={dimension.id} 
-                          className={`space-y-3 cursor-pointer transition-all duration-200 hover:scale-105 py-2 px-3 rounded-lg ${
-                            currentDimension.id === dimension.id ? 'bg-white/10' : 'hover:bg-white/5'
-                          }`}
-                          onMouseEnter={() => setHoveredDimension(dimension)}
-                          onMouseLeave={() => {
-                            setHoveredDimension(null);
-                            setSelectedDimension(dimension);
-                          }}
+                          className="space-y-3 py-2 px-3"
                         >
                           <div className="relative py-1">
                             {/* Percentage text above the graph - centered */}
                             <div className="text-center mb-2">
-                              <span className={`text-sm font-bold ${getResultColor(dimension.color)}`}>
+                              <span className={`text-base font-bold ${getResultColor(dimension.color)}`}>
                                 {dimension.percentage}% {dimension.resultLabel}
                               </span>
                             </div>
                             
-                            <div className={`w-full ${getBackgroundColor(dimension.color)} rounded-full h-4 overflow-hidden relative transition-all duration-200 ${hoveredDimension?.id === dimension.id ? 'shadow-lg' : ''}`}>
-                              <div className="absolute inset-0 bg-white/20"></div>
+                            <div className="relative">
+                              <div className={`w-full ${getBackgroundColor(dimension.color)} rounded-full h-4 relative`}>
+                                <div className="absolute inset-0 bg-white/20 rounded-full"></div>
+                              </div>
                               {(() => {
                                 // Determine if this is a "reverse" axis (I, S, N, H)
                                 const isReverse = dimension.resultLabel.includes('内向性') || 
@@ -371,8 +332,8 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                                 
                                 return (
                                   <div 
-                                    className={`absolute top-1/2 transform -translate-y-1/2 w-5 h-5 bg-white rounded-full shadow-lg border-2 border-white transition-all duration-300 flex items-center justify-center ${hoveredDimension?.id === dimension.id ? 'scale-125' : 'hover:scale-110'}`}
-                                    style={{ left: `calc(${circlePosition}% - 10px)` }}
+                                    className="absolute top-1/2 transform -translate-y-1/2 w-5 h-5 bg-white rounded-full shadow-lg border-2 border-white flex items-center justify-center"
+                                    style={{ left: `calc(${circlePosition}% - 10px)`, top: '50%', transform: 'translateY(-50%)' }}
                                   >
                                     <div className={`w-3 h-3 ${getIndicatorCenterColor(dimension.color)} rounded-full`}></div>
                                   </div>
@@ -393,53 +354,197 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                         </div>
                       ))}
                     </div>
+                </div>
 
-                    {/* Character & Results - Now on the right side */}
-                    <div className="flex flex-col justify-center">
-                      <div className={`bg-gradient-to-br ${getGradientColors(currentDimension.color)} rounded-xl p-6 text-center transition-all duration-300`}>
-                        <div className="mb-4">
-                          {/* Character Illustration Placeholder */}
-                          <h3 className={`text-2xl font-bold mb-4 ${getResultColor(currentDimension.color)}`}>
-                            {currentDimension.percentage}% {currentDimension.resultLabel}
-                          </h3>
-                        </div>
-                        <div className="w-[187px] h-[187px] mx-auto mb-4 flex items-center justify-center">
-                          <Image
-                            src={(() => {
-                              switch (currentDimension.id) {
-                                case 'extraversion':
-                                  return result.E >= 50 ? '/images/axis/extraversion.svg' : '/images/axis/introversion.svg';
-                                case 'lead':
-                                  return result.L >= 50 ? '/images/axis/lead.svg' : '/images/axis/follow.svg';
-                                case 'adventure':
-                                  return result.A >= 50 ? '/images/axis/adventure.svg' : '/images/axis/stable.svg';
-                                case 'love':
-                                  return result.L2 >= 50 ? '/images/axis/love.svg' : '/images/axis/free.svg';
-                                case 'openness':
-                                  return result.O >= 50 ? '/images/axis/open.svg' : '/images/axis/secret.svg';
-                                default:
-                                  return '';
-                              }
-                            })()}
-                            alt={currentDimension.leftLabel + '軸画像'}
-                            width={187}
-                            height={187}
-                            className="object-contain w-[187px] h-[187px]"
-                          />
-                        </div>
-                        
-                        <p className="text-sm text-[#e0e7ff] leading-relaxed mb-6 transition-all duration-300">
-                          {currentDimension.description}
-                        </p>
-                      </div>
+                {/* 夜の性格詳細セクション */}
+                <div className="space-y-8 mt-12">
+                  {/* 夜の性格 */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
+                    <div className="flex items-center mb-4">
+                      <span className="text-2xl mr-3">🧠</span>
+                      <h3 className="text-xl font-bold text-[#e0e7ff]">夜の性格</h3>
                     </div>
+                    <p className="text-[#e0e7ff] leading-relaxed">
+                      {type.nightPersonality || '理性はあるけど、ベッドでは全部脱ぐタイプ。欲しいものは自分で奪う。'}
+                    </p>
+                  </div>
+
+                  {/* S/M傾向 */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
+                    <div className="flex items-center mb-4">
+                      <span className="text-2xl mr-3">😈</span>
+                      <h3 className="text-xl font-bold text-[#e0e7ff]">S or M 傾向</h3>
+                    </div>
+                    <p className="text-[#e0e7ff] leading-relaxed">
+                      {result.additionalResults?.smTendency === 'S' 
+                        ? 'S寄り（命令したい・主導したい）'
+                        : result.additionalResults?.smTendency === 'M'
+                        ? 'M寄り（命令されたい・従いたい）' 
+                        : 'Both（どちらも楽しめる）'}
+                    </p>
+                  </div>
+
+                  {/* 性欲レベル */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
+                    <div className="flex items-center mb-4">
+                      <span className="text-2xl mr-3">💋</span>
+                      <h3 className="text-xl font-bold text-[#e0e7ff]">性欲レベル</h3>
+                    </div>
+                    <div className="flex items-center mb-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <span key={star} className={`text-2xl ${star <= (result.additionalResults?.libidoLevel || 3) ? 'text-pink-500' : 'text-gray-600'}`}>
+                          ★
+                        </span>
+                      ))}
+                      <span className="ml-2 text-[#e0e7ff]">
+                        {result.additionalResults?.libidoLevel === 5 ? '（とても強い）' :
+                         result.additionalResults?.libidoLevel === 4 ? '（強い）' :
+                         result.additionalResults?.libidoLevel === 3 ? '（普通）' :
+                         result.additionalResults?.libidoLevel === 2 ? '（控えめ）' : '（穏やか）'}
+                      </span>
+                    </div>
+                    <p className="text-[#e0e7ff] text-sm">
+                      {result.additionalResults?.libidoLevel && result.additionalResults.libidoLevel >= 4 
+                        ? '平常時でも妄想が止まらないタイプ。'
+                        : '気分やシチュエーションによって変化するタイプ。'}
+                    </p>
+                  </div>
+
+                  {/* おすすめの体位 */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
+                    <div className="flex items-center mb-4">
+                      <span className="text-2xl mr-3">🍑</span>
+                      <h3 className="text-xl font-bold text-[#e0e7ff]">おすすめの体位（48手）</h3>
+                    </div>
+                    <p className="text-[#e0e7ff] mb-3">
+                      {type.recommendedPositions?.join('・') || '正常位・騎乗位・後背位・駅弁・対面座位・寝バック・立位'}
+                    </p>
+                    <p className="text-[#e0e7ff] text-sm italic">
+                      {result.additionalResults?.smTendency === 'S' 
+                        ? '「深く」「支配的」「見下ろすように愛したい」'
+                        : result.additionalResults?.smTendency === 'M'
+                        ? '「深く」「受け身で」「見上げるように愛されたい」'
+                        : '「深く」「情熱的に」「互いに求め合いたい」'}
+                    </p>
+                  </div>
+
+                  {/* 体に対する自信 */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
+                    <div className="flex items-center mb-4">
+                      <span className="text-2xl mr-3">👁</span>
+                      <h3 className="text-xl font-bold text-[#e0e7ff]">自分の体に対する自信</h3>
+                    </div>
+                    <p className="text-[#e0e7ff] mb-2">
+                      {type.bodyConfidence?.level || 'ある'}
+                      {type.bodyConfidence?.parts && type.bodyConfidence.parts.length > 0 && 
+                        `（自信のある部位：${type.bodyConfidence.parts.join('と')}）`}
+                    </p>
+                    <p className="text-[#e0e7ff] text-sm">
+                      {type.bodyConfidence?.parts?.includes('腰') && '腰使いは"無意識でエロい"と言われがち。'}
+                    </p>
+                  </div>
+
+                  {/* 相性のいいタイプ */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
+                    <div className="flex items-center mb-4">
+                      <span className="text-2xl mr-3">💘</span>
+                      <h3 className="text-xl font-bold text-[#e0e7ff]">相性のいいタイプ</h3>
+                    </div>
+                    {type.compatibleTraits?.map((trait, index) => (
+                      <p key={index} className="text-[#e0e7ff] mb-1">
+                        {trait}
+                      </p>
+                    )) || <p className="text-[#e0e7ff]">感度が高く、甘え上手な人。自分のリードを委ねてくれる相手に惹かれる。</p>}
+                  </div>
+
+                  {/* 相性が悪いタイプ */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
+                    <div className="flex items-center mb-4">
+                      <span className="text-2xl mr-3">🚫</span>
+                      <h3 className="text-xl font-bold text-[#e0e7ff]">相性が悪いタイプ</h3>
+                    </div>
+                    {type.incompatibleTraits?.map((trait, index) => (
+                      <p key={index} className="text-[#e0e7ff] mb-1">
+                        {trait}
+                      </p>
+                    )) || <p className="text-[#e0e7ff]">ノリが合わない堅物系、リアクションが薄い人。受け身すぎる or 無反応な相手には温度差を感じやすい。</p>}
+                  </div>
+
+                  {/* 夜のギャップ度 */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
+                    <div className="flex items-center mb-4">
+                      <span className="text-2xl mr-3">🎭</span>
+                      <h3 className="text-xl font-bold text-[#e0e7ff]">夜のギャップ度</h3>
+                    </div>
+                    <p className="text-[#e0e7ff]">
+                      {type.nightGapLevel || '昼は静か、夜は獣。いつも冷静な人ほど豹変すると燃える。'}
+                    </p>
+                  </div>
+
+                  {/* セックスでのこだわり */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
+                    <div className="flex items-center mb-4">
+                      <span className="text-2xl mr-3">🔍</span>
+                      <h3 className="text-xl font-bold text-[#e0e7ff]">セックスでのこだわり</h3>
+                    </div>
+                    <ul className="text-[#e0e7ff] space-y-1">
+                      {type.sexualPreferences?.map((pref, index) => (
+                        <li key={index} className="flex items-start">
+                          <span className="mr-2">•</span>
+                          <span>{pref}</span>
+                        </li>
+                      )) || (
+                        <>
+                          <li className="flex items-start">
+                            <span className="mr-2">•</span>
+                            <span>前戯が濃厚じゃないと冷める</span>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="mr-2">•</span>
+                            <span>キスは必須。なければ温度が下がる</span>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="mr-2">•</span>
+                            <span>指先の絡ませ合いが好き</span>
+                          </li>
+                        </>
+                      )}
+                    </ul>
+                  </div>
+
+                  {/* 関係性の理想スタイル */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
+                    <div className="flex items-center mb-4">
+                      <span className="text-2xl mr-3">🔄</span>
+                      <h3 className="text-xl font-bold text-[#e0e7ff]">関係性の理想スタイル</h3>
+                    </div>
+                    <p className="text-[#e0e7ff]">
+                      {type.relationshipStyle || '気が合えば専属で深く繋がりたい。"身体の相性"から心も通わせていくのが理想。'}
+                    </p>
+                  </div>
+
+                  {/* 短所とアドバイス */}
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
+                    <div className="flex items-center mb-4">
+                      <span className="text-2xl mr-3">⚠️</span>
+                      <h3 className="text-xl font-bold text-[#e0e7ff]">あなたの短所とアドバイス</h3>
+                    </div>
+                    <p className="text-[#e0e7ff] mb-2">
+                      <span className="font-semibold">短所：</span>
+                      {type.shortcomingsAdvice?.shortcoming || '気分屋な面があり、急に冷めることも。'}
+                    </p>
+                    <p className="text-[#e0e7ff]">
+                      → <span className="font-semibold">アドバイス：</span>
+                      {type.shortcomingsAdvice?.advice || '信頼関係と温度管理を大切にすれば長く愛される。'}
+                    </p>
+                  </div>
                 </div>
 
                 {/* QRコードセクション */}
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 mb-8 mt-12 border border-white/5">
                     <div className="flex items-center mb-6">
                       <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold mr-4">
-                        2
+                        1
                       </div>
                       <h2 className="text-2xl font-bold text-[#e0e7ff]">相性診断用QRコード</h2>
                     </div>

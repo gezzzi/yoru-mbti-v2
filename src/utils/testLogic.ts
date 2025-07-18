@@ -7,6 +7,15 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
   let ETotal = 0, LTotal = 0, ATotal = 0, L2Total = 0, OTotal = 0;
   let ECount = 0, LCount = 0, ACount = 0, L2Count = 0, OCount = 0;
   
+  // 追加軸の集計用
+  let STotal = 0, MTotal = 0; // S/M傾向
+  let libidoTotal = 0, libidoCount = 0;
+  let positionScores = { cozy: 0, adventurous: 0, flexible: 0, back: 0, chill: 0 };
+  let gapTotal = 0, gapCount = 0;
+  let tensionVocal = 0, tensionReactive = 0;
+  let kissTotal = 0, kissCount = 0;
+  let preferences: string[] = [];
+  
   Object.entries(answers).forEach(([questionId, value]) => {
     const id = parseInt(questionId);
     const question = questions.find(q => q.id === id);
@@ -25,6 +34,12 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
       case 'LF':
         LTotal += adjustedValue;
         LCount++;
+        // S/M傾向の判定
+        if (question.smTendency === 'S') {
+          STotal += adjustedValue;
+        } else if (question.smTendency === 'M') {
+          MTotal += adjustedValue;
+        }
         break;
       case 'AS':
         ATotal += adjustedValue;
@@ -37,6 +52,37 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
       case 'OS':
         OTotal += adjustedValue;
         OCount++;
+        break;
+      case 'LIBIDO':
+        libidoTotal += value; // 逆転なし
+        libidoCount++;
+        break;
+      case 'POSITION':
+        if (question.additionalType === 'position_cozy') positionScores.cozy = value;
+        if (question.additionalType === 'position_adventurous') positionScores.adventurous = value;
+        if (question.additionalType === 'position_flexible') positionScores.flexible = value;
+        if (question.additionalType === 'position_back') positionScores.back = value;
+        if (question.additionalType === 'position_chill') positionScores.chill = value;
+        break;
+      case 'GAP':
+        gapTotal += value;
+        gapCount++;
+        break;
+      case 'TENSION':
+        if (id === 30) tensionVocal = value; // 声の反応
+        if (id === 31) tensionReactive = value; // リアクション
+        break;
+      case 'KISS':
+        kissTotal += value;
+        kissCount++;
+        break;
+      case 'PREFERENCE':
+        if (value >= 4) { // 4以上で好みとみなす
+          if (id === 34) preferences.push('腰使い');
+          if (id === 35) preferences.push('アイコンタクト');
+          if (id === 36) preferences.push('ロールプレイ');
+          if (id === 37) preferences.push('前戯重視');
+        }
         break;
     }
   });
@@ -66,13 +112,37 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
   // Find matching personality type using 4-character code
   const personalityType = personalityTypes.find(type => type.code === typeCode) || personalityTypes[0];
   
+  // 追加結果の計算
+  const smScore = STotal - MTotal;
+  const smTendency = smScore > 5 ? 'S' : smScore < -5 ? 'M' : 'Both';
+  
+  const libidoAvg = libidoCount > 0 ? libidoTotal / libidoCount : 3;
+  const libidoLevel = Math.min(5, Math.max(1, Math.round(libidoAvg))) as 1 | 2 | 3 | 4 | 5;
+  
+  const gapLevel = gapCount > 0 ? Math.round((gapTotal / gapCount) / 6 * 100) : 50;
+  
+  const kissImportance = kissCount > 0 ? Math.round((kissTotal / kissCount) / 6 * 100) : 50;
+  
   return {
     E,
     L,
     A,
     L2,
     O,
-    type: personalityType
+    type: personalityType,
+    additionalResults: {
+      smTendency,
+      smScore,
+      libidoLevel,
+      positionPreferences: positionScores,
+      gapLevel,
+      tensionFactors: {
+        vocal: tensionVocal >= 4,
+        reactive: tensionReactive >= 4
+      },
+      kissImportance,
+      preferences
+    }
   };
 };
 

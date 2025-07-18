@@ -15,7 +15,24 @@ export const personalityTypes: PersonalityType[] = [
     compatibility: ['IFSL', 'EFSL', 'IFAL'],
     strengths: ['リーダーシップがある', '情熱的', '責任感が強い', '保護欲が強い'],
     weaknesses: ['束縛が強すぎる', '独占欲が過度', '嫉妬深い', '支配的になりがち'],
-    careers: ['経営者', 'プロジェクトマネージャー', 'チームリーダー', '営業職']
+    careers: ['経営者', 'プロジェクトマネージャー', 'チームリーダー', '営業職'],
+    nightPersonality: '理性はあるけど、ベッドでは全部脱ぐタイプ。欲しいものは自分で奪う。',
+    smTendency: 'S',
+    libidoLevel: 5,
+    recommendedPositions: ['正常位', '騎乗位', '後背位', '駅弁', '対面座位', '寝バック', '立位'],
+    bodyConfidence: {
+      level: 'ある',
+      parts: ['腰', '尻']
+    },
+    compatibleTraits: ['感度が高く、甘え上手な人', '自分のリードを委ねてくれる相手に惹かれる'],
+    incompatibleTraits: ['ノリが合わない堅物系、リアクションが薄い人', '受け身すぎる or 無反応な相手には温度差を感じやすい'],
+    nightGapLevel: '昼は静か、夜は獣。いつも冷静な人ほど豹変すると燃える。',
+    sexualPreferences: ['前戯が濃厚じゃないと冷める', 'キスは必須。なければ温度が下がる', '指先の絡ませ合いが好き'],
+    relationshipStyle: '気が合えば専属で深く繋がりたい。"身体の相性"から心も通わせていくのが理想。',
+    shortcomingsAdvice: {
+      shortcoming: '気分屋な面があり、急に冷めることも',
+      advice: '信頼関係と温度管理を大切にすれば長く愛される'
+    }
   },
   {
     code: 'ELAF',
