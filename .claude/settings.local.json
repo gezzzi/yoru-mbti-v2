@@ -18,7 +18,11 @@
       "Bash(node:*)",
       "Bash(npm:*)",
       "Bash(claude auth:*)",
-      "Bash(lsof:*)"
+      "Bash(lsof:*)",
+      "Bash(npx tsc:*)",
+      "Bash(find:*)",
+      "Bash(mv:*)",
+      "Bash(ls:*)"
     ],
     "deny": []
   }

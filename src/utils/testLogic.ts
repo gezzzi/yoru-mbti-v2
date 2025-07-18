@@ -4,8 +4,8 @@ import { questions } from '../data/questions';
 
 export const calculatePersonalityType = (answers: Record<string, number>): TestResult => {
   // Initialize score totals for each axis
-  let ETotal = 0, DTotal = 0, TTotal = 0, RTotal = 0, ATotal = 0;
-  let ECount = 0, DCount = 0, TCount = 0, RCount = 0, ACount = 0;
+  let ETotal = 0, LTotal = 0, ATotal = 0, L2Total = 0, OTotal = 0;
+  let ECount = 0, LCount = 0, ACount = 0, L2Count = 0, OCount = 0;
   
   Object.entries(answers).forEach(([questionId, value]) => {
     const id = parseInt(questionId);
@@ -22,21 +22,21 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
         ETotal += adjustedValue;
         ECount++;
         break;
-      case 'DS':
-        DTotal += adjustedValue;
-        DCount++;
+      case 'LF':
+        LTotal += adjustedValue;
+        LCount++;
         break;
-      case 'TS':
-        TTotal += adjustedValue;
-        TCount++;
-        break;
-      case 'RH':
-        RTotal += adjustedValue;
-        RCount++;
-        break;
-      case 'AN':
+      case 'AS':
         ATotal += adjustedValue;
         ACount++;
+        break;
+      case 'LF2':
+        L2Total += adjustedValue;
+        L2Count++;
+        break;
+      case 'OS':
+        OTotal += adjustedValue;
+        OCount++;
         break;
     }
   });
@@ -50,37 +50,28 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
   };
 
   const E = calculatePercentage(ETotal, ECount);
-  const D = calculatePercentage(DTotal, DCount);
-  const T = calculatePercentage(TTotal, TCount);
-  const R = calculatePercentage(RTotal, RCount);
+  const L = calculatePercentage(LTotal, LCount);
   const A = calculatePercentage(ATotal, ACount);
+  const L2 = calculatePercentage(L2Total, L2Count);
+  const O = calculatePercentage(OTotal, OCount);
   
   // Determine personality type code based on which side is stronger
   // 50%の場合は51%になっているため、通常の比較で判定
-  const baseTypeCode = 
+  const typeCode = 
     (E > 50 ? 'E' : 'I') +
-    (D > 50 ? 'D' : 'S') +
-    (T > 50 ? 'T' : 'S') +
-    (A > 50 ? 'A' : 'N');
+    (L > 50 ? 'L' : 'F') +
+    (A > 50 ? 'A' : 'S') +
+    (L2 > 50 ? 'L' : 'F');
   
-  const rhSuffix = R > 50 ? 'R' : 'H';
-  const fullTypeCode = baseTypeCode + '-' + rhSuffix;
-  
-  // Find matching personality type using base 4-character code
-  const basePersonalityType = personalityTypes.find(type => type.code === baseTypeCode) || personalityTypes[0];
-  
-  // Create extended personality type with R/H suffix
-  const personalityType: PersonalityType = {
-    ...basePersonalityType,
-    code: fullTypeCode
-  };
+  // Find matching personality type using 4-character code
+  const personalityType = personalityTypes.find(type => type.code === typeCode) || personalityTypes[0];
   
   return {
     E,
-    D,
-    T,
-    R,
+    L,
     A,
+    L2,
+    O,
     type: personalityType
   };
 };

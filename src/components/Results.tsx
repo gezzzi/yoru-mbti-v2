@@ -42,7 +42,7 @@ interface ResultsProps {
 const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = ({ typeCode, emoji, name }) => {
   const [imageError, setImageError] = useState(false);
   
-  // タイプコードから基本の4文字を抽出（例：EDTA-R → EDTA）
+  // タイプコードから基本の4文字を抽出（例：ELAL-O → ELAL）
   const getBaseTypeCode = (code: string): string => {
     return code.split('-')[0].toUpperCase();
   };
@@ -74,7 +74,7 @@ const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = (
 const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
   const { type } = result;
   
-  // コードから基本の4文字を抽出（例：IDSA-R → IDSA）
+  // コードから基本の4文字を抽出（例：ILSL-O → ILSL）
   const baseTypeCode = type.code.split('-')[0];
   
   // personalityTypesから直接rubyプロパティを取得
@@ -108,10 +108,10 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
     
     switch (axis) {
       case 'E': return isPositive ? '外向性' : '内向性';
-      case 'D': return isPositive ? '主導性' : '服従性';
-      case 'T': return isPositive ? '刺激志向' : '安心志向';
-      case 'R': return isPositive ? '羞恥体制' : '羞恥敏感';
-      case 'A': return isPositive ? '愛着傾向' : '非愛着傾向';
+      case 'L': return isPositive ? 'リード' : 'フォロー';
+      case 'A': return isPositive ? '冒険' : '安定';
+      case 'L2': return isPositive ? 'ラブ' : 'フリー';
+      case 'O': return isPositive ? '開放' : '秘密';
       default: return axis;
     }
   };
@@ -119,10 +119,10 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
   const getAxisValue = (axis: string) => {
     switch (axis) {
       case 'E': return result.E;
-      case 'D': return result.D;
-      case 'T': return result.T;
-      case 'R': return result.R;
+      case 'L': return result.L;
       case 'A': return result.A;
+      case 'L2': return result.L2;
+      case 'O': return result.O;
       default: return 0;
     }
   };
@@ -142,56 +142,56 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
       category: 'エネルギー'
     },
     {
-      id: 'dominance',
-      leftLabel: '主導(D)',
-      rightLabel: '服従(S)',
-      percentage: result.D >= 50 ? result.D : (100 - result.D),
+      id: 'lead',
+      leftLabel: 'リード(L)',
+      rightLabel: 'フォロー(F)',
+      percentage: result.L >= 50 ? result.L : (100 - result.L),
       color: 'bg-orange-500',
-      resultLabel: result.D >= 50 ? '主導(D)' : '服従(S)',
+      resultLabel: result.L >= 50 ? 'リード(L)' : 'フォロー(F)',
       icon: <Shield className="w-4 h-4" />,
-      description: result.D >= 50
-        ? '主導型の人はリーダーシップを発揮し、積極的に物事を進める傾向があります。決断力があり、チームを引っ張る力を持っています。'
-        : '服従型の人は協調性を重視し、チームワークを大切にします。他者をサポートし、調和を保つことを得意とします。',
+      description: result.L >= 50
+        ? 'リード型の人は主導権を握り、相手を導くことを好みます。積極的にアプローチし、関係をコントロールする傾向があります。'
+        : 'フォロー型の人は相手に導かれることを好み、受け身の姿勢を取ります。相手のペースに合わせることを得意とします。',
       category: 'リーダーシップ'
     },
     {
-      id: 'stimulation',
-      leftLabel: '刺激志向(T)',
-      rightLabel: '安心志向(S)',
-      percentage: result.T >= 50 ? result.T : (100 - result.T),
+      id: 'adventure',
+      leftLabel: '冒険(A)',
+      rightLabel: '安定(S)',
+      percentage: result.A >= 50 ? result.A : (100 - result.A),
       color: 'bg-green-500',
-      resultLabel: result.T >= 50 ? '刺激志向(T)' : '安心志向(S)',
+      resultLabel: result.A >= 50 ? '冒険(A)' : '安定(S)',
       icon: <Zap className="w-4 h-4" />,
-      description: result.T >= 50
-        ? '刺激志向の人は新しい体験や冒険を求める傾向があります。変化を楽しみ、チャレンジングな状況を好みます。'
-        : '安心志向の人は安定性と予測可能性を重視します。慣れ親しんだ環境や確実性を好む傾向があります。',
+      description: result.A >= 50
+        ? '冒険型の人は新しい体験や未知の快楽を求める傾向があります。変化を楽しみ、刺激的な状況を好みます。'
+        : '安定型の人は慣れ親しんだ関係や確実な快楽を重視します。安心できる環境での親密さを好む傾向があります。',
       category: '刺激'
     },
     {
-      id: 'attachment',
-      leftLabel: '愛着傾向(A)',
-      rightLabel: '非愛着傾向(N)',
-      percentage: result.A >= 50 ? result.A : (100 - result.A),
+      id: 'love',
+      leftLabel: 'ラブ(L)',
+      rightLabel: 'フリー(F)',
+      percentage: result.L2 >= 50 ? result.L2 : (100 - result.L2),
       color: 'bg-purple-500',
-      resultLabel: result.A >= 50 ? '愛着傾向(A)' : '非愛着傾向(N)',
+      resultLabel: result.L2 >= 50 ? 'ラブ(L)' : 'フリー(F)',
       icon: <Heart className="w-4 h-4" />,
-      description: result.A >= 50
-        ? '愛着傾向の人は深い人間関係を重視し、親密な絆を築くことを大切にします。感情的なつながりを求める傾向があります。'
-        : '非愛着傾向の人は独立性を重視し、自立した関係を好みます。個人的な空間と自由を大切にします。',
-      category: '愛着'
+      description: result.L2 >= 50
+        ? 'ラブ型の人は一人の相手との深い関係を重視し、恋愛感情や情熱的な結びつきを大切にします。'
+        : 'フリー型の人は複数の相手との関係や、感情に縛られない自由な関係を好みます。',
+      category: '関係性'
     },
     {
-      id: 'shame',
-      leftLabel: '羞恥体制(R)',
-      rightLabel: '羞恥敏感(H)',
-      percentage: result.R >= 50 ? result.R : (100 - result.R),
+      id: 'openness',
+      leftLabel: '開放(O)',
+      rightLabel: '秘密(S)',
+      percentage: result.O >= 50 ? result.O : (100 - result.O),
       color: 'bg-red-500',
-      resultLabel: result.R >= 50 ? '羞恥体制(R)' : '羞恥敏感(H)',
+      resultLabel: result.O >= 50 ? '開放(O)' : '秘密(S)',
       icon: <Eye className="w-4 h-4" />,
-      description: result.R >= 50
-        ? '羞恥体制の人は他人の評価に対して比較的強い耐性を持ち、自分の行動に自信を持って取り組む傾向があります。'
-        : '羞恥敏感の人は他人の評価や反応に敏感で、周囲との調和を重視する傾向があります。',
-      category: '羞恥'
+      description: result.O >= 50
+        ? '開放型の人は自分の欲望や嗜好をオープンに表現し、相手と共有することを好みます。'
+        : '秘密型の人は自分の内なる欲望を隠し、プライベートな部分を守ることを重視します。',
+      category: '表現'
     }
   ];
 
@@ -409,14 +409,14 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                               switch (currentDimension.id) {
                                 case 'extraversion':
                                   return result.E >= 50 ? '/images/axis/extraversion.svg' : '/images/axis/introversion.svg';
-                                case 'dominance':
-                                  return result.D >= 50 ? '/images/axis/dominance.svg' : '/images/axis/submissiveness.svg';
-                                case 'stimulation':
-                                  return result.T >= 50 ? '/images/axis/thrill.svg' : '/images/axis/stability.svg';
-                                case 'attachment':
-                                  return result.A >= 50 ? '/images/axis/attachment.svg' : '/images/axis/non-attachment.svg';
-                                case 'shame':
-                                  return result.R >= 50 ? '/images/axis/resistance.svg' : '/images/axis/hypersensitivity.svg';
+                                case 'lead':
+                                  return result.L >= 50 ? '/images/axis/lead.svg' : '/images/axis/follow.svg';
+                                case 'adventure':
+                                  return result.A >= 50 ? '/images/axis/adventure.svg' : '/images/axis/stable.svg';
+                                case 'love':
+                                  return result.L2 >= 50 ? '/images/axis/love.svg' : '/images/axis/free.svg';
+                                case 'openness':
+                                  return result.O >= 50 ? '/images/axis/open.svg' : '/images/axis/secret.svg';
                                 default:
                                   return '';
                               }

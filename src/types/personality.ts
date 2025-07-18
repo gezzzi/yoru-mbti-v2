@@ -1,6 +1,6 @@
 export interface Question {
   id: number;
-  axis: 'EI' | 'DS' | 'TS' | 'RH' | 'AN';
+  axis: 'EI' | 'LF' | 'AS' | 'LF2' | 'OS';
   text: string;
   isReverse: boolean; // 質問のベクトルが逆の場合true
   options: {
@@ -14,6 +14,7 @@ export interface PersonalityType {
   name: string;
   ruby?: string; // フリガナ
   summary?: string; // 要約
+  fullDescription?: string; // 全文
   category: 'dom' | 'sub' | 'introvert' | 'fantasy';
   emoji: string;
   description: string;
@@ -26,9 +27,9 @@ export interface PersonalityType {
 
 export interface TestResult {
   E: number; // Extroversion vs Introversion
-  D: number; // Dominance vs Submission  
-  T: number; // Thrill-seeking vs Security-seeking
-  R: number; // Shame-resistant vs Shame-sensitive
-  A: number; // Attachment vs Non-attachment
+  L: number; // Lead vs Follow  
+  A: number; // Adventure vs Stable
+  L2: number; // Love vs Free
+  O: number; // Open vs Secret
   type: PersonalityType;
 } 

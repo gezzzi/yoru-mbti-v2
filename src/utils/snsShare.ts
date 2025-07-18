@@ -4,10 +4,10 @@ import { TestResult } from '../types/personality';
 export const generateCompatibilityCode = (result: TestResult): string => {
   // 各軸の値を0-100の整数値に変換
   const v1 = Math.round(result.E);
-  const v2 = Math.round(result.D);
-  const v3 = Math.round(result.T);
-  const v4 = Math.round(result.R);
-  const v5 = Math.round(result.A);
+  const v2 = Math.round(result.L);
+  const v3 = Math.round(result.A);
+  const v4 = Math.round(result.L2);
+  const v5 = Math.round(result.O);
   
   // 数式: 値 = v1×101⁴ + v2×101³ + v3×101² + v4×101¹ + v5×101⁰
   const value = v1 * Math.pow(101, 4) + 
@@ -55,10 +55,10 @@ export const parseCompatibilityCode = (code: string): TestResult | null => {
     
     return {
       E: v1,
-      D: v2,
-      T: v3,
-      R: v4,
-      A: v5,
+      L: v2,
+      A: v3,
+      L2: v4,
+      O: v5,
       type: null as any // 型判定は別途実行する必要がある
     };
   } catch {

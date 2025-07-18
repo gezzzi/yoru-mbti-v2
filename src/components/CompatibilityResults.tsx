@@ -23,7 +23,7 @@ interface CompatibilityResultsProps {
 }
 
 // レーダーチャートコンポーネント
-const RadarChart: React.FC<{ axisScores: { E: number, D: number, T: number, A: number, R: number }, totalScore: number }> = ({ axisScores, totalScore }) => {
+const RadarChart: React.FC<{ axisScores: { E: number, L: number, A: number, L2: number, O: number }, totalScore: number }> = ({ axisScores, totalScore }) => {
   const size = 360;
   const center = size / 2;
   const radius = 80;
@@ -31,14 +31,14 @@ const RadarChart: React.FC<{ axisScores: { E: number, D: number, T: number, A: n
   // 5角形の各頂点の角度（上から時計回り）
   const angles = [
     -Math.PI / 2,          // E (上)
-    -Math.PI / 2 + (2 * Math.PI / 5),     // D (右上)
-    -Math.PI / 2 + (4 * Math.PI / 5),     // T (右下)
-    -Math.PI / 2 + (6 * Math.PI / 5),     // A (左下)
-    -Math.PI / 2 + (8 * Math.PI / 5),     // R (左上)
+    -Math.PI / 2 + (2 * Math.PI / 5),     // L (右上)
+    -Math.PI / 2 + (4 * Math.PI / 5),     // A (右下)
+    -Math.PI / 2 + (6 * Math.PI / 5),     // L2 (左下)
+    -Math.PI / 2 + (8 * Math.PI / 5),     // O (左上)
   ];
   
-  const axisLabels = ['外向性', '主導性', '刺激', '愛着', '羞恥耐性'];
-  const axisValues = [axisScores.E, axisScores.D, axisScores.T, axisScores.A, axisScores.R];
+  const axisLabels = ['外向性', 'リード', '冒険', 'ラブ', '開放'];
+  const axisValues = [axisScores.E, axisScores.L, axisScores.A, axisScores.L2, axisScores.O];
   
   // 座標計算関数
   const getPoint = (angle: number, distance: number) => ({
@@ -152,8 +152,8 @@ const RadarChart: React.FC<{ axisScores: { E: number, D: number, T: number, A: n
           <h4 className="text-sm font-semibold text-gray-700">各軸の相性スコア</h4>
         </div>
         <div className="text-xs text-gray-600 space-y-1">
-          <div>外向性: {Math.round(axisScores.E)}% | 主導性: {Math.round(axisScores.D)}%</div>
-          <div>刺激: {Math.round(axisScores.T)}% | 愛着: {Math.round(axisScores.A)}% | 羞恥耐性: {Math.round(axisScores.R)}%</div>
+          <div>外向性: {Math.round(axisScores.E)}% | リード: {Math.round(axisScores.L)}%</div>
+          <div>冒険: {Math.round(axisScores.A)}% | ラブ: {Math.round(axisScores.L2)}% | 開放: {Math.round(axisScores.O)}%</div>
         </div>
       </div>
     </div>
@@ -213,28 +213,28 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   const [showShareModal, setShowShareModal] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const calculateCompatibility = (user: TestResult, partner: TestResult): CompatibilityResult & { axisScores: { E: number, D: number, T: number, A: number, R: number } } => {
+  const calculateCompatibility = (user: TestResult, partner: TestResult): CompatibilityResult & { axisScores: { E: number, L: number, A: number, L2: number, O: number } } => {
     // 各軸の相性スコアを計算（類似軸と補完軸で異なる計算方法）
     
     // 外向性(E)/内向性(I) - 類似軸
     const eScore = 100 - Math.abs(user.E - partner.E);
     
-    // 主導(D)/服従(S) - 補完軸
+    // リード(L)/フォロー(F) - 補完軸
     // 合計値が100に近いほど良い
-    const dScore = 100 - Math.abs((user.D + partner.D) - 100);
+    const lScore = 100 - Math.abs((user.L + partner.L) - 100);
     
-    // 刺激志向(T)/安心志向(S) - 類似軸
-    const tScore = 100 - Math.abs(user.T - partner.T);
-    
-    // 愛着傾向(A)/非愛着傾向(N) - 類似軸
+    // 冒険(A)/安定(S) - 類似軸
     const aScore = 100 - Math.abs(user.A - partner.A);
     
-    // 羞恥体制(R)/羞恥敏感(H) - 類似軸
-    const rScore = 100 - Math.abs(user.R - partner.R);
+    // ラブ(L)/フリー(F) - 類似軸
+    const l2Score = 100 - Math.abs(user.L2 - partner.L2);
+    
+    // 開放(O)/秘密(S) - 類似軸
+    const oScore = 100 - Math.abs(user.O - partner.O);
     
     // 総合相性度を計算（重み付き平均）
     const compatibility = Math.max(0, Math.min(100, 
-      (eScore * 0.15) + (dScore * 0.3) + (tScore * 0.25) + (aScore * 0.2) + (rScore * 0.1)
+      (eScore * 0.15) + (lScore * 0.3) + (aScore * 0.25) + (l2Score * 0.2) + (oScore * 0.1)
     ));
 
     let description = '';
@@ -277,10 +277,10 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       tips,
       axisScores: {
         E: Math.max(0, Math.min(100, eScore)),
-        D: Math.max(0, Math.min(100, dScore)),
-        T: Math.max(0, Math.min(100, tScore)),
+        L: Math.max(0, Math.min(100, lScore)),
         A: Math.max(0, Math.min(100, aScore)),
-        R: Math.max(0, Math.min(100, rScore))
+        L2: Math.max(0, Math.min(100, l2Score)),
+        O: Math.max(0, Math.min(100, oScore))
       }
     };
   };

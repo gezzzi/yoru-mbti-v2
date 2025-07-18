@@ -11,24 +11,24 @@ import { ScrollAnimation } from './ScrollAnimation';
 // カテゴリごとの色設定
 const categoryColorSchemes = {
   dom: {
-    bg: 'bg-red-200',
-    textBg: 'bg-red-200',
-    imageBg: 'bg-red-200'
+    bg: 'bg-purple-400/50',
+    textBg: 'bg-transparent',
+    imageBg: 'bg-transparent'
   },
   sub: {
-    bg: 'bg-pink-200',
-    textBg: 'bg-pink-200',
-    imageBg: 'bg-pink-200'
+    bg: 'bg-pink-400/50',
+    textBg: 'bg-transparent',
+    imageBg: 'bg-transparent'
   },
   introvert: {
-    bg: 'bg-purple-200',
-    textBg: 'bg-purple-200',
-    imageBg: 'bg-purple-200'
+    bg: 'bg-cyan-400/50',
+    textBg: 'bg-transparent',
+    imageBg: 'bg-transparent'
   },
   fantasy: {
-    bg: 'bg-blue-200',
-    textBg: 'bg-blue-200',
-    imageBg: 'bg-blue-200'
+    bg: 'bg-blue-400/50',
+    textBg: 'bg-transparent',
+    imageBg: 'bg-transparent'
   }
 };
 
@@ -72,12 +72,12 @@ export default function PersonalityTypesPage() {
           href={`/types/${type.code.toLowerCase()}`}
           className="block rounded-2xl p-6 transition-all duration-300 hover:-translate-y-2 cursor-pointer group"
         >
-        <div className="text-center mb-6">
+        <div className="text-center mb-6 relative z-20">
           <div className={`w-72 h-72 mx-auto mb-4 rounded-2xl overflow-hidden ${scheme.imageBg} flex items-center justify-center`}>
             <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
           </div>
           <div className={`${scheme.textBg} rounded-xl p-4 mx-auto`}>
-            <h3 className="text-xl font-bold text-gray-900 mb-1">
+            <h3 className="text-xl font-bold text-[#e0e7ff] mb-1">
               {type.ruby ? (
                 <ruby className="ruby-text">
                   {type.name}
@@ -87,11 +87,11 @@ export default function PersonalityTypesPage() {
                 type.name
               )}
             </h3>
-            <p className="text-sm font-medium text-gray-700 mb-1">
+            <p className="text-sm font-medium text-[#e0e7ff]/80 mb-1">
               {type.code}
             </p>
             {type.summary && (
-              <p className="text-sm font-semibold text-gray-800 mt-2">
+              <p className="text-sm font-semibold text-[#e0e7ff]/90 mt-2">
                 {type.summary}
               </p>
             )}
@@ -122,15 +122,15 @@ export default function PersonalityTypesPage() {
             
             return (
               <div key={category}>
-                <ScrollAnimation animation="fadeIn" delay={100 + index * 200}>
-                  <section className={`${scheme.bg} pt-12 relative rounded-3xl`}>
-                    <div className="text-center mb-12">
-                      <h2 className="text-4xl font-bold text-gray-900 mb-2 mt-8">
+                <ScrollAnimation animation="fadeInUp" delay={100 + index * 200}>
+                  <section className={`${scheme.bg} pt-12 relative rounded-3xl backdrop-blur-sm border border-white/10`}>
+                    <div className="text-center mb-0 relative z-0">
+                      <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-bold text-[#e0e7ff] mb-0 mt-4 sm:mt-6 md:mt-8">
                       {getCategoryName(category)}
                     </h2>
                   </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 -mt-12 sm:-mt-14 md:-mt-16 lg:-mt-18 xl:-mt-20 relative z-10">
                   {categoryTypes.map((type, idx) => renderPersonalityType(type, category, 200 + idx * 100))}
               </div>
                 </section>
@@ -138,7 +138,7 @@ export default function PersonalityTypesPage() {
               
               {/* セクション間の隙間 */}
               {index < categories.length - 1 && (
-                <div className="h-8 bg-transparent"></div>
+                <div className="h-16 md:h-20 lg:h-24 bg-transparent"></div>
               )}
             </div>
           );
@@ -147,11 +147,11 @@ export default function PersonalityTypesPage() {
 
         {/* Footer */}
         <ScrollAnimation animation="fadeInUp" delay={1000}>
-          <div className="text-center mt-20 bg-white rounded-3xl p-12 shadow-xl">
-            <h3 className="text-3xl font-bold text-gray-900 mb-6">
+          <div className="text-center mt-20 bg-white/10 backdrop-blur-sm rounded-3xl p-12 shadow-xl border border-white/20">
+            <h3 className="text-3xl font-bold text-[#e0e7ff] mb-6">
               自分のタイプを知りたい？
             </h3>
-            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-[#e0e7ff]/80 mb-8 max-w-2xl mx-auto">
               診断テストを受けて、あなたの本当の性格タイプを発見しましょう。
             </p>
             <Link

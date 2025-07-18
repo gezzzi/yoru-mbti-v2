@@ -9,10 +9,10 @@ import { ScrollAnimation } from '@/components/ScrollAnimation';
 
 // カテゴリごとの色設定をインポート
 const categoryColorSchemes = {
-  dom: 'bg-red-200',
-  sub: 'bg-pink-200',
-  introvert: 'bg-purple-200',
-  fantasy: 'bg-blue-200',
+  dom: 'bg-purple-400/50',
+  sub: 'bg-pink-400/50',
+  introvert: 'bg-cyan-400/50',
+  fantasy: 'bg-blue-400/50',
 };
 
 interface PersonalityTypeDetailProps {
@@ -67,11 +67,11 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
 
         {/* メインコンテンツ */}
         <ScrollAnimation animation="fadeInUp" delay={200}>
-          <div className="rounded-3xl shadow-xl overflow-hidden border-2 border-white/30" style={{backgroundColor: 'rgba(255, 255, 255, 0)', boxShadow: '0 0 20px rgba(255, 255, 255, 0.1)'}}>
+          <div className="rounded-3xl shadow-xl overflow-hidden border-2 border-white/40 bg-gradient-to-br from-white/25 via-white/15 to-white/20 backdrop-blur-sm" style={{boxShadow: '0 0 40px rgba(255, 255, 255, 0.3)'}}>
             {/* 画像をカテゴリごとの背景色でグラデーションdivに配置 */}
             <ScrollAnimation animation="fadeIn" delay={400}>
-              <div className={`p-8 text-white flex justify-center ${categoryColorSchemes[type.category]}`}>
-                <div className={`w-72 h-72 mx-auto rounded-2xl overflow-hidden ${categoryColorSchemes[type.category]} flex items-center justify-center`}>
+              <div className={`p-8 text-white flex justify-center ${categoryColorSchemes[type.category]} backdrop-blur-md`}>
+                <div className={`w-72 h-72 mx-auto rounded-2xl overflow-hidden bg-transparent flex items-center justify-center`}>
                   <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
                 </div>
               </div>
@@ -96,8 +96,8 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
                 </div>
                 
                 {/* タイプ説明文 */}
-                <div className="mb-8 bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
-                  <p className="text-lg text-[#e0e7ff] leading-relaxed font-medium">{type.description}</p>
+                <div className="mb-8 bg-transparent rounded-xl p-6">
+                  <p className="text-lg text-[#e0e7ff] leading-relaxed font-medium">{type.fullDescription || type.description}</p>
                 </div>
 
                 {/* アクションボタン */}

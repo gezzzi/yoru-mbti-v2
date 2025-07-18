@@ -19,7 +19,7 @@ export const questions: Question[] = [
   },
   {
     id: 2,
-    axis: 'DS',
+    axis: 'LF',
     text: '自分から相手にどうされたいかを指示するのが快感だ',
     isReverse: false,
     options: [
@@ -34,7 +34,7 @@ export const questions: Question[] = [
   },
   {
     id: 3,
-    axis: 'TS',
+    axis: 'AS',
     text: '未知のプレイや道具には好奇心が強い',
     isReverse: false,
     options: [
@@ -49,7 +49,7 @@ export const questions: Question[] = [
   },
   {
     id: 4,
-    axis: 'AN',
+    axis: 'OS',
     text: '性的関係にもある程度の「愛」が必要だと感じる',
     isReverse: false,
     options: [
@@ -64,7 +64,7 @@ export const questions: Question[] = [
   },
   {
     id: 5,
-    axis: 'RH',
+    axis: 'LF2',
     text: '他人に見られるかもしれない状況に興奮する',
     isReverse: false,
     options: [
@@ -94,7 +94,7 @@ export const questions: Question[] = [
   },
   {
     id: 7,
-    axis: 'DS',
+    axis: 'LF',
     text: '抵抗できない状況に興奮することがある',
     isReverse: true,
     options: [
@@ -109,7 +109,7 @@ export const questions: Question[] = [
   },
   {
     id: 8,
-    axis: 'TS',
+    axis: 'AS',
     text: '安定したパートナーシップの中で性を深めたい',
     isReverse: true,
     options: [
@@ -124,7 +124,7 @@ export const questions: Question[] = [
   },
   {
     id: 9,
-    axis: 'AN',
+    axis: 'OS',
     text: 'セックスと恋愛は完全に切り離せると思っている',
     isReverse: true,
     options: [
@@ -139,7 +139,7 @@ export const questions: Question[] = [
   },
   {
     id: 10,
-    axis: 'RH',
+    axis: 'LF2',
     text: '服を脱がされる瞬間がいちばん恥ずかしい',
     isReverse: true,
     options: [
@@ -169,7 +169,7 @@ export const questions: Question[] = [
   },
   {
     id: 12,
-    axis: 'DS',
+    axis: 'LF',
     text: 'セックスのときは、自分がペースを握りたい',
     isReverse: false,
     options: [
@@ -184,7 +184,7 @@ export const questions: Question[] = [
   },
   {
     id: 13,
-    axis: 'TS',
+    axis: 'AS',
     text: 'ちょっと危ない刺激のあるシチュエーションに惹かれる',
     isReverse: false,
     options: [
@@ -199,7 +199,7 @@ export const questions: Question[] = [
   },
   {
     id: 14,
-    axis: 'AN',
+    axis: 'OS',
     text: '相手に好かれている実感がないと、体は開けない',
     isReverse: false,
     options: [
@@ -214,7 +214,7 @@ export const questions: Question[] = [
   },
   {
     id: 15,
-    axis: 'RH',
+    axis: 'LF2',
     text: '「どう思われてもいい」という感覚で性的に振る舞える',
     isReverse: false,
     options: [
@@ -244,7 +244,7 @@ export const questions: Question[] = [
   },
   {
     id: 17,
-    axis: 'DS',
+    axis: 'LF',
     text: '「命令される」という行為に興奮を感じたことがある',
     isReverse: true,
     options: [
@@ -259,7 +259,7 @@ export const questions: Question[] = [
   },
   {
     id: 18,
-    axis: 'TS',
+    axis: 'AS',
     text: '自分のペースでじっくり愛し合う時間が大事',
     isReverse: true,
     options: [
@@ -274,7 +274,7 @@ export const questions: Question[] = [
   },
   {
     id: 19,
-    axis: 'AN',
+    axis: 'OS',
     text: '「一晩だけ」の関係に抵抗はない',
     isReverse: true,
     options: [
@@ -289,7 +289,7 @@ export const questions: Question[] = [
   },
   {
     id: 20,
-    axis: 'RH',
+    axis: 'LF2',
     text: 'セックス中、見られることに不安を感じる',
     isReverse: true,
     options: [
@@ -319,7 +319,7 @@ export const questions: Question[] = [
   },
   {
     id: 22,
-    axis: 'DS',
+    axis: 'LF',
     text: '恋愛関係でも、主導権を握るほうが落ち着く',
     isReverse: false,
     options: [
@@ -334,7 +334,7 @@ export const questions: Question[] = [
   },
   {
     id: 23,
-    axis: 'TS',
+    axis: 'AS',
     text: '「今までやったことがないこと」に惹かれる',
     isReverse: false,
     options: [
@@ -349,7 +349,7 @@ export const questions: Question[] = [
   },
   {
     id: 24,
-    axis: 'AN',
+    axis: 'OS',
     text: 'セックス後、抱き合って寝る時間が好き',
     isReverse: false,
     options: [
@@ -364,7 +364,7 @@ export const questions: Question[] = [
   },
   {
     id: 25,
-    axis: 'RH',
+    axis: 'LF2',
     text: 'あえて羞恥心を煽るような言葉を言われるのが好き',
     isReverse: false,
     options: [
@@ -394,7 +394,7 @@ export const questions: Question[] = [
   },
   {
     id: 27,
-    axis: 'DS',
+    axis: 'LF',
     text: '相手の言いなりになって乱される展開が好き',
     isReverse: true,
     options: [
@@ -409,7 +409,7 @@ export const questions: Question[] = [
   },
   {
     id: 28,
-    axis: 'TS',
+    axis: 'AS',
     text: 'ルーティンのようなセックスでも安心する',
     isReverse: true,
     options: [
@@ -424,7 +424,7 @@ export const questions: Question[] = [
   },
   {
     id: 29,
-    axis: 'AN',
+    axis: 'OS',
     text: 'その場限りでも楽しければ良いと思っている',
     isReverse: true,
     options: [
@@ -439,7 +439,7 @@ export const questions: Question[] = [
   },
   {
     id: 30,
-    axis: 'RH',
+    axis: 'LF2',
     text: '恥ずかしいセリフやポーズを強要されると冷める',
     isReverse: true,
     options: [
@@ -469,7 +469,7 @@ export const questions: Question[] = [
   },
   {
     id: 32,
-    axis: 'DS',
+    axis: 'LF',
     text: '自分の"したいようにする"のがいちばん気持ちいい',
     isReverse: false,
     options: [
@@ -484,7 +484,7 @@ export const questions: Question[] = [
   },
   {
     id: 33,
-    axis: 'TS',
+    axis: 'AS',
     text: '人には話せない妄想を抱いていることがある',
     isReverse: false,
     options: [
@@ -499,7 +499,7 @@ export const questions: Question[] = [
   },
   {
     id: 34,
-    axis: 'AN',
+    axis: 'OS',
     text: '自分の心と相手の心が通じ合う感覚に欲情する',
     isReverse: false,
     options: [
@@ -514,7 +514,7 @@ export const questions: Question[] = [
   },
   {
     id: 35,
-    axis: 'RH',
+    axis: 'LF2',
     text: 'カメラや鏡越しのプレイにワクワクする',
     isReverse: false,
     options: [
@@ -544,7 +544,7 @@ export const questions: Question[] = [
   },
   {
     id: 37,
-    axis: 'DS',
+    axis: 'LF',
     text: '自分ではどうしようもない快楽に抗えなくなるのが好き',
     isReverse: true,
     options: [
@@ -559,7 +559,7 @@ export const questions: Question[] = [
   },
   {
     id: 38,
-    axis: 'TS',
+    axis: 'AS',
     text: '性的なルールや決まりがあると落ち着く',
     isReverse: true,
     options: [
@@ -574,7 +574,7 @@ export const questions: Question[] = [
   },
   {
     id: 39,
-    axis: 'AN',
+    axis: 'OS',
     text: 'セフレという関係性に対して違和感がない',
     isReverse: true,
     options: [
@@ -589,7 +589,7 @@ export const questions: Question[] = [
   },
   {
     id: 40,
-    axis: 'RH',
+    axis: 'LF2',
     text: '自分の裸に強い自信があるわけではない',
     isReverse: true,
     options: [
@@ -619,7 +619,7 @@ export const questions: Question[] = [
   },
   {
     id: 42,
-    axis: 'DS',
+    axis: 'LF',
     text: 'リードすることで、相手の反応を見るのが興奮する',
     isReverse: false,
     options: [
@@ -634,7 +634,7 @@ export const questions: Question[] = [
   },
   {
     id: 43,
-    axis: 'TS',
+    axis: 'AS',
     text: 'プレイ内容は相手とその場で変化させるのが楽しい',
     isReverse: false,
     options: [
@@ -649,7 +649,7 @@ export const questions: Question[] = [
   },
   {
     id: 44,
-    axis: 'AN',
+    axis: 'OS',
     text: '相手のことを深く知らずに抱かれるのは落ち着かない',
     isReverse: false,
     options: [
@@ -664,7 +664,7 @@ export const questions: Question[] = [
   },
   {
     id: 45,
-    axis: 'RH',
+    axis: 'LF2',
     text: '自分から見せつけるような行為に快感を覚える',
     isReverse: false,
     options: [
@@ -694,7 +694,7 @@ export const questions: Question[] = [
   },
   {
     id: 47,
-    axis: 'DS',
+    axis: 'LF',
     text: '支配されたい願望が強く、抑えきれない時がある...',
     isReverse: true,
     options: [
@@ -709,7 +709,7 @@ export const questions: Question[] = [
   },
   {
     id: 48,
-    axis: 'TS',
+    axis: 'AS',
     text: '予測できない展開が逆に怖くて苦手',
     isReverse: true,
     options: [
@@ -724,7 +724,7 @@ export const questions: Question[] = [
   },
   {
     id: 49,
-    axis: 'AN',
+    axis: 'OS',
     text: '自分の欲望を満たすためだけにセックスすることがある',
     isReverse: true,
     options: [
@@ -739,7 +739,7 @@ export const questions: Question[] = [
   },
   {
     id: 50,
-    axis: 'RH',
+    axis: 'LF2',
     text: '恥ずかしがる相手を見るのは好きだが、自分では無理',
     isReverse: true,
     options: [

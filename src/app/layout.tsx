@@ -68,7 +68,7 @@ export default function RootLayout({
       <body>
         {/* 背景と星 */}
         <div className="fixed inset-0 -z-10 w-full h-full overflow-hidden">
-          <div className="absolute inset-0" style={{background: 'linear-gradient(135deg, #1e1338 0%, #0a1628 100%)'}} />
+          <div className="absolute inset-0" style={{background: '#141e30'}} />
           {[...Array(50)].map((_, i) => (
             <div
               key={i}

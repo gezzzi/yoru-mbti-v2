@@ -87,21 +87,21 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
     // 外向性(E)/内向性(I) - 類似軸 (重み: 0.15)
     const eScore = (100 - Math.abs(user.E - partner.E)) * 0.15;
     
-    // 主導(D)/服従(S) - 補完軸 (重み: 0.3)
+    // リード(L)/フォロー(F) - 補完軸 (重み: 0.3)
     // 合計値が100に近いほど良い
-    const dScore = (100 - Math.abs((user.D + partner.D) - 100)) * 0.3;
+    const lScore = (100 - Math.abs((user.L + partner.L) - 100)) * 0.3;
     
-    // 刺激志向(T)/安心志向(S) - 類似軸 (重み: 0.25)
-    const tScore = (100 - Math.abs(user.T - partner.T)) * 0.25;
+    // 冒険(A)/安定(S) - 類似軸 (重み: 0.25)
+    const aScore = (100 - Math.abs(user.A - partner.A)) * 0.25;
     
-    // 愛着傾向(A)/非愛着傾向(N) - 類似軸 (重み: 0.2)
-    const aScore = (100 - Math.abs(user.A - partner.A)) * 0.2;
+    // ラブ(L)/フリー(F) - 類似軸 (重み: 0.2)
+    const l2Score = (100 - Math.abs(user.L2 - partner.L2)) * 0.2;
     
-    // 羞恥体制(R)/羞恥敏感(H) - 類似軸 (重み: 0.1)
-    const rScore = (100 - Math.abs(user.R - partner.R)) * 0.1;
+    // 開放(O)/秘密(S) - 類似軸 (重み: 0.1)
+    const oScore = (100 - Math.abs(user.O - partner.O)) * 0.1;
     
     // 総合相性度を計算
-    const compatibility = Math.max(0, Math.min(100, eScore + dScore + tScore + aScore + rScore));
+    const compatibility = Math.max(0, Math.min(100, eScore + lScore + aScore + l2Score + oScore));
 
     let description = '';
     let tips: string[] = [];
@@ -144,39 +144,24 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
     const parsedResult = parseCompatibilityCode(code);
     if (!parsedResult) return null;
 
-    // 5軸すべてを含むタイプコードを生成（E-D-T-A-R形式）
+    // 4軸のタイプコードを生成
     const typeCode = 
       (parsedResult.E > 50 ? 'E' : 'I') +
-      (parsedResult.D > 50 ? 'D' : 'S') +
-      (parsedResult.T > 50 ? 'T' : 'S') +
-      (parsedResult.A > 50 ? 'A' : 'N') +
-      '-' +
-      (parsedResult.R > 50 ? 'R' : 'H');
-    
-    // 4軸のコードで性格タイプを検索（既存のpersonalityTypesは4軸ベース）
-    const fourAxisCode = 
-      (parsedResult.E > 50 ? 'E' : 'I') +
-      (parsedResult.D > 50 ? 'D' : 'S') +
-      (parsedResult.T > 50 ? 'T' : 'S') +
-      (parsedResult.A > 50 ? 'A' : 'N');
+      (parsedResult.L > 50 ? 'L' : 'F') +
+      (parsedResult.A > 50 ? 'A' : 'S') +
+      (parsedResult.L2 > 50 ? 'L' : 'F');
     
     const personalityType = personalityTypes.find(type => 
-      type.code === fourAxisCode
+      type.code === typeCode
     ) || personalityTypes[0];
-    
-    // 5軸のタイプコードを表示用に設定
-    const extendedPersonalityType = {
-      ...personalityType,
-      code: typeCode
-    };
     
     return {
       E: parsedResult.E,
-      D: parsedResult.D,
-      T: parsedResult.T,
-      R: parsedResult.R,
+      L: parsedResult.L,
       A: parsedResult.A,
-      type: extendedPersonalityType
+      L2: parsedResult.L2,
+      O: parsedResult.O,
+      type: personalityType
     };
   };
 
