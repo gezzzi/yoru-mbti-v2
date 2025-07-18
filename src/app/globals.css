@@ -140,8 +140,8 @@ body {
   display: inline-block;
   position: relative;
   color: transparent;
-  -webkit-text-stroke: 1px #ffeb3b;
-  text-stroke: 1px #ffeb3b;
+  -webkit-text-stroke: 2px #ffeb3b;
+  text-stroke: 2px #ffeb3b;
   -webkit-text-fill-color: transparent;
   text-shadow: none;
   animation: 
@@ -160,31 +160,14 @@ body {
 }
 
 .neon-char::before {
-  content: attr(data-char);
-  position: absolute;
-  left: 0;
-  top: 0;
-  -webkit-text-stroke: 3px #9945ff;
-  text-stroke: 3px #9945ff;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  z-index: -1;
-  text-shadow: none;
-  animation: 
-    rotate-slow 8s linear infinite,
-    outline-pulse 2s ease-in-out infinite;
-  animation-delay: 
-    calc(var(--char-index) * 0.3s),
-    calc(var(--char-index) * 0.1s);
-  -webkit-font-smoothing: antialiased;
-  transform: translateZ(0);
+  display: none;
 }
 
 /* Special character style (for key characters like 性) */
 .neon-char.special {
   color: transparent;
-  -webkit-text-stroke: 2px #ff00ff;
-  text-stroke: 2px #ff00ff;
+  -webkit-text-stroke: 3px #ff00ff;
+  text-stroke: 3px #ff00ff;
   -webkit-text-fill-color: transparent;
   text-shadow: none;
   animation: 
@@ -227,8 +210,8 @@ body {
   display: inline-block;
   position: relative;
   color: transparent;
-  -webkit-text-stroke: 1px #ffeb3b;
-  text-stroke: 1px #ffeb3b;
+  -webkit-text-stroke: 2px #ffeb3b;
+  text-stroke: 2px #ffeb3b;
   -webkit-text-fill-color: transparent;
   text-shadow: none;
   font-weight: bold;
@@ -247,28 +230,12 @@ body {
 }
 
 .neon-char-iphone::before {
-  content: attr(data-char);
-  position: absolute;
-  left: 0;
-  top: 0;
-  -webkit-text-stroke: 2px #9945ff;
-  text-stroke: 2px #9945ff;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  text-shadow: none;
-  z-index: -1;
-  filter: drop-shadow(0 0 5px #9945ff);
-  animation: 
-    rotate-slow 8s linear infinite,
-    outline-pulse 2s ease-in-out infinite;
-  animation-delay: 
-    calc(var(--char-index) * 0.3s),
-    calc(var(--char-index) * 0.1s);
+  display: none;
 }
 
 .neon-char-iphone.special {
-  -webkit-text-stroke: 2px #ff00ff;
-  text-stroke: 2px #ff00ff;
+  -webkit-text-stroke: 3px #ff00ff;
+  text-stroke: 3px #ff00ff;
   filter: drop-shadow(0 0 5px #ff00ff);
   animation: 
     sequential-blink 3s infinite,
@@ -429,8 +396,8 @@ body {
 /* Test 1: Minimal stroke approach */
 .debug-test-1 .neon-char {
   color: transparent !important;
-  -webkit-text-stroke: 1px #ffeb3b !important;
-  text-stroke: 1px #ffeb3b !important;
+  -webkit-text-stroke: 2px #ffeb3b !important;
+  text-stroke: 2px #ffeb3b !important;
   text-shadow: none !important;
   -webkit-font-smoothing: antialiased !important;
   font-weight: bold !important;
@@ -447,7 +414,7 @@ body {
   color: #ffeb3b !important;
   -webkit-text-stroke: none !important;
   text-stroke: none !important;
-  text-shadow: 0 0 5px #ffeb3b, 0 0 10px #ffc107 !important;
+  text-shadow: 0 0 5px #fff44f, 0 0 10px #fffde7 !important;
   -webkit-font-smoothing: antialiased !important;
   animation: none !important;
 }
