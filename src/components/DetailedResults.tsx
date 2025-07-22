@@ -35,36 +35,25 @@ const DetailedResults: React.FC<DetailedResultsProps> = ({ result }) => {
   ];
 
   return (
-    <div className="min-h-screen pt-28 pb-12">
+    <div className="min-h-screen pt-28 pb-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* タイトル */}
         <ScrollAnimation animation="fadeIn" duration={800}>
-          <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight drop-shadow-lg select-none text-center">
-              <NeonText text={["診断結果", "詳細"]} specialCharIndex={4} className="gap-1" />
+          <div className="text-center mb-12">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight drop-shadow-lg select-none text-center">
+              <NeonText text="結果詳細" specialCharIndex={1} className="gap-1" />
             </h1>
-            <h2 className="text-2xl md:text-3xl font-bold text-[#e0e7ff] mb-2">
-              {typeWithRuby && typeWithRuby.ruby ? (
-                <ruby className="ruby-text">
-                  {typeWithRuby.name}
-                  <rt>{typeWithRuby.ruby}</rt>
-                </ruby>
-              ) : (
-                typeWithRuby?.name || 'タイプ名なし'
-              )}
-            </h2>
-            <p className="text-lg text-[#e0e7ff]/80">{type.code}</p>
           </div>
         </ScrollAnimation>
 
         {/* タブナビゲーション */}
         <ScrollAnimation animation="fadeIn" duration={800} delay={200}>
-          <div className="flex gap-2 mb-8 overflow-x-auto pb-2">
+          <div className="flex flex-wrap gap-1 sm:gap-2 mb-8 justify-center">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-6 py-2 rounded-full transition-all whitespace-nowrap ${
+                className={`px-4 sm:px-6 py-2 rounded-full transition-all whitespace-nowrap ${
                   activeTab === tab.id
                     ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg transform scale-105'
                     : 'bg-white/10 text-[#e0e7ff]/80 hover:bg-white/15'
@@ -82,8 +71,8 @@ const DetailedResults: React.FC<DetailedResultsProps> = ({ result }) => {
             {/* 基本性格タブ */}
             {activeTab === 'basic' && (
               <>
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
-                  <div className="flex items-center mb-4">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-white/5">
+                  <div className="flex items-center mb-3 sm:mb-4">
                     <span className="text-2xl mr-3">🧠</span>
                     <h3 className="text-xl font-bold text-[#e0e7ff]">夜の性格</h3>
                   </div>
@@ -98,12 +87,12 @@ const DetailedResults: React.FC<DetailedResultsProps> = ({ result }) => {
                   </div>
                 </div>
 
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
-                  <div className="flex items-center mb-4">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-white/5">
+                  <div className="flex items-center mb-3 sm:mb-4">
                     <span className="text-2xl mr-3">😈</span>
                     <h3 className="text-xl font-bold text-[#e0e7ff]">S or M 傾向</h3>
                   </div>
-                  <p className="text-[#e0e7ff] text-lg font-bold mb-2">
+                  <p className="text-lg text-[#e0e7ff] font-bold mb-2">
                     {result.additionalResults?.smTendency === 'S' 
                       ? 'S'
                       : result.additionalResults?.smTendency === 'M'
@@ -119,8 +108,8 @@ const DetailedResults: React.FC<DetailedResultsProps> = ({ result }) => {
                   </p>
                 </div>
 
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
-                  <div className="flex items-center mb-4">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-white/5">
+                  <div className="flex items-center mb-3 sm:mb-4">
                     <span className="text-2xl mr-3">🎭</span>
                     <h3 className="text-xl font-bold text-[#e0e7ff]">夜のギャップ度</h3>
                   </div>
@@ -134,8 +123,8 @@ const DetailedResults: React.FC<DetailedResultsProps> = ({ result }) => {
             {/* スタイル・体位タブ */}
             {activeTab === 'style' && (
               <>
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
-                  <div className="flex items-center mb-4">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-white/5">
+                  <div className="flex items-center mb-3 sm:mb-4">
                     <span className="text-2xl mr-3">💋</span>
                     <h3 className="text-xl font-bold text-[#e0e7ff]">性欲レベル</h3>
                   </div>
@@ -159,12 +148,12 @@ const DetailedResults: React.FC<DetailedResultsProps> = ({ result }) => {
                   </p>
                 </div>
 
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
-                  <div className="flex items-center mb-4">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-white/5">
+                  <div className="flex items-center mb-3 sm:mb-4">
                     <span className="text-2xl mr-3">🍑</span>
                     <h3 className="text-xl font-bold text-[#e0e7ff]">おすすめの体位（48手）</h3>
                   </div>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-4">
                     {(type.recommendedPositions || ['正常位', '騎乗位', '後背位', '駅弁', '対面座位', '寝バック', '立位']).map((position, index) => (
                       <div key={index} className="bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-center text-[#e0e7ff]">
                         {position}
@@ -180,8 +169,8 @@ const DetailedResults: React.FC<DetailedResultsProps> = ({ result }) => {
                   </p>
                 </div>
 
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
-                  <div className="flex items-center mb-4">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-white/5">
+                  <div className="flex items-center mb-3 sm:mb-4">
                     <span className="text-2xl mr-3">👁</span>
                     <h3 className="text-xl font-bold text-[#e0e7ff]">自分の体に対する自信</h3>
                   </div>
@@ -201,8 +190,8 @@ const DetailedResults: React.FC<DetailedResultsProps> = ({ result }) => {
             {/* 相性診断タブ */}
             {activeTab === 'compatibility' && (
               <>
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
-                  <div className="flex items-center mb-4">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-white/5">
+                  <div className="flex items-center mb-3 sm:mb-4">
                     <span className="text-2xl mr-3">💘</span>
                     <h3 className="text-xl font-bold text-[#e0e7ff]">相性のいいタイプ</h3>
                   </div>
@@ -213,8 +202,8 @@ const DetailedResults: React.FC<DetailedResultsProps> = ({ result }) => {
                   )) || <p className="text-[#e0e7ff]">感度が高く、甘え上手な人。自分のリードを委ねてくれる相手に惹かれる。</p>}
                 </div>
 
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
-                  <div className="flex items-center mb-4">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-white/5">
+                  <div className="flex items-center mb-3 sm:mb-4">
                     <span className="text-2xl mr-3">🚫</span>
                     <h3 className="text-xl font-bold text-[#e0e7ff]">相性が悪いタイプ</h3>
                   </div>
@@ -225,8 +214,8 @@ const DetailedResults: React.FC<DetailedResultsProps> = ({ result }) => {
                   )) || <p className="text-[#e0e7ff]">ノリが合わない堅物系、リアクションが薄い人。受け身すぎる or 無反応な相手には温度差を感じやすい。</p>}
                 </div>
 
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
-                  <div className="flex items-center mb-4">
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-white/5">
+                  <div className="flex items-center mb-3 sm:mb-4">
                     <span className="text-2xl mr-3">🔄</span>
                     <h3 className="text-xl font-bold text-[#e0e7ff]">関係性の理想スタイル</h3>
                   </div>
@@ -277,7 +266,7 @@ const DetailedResults: React.FC<DetailedResultsProps> = ({ result }) => {
                   <span className="text-2xl mr-3">⚠️</span>
                   <h3 className="text-xl font-bold text-[#e0e7ff]">あなたの短所とアドバイス</h3>
                 </div>
-                <div className="bg-white/5 rounded-lg p-4 mb-4">
+                <div className="bg-white/5 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4">
                   <p className="text-[#e0e7ff] mb-3">
                     <span className="font-bold text-pink-500">短所：</span>
                     {type.shortcomingsAdvice?.shortcoming || '気分屋な面があり、急に冷めることも。'}
@@ -308,24 +297,24 @@ const DetailedResults: React.FC<DetailedResultsProps> = ({ result }) => {
         </ScrollAnimation>
 
         {/* アクションボタン */}
-        <div className="text-center mt-12">
-          <div className="flex flex-col md:flex-row justify-center items-center gap-4">
+        <div className="text-center mt-8 sm:mt-12">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4">
             <Link
               href="/results"
-              className="bg-white/10 text-[#e0e7ff] px-8 py-3 rounded-lg font-semibold hover:bg-white/20 transition-colors flex items-center border border-white/20"
+              className="bg-white/10 text-[#e0e7ff] px-8 py-3 rounded-lg font-semibold hover:bg-white/20 transition-colors flex items-center border border-white/20 w-full sm:w-auto justify-center"
             >
               サマリーに戻る
             </Link>
             <Link
               href="/test"
-              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all flex items-center justify-center"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all flex items-center justify-center w-full sm:w-auto"
             >
               <RefreshCw className="w-5 h-5 mr-2" />
               もう一度診断する
             </Link>
             <Link
               href="/compatibility"
-              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all flex items-center justify-center"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all flex items-center justify-center w-full sm:w-auto"
             >
               <Heart className="w-5 h-5 mr-2" />
               相性診断をする

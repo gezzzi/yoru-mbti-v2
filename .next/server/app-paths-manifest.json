@@ -1,5 +1,16 @@
 {
+  "/coming-soon/page": "app/coming-soon/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/feedback/route": "app/api/feedback/route.js",
+  "/compatibility/results/page": "app/compatibility/results/page.js",
+  "/compatibility/page": "app/compatibility/page.js",
+  "/demo-neon-colors/page": "app/demo-neon-colors/page.js",
+  "/debug-stars/page": "app/debug-stars/page.js",
+  "/help/page": "app/help/page.js",
   "/page": "app/page.js",
   "/results/detail/page": "app/results/detail/page.js",
-  "/results/page": "app/results/page.js"
+  "/results/page": "app/results/page.js",
+  "/test/page": "app/test/page.js",
+  "/types/page": "app/types/page.js",
+  "/types/[typeCode]/page": "app/types/[typeCode]/page.js"
 }
