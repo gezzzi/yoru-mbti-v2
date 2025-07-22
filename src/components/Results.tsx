@@ -320,14 +320,14 @@ const Results: React.FC<ResultsProps> = ({ result, onRestart }) => {
                                 <div className="absolute inset-0 bg-white/20 rounded-full"></div>
                               </div>
                               {(() => {
-                                // Determine if this is a "reverse" axis (I, S, N, H)
+                                // 内向性系の軸の場合は、実際の位置を反転させる
                                 const isReverse = dimension.resultLabel.includes('内向性') || 
-                                                dimension.resultLabel.includes('服従') || 
-                                                dimension.resultLabel.includes('安心志向') ||
-                                                dimension.resultLabel.includes('非愛着傾向') || 
-                                                dimension.resultLabel.includes('羞恥敏感');
+                                                dimension.resultLabel.includes('フォロー') || 
+                                                dimension.resultLabel.includes('安定') ||
+                                                dimension.resultLabel.includes('フリー') || 
+                                                dimension.resultLabel.includes('秘密');
                                 
-                                // For reverse axes, we need to position the circle from the opposite side
+                                // 円の位置：内向性系の場合は100から引いた値を使用
                                 const circlePosition = isReverse ? (100 - dimension.percentage) : dimension.percentage;
                                 
                                 return (

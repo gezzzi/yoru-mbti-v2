@@ -107,10 +107,19 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
     (E > 50 ? 'E' : 'I') +
     (L > 50 ? 'L' : 'F') +
     (A > 50 ? 'A' : 'S') +
-    (L2 > 50 ? 'L' : 'F');
+    (L2 > 50 ? 'L' : 'F') +
+    '-' +
+    (O > 50 ? 'O' : 'S');
   
-  // Find matching personality type using 4-character code
-  const personalityType = personalityTypes.find(type => type.code === typeCode) || personalityTypes[0];
+  // Find matching personality type using 4-character code (without 5th axis for lookup)
+  const baseTypeCode = typeCode.split('-')[0];
+  const personalityType = personalityTypes.find(type => type.code === baseTypeCode) || personalityTypes[0];
+  
+  // Add the full 5-character code to the personality type
+  const personalityTypeWithFullCode = {
+    ...personalityType,
+    code: typeCode
+  };
   
   // 追加結果の計算
   const smScore = STotal - MTotal;
@@ -129,7 +138,7 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
     A,
     L2,
     O,
-    type: personalityType,
+    type: personalityTypeWithFullCode,
     additionalResults: {
       smTendency,
       smScore,
@@ -151,5 +160,17 @@ export const getProgressPercentage = (currentQuestion: number, totalQuestions: n
 };
 
 export const getPersonalityTypeByCode = (code: string): PersonalityType | undefined => {
-  return personalityTypes.find(type => type.code === code);
+  // Handle both 4-character and 5-character codes
+  const baseCode = code.split('-')[0];
+  const personalityType = personalityTypes.find(type => type.code === baseCode);
+  
+  if (personalityType && code.includes('-')) {
+    // Return with full 5-character code
+    return {
+      ...personalityType,
+      code: code
+    };
+  }
+  
+  return personalityType;
 }; 
