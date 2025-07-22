@@ -14,6 +14,10 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport = {
+  themeColor: "#000000",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -22,6 +26,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <head>
+        <meta name="theme-color" content="#000000" />
         <Script async src="https://www.googletagmanager.com/gtag/js?id=G-HLM13T0M2K" strategy="afterInteractive" />
         <Script id="gtag-init" strategy="afterInteractive">
           {`

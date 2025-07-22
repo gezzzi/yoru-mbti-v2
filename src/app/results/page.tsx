@@ -29,14 +29,6 @@ export default function ResultsPage() {
     }
   }, [router]);
 
-  const handleRestart = () => {
-    // ローカルストレージから削除
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('personality_test_result');
-    }
-    router.push('/');
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -52,7 +44,6 @@ export default function ResultsPage() {
   return (
     <Results 
       result={result}
-      onRestart={handleRestart}
     />
   );
 } 

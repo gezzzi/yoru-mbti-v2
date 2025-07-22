@@ -123,7 +123,7 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
   
   // 追加結果の計算
   const smScore = STotal - MTotal;
-  const smTendency = smScore > 5 ? 'S' : smScore < -5 ? 'M' : 'Both';
+  const smTendency = smScore > 0 ? 'S' : smScore < 0 ? 'M' : 'Both';
   
   const libidoAvg = libidoCount > 0 ? libidoTotal / libidoCount : 3;
   const libidoLevel = Math.min(5, Math.max(1, Math.round(libidoAvg))) as 1 | 2 | 3 | 4 | 5;

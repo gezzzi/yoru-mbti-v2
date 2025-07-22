@@ -15,8 +15,7 @@ export const personalityTypes: PersonalityType[] = [
     compatibility: ['IFSL', 'EFSL', 'IFAL'],
     strengths: ['リーダーシップがある', '情熱的', '責任感が強い', '保護欲が強い'],
     weaknesses: ['束縛が強すぎる', '独占欲が過度', '嫉妬深い', '支配的になりがち'],
-    careers: ['経営者', 'プロジェクトマネージャー', 'チームリーダー', '営業職'],
-    nightPersonality: '理性はあるけど、ベッドでは全部脱ぐタイプ。欲しいものは自分で奪う。',
+    nightPersonality: '前戯：主導権を握り場を温める"DJ"。視線と距離感で高揚を操る。本番：テンポは速攻型。自分も相手もピークへ導くことに集中し、"次の一手"を常に更新。アフター：頂点後すぐに次のラウンドを提案。快楽の続きをプロデュースしてくる。',
     smTendency: 'S',
     libidoLevel: 5,
     recommendedPositions: ['正常位', '騎乗位', '後背位', '駅弁', '対面座位', '寝バック', '立位'],
@@ -47,7 +46,7 @@ export const personalityTypes: PersonalityType[] = [
     compatibility: ['EFAF', 'IFAF', 'IFSF'],
     strengths: ['決断力がある', '行動力がある', '現実的', '柔軟性がある'],
     weaknesses: ['感情軽視', '衝動的すぎる', '安定性に欠ける', '深い関係を築きにくい'],
-    careers: ['起業家', '営業職', 'セールスマネージャー', 'フリーランス']
+    nightPersonality: '前戯：軽やかにリズムを作り、翻弄しながら相手のリアクションを観察。本番：自由奔放にポジションチェンジ。主導権は渡さず、"あえて振り回す"展開。アフター：さっぱりと離れるかと思いきや、本命相手には腕を絡めて余韻を独占。'
   },
   {
     code: 'ELSL',
@@ -62,7 +61,7 @@ export const personalityTypes: PersonalityType[] = [
     compatibility: ['IFSL', 'EFSL', 'IFAL'],
     strengths: ['献身的', '安定性がある', '責任感が強い', '愛情深い'],
     weaknesses: ['過度に尽くしてしまう', '自分を犠牲にしがち', '束縛が強い', '期待が高すぎる'],
-    careers: ['教師', 'カウンセラー', '看護師', '人事職']
+    nightPersonality: '前戯：スキンシップ多めの"包み込み型"。褒め言葉と笑顔で安心感MAX。本番：相手のペースに合わせつつも、求められればリードスイッチON。アフター：髪を撫でたり飲み物を渡したり、面倒見の良さ全開。自分も甘えたい素振りをチラッ。'
   },
   {
     code: 'ELSF',
@@ -77,7 +76,7 @@ export const personalityTypes: PersonalityType[] = [
     compatibility: ['IFSF', 'EFAF', 'IFAF'],
     strengths: ['論理的', '冷静', '技術力が高い', '効率的'],
     weaknesses: ['感情表現が苦手', '冷たく見える', '共感力に欠ける', '人間関係が希薄'],
-    careers: ['エンジニア', '研究者', 'アナリスト', 'IT専門職']
+    nightPersonality: '前戯：温度と時間をわりと計算。"反応プロファイル"を静かに収集。本番：効率重視で刺激を最適化。声や呼吸を指標にペースを微調整。アフター：満足度を確認しつつもクール。次回に向けた"改善案"を頭でメモっている。'
   },
 
   // Sub系タイプ
@@ -94,7 +93,7 @@ export const personalityTypes: PersonalityType[] = [
     compatibility: ['ELAL', 'ELSL', 'ILAL'],
     strengths: ['愛嬌がある', '社交的', '協調性がある', '素直'],
     weaknesses: ['依存的', '自立心に欠ける', '甘えすぎる', '自己主張が弱い'],
-    careers: ['接客業', '販売員', '秘書', 'アシスタント']
+    nightPersonality: '前戯：ムード灯り・音楽・香りまで演出。言葉攻めで鼓動を揺さぶる。本番：感情を爆発させるタイプ。相手の表情を読みながらサプライズを挟む。アフター：急に「寂しい」と甘えてくるギャップで再び心拍数を上げる。'
   },
   {
     code: 'EFAF',
@@ -109,7 +108,7 @@ export const personalityTypes: PersonalityType[] = [
     compatibility: ['ELAF', 'ELSF', 'ILAF'],
     strengths: ['好奇心旺盛', 'オープンマインド', '適応力がある', '楽観的'],
     weaknesses: ['飽きっぽい', '安定性に欠ける', '衝動的', '責任感が薄い'],
-    careers: ['イベントプランナー', 'エンターテイナー', '旅行業', 'クリエイティブ職']
+    nightPersonality: '前戯：ノリ重視で笑いを交えつつ大胆にアプローチ。本番：テンポ早め、刺激を切らさない連続攻撃。遊び道具の投入率高め。アフター：クールダウンは短め。次のイベント（夜食・二次会）に移行。'
   },
   {
     code: 'EFSL',
@@ -124,7 +123,7 @@ export const personalityTypes: PersonalityType[] = [
     compatibility: ['ELAL', 'ELSL', 'ILSL'],
     strengths: ['一途', '愛情深い', '献身的', '安定志向'],
     weaknesses: ['依存的すぎる', '嫉妬深い', '不安になりやすい', '自立心が弱い'],
-    careers: ['カウンセラー', '保育士', '看護師', '福祉職']
+    nightPersonality: '前戯：密着しながら相手の反応を覗き込み、自分も絡みつく"子犬系"。本番：尽くすほど求め、"離れないで"サイン多め。独占欲でテンション急上昇。アフター：腕枕や添い寝必須。スマホチェック禁止令が出ることも。'
   },
   {
     code: 'EFSF',
@@ -139,7 +138,7 @@ export const personalityTypes: PersonalityType[] = [
     compatibility: ['ELSF', 'ILSF', 'ELAF'],
     strengths: ['自由度が高い', 'ストレスが少ない', '現実的', '合理的'],
     weaknesses: ['感情が薄い', '深い関係を築きにくい', '無責任に見える', '冷たく見える'],
-    careers: ['フリーランス', 'コンサルタント', 'デザイナー', '自営業']
+    nightPersonality: '前戯：ゆるトークで緊張を溶かし、自然体で距離を詰める。本番：相手のペースに柔軟適応。時折こぼす甘い一言で空気を一変。アフター：湯たんぽのように寄り添いながら、次の予定をのんびり相談。'
   },
 
   // Introvert系タイプ
@@ -156,7 +155,7 @@ export const personalityTypes: PersonalityType[] = [
     compatibility: ['EFAL', 'EFSL', 'IFAL'],
     strengths: ['集中力がある', '深く考える', '独立心がある', '冷静'],
     weaknesses: ['コミュニケーション不足', '威圧的', '孤立しがち', '感情表現が苦手'],
-    careers: ['研究者', '技術者', '専門職', 'プログラマー']
+    nightPersonality: '前戯：言葉少なめだが触れ方は熱い。目線だけで意思疎通。本番：一点集中でストイックに高める。タイミングを合わせる職人肌。アフター：深呼吸と共に抱き寄せ、静かに鼓動を共有。言葉は少なくても余韻は長い。'
   },
   {
     code: 'ILAF',
@@ -171,7 +170,7 @@ export const personalityTypes: PersonalityType[] = [
     compatibility: ['EFAF', 'IFAF', 'EFAL'],
     strengths: ['分析力が高い', '探究心旺盛', '専門性が深い', '客観的'],
     weaknesses: ['社交性に欠ける', 'マニアック', '変わり者に見える', '実用性に欠ける'],
-    careers: ['研究員', 'データアナリスト', '学者', 'エンジニア']
+    nightPersonality: '前戯：観察・質問・実験を織り交ぜ、"反応データ"を取得。本番：意外な角度やテクニックを投入。記録更新を密かに狙う研究者魂。アフター：クールに満足度をチェックしつつ、次回のプランを構築。'
   },
   {
     code: 'ILSL',
@@ -186,7 +185,7 @@ export const personalityTypes: PersonalityType[] = [
     compatibility: ['EFSL', 'IFSL', 'EFAL'],
     strengths: ['包容力がある', '癒し系', '安定している', '思いやりがある'],
     weaknesses: ['消極的', '自己主張が弱い', '優柔不断', 'ストレスを溜めやすい'],
-    careers: ['セラピスト', 'カウンセラー', '医療職', '福祉職']
+    nightPersonality: '前戯：安心感のバリアを張り、相手のOKサインを確認してから踏み込む。本番：相手を包み込むようにゆったりペース。ピンチと感じればすぐフォロー。アフター：水分補給・体温調節まで気遣い抜群。自分の満足より相手の回復を優先。'
   },
   {
     code: 'ILSF',
@@ -201,7 +200,7 @@ export const personalityTypes: PersonalityType[] = [
     compatibility: ['IFSF', 'EFSF', 'IFAF'],
     strengths: ['独立性がある', '冷静', '客観的', '専門性が高い'],
     weaknesses: ['孤立しがち', '感情が薄い', '人間関係が希薄', '冷たく見える'],
-    careers: ['個人事業主', '専門職', 'フリーランス', '技術職']
+    nightPersonality: '前戯：効率よく"快感ルート"を組む戦略家。無駄な動きは少ない。本番：テンポ安定、呼吸合わせ重視。突如見せる情熱のギャップが破壊力大。アフター：頭を撫でながらもクールダウンを促進。翌朝の予定管理まで漏れなく。'
   },
 
   // Fantasy系タイプ
@@ -218,7 +217,7 @@ export const personalityTypes: PersonalityType[] = [
     compatibility: ['ILAL', 'ELAL', 'ILSL'],
     strengths: ['想像力豊か', '感受性が高い', '独創性がある', '芸術的センス'],
     weaknesses: ['現実逃避しがち', '依存的', '不安定', '実行力に欠ける'],
-    careers: ['クリエイター', 'アーティスト', 'ライター', 'デザイナー']
+    nightPersonality: '前戯：静かに見つめつつ妄想スイッチON。言葉より手の動きが雄弁。本番：解放された瞬間、頭の中のシナリオを一気に具現化。大胆さが急上昇。アフター：まどろみながら次の妄想を共有。ロマンチックな語りで寝落ちへ誘う。'
   },
   {
     code: 'IFAF',
@@ -233,7 +232,7 @@ export const personalityTypes: PersonalityType[] = [
     compatibility: ['ELAF', 'ILAF', 'ELSF'],
     strengths: ['独立性が高い', 'ストレス耐性がある', '客観的', '合理的'],
     weaknesses: ['感情表現が苦手', '孤立しがち', '逃避的', '人間関係が希薄'],
-    careers: ['プログラマー', 'フリーランス', '個人事業主', 'ゲーム開発者']
+    nightPersonality: '前戯：受け身で様子見しつつ、刺激への耐性を試してくる。本番：リードを握られた瞬間に覚醒。お願い上手で"もっと"を引き出す。アフター：満足げに身を委ね、余韻の中で小さなご褒美を要求。'
   },
   {
     code: 'IFSL',
@@ -248,7 +247,7 @@ export const personalityTypes: PersonalityType[] = [
     compatibility: ['ELAL', 'ELSL', 'ILAL'],
     strengths: ['愛情深い', '一途', '献身的', '安定志向'],
     weaknesses: ['依存的すぎる', '重い', '不安になりやすい', '束縛が強い'],
-    careers: ['アーティスト', 'ライター', 'カウンセラー', 'クリエイティブ職']
+    nightPersonality: '前戯：優しいタッチで相手の緊張を吸収。静かな微笑みが鎮静剤。本番：スロー＆ディープ。相手の呼吸に合わせて共鳴し合う癒やしの波。アフター：胸に手を当てて鼓動を感じ合う穏やかな時間を最重視。'
   },
   {
     code: 'IFSF',
@@ -263,7 +262,7 @@ export const personalityTypes: PersonalityType[] = [
     compatibility: ['ELSF', 'ILSF', 'EFSF'],
     strengths: ['客観的', '冷静', 'ストレスが少ない', '現実的'],
     weaknesses: ['感情が薄い', '深い関係を築きにくい', '冷たく見える', '孤立しがち'],
-    careers: ['技術職', 'データ処理', 'フリーランス', '個人事業主']
+    nightPersonality: '前戯：相手の欲求を察知し"ちょうどいい"刺激を差し出す。本番：従順に見えてタイミングを操る影のプロデューサー。アフター：満たした後にそっと自分の願望を提示。感謝を引き出す術に長ける。'
   }
 ];
 

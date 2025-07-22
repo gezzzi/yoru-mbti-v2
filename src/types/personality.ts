@@ -24,7 +24,6 @@ export interface PersonalityType {
   compatibility: string[];
   strengths: string[];
   weaknesses: string[];
-  careers: string[];
   // 新しい結果表示用プロパティ
   nightPersonality?: string; // 夜の性格キャッチコピー
   smTendency?: 'S' | 'M' | 'Both'; // S/M傾向
