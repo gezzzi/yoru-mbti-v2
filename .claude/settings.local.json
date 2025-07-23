@@ -23,7 +23,9 @@
       "Bash(find:*)",
       "Bash(mv:*)",
       "Bash(ls:*)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(cat:*)",
+      "Bash(sed:*)"
     ],
     "deny": []
   }

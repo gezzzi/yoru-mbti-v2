@@ -318,7 +318,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
         
         // 画像をダウンロード
         const link = document.createElement('a');
-        link.download = `相性診断QRコード_${myResult?.type.code}.png`;
+        link.download = `QRコード診断_${myResult?.type.code}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
         
@@ -373,9 +373,6 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                 <AlertCircle className="w-6 h-6 text-yellow-600 mr-3" />
                 <h2 className="text-xl font-bold text-yellow-800">性格診断結果が必要です</h2>
               </div>
-            <p className="text-yellow-700 mb-6">
-              相性診断を行うには、あなた自身の性格診断結果が必要です。以下のいずれかの方法で設定してください。
-            </p>
             
             <div className="grid md:grid-cols-2 gap-4">
               {/* 新しく診断を受ける */}
@@ -415,7 +412,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                       ) : (
                         <>
                           <Camera className="w-6 h-6 text-yellow-400 mb-1" />
-                          <p className="text-xs text-yellow-600">QRコード画像をアップロード</p>
+                          <p className="text-xs text-yellow-600">QRコードをアップロード</p>
                         </>
                       )}
                     </div>
@@ -434,17 +431,17 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
           </ScrollAnimation>
         )}
 
-        {/* 相性診断QRコード */}
+        {/* QRコード診断 */}
         {myResult && (
           <ScrollAnimation animation="fadeInUp" delay={400}>
             <div className="rounded-xl p-6 mb-8 border-2 border-white/30" style={{backgroundColor: 'rgba(255, 255, 255, 0)', boxShadow: '0 0 20px rgba(255, 255, 255, 0.1)'}}>
-            <h2 className="text-2xl font-bold text-[#e0e7ff] mb-6 text-center">相性診断QRコード</h2>
+            <h2 className="text-2xl font-bold text-[#e0e7ff] mb-6 text-center">QRコード診断</h2>
             
             <div className="grid lg:grid-cols-2 gap-8">
-                             {/* 左側：あなたの相性診断QRコード */}
+                             {/* 左側：あなたのQRコード */}
                <div className="space-y-4">
-                 <h3 className="text-lg font-semibold text-[#e0e7ff] text-center">あなたの相性診断QRコード</h3>
-                 <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-white/30 rounded-lg p-4 flex flex-col items-center gap-4" style={{backdropFilter: 'blur(3px)'}}>
+                 <h3 className="text-lg font-semibold text-[#e0e7ff] text-center">あなたのQRコード</h3>
+                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 flex flex-col items-center gap-4 border border-white/5">
                   <div className="bg-white/90 backdrop-blur-xs p-4 rounded-lg shadow-sm border border-white/40" ref={qrRef}>
                     <QRCode
                       value={myCode}
@@ -512,9 +509,9 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                 </div>
               </div>
 
-              {/* 右側：相手の相性診断QRコード読み取り */}
+              {/* 右側：相手のQRコード読み取り */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-[#e0e7ff] text-center">相手のQRコードを読み取り</h3>
+                <h3 className="text-lg font-semibold text-[#e0e7ff] text-center">相手のQRコード</h3>
                 
                 <div className="space-y-6">
                   {/* QRコードアップロード */}
@@ -538,7 +535,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                             </button>
                           </div>
                         ) : (
-                          <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50/80 hover:bg-gray-100/80 backdrop-blur-sm transition-colors">
+                          <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-white/40 border-dashed rounded-xl cursor-pointer bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-colors">
                             <div className="flex flex-col items-center justify-center pt-6 pb-6">
                               {isQRUploading ? (
                                 <div className="flex items-center space-x-2">
@@ -547,9 +544,8 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                                 </div>
                               ) : (
                                 <>
-                                  <Camera className="w-10 h-10 text-gray-400 mb-3" />
-                                  <p className="text-lg font-medium text-[#e0e7ff] mb-1">QRコード画像をアップロード</p>
-                                  <p className="text-sm text-[#e0e7ff]/80 text-center px-4">相手の診断結果QRコードの画像をアップロードしてください</p>
+                                  <Upload className="w-10 h-10 text-gray-400 mb-3" />
+                                  <p className="text-lg font-medium text-[#e0e7ff] mb-1">QRコードをアップロード</p>
                                 </>
                               )}
                             </div>
