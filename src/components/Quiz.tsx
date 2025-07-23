@@ -112,10 +112,10 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   const scaleValues = [6, 5, 4, 3, 2, 1, 0];
 
   const getCircleSize = (index: number) => {
-    if (index === 0 || index === 6) return 'w-10 h-10 md:w-16 md:h-16'; // Largest circles (extreme ends)
-    if (index === 1 || index === 5) return 'w-9 h-9 md:w-14 md:h-14'; // Large circles
-    if (index === 2 || index === 4) return 'w-8 h-8 md:w-12 md:h-12'; // Medium circles
-    return 'w-7 h-7 md:w-10 md:h-10'; // Smallest circle (neutral center)
+    if (index === 0 || index === 6) return 'w-12 h-12 md:w-16 md:h-16'; // Largest circles (extreme ends)
+    if (index === 1 || index === 5) return 'w-11 h-11 md:w-14 md:h-14'; // Large circles
+    if (index === 2 || index === 4) return 'w-10 h-10 md:w-12 md:h-12'; // Medium circles
+    return 'w-9 h-9 md:w-10 md:h-10'; // Smallest circle (neutral center)
   };
 
   const getCircleColor = (value: number, isSelected: boolean) => {
@@ -128,9 +128,9 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   const QuestionItem: React.FC<{ question: Question }> = ({ question }) => (
     <div 
       ref={(el) => { questionRefs.current[question.id] = el; }}
-      className="p-8 mb-8 border-b border-gray-100"
+      className="px-0 py-8 sm:p-6 md:p-8 mb-8 border-b border-gray-100"
     >
-      <div className="text-center mb-8">
+      <div className="text-center mb-8 px-4">
         <h3 className="text-lg font-bold text-gray-100 leading-relaxed max-w-2xl mx-auto">
           {question.text}
         </h3>
@@ -139,13 +139,13 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       {/* Visual Scale */}
       <div className="flex flex-col items-center space-y-6">
         {/* Scale Labels */}
-        <div className="flex justify-between items-center w-full max-w-2xl">
+        <div className="flex justify-between items-center w-full max-w-2xl px-6 sm:px-12 md:px-5">
           <span className="text-base font-bold text-cyan-300">Yes</span>
           <span className="text-base font-bold text-pink-300">No</span>
         </div>
 
         {/* Circle Scale */}
-        <div className="flex items-center justify-center space-x-2 md:space-x-5">
+        <div className="flex items-center justify-center space-x-2 sm:space-x-3 md:space-x-5">
           {scaleValues.map((value, index) => {
             const isSelected = answers[question.id] === value;
             
@@ -158,7 +158,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
                 } ${isSelected ? 'scale-105 shadow-lg' : 'hover:shadow-md'} flex items-center justify-center`}
               >
                 {isSelected && (
-                  <Check className="w-3 h-3 md:w-5 md:h-5 text-white" strokeWidth={3} />
+                  <Check className="w-4 h-4 md:w-5 md:h-5 text-white" strokeWidth={3} />
                 )}
               </button>
             );
