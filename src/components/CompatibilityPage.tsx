@@ -369,7 +369,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
         {!myResult && (
           <ScrollAnimation animation="fadeInUp" delay={200}>
             <div className="bg-yellow-50/90 backdrop-blur-sm border border-yellow-200 rounded-xl p-6 mb-8">
-              <div className="flex items-center mb-4">
+              <div className="flex items-center justify-center mb-4">
                 <AlertCircle className="w-6 h-6 text-yellow-600 mr-3" />
                 <h2 className="text-xl font-bold text-yellow-800">性格診断結果が必要です</h2>
               </div>
@@ -377,7 +377,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
             <div className="grid md:grid-cols-2 gap-4">
               {/* 新しく診断を受ける */}
               <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4 border border-yellow-200">
-                <h3 className="font-semibold text-yellow-800 mb-2 flex items-center">
+                <h3 className="font-semibold text-yellow-800 mb-2 flex items-center justify-center">
                   <TestTube className="w-5 h-5 mr-2" />
                   新しく診断を受ける
                 </h3>
@@ -394,7 +394,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
 
               {/* 過去のQRコードをアップロード */}
               <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4 border border-yellow-200">
-                <h3 className="font-semibold text-yellow-800 mb-2 flex items-center">
+                <h3 className="font-semibold text-yellow-800 mb-2 flex items-center justify-center">
                   <Upload className="w-5 h-5 mr-2" />
                   過去の診断結果を使用
                 </h3>
@@ -515,27 +515,26 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                 
                 <div className="space-y-6">
                   {/* QRコードアップロード */}
-                  <div>
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="w-full">
-                        {uploadedQRImage ? (
-                          <div className="flex flex-col items-center gap-4">
-                            <div className="w-full max-w-xs bg-gradient-to-br from-blue-500/20 to-teal-500/20 p-4 rounded-lg shadow-sm border border-white/30" style={{backdropFilter: 'blur(3px)'}}>
-                              <img
-                                src={uploadedQRImage}
-                                alt="アップロードされたQRコード"
-                                className="w-full h-auto rounded-lg"
-                              />
-                            </div>
-                            <button
-                              onClick={handleReset}
-                              className="text-sm text-[#e0e7ff] hover:text-white underline"
-                            >
-                              別のQRコードを選択
-                            </button>
-                          </div>
-                        ) : (
-                          <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-white/40 border-dashed rounded-xl cursor-pointer bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-colors">
+                  {uploadedQRImage ? (
+                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/5 flex flex-col items-center gap-4">
+                              <div className="bg-white/90 backdrop-blur-xs p-4 rounded-lg shadow-sm border border-white/40">
+                                <img
+                                  src={uploadedQRImage}
+                                  alt="アップロードされたQRコード"
+                                  className="w-full h-auto max-w-[200px]"
+                                />
+                              </div>
+                      <div className="flex flex-wrap gap-2 justify-center">
+                        <button
+                          onClick={handleReset}
+                          className="text-sm text-[#e0e7ff] hover:text-white underline px-4 py-2"
+                        >
+                          別のQRコードを選択
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-white/40 border-dashed rounded-xl cursor-pointer bg-white/10 hover:bg-white/20 backdrop-blur-sm transition-colors">
                             <div className="flex flex-col items-center justify-center pt-6 pb-6">
                               {isQRUploading ? (
                                 <div className="flex items-center space-x-2">
@@ -556,11 +555,8 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                               className="hidden"
                               disabled={isQRUploading}
                             />
-                          </label>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                    </label>
+                  )}
 
                   {/* エラー表示 */}
                   {error && (
@@ -570,28 +566,29 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                     </div>
                   )}
 
-                  {/* ボタン */}
-                  <div className="flex space-x-3">
-                    <button
-                      onClick={handleCheckCompatibility}
-                      disabled={partnerCode.length === 0 || isLoading}
-                      className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all flex items-center justify-center space-x-2"
-                    >
-                      {isLoading ? (
-                        <>
-                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                          <span>診断中...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Heart className="w-5 h-5" />
-                          <span>相性診断開始</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
                 </div>
               </div>
+            </div>
+            
+            {/* ボタン */}
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={handleCheckCompatibility}
+                disabled={partnerCode.length === 0 || isLoading}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-8 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all flex items-center justify-center space-x-2"
+              >
+                {isLoading ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>診断中...</span>
+                  </>
+                ) : (
+                  <>
+                    <Heart className="w-5 h-5" />
+                    <span>相性診断開始</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
           </ScrollAnimation>
