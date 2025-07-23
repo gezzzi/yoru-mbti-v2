@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { TestResult, PersonalityType } from '../types/personality';
 import { Heart, Users, ArrowRight, Check, Download, Share2, RefreshCw, User, Copy, Twitter, MessageCircle, X } from 'lucide-react';
 import html2canvas from 'html2canvas';
@@ -9,6 +9,8 @@ import { personalityTypes } from '../data/personalityTypes';
 import Image from 'next/image';
 import NeonText from './NeonText';
 import { ScrollAnimation } from './ScrollAnimation';
+import Fireworks from './Fireworks';
+import HeartRain from './HeartRain';
 
 interface CompatibilityResult {
   compatibility: number;
@@ -25,9 +27,33 @@ interface CompatibilityResultsProps {
 
 // レーダーチャートコンポーネント
 const RadarChart: React.FC<{ axisScores: { E: number, L: number, A: number, L2: number, O: number }, totalScore: number }> = ({ axisScores, totalScore }) => {
+  const [animationProgress, setAnimationProgress] = useState(0);
   const size = 280;
   const center = size / 2;
   const radius = 80;
+  
+  useEffect(() => {
+    // 順次描画アニメーション
+    const duration = 2000; // 2秒
+    const startTime = Date.now();
+    
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      setAnimationProgress(progress);
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+    
+    const timer = setTimeout(() => {
+      requestAnimationFrame(animate);
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
   
   // 5角形の各頂点の角度（上から時計回り）
   const angles = [
@@ -38,7 +64,7 @@ const RadarChart: React.FC<{ axisScores: { E: number, L: number, A: number, L2: 
     -Math.PI / 2 + (8 * Math.PI / 5),     // O (左上)
   ];
   
-  const axisLabels = ['外向性', 'リード', '冒険', 'ラブ', '開放'];
+  const axisLabels = ['E/I', 'L/F', 'A/S', 'L/F', 'O/S'];
   const axisValues = [axisScores.E, axisScores.L, axisScores.A, axisScores.L2, axisScores.O];
   
   // 座標計算関数
@@ -56,10 +82,13 @@ const RadarChart: React.FC<{ axisScores: { E: number, L: number, A: number, L2: 
     return { percentage, points };
   });
   
-  // データの5角形を生成
+  // データの5角形を生成（アニメーション対応）
   const dataPoints = angles.map((angle, index) => {
     const value = axisValues[index];
-    const distance = (radius * value) / 100;
+    // 各頂点を順番に描画
+    const pointProgress = Math.max(0, Math.min(1, (animationProgress * 5) - index));
+    const animatedValue = value * pointProgress;
+    const distance = (radius * animatedValue) / 100;
     return getPoint(angle, distance);
   });
   
@@ -67,7 +96,11 @@ const RadarChart: React.FC<{ axisScores: { E: number, L: number, A: number, L2: 
   
   return (
     <div className="flex flex-col items-center">
-      <svg width={size} height={size} className="mb-4">
+      <svg 
+        width={size} 
+        height={size} 
+        className="mb-4"
+      >
         {/* 背景グリッド */}
         {backgroundPentagons.map(({ percentage, points }) => (
           <polygon
@@ -101,18 +134,11 @@ const RadarChart: React.FC<{ axisScores: { E: number, L: number, A: number, L2: 
           fill="rgba(168, 85, 247, 0.3)"
           stroke="#a855f7"
           strokeWidth="2"
+          style={{
+            opacity: animationProgress,
+            animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          }}
         />
-        
-        {/* データポイント */}
-        {dataPoints.map((point, index) => (
-          <circle
-            key={index}
-            cx={point.x}
-            cy={point.y}
-            r="4"
-            fill="#a855f7"
-          />
-        ))}
         
         {/* 軸ラベル */}
         {angles.map((angle, index) => {
@@ -153,12 +179,47 @@ const RadarChart: React.FC<{ axisScores: { E: number, L: number, A: number, L2: 
           <h4 className="text-sm font-semibold text-[#e0e7ff]">各軸の相性スコア</h4>
         </div>
         <div className="text-xs text-[#e0e7ff]/80 space-y-1">
-          <div>外向性: {Math.round(axisScores.E)}% | リード: {Math.round(axisScores.L)}%</div>
-          <div>冒険: {Math.round(axisScores.A)}% | ラブ: {Math.round(axisScores.L2)}% | 開放: {Math.round(axisScores.O)}%</div>
+          <div>外向性/内向性: {Math.round(axisScores.E)}% | リード/フォロー: {Math.round(axisScores.L)}%</div>
+          <div>冒険/安定: {Math.round(axisScores.A)}% | ラブ/フリー: {Math.round(axisScores.L2)}% | 開放/秘密: {Math.round(axisScores.O)}%</div>
         </div>
       </div>
     </div>
   );
+};
+
+// カウントアップアニメーション用のカスタムフック
+const useCountUp = (end: number, duration: number = 1500, start: boolean = true) => {
+  const [count, setCount] = useState(0);
+  
+  useEffect(() => {
+    if (!start) return;
+    
+    let startTime: number | null = null;
+    let animationFrameId: number;
+    
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      
+      // イーズアウト関数で自然な動きに
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      setCount(Math.floor(easeOutQuart * end));
+      
+      if (progress < 1) {
+        animationFrameId = requestAnimationFrame(animate);
+      }
+    };
+    
+    animationFrameId = requestAnimationFrame(animate);
+    
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+  }, [end, duration, start]);
+  
+  return count;
 };
 
 const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = ({ typeCode, emoji, name }) => {
@@ -213,6 +274,9 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   const downloadRef = useRef<HTMLDivElement>(null);
   const [showShareModal, setShowShareModal] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [animationStarted, setAnimationStarted] = useState(false);
+  const [showFireworks, setShowFireworks] = useState(false);
+  const [showHeartRain, setShowHeartRain] = useState(false);
 
   const calculateCompatibility = (user: TestResult, partner: TestResult): CompatibilityResult & { axisScores: { E: number, L: number, A: number, L2: number, O: number } } => {
     // 各軸の相性スコアを計算（類似軸と補完軸で異なる計算方法）
@@ -288,6 +352,35 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
 
   const compatibility = calculateCompatibility(myResult, partnerResult);
   const shareText = generateCompatibilityShareText(myResult, partnerResult, Math.round(compatibility.compatibility));
+  
+  // カウントアップアニメーション用
+  const animatedScore = useCountUp(Math.round(compatibility.compatibility), 4000, animationStarted);
+  
+  // コンポーネントマウント時にアニメーションを開始
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAnimationStarted(true);
+      setShowHeartRain(true); // ハートレインを開始
+      
+      // カウントアップが終わったらハートレインを停止
+      setTimeout(() => {
+        setShowHeartRain(false);
+      }, 5000);
+      
+      // 80%以上の場合、ハートレインが終わるタイミングで花火表示
+      if (compatibility.compatibility >= 80) {
+        setTimeout(() => {
+          setShowFireworks(true);
+          // 4秒後に非表示
+          setTimeout(() => {
+            setShowFireworks(false);
+          }, 4000);
+        }, 5000); // ハートレインが終わるタイミング
+      }
+    }, 500); // 少し遅延を入れて自然に
+    
+    return () => clearTimeout(timer);
+  }, [compatibility.compatibility]);
 
   // 夜の相性分析を生成
   const generateIntimateCompatibility = () => {
@@ -400,8 +493,8 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   };
 
   const getCompatibilityIcon = (score: number) => {
-    if (score >= 60) return <Heart className="w-8 h-8" />;
-    return <Users className="w-8 h-8" />;
+    if (score >= 60) return <Heart className="w-10 h-10 md:w-12 md:h-12 text-pink-400" />;
+    return <Users className="w-10 h-10 md:w-12 md:h-12 text-pink-400" />;
   };
 
   // ダウンロード機能
@@ -432,6 +525,9 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
 
   return (
     <div className="min-h-screen pt-16">
+      {/* お祝いの花火 */}
+      {showFireworks && <Fireworks />}
+      
       {/* ダウンロード用のコンテナ */}
       <div ref={downloadRef}>
         {/* Hero Section */}
@@ -454,15 +550,17 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
               
               {/* 相性スコア */}
               <ScrollAnimation animation="fadeInUp" delay={200}>
-              <div className="rounded-xl shadow-lg p-4 sm:p-6 bg-white/10 backdrop-blur-sm border border-white/5">
-            <div className="text-center">
-              <div className="flex items-center justify-center mb-4 sm:mb-6">
-                <span className="text-[#e0e7ff]">{getCompatibilityIcon(compatibility.compatibility)}</span>
-                <span className="ml-3 sm:ml-4 text-4xl sm:text-5xl font-bold text-[#e0e7ff]">
-                  {Math.round(compatibility.compatibility)}%
+              <div className="rounded-xl shadow-lg p-4 sm:p-6 bg-white/10 backdrop-blur-sm border border-white/5 relative">
+            {/* ハートレインアニメーション（コンテナ内） */}
+            {showHeartRain && <HeartRain />}
+            
+            <div className="text-center relative z-10">
+              <div className="flex items-center justify-center mb-4 sm:mb-6 animate-pulse">
+                {getCompatibilityIcon(compatibility.compatibility)}
+                <span className="ml-3 sm:ml-4 text-5xl sm:text-6xl md:text-7xl font-bold text-pink-400">
+                  {animatedScore}%
                 </span>
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-[#e0e7ff]">相性診断結果</h3>
               <p className="text-base sm:text-lg font-medium text-[#e0e7ff]/90 leading-relaxed">
                 {compatibility.description}
               </p>
@@ -473,7 +571,6 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
               {/* 相性レーダーチャート */}
               <ScrollAnimation animation="fadeInUp" delay={400}>
               <div className="rounded-xl shadow-lg p-6 bg-white/10 backdrop-blur-sm border border-white/5">
-                <h3 className="text-xl font-bold text-[#e0e7ff] mb-6 text-center">相性分析チャート: {Math.round(compatibility.compatibility)}%</h3>
                 <div className="flex justify-center">
                   <RadarChart axisScores={compatibility.axisScores} totalScore={compatibility.compatibility} />
                 </div>
@@ -483,7 +580,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
               {/* 夜の相性診断カード */}
               <ScrollAnimation animation="fadeInUp" delay={600}>
               <div className="rounded-xl shadow-lg p-4 sm:p-6 bg-white/10 backdrop-blur-sm border border-white/5">
-                <h3 className="text-lg sm:text-xl font-bold text-[#e0e7ff] mb-4 sm:mb-6 text-center">🖤 夜MBTI｜相性診断カード</h3>
+                <h3 className="text-lg sm:text-xl font-bold text-[#e0e7ff] mb-4 sm:mb-6 text-center">相性診断カード</h3>
                 <div className="space-y-4">
                   {/* ① おすすめプレイ */}
                   <div className="border-b border-white/20 pb-4">
