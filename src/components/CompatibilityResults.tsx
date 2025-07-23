@@ -8,6 +8,7 @@ import { generateCompatibilityShareText, copyToClipboard } from '../utils/snsSha
 import { personalityTypes } from '../data/personalityTypes';
 import Image from 'next/image';
 import NeonText from './NeonText';
+import { ScrollAnimation } from './ScrollAnimation';
 
 interface CompatibilityResult {
   compatibility: number;
@@ -24,7 +25,7 @@ interface CompatibilityResultsProps {
 
 // レーダーチャートコンポーネント
 const RadarChart: React.FC<{ axisScores: { E: number, L: number, A: number, L2: number, O: number }, totalScore: number }> = ({ axisScores, totalScore }) => {
-  const size = 360;
+  const size = 280;
   const center = size / 2;
   const radius = 80;
   
@@ -73,7 +74,7 @@ const RadarChart: React.FC<{ axisScores: { E: number, L: number, A: number, L2: 
             key={percentage}
             points={points}
             fill="none"
-            stroke="#e5e7eb"
+            stroke="rgba(224, 231, 255, 0.2)"
             strokeWidth="1"
           />
         ))}
@@ -88,7 +89,7 @@ const RadarChart: React.FC<{ axisScores: { E: number, L: number, A: number, L2: 
               y1={center}
               x2={endPoint.x}
               y2={endPoint.y}
-              stroke="#e5e7eb"
+              stroke="rgba(224, 231, 255, 0.2)"
               strokeWidth="1"
             />
           );
@@ -97,8 +98,8 @@ const RadarChart: React.FC<{ axisScores: { E: number, L: number, A: number, L2: 
         {/* データポリゴン */}
         <polygon
           points={dataPolygonPoints}
-          fill="rgba(59, 130, 246, 0.3)"
-          stroke="#3b82f6"
+          fill="rgba(168, 85, 247, 0.3)"
+          stroke="#a855f7"
           strokeWidth="2"
         />
         
@@ -109,13 +110,13 @@ const RadarChart: React.FC<{ axisScores: { E: number, L: number, A: number, L2: 
             cx={point.x}
             cy={point.y}
             r="4"
-            fill="#3b82f6"
+            fill="#a855f7"
           />
         ))}
         
         {/* 軸ラベル */}
         {angles.map((angle, index) => {
-          const labelPoint = getPoint(angle, radius + 50);
+          const labelPoint = getPoint(angle, radius + 35);
           // 位置に応じてテキストアンカーを調整
           let textAnchor = "middle";
           let dominantBaseline = "middle";
@@ -137,7 +138,7 @@ const RadarChart: React.FC<{ axisScores: { E: number, L: number, A: number, L2: 
               y={labelPoint.y}
               textAnchor={textAnchor}
               dominantBaseline={dominantBaseline}
-              className="text-sm font-medium fill-gray-700"
+              className="text-sm font-medium fill-[#e0e7ff]"
             >
               {axisLabels[index]}
             </text>
@@ -149,9 +150,9 @@ const RadarChart: React.FC<{ axisScores: { E: number, L: number, A: number, L2: 
       {/* 凡例 */}
       <div className="text-center">
         <div className="mb-3">
-          <h4 className="text-sm font-semibold text-gray-700">各軸の相性スコア</h4>
+          <h4 className="text-sm font-semibold text-[#e0e7ff]">各軸の相性スコア</h4>
         </div>
-        <div className="text-xs text-gray-600 space-y-1">
+        <div className="text-xs text-[#e0e7ff]/80 space-y-1">
           <div>外向性: {Math.round(axisScores.E)}% | リード: {Math.round(axisScores.L)}%</div>
           <div>冒険: {Math.round(axisScores.A)}% | ラブ: {Math.round(axisScores.L2)}% | 開放: {Math.round(axisScores.O)}%</div>
         </div>
@@ -288,11 +289,114 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   const compatibility = calculateCompatibility(myResult, partnerResult);
   const shareText = generateCompatibilityShareText(myResult, partnerResult, Math.round(compatibility.compatibility));
 
+  // 夜の相性分析を生成
+  const generateIntimateCompatibility = () => {
+    // おすすめプレイ
+    const playStyles = {
+      dominant: ['緊縛', '命令', '支配', '焦らし'],
+      submissive: ['奉仕', '服従', '手コキ', 'フェラ'],
+      balanced: ['愛撫', 'キス', '前戯', 'マッサージ']
+    };
+    
+    const myDominance = myResult.L > 50 ? 'dominant' : 'submissive';
+    const partnerDominance = partnerResult.L > 50 ? 'dominant' : 'submissive';
+    
+    let recommendedPlay = '';
+    if (myDominance === 'dominant' && partnerDominance === 'submissive') {
+      recommendedPlay = `${playStyles.dominant[Math.floor(Math.random() * playStyles.dominant.length)]} × ${playStyles.submissive[Math.floor(Math.random() * playStyles.submissive.length)]} → 完璧な主従関係`;
+    } else if (myDominance === 'submissive' && partnerDominance === 'dominant') {
+      recommendedPlay = `${playStyles.submissive[Math.floor(Math.random() * playStyles.submissive.length)]} × ${playStyles.dominant[Math.floor(Math.random() * playStyles.dominant.length)]} → 理想的な支配関係`;
+    } else if (myDominance === partnerDominance) {
+      recommendedPlay = `${playStyles.balanced[Math.floor(Math.random() * playStyles.balanced.length)]} × ${playStyles.balanced[Math.floor(Math.random() * playStyles.balanced.length)]} → スイッチプレイ推奨`;
+    }
+    
+    // おすすめ体位
+    const positions = ['騎乗位', '正常位', '背面座位', 'バック', '立ちバック', '対面座位', '側位', '松葉崩し'];
+    const myPosition = positions[Math.floor((myResult.A / 100) * positions.length)];
+    const partnerPosition = positions[Math.floor((partnerResult.A / 100) * positions.length)];
+    const positionAnalysis = myResult.A > 70 && partnerResult.A > 70 ? '激しい系' : 
+                           myResult.A < 30 && partnerResult.A < 30 ? 'ゆったり系' : '焦らし系';
+    
+    // 性欲バランス
+    const myLibido = myResult.E > 60 ? '強め' : myResult.E > 30 ? '普通' : '控えめ';
+    const partnerLibido = partnerResult.E > 60 ? '強め' : partnerResult.E > 30 ? '普通' : '控えめ';
+    let libidoBalance = '';
+    if (myLibido === '強め' && partnerLibido === '強め') {
+      libidoBalance = '毎晩バトルモード';
+    } else if ((myLibido === '強め' && partnerLibido === '控えめ') || (myLibido === '控えめ' && partnerLibido === '強め')) {
+      libidoBalance = '温度差注意！';
+    } else {
+      libidoBalance = 'バランス良好';
+    }
+    
+    // S/M相性
+    let smCompatibility = '';
+    if (myResult.L > 70 && partnerResult.L < 30) {
+      smCompatibility = 'S × M → ド安定な主従関係';
+    } else if (myResult.L < 30 && partnerResult.L > 70) {
+      smCompatibility = 'M × S → 完璧な支配関係';
+    } else if (myResult.L > 70 && partnerResult.L > 70) {
+      smCompatibility = 'S × S → 主導権の取り合い勃発かも';
+    } else if (myResult.L < 30 && partnerResult.L < 30) {
+      smCompatibility = 'M × M → 優しい愛撫の応酬';
+    } else {
+      smCompatibility = 'バランス型 → スイッチプレイが楽しめる';
+    }
+    
+    // 付き合う前の価値観
+    const myOpenness = myResult.L2 > 50 ? 'YES' : 'NO';
+    const partnerOpenness = partnerResult.L2 > 50 ? 'YES' : 'NO';
+    let beforeRelationship = '';
+    if (myOpenness === 'YES' && partnerOpenness === 'YES') {
+      beforeRelationship = '始まりはカラダから';
+    } else if (myOpenness === 'YES' && partnerOpenness === 'NO') {
+      beforeRelationship = '感情とタイミングが鍵';
+    } else if (myOpenness === 'NO' && partnerOpenness === 'YES') {
+      beforeRelationship = '価値観の違いに注意';
+    } else {
+      beforeRelationship = '恋愛から始まる正統派';
+    }
+    
+    // ギャップ度
+    const gapScore = Math.abs(myResult.E - partnerResult.E) + Math.abs(myResult.A - partnerResult.A);
+    let gapAnalysis = '';
+    if (gapScore > 100) {
+      gapAnalysis = '温度差に注意！';
+    } else if (gapScore > 50) {
+      gapAnalysis = '主導権争いで火花が…';
+    } else {
+      gapAnalysis = '最高だけど衝突の可能性も';
+    }
+    
+    // 関係性予測
+    let relationshipPrediction = '';
+    if (compatibility.compatibility >= 80) {
+      relationshipPrediction = '夜から始まっても、深くつながれる関係かも';
+    } else if (compatibility.compatibility >= 60) {
+      relationshipPrediction = '体だけなら最高。でも恋は危険';
+    } else {
+      relationshipPrediction = 'セフレ向き。でも本気になると燃え尽き注意';
+    }
+    
+    return {
+      recommendedPlay,
+      recommendedPosition: `${myPosition} × ${partnerPosition} → 対面で${positionAnalysis}`,
+      libidoBalance: `${myLibido} × ${partnerLibido} → ${libidoBalance}`,
+      smCompatibility,
+      beforeRelationship: `${myOpenness} × ${partnerOpenness} → ${beforeRelationship}`,
+      gapAnalysis,
+      relationshipPrediction
+    };
+  };
+
+  const intimateCompatibility = generateIntimateCompatibility();
+
   const getCompatibilityColor = (score: number) => {
-    if (score >= 80) return 'text-green-600 bg-green-50 border-green-200';
-    if (score >= 60) return 'text-blue-600 bg-blue-50 border-blue-200';
-    if (score >= 40) return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-    return 'text-red-600 bg-red-50 border-red-200';
+    // Returns gradient classes for glass morphism effect
+    if (score >= 80) return 'from-emerald-500/20 via-green-500/15 to-teal-500/20';
+    if (score >= 60) return 'from-blue-500/20 via-cyan-500/15 to-blue-600/20';
+    if (score >= 40) return 'from-amber-500/20 via-yellow-500/15 to-orange-500/20';
+    return 'from-red-500/20 via-pink-500/15 to-rose-500/20';
   };
 
   const getCompatibilityIcon = (score: number) => {
@@ -333,10 +437,11 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         {/* Hero Section */}
         <div className="text-white py-16">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 select-none text-center">
-              <NeonText text={["相性", "診断結果"]} specialCharIndex={1} className="gap-1" />
-            </h1>
-
+            <ScrollAnimation animation="fadeIn" duration={800}>
+              <h1 className="text-5xl md:text-6xl font-bold mb-6 select-none text-center">
+                <NeonText text={["相性", "診断結果"]} specialCharIndex={1} className="gap-1" />
+              </h1>
+            </ScrollAnimation>
           </div>
         </div>
 
@@ -345,97 +450,129 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
           
           {/* 相性診断結果ページコンテナ */}
           <div className="rounded-2xl shadow-2xl overflow-hidden border-2 border-white/30" style={{backgroundColor: 'rgba(255, 255, 255, 0)', boxShadow: '0 0 20px rgba(255, 255, 255, 0.1)'}}>
-            <div className="p-8 space-y-8">
+            <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
               
               {/* 相性スコア */}
-              <div className={`rounded-xl shadow-lg p-6 border-2 ${getCompatibilityColor(compatibility.compatibility)}`}>
+              <ScrollAnimation animation="fadeInUp" delay={200}>
+              <div className="rounded-xl shadow-lg p-4 sm:p-6 bg-white/10 backdrop-blur-sm border border-white/5">
             <div className="text-center">
-              <div className="flex items-center justify-center mb-6">
-                {getCompatibilityIcon(compatibility.compatibility)}
-                <span className="ml-4 text-5xl font-bold">
+              <div className="flex items-center justify-center mb-4 sm:mb-6">
+                <span className="text-[#e0e7ff]">{getCompatibilityIcon(compatibility.compatibility)}</span>
+                <span className="ml-3 sm:ml-4 text-4xl sm:text-5xl font-bold text-[#e0e7ff]">
                   {Math.round(compatibility.compatibility)}%
                 </span>
               </div>
-              <h3 className="text-2xl font-bold mb-4">相性診断結果</h3>
-              <p className="text-lg font-medium">
+              <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-[#e0e7ff]">相性診断結果</h3>
+              <p className="text-base sm:text-lg font-medium text-[#e0e7ff]/90 leading-relaxed">
                 {compatibility.description}
               </p>
             </div>
           </div>
-
-              {/* 性格タイプ比較 */}
-              <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-white/5">
-              <h3 className="font-semibold text-gray-900 mb-4 text-center">あなたのタイプ</h3>
-              <div className="text-center">
-                <TypeImage typeCode={myResult.type.code} emoji={myResult.type.emoji} name={myResult.type.name} />
-                <h4 className="text-xl font-bold text-[#e0e7ff]">
-                  {myTypeWithRuby && myTypeWithRuby.ruby ? (
-                    <ruby className="ruby-text">
-                      {myTypeWithRuby.name}
-                      <rt>{myTypeWithRuby.ruby}</rt>
-                    </ruby>
-                  ) : (
-                    myTypeWithRuby?.name || 'タイプ名なし'
-                  )}
-                </h4>
-                <p className="text-sm text-[#e0e7ff]/80 mb-3">{myResult.type.code}</p>
-                <p className="text-sm text-[#e0e7ff]">{myResult.type.description}</p>
-              </div>
-            </div>
-            
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-white/5">
-              <h3 className="font-semibold text-gray-900 mb-4 text-center">相手のタイプ</h3>
-              <div className="text-center">
-                <TypeImage typeCode={partnerResult.type.code} emoji={partnerResult.type.emoji} name={partnerResult.type.name} />
-                <h4 className="text-xl font-bold text-[#e0e7ff]">
-                  {partnerTypeWithRuby && partnerTypeWithRuby.ruby ? (
-                    <ruby className="ruby-text">
-                      {partnerTypeWithRuby.name}
-                      <rt>{partnerTypeWithRuby.ruby}</rt>
-                    </ruby>
-                  ) : (
-                    partnerTypeWithRuby?.name || 'タイプ名なし'
-                  )}
-                </h4>
-                <p className="text-sm text-[#e0e7ff]/80 mb-3">{partnerResult.type.code}</p>
-                <p className="text-sm text-[#e0e7ff]">{partnerResult.type.description}</p>
-              </div>
-            </div>
-          </div>
-
-              {/* アドバイス */}
-              <div className="rounded-xl shadow-lg p-6 bg-white/10 backdrop-blur-sm border border-white/5">
-                <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                  <Check className="w-6 h-6 text-green-500 mr-3" />
-                  関係を良くするためのアドバイス
-                </h3>
-                <ul className="space-y-3">
-                  {compatibility.tips.map((tip, index) => (
-                    <li key={index} className="flex items-start space-x-3">
-                      <ArrowRight className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-700">{tip}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              </ScrollAnimation>
 
               {/* 相性レーダーチャート */}
+              <ScrollAnimation animation="fadeInUp" delay={400}>
               <div className="rounded-xl shadow-lg p-6 bg-white/10 backdrop-blur-sm border border-white/5">
-                <h3 className="text-xl font-bold text-gray-900 mb-6 text-center">相性分析チャート: {Math.round(compatibility.compatibility)}%</h3>
+                <h3 className="text-xl font-bold text-[#e0e7ff] mb-6 text-center">相性分析チャート: {Math.round(compatibility.compatibility)}%</h3>
                 <div className="flex justify-center">
                   <RadarChart axisScores={compatibility.axisScores} totalScore={compatibility.compatibility} />
                 </div>
               </div>
+              </ScrollAnimation>
 
+              {/* 夜の相性診断カード */}
+              <ScrollAnimation animation="fadeInUp" delay={600}>
+              <div className="rounded-xl shadow-lg p-4 sm:p-6 bg-white/10 backdrop-blur-sm border border-white/5">
+                <h3 className="text-lg sm:text-xl font-bold text-[#e0e7ff] mb-4 sm:mb-6 text-center">🖤 夜MBTI｜相性診断カード</h3>
+                <div className="space-y-4">
+                  {/* ① おすすめプレイ */}
+                  <div className="border-b border-white/20 pb-4">
+                    <div className="flex items-start space-x-3">
+                      <span className="text-lg flex-shrink-0">🛏</span>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-[#e0e7ff] mb-1 text-sm sm:text-base">2人のおすすめプレイ</h4>
+                        <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.recommendedPlay}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ② おすすめ体位 */}
+                  <div className="border-b border-white/20 pb-4">
+                    <div className="flex items-start space-x-3">
+                      <span className="text-lg flex-shrink-0">🧘‍♀️</span>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-[#e0e7ff] mb-1 text-sm sm:text-base">2人のおすすめ体位（48手）</h4>
+                        <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.recommendedPosition}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ③ 性欲バランス */}
+                  <div className="border-b border-white/20 pb-4">
+                    <div className="flex items-start space-x-3">
+                      <span className="text-lg flex-shrink-0">🔥</span>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-[#e0e7ff] mb-1 text-sm sm:text-base">性欲の強さバランス</h4>
+                        <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.libidoBalance}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ④ S/M相性 */}
+                  <div className="border-b border-white/20 pb-4">
+                    <div className="flex items-start space-x-3">
+                      <span className="text-lg flex-shrink-0">😈</span>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-[#e0e7ff] mb-1 text-sm sm:text-base">S/Mの相性</h4>
+                        <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.smCompatibility}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ⑤ 付き合う前の価値観 */}
+                  <div className="border-b border-white/20 pb-4">
+                    <div className="flex items-start space-x-3">
+                      <span className="text-lg flex-shrink-0">💋</span>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-[#e0e7ff] mb-1 text-sm sm:text-base">付き合う前にXできるか？（価値観）</h4>
+                        <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.beforeRelationship}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ⑥ ギャップ度 */}
+                  <div className="border-b border-white/20 pb-4">
+                    <div className="flex items-start space-x-3">
+                      <span className="text-lg flex-shrink-0">⚡</span>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-[#e0e7ff] mb-1 text-sm sm:text-base">相性ギャップ度（思考＆欲望のズレ）</h4>
+                        <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.gapAnalysis}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ⑦ 関係性予測 */}
+                  <div>
+                    <div className="flex items-start space-x-3">
+                      <span className="text-lg flex-shrink-0">💞</span>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-[#e0e7ff] mb-1 text-sm sm:text-base">関係性の行き先予測</h4>
+                        <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.relationshipPrediction}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </ScrollAnimation>
 
               {/* ダウンロード・シェアボタン */}
+              <ScrollAnimation animation="fadeInUp" delay={800}>
               <div className="text-center">
                 <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
                   <button 
                     onClick={handleDownload}
                     disabled={isDownloading}
-                    className="bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-lg hover:from-green-700 hover:to-green-800 transition-all flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                    className="bg-gradient-to-r from-green-600 to-green-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:from-green-700 hover:to-green-800 transition-all flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg text-sm sm:text-base"
                   >
                     {isDownloading ? (
                       <>
@@ -451,20 +588,22 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                   </button>
                   <button
                     onClick={() => setShowShareModal(true)}
-                    className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all flex items-center space-x-2 shadow-lg"
+                    className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all flex items-center space-x-2 shadow-lg text-sm sm:text-base"
                   >
                     <Share2 className="w-5 h-5" />
                     <span>結果をシェア</span>
                   </button>
                 </div>
               </div>
+              </ScrollAnimation>
 
               {/* アクションボタン */}
+              <ScrollAnimation animation="fadeInUp" delay={1000}>
               <div className="text-center space-y-4">
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <button
                     onClick={onBack}
-                    className="px-6 py-3 border border-gray-300 text-gray-700 bg-white rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2"
+                    className="px-4 sm:px-6 py-2 sm:py-3 border border-white/20 text-[#e0e7ff] bg-white/10 rounded-lg hover:bg-white/20 transition-colors flex items-center justify-center space-x-2 text-sm sm:text-base"
                   >
                     <ArrowRight className="w-5 h-5 transform rotate-180" />
                     <span>相性診断に戻る</span>
@@ -472,13 +611,14 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                   
                   <button
                     onClick={onNewTest}
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all flex items-center justify-center space-x-2"
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all flex items-center justify-center space-x-2 text-sm sm:text-base"
                   >
                     <RefreshCw className="w-5 h-5" />
                     <span>新しい相性診断</span>
                   </button>
                 </div>
               </div>
+              </ScrollAnimation>
               
             </div>
           </div>
@@ -487,23 +627,23 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
 
       {/* シェアモーダル */}
       {showShareModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between p-6 border-b">
-              <h2 className="text-xl font-bold text-gray-900">相性診断結果をシェア</h2>
-              <button onClick={() => setShowShareModal(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                <X className="w-5 h-5" />
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+          <div className="bg-[#1a1f2e] rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-white/20">
+            <div className="flex items-center justify-between p-6 border-b border-white/20">
+              <h2 className="text-xl font-bold text-[#e0e7ff]">相性診断結果をシェア</h2>
+              <button onClick={() => setShowShareModal(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+                <X className="w-5 h-5 text-[#e0e7ff]" />
               </button>
             </div>
             <div className="p-6 space-y-6">
               <textarea
                 value={shareText}
                 readOnly
-                className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-3 border border-white/20 bg-white/10 text-[#e0e7ff] rounded-lg resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 rows={8}
               />
               <div className="space-y-3">
-                <h3 className="font-medium text-gray-900">シェア方法を選択</h3>
+                <h3 className="font-medium text-[#e0e7ff]">シェア方法を選択</h3>
                 <div className="grid grid-cols-1 gap-3">
                   {/* Twitter */}
                   <button
@@ -528,7 +668,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                       setCopied(true);
                       setTimeout(() => setCopied(false), 2000);
                     }}
-                    className={`flex items-center justify-center space-x-3 w-full py-3 px-4 rounded-lg transition-colors ${copied ? 'bg-green-100 text-green-700 border border-green-300' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300'}`}
+                    className={`flex items-center justify-center space-x-3 w-full py-3 px-4 rounded-lg transition-colors ${copied ? 'bg-green-500/20 text-green-400 border border-green-400/30' : 'bg-white/10 text-[#e0e7ff] hover:bg-white/20 border border-white/20'}`}
                   >
                     {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
                     <span>{copied ? 'コピーしました！' : 'テキストをコピー'}</span>
@@ -536,10 +676,10 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                 </div>
               </div>
             </div>
-            <div className="p-6 border-t bg-gray-50 rounded-b-xl">
+            <div className="p-6 border-t border-white/20 bg-white/5 rounded-b-xl">
               <button
                 onClick={() => setShowShareModal(false)}
-                className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors"
+                className="w-full bg-white/10 text-[#e0e7ff] py-2 px-4 rounded-lg hover:bg-white/20 transition-colors border border-white/20"
               >
                 閉じる
               </button>
