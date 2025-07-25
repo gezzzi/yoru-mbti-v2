@@ -5,14 +5,14 @@ import Link from 'next/link';
 import { TestResult } from '../types/personality';
 import { getCategoryColor, getCategoryName, personalityTypes } from '../data/personalityTypes';
 import { copyToClipboard } from '../utils/snsShare';
-import { Heart, RefreshCw, Share2, User, Shield, Zap, Eye, Download } from 'lucide-react';
+import { Heart, RefreshCw, Share2, User, Shield, Zap, Eye, Download, ChevronDown, ChevronUp } from 'lucide-react';
 import Image from 'next/image';
 import SNSShareModal from './SNSShareModal';
 import html2canvas from 'html2canvas';
 import NeonText from './NeonText';
 import { ScrollAnimation } from './ScrollAnimation';
 
-// カテゴリごとの色設定を追加
+// Category color settings
 const categoryColorSchemes = {
   dom: 'bg-purple-400/50',
   sub: 'bg-pink-400/50',
@@ -36,7 +36,7 @@ interface ResultsProps {
   result: TestResult;
 }
 
-// 画像または絵文字を表示するコンポーネント
+// Component to display image or emoji
 const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = ({ typeCode, emoji, name }) => {
   const [imageError, setImageError] = useState(false);
   
@@ -85,6 +85,24 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const downloadRef = useRef<HTMLDivElement>(null);
+  const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({
+    nightPersonality: false,
+    smTendency: false,
+    libidoLevel: false,
+    positions: false,
+    compatible: false,
+    incompatible: false,
+    relationship: false,
+    preferences: false,
+    advice: false
+  });
+
+  const toggleSection = (section: string) => {
+    setOpenSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
 
   // 診断結果をローカルストレージに保存
   React.useEffect(() => {
@@ -200,12 +218,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
 
     setIsDownloading(true);
     try {
-      const canvas = await html2canvas(downloadRef.current, {
-        backgroundColor: '#ffffff',
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-      } as any);
+      const canvas = await html2canvas(downloadRef.current);
 
       // Canvasを画像として保存
       const link = document.createElement('a');
@@ -223,7 +236,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
   return (
     <div className="min-h-screen pt-28 pb-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* タイトル */}
+        {/* Title */}
         <ScrollAnimation animation="fadeIn" duration={800}>
           <div className="text-center mb-8">
             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight drop-shadow-lg select-none text-center">
@@ -232,7 +245,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
           </div>
         </ScrollAnimation>
         
-        {/* ダウンロード用のコンテナ */}
+        {/* Download container */}
         <ScrollAnimation animation="fadeInUp" delay={200}>
           <div ref={downloadRef}>
             {/* Header Section */}
@@ -262,7 +275,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
             </div>
             {/* Main Content */}
             <div className="rounded-b-3xl shadow-xl overflow-hidden border-2 border-white/30" style={{backgroundColor: 'rgba(255, 255, 255, 0)', boxShadow: '0 0 20px rgba(255, 255, 255, 0.1)'}}>
-              <div className="p-8">
+              <div className="p-8 grid grid-cols-1">
 
                 {/* New Graph Design */}
                 <div className="mb-12">
@@ -322,114 +335,362 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                         </div>
                       ))}
                     </div>
+                  </div>
                 </div>
 
-                {/* 簡単な説明 */}
-                <p className="text-center text-[#e0e7ff] text-lg leading-relaxed mt-8 px-4">
-                  {type.summary || type.description}
-                </p>
-
-                {/* 主要な特性 */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5 text-center">
-                    <span className="text-2xl mb-2 block">😈</span>
-                    <div className="text-sm text-[#e0e7ff]/80 mb-1">S/M傾向</div>
-                    <div className="text-lg font-bold text-[#e0e7ff]">
-                      {result.additionalResults?.smTendency === 'S' 
-                        ? 'S'
-                        : result.additionalResults?.smTendency === 'M'
-                        ? 'M' 
-                        : '中立'}
-                    </div>
+              {/* 詳細情報統合カード */}
+              <div className="rounded-xl shadow-lg bg-white/10 backdrop-blur-sm p-4 sm:p-6 mt-8 mx-4 flex-shrink-0">
+                <h3 className="text-lg sm:text-xl font-bold text-[#e0e7ff] mb-4 sm:mb-6 text-center">性格診断カード</h3>
+                  
+                  {/* 基本性格セクション */}
+                  <div className="mb-6 pb-6 border-b border-white/20 min-w-0">
+                  <div className="space-y-4 min-w-0">
+                  {/* 夜の性格 */}
+                  <div className="border-b border-white/20 pb-4 w-full">
+                    <button
+                      onClick={() => toggleSection('nightPersonality')}
+                      className="w-full flex items-center justify-between space-x-3 hover:bg-white/5 rounded-lg p-2 transition-colors"
+                    >
+                      <div className="flex items-start space-x-3">
+                        <span className="text-lg flex-shrink-0">🧠</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base text-left">夜の性格</h4>
+                      </div>
+                      {openSections.nightPersonality ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                    </button>
+                    {openSections.nightPersonality && (
+                      <div className="mt-3 pl-8">
+                        <div className="text-[#e0e7ff]/80 text-sm space-y-1">
+                          {type.nightPersonality ? (
+                            type.nightPersonality.split(/(?=本番：|アフター：)/).map((text, index) => (
+                              <p key={index}>{text.trim()}</p>
+                            ))
+                          ) : (
+                            <p>理性はあるけど、ベッドでは全部脱ぐタイプ。欲しいものは自分で奪う。</p>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
                   
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5 text-center">
-                    <span className="text-2xl mb-2 block">💋</span>
-                    <div className="text-sm text-[#e0e7ff]/80 mb-1">性欲レベル</div>
-                    <div className="text-lg font-bold text-[#e0e7ff]">
-                      {[...Array(5)].map((_, i) => (
-                        <span key={i} className={i < (result.additionalResults?.libidoLevel || 3) ? 'text-pink-500' : 'text-gray-600'}>
-                          ★
-                        </span>
-                      ))}
-                    </div>
+                  {/* S or M 傾向 */}
+                  <div>
+                    <button
+                      onClick={() => toggleSection('smTendency')}
+                      className="w-full flex items-center justify-between space-x-3 hover:bg-white/5 rounded-lg p-2 transition-colors"
+                    >
+                      <div className="flex items-start space-x-3">
+                        <span className="text-lg flex-shrink-0">😈</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base text-left">S or M 傾向</h4>
+                      </div>
+                      {openSections.smTendency ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                    </button>
+                    {openSections.smTendency && (
+                      <div className="mt-3 pl-8">
+                        <p className="text-[#e0e7ff] font-bold mb-1">
+                          {result.additionalResults?.smTendency === 'S' 
+                            ? 'S'
+                            : result.additionalResults?.smTendency === 'M'
+                            ? 'M' 
+                            : '中立'}
+                        </p>
+                        <p className="text-[#e0e7ff]/80 text-sm">
+                          {result.additionalResults?.smTendency === 'S' 
+                            ? '支配したい気持ちが強く、相手をリードすることに喜びを感じます。'
+                            : result.additionalResults?.smTendency === 'M'
+                            ? '委ねることに安心感を覚え、相手に導かれることを好みます。'
+                            : '相手や気分によって自在に立場を変えられる柔軟性があります。'}
+                        </p>
+                      </div>
+                    )}
                   </div>
-                  
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5 text-center">
-                    <span className="text-2xl mb-2 block">🎭</span>
-                    <div className="text-sm text-[#e0e7ff]/80 mb-1">ギャップ度</div>
-                    <div className="text-lg font-bold text-[#e0e7ff]">
-                      {result.additionalResults?.gapLevel && result.additionalResults.gapLevel >= 70 ? 'MAX' : 
-                       result.additionalResults?.gapLevel && result.additionalResults.gapLevel >= 50 ? '高い' : '普通'}
-                    </div>
-                  </div>
-                  
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5 text-center">
-                    <span className="text-2xl mb-2 block">👁</span>
-                    <div className="text-sm text-[#e0e7ff]/80 mb-1">自信度</div>
-                    <div className="text-lg font-bold text-[#e0e7ff]">
-                      {type.bodyConfidence?.level || 'ある'}
-                    </div>
                   </div>
                 </div>
                 
-                {/* Action buttons - Download and Share */}
-                <div className="text-center mb-8 mt-12">
-                    <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-                      <Link
-                        href={`/results/detail?result=${encodeURIComponent(JSON.stringify(result))}`}
-                        className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all flex items-center justify-center shadow-lg"
-                      >
-                        <span>詳細を見る</span>
-                      </Link>
-                      <button 
-                        onClick={() => setShowShareModal(true)}
-                        className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all flex items-center space-x-2 shadow-lg"
-                      >
-                        <Share2 className="w-5 h-5" />
-                        <span>結果をシェア</span>
-                      </button>
-                      <button 
-                        onClick={handleDownload}
-                        disabled={isDownloading}
-                        className="bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-lg hover:from-green-700 hover:to-green-800 transition-all flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-                      >
-                        {isDownloading ? (
-                          <>
-                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                            <span>ダウンロード中...</span>
-                          </>
-                        ) : (
-                          <>
-                            <Download className="w-5 h-5" />
-                            <span>結果をダウンロード</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
-                </div>
-
-                {/* Call to Action */}
-                <div className="text-center">
-                    <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/5">
-                      <h3 className="text-2xl font-bold mb-4 text-[#e0e7ff]">次のステップに進みますか？</h3>
-                      <div className="flex flex-col md:flex-row justify-center items-center gap-4">
-                        <Link
-                          href="/test"
-                          className="bg-white text-teal-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center border border-teal-600"
-                        >
-                          <RefreshCw className="w-5 h-5 mr-2" />
-                          もう一度診断する
-                        </Link>
-                        <Link
-                          href="/compatibility"
-                          className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all flex items-center justify-center"
-                        >
-                          <Heart className="w-5 h-5 mr-2" />
-                          相性診断をする
-                        </Link>
+                {/* スタイル・体位セクション */}
+                <div className="mb-6 pb-6 border-b border-white/20 min-w-0">
+                  <div className="space-y-4 min-w-0">
+                  {/* 性欲レベル */}
+                  <div className="border-b border-white/20 pb-4">
+                    <button
+                      onClick={() => toggleSection('libidoLevel')}
+                      className="w-full flex items-center justify-between space-x-3 hover:bg-white/5 rounded-lg p-2 transition-colors"
+                    >
+                      <div className="flex items-start space-x-3">
+                        <span className="text-lg flex-shrink-0">💋</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base text-left">性欲レベル</h4>
                       </div>
-                    </div>
+                      {openSections.libidoLevel ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                    </button>
+                    {openSections.libidoLevel && (
+                      <div className="mt-3 pl-8">
+                        <div className="flex items-center mb-1">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <span key={star} className={`text-lg ${star <= (result.additionalResults?.libidoLevel || 3) ? 'text-pink-500' : 'text-gray-600'}`}>
+                              ★
+                            </span>
+                          ))}
+                          <span className="ml-2 text-[#e0e7ff]/80 text-sm">
+                            {result.additionalResults?.libidoLevel === 5 ? '（とても強い）' :
+                             result.additionalResults?.libidoLevel === 4 ? '（強い）' :
+                             result.additionalResults?.libidoLevel === 3 ? '（普通）' :
+                             result.additionalResults?.libidoLevel === 2 ? '（控えめ）' : '（穏やか）'}
+                          </span>
+                        </div>
+                        <p className="text-[#e0e7ff]/80 text-sm">
+                          {result.additionalResults?.libidoLevel && result.additionalResults.libidoLevel >= 4 
+                            ? '平常時でも妄想が止まらないタイプ。'
+                            : '気分やシチュエーションによって変化するタイプ。'}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* おすすめの体位 */}
+                  <div>
+                    <button
+                      onClick={() => toggleSection('positions')}
+                      className="w-full flex items-center justify-between space-x-3 hover:bg-white/5 rounded-lg p-2 transition-colors"
+                    >
+                      <div className="flex items-start space-x-3">
+                        <span className="text-lg flex-shrink-0">🍑</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base text-left">おすすめの体位（48手）</h4>
+                      </div>
+                      {openSections.positions ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                    </button>
+                    {openSections.positions && (
+                      <div className="mt-3 pl-8">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-2">
+                          {(type.recommendedPositions || ['正常位', '騎乗位', '後背位', '駅弁', '対面座位', '寝バック', '立位']).map((position, index) => (
+                            <div key={index} className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-center text-[#e0e7ff] text-sm">
+                              {position}
+                            </div>
+                          ))}
+                        </div>
+                        <p className="text-[#e0e7ff]/80 text-sm italic">
+                          {result.additionalResults?.smTendency === 'S' 
+                            ? '「深く」「支配的」「見下ろすように愛したい」'
+                            : result.additionalResults?.smTendency === 'M'
+                            ? '「深く」「受け身で」「見上げるように愛されたい」'
+                            : '「深く」「情熱的に」「互いに求め合いたい」'}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  </div>
+                </div>
+                
+                {/* 相性診断セクション */}
+                <div className="mb-6 pb-6 border-b border-white/20 min-w-0">
+                  <div className="space-y-4 min-w-0">
+                  {/* 相性のいいタイプ */}
+                  <div className="border-b border-white/20 pb-4">
+                    <button
+                      onClick={() => toggleSection('compatible')}
+                      className="w-full flex items-center justify-between space-x-3 hover:bg-white/5 rounded-lg p-2 transition-colors"
+                    >
+                      <div className="flex items-start space-x-3">
+                        <span className="text-lg flex-shrink-0">💘</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base text-left">相性のいいタイプ</h4>
+                      </div>
+                      {openSections.compatible ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                    </button>
+                    {openSections.compatible && (
+                      <div className="mt-3 pl-8">
+                        <div className="text-[#e0e7ff]/80 text-sm">
+                          {type.compatibleTraits?.map((trait, index) => (
+                            <p key={index} className="mb-1">{trait}</p>
+                          )) || <p>感度が高く、甘え上手な人。自分のリードを委ねてくれる相手に惹かれる。</p>}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* 相性が悪いタイプ */}
+                  <div className="border-b border-white/20 pb-4">
+                    <button
+                      onClick={() => toggleSection('incompatible')}
+                      className="w-full flex items-center justify-between space-x-3 hover:bg-white/5 rounded-lg p-2 transition-colors"
+                    >
+                      <div className="flex items-start space-x-3">
+                        <span className="text-lg flex-shrink-0">🚫</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base text-left">相性が悪いタイプ</h4>
+                      </div>
+                      {openSections.incompatible ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                    </button>
+                    {openSections.incompatible && (
+                      <div className="mt-3 pl-8">
+                        <div className="text-[#e0e7ff]/80 text-sm">
+                          {type.incompatibleTraits?.map((trait, index) => (
+                            <p key={index} className="mb-1">{trait}</p>
+                          )) || <p>ノリが合わない堅物系、リアクションが薄い人。受け身すぎる or 無反応な相手には温度差を感じやすい。</p>}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* 関係性の理想スタイル */}
+                  <div>
+                    <button
+                      onClick={() => toggleSection('relationship')}
+                      className="w-full flex items-center justify-between space-x-3 hover:bg-white/5 rounded-lg p-2 transition-colors"
+                    >
+                      <div className="flex items-start space-x-3">
+                        <span className="text-lg flex-shrink-0">🔄</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base text-left">関係性の理想スタイル</h4>
+                      </div>
+                      {openSections.relationship ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                    </button>
+                    {openSections.relationship && (
+                      <div className="mt-3 pl-8">
+                        <p className="text-[#e0e7ff]/80 text-sm">
+                          {type.relationshipStyle || '気が合えば専属で深く繋がりたい。"身体の相性"から心も通わせていくのが理想。'}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  </div>
+                </div>
+                
+                {/* こだわりセクション */}
+                <div className="mb-6 pb-6 border-b border-white/20 min-w-0">
+                  <div className="space-y-4 min-w-0">
+                  <div>
+                    <button
+                      onClick={() => toggleSection('preferences')}
+                      className="w-full flex items-center justify-between space-x-3 hover:bg-white/5 rounded-lg p-2 transition-colors"
+                    >
+                      <div className="flex items-start space-x-3">
+                        <span className="text-lg flex-shrink-0">🔍</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base text-left">セックスでのこだわり</h4>
+                      </div>
+                      {openSections.preferences ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                    </button>
+                    {openSections.preferences && (
+                      <div className="mt-3 pl-8">
+                        <ul className="text-[#e0e7ff]/80 text-sm space-y-1">
+                          {type.sexualPreferences?.map((pref, index) => (
+                            <li key={index} className="flex items-start">
+                              <span className="mr-2 text-pink-500">♥</span>
+                              <span>{pref}</span>
+                            </li>
+                          )) || (
+                            <>
+                              <li className="flex items-start">
+                                <span className="mr-2 text-pink-500">♥</span>
+                                <span>前戯が濃厚じゃないと冷める</span>
+                              </li>
+                              <li className="flex items-start">
+                                <span className="mr-2 text-pink-500">♥</span>
+                                <span>キスは必須。なければ温度が下がる</span>
+                              </li>
+                              <li className="flex items-start">
+                                <span className="mr-2 text-pink-500">♥</span>
+                                <span>指先の絡ませ合いが好き</span>
+                              </li>
+                            </>
+                          )}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                  </div>
+                </div>
+                
+                {/* アドバイスセクション */}
+                <div className="mb-6 min-w-0">
+                  <div className="space-y-4 min-w-0">
+                  <div>
+                    <button
+                      onClick={() => toggleSection('advice')}
+                      className="w-full flex items-center justify-between space-x-3 hover:bg-white/5 rounded-lg p-2 transition-colors"
+                    >
+                      <div className="flex items-start space-x-3">
+                        <span className="text-lg flex-shrink-0">⚠️</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base text-left">あなたの短所とアドバイス</h4>
+                      </div>
+                      {openSections.advice ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                    </button>
+                    {openSections.advice && (
+                      <div className="mt-3 pl-8">
+                        <div className="bg-white/5 rounded-lg p-3 mb-3">
+                          <p className="text-[#e0e7ff]/80 text-sm mb-2">
+                            <span className="font-bold text-pink-500">短所：</span>
+                            {type.shortcomingsAdvice?.shortcoming || '気分屋な面があり、急に冷めることも。'}
+                          </p>
+                          <p className="text-[#e0e7ff]/80 text-sm">
+                            <span className="font-bold text-pink-500">→ アドバイス：</span>
+                            {type.shortcomingsAdvice?.advice || '信頼関係と温度管理を大切にすれば長く愛される。'}
+                          </p>
+                        </div>
+                        <h5 className="font-semibold text-[#e0e7ff] mb-2 text-sm">より良い関係を築くための3つのヒント</h5>
+                        <ul className="text-[#e0e7ff]/80 text-sm space-y-1">
+                          <li className="flex items-start">
+                            <span className="mr-2 text-pink-500">♥</span>
+                            <span>自分の気分を素直に伝える習慣をつける</span>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="mr-2 text-pink-500">♥</span>
+                            <span>相手のペースも尊重し、バランスを取る</span>
+                          </li>
+                          <li className="flex items-start">
+                            <span className="mr-2 text-pink-500">♥</span>
+                            <span>定期的に新しい刺激を取り入れてマンネリを防ぐ</span>
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                  </div>
+                </div>
+              </div>{/* Close 詳細情報統合カード */}
+
+              {/* Action buttons - Download and Share */}
+              <div className="text-center mt-8">
+                <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+                  <button 
+                    onClick={() => setShowShareModal(true)}
+                    className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all flex items-center space-x-2 shadow-lg"
+                  >
+                    <Share2 className="w-5 h-5" />
+                    <span>結果をシェア</span>
+                  </button>
+                  <button 
+                    onClick={handleDownload}
+                    disabled={isDownloading}
+                    className="bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-lg hover:from-green-700 hover:to-green-800 transition-all flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                  >
+                    {isDownloading ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <span>ダウンロード中...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Download className="w-5 h-5" />
+                        <span>結果をダウンロード</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* アクションボタン */}
+              <div className="text-center mt-6">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Link
+                    href="/test"
+                    className="bg-white text-teal-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center justify-center border border-teal-600"
+                  >
+                    <RefreshCw className="w-5 h-5 mr-2" />
+                    もう一度診断する
+                  </Link>
+                  <Link
+                    href="/compatibility"
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all flex items-center justify-center"
+                  >
+                    <Heart className="w-5 h-5 mr-2" />
+                    相性診断をする
+                  </Link>
                 </div>
               </div>
             </div>

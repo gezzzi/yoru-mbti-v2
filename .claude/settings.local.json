@@ -25,7 +25,10 @@
       "Bash(ls:*)",
       "Bash(test:*)",
       "Bash(cat:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "Bash(awk:*)",
+      "Bash(npx babel:*)",
+      "Bash(cp:*)"
     ],
     "deny": []
   }
