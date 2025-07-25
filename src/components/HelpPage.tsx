@@ -56,21 +56,21 @@ const HelpPage: React.FC = () => {
           <div className="space-y-12">
             {/* よくある質問 */}
             <ScrollAnimation animation="fadeIn" duration={800}>
-              <div id="faq" className="bg-white rounded-3xl p-8 shadow-lg scroll-mt-20 w-full">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+              <div id="faq" className="bg-white/10 backdrop-blur-sm rounded-xl p-8 shadow-lg border border-white/5 scroll-mt-20 w-full">
+                <h2 className="text-3xl font-bold text-[#e0e7ff] mb-6 text-center">
                   よくある質問
                 </h2>
-                <p className="text-gray-600 mb-8 text-center">
+                <p className="text-[#e0e7ff]/80 mb-8 text-center">
                   多くのお客様からお寄せいただくご質問とその回答をまとめました。
                 </p>
 
               <div className="space-y-4">
                 {faqData.map((faq, index) => (
                   <ScrollAnimation key={index} animation="fadeInUp" delay={200 + index * 100}>
-                    <div className="border border-gray-200 rounded-lg overflow-hidden">
+                    <div className="border-b border-white/20 pb-4">
                     <button
                       onClick={() => toggleFaq(index)}
-                      className="w-full px-6 py-4 text-left font-medium text-gray-900 hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition-colors duration-150 flex justify-between items-center"
+                      className="w-full py-4 text-left font-semibold text-[#e0e7ff] hover:text-[#e0e7ff]/90 focus:outline-none transition-colors duration-150 flex justify-between items-center"
                     >
                       <span className="pr-4">{faq.question}</span>
                       <svg
@@ -87,8 +87,8 @@ const HelpPage: React.FC = () => {
                     <div className={`transition-all duration-300 ${
                       openFaq.includes(index) ? 'max-h-96' : 'max-h-0'
                     } overflow-hidden`}>
-                      <div className="px-6 pt-4 pb-4">
-                        <p className="text-gray-600 leading-relaxed">
+                      <div className="pt-2">
+                        <p className="text-[#e0e7ff]/80 leading-relaxed text-sm">
                           {faq.answer}
                         </p>
                       </div>

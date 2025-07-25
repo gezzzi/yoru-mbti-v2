@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { TestResult, PersonalityType } from '../types/personality';
-import { Heart, Users, ArrowRight, Check, Download, Share2, RefreshCw, User, Copy, Twitter, MessageCircle, X } from 'lucide-react';
+import { Heart, Users, ArrowRight, Check, Download, Share2, RefreshCw, User, Copy, Twitter, MessageCircle, X, ChevronUp, ChevronDown } from 'lucide-react';
 import html2canvas from 'html2canvas';
 import { generateCompatibilityShareText, copyToClipboard } from '../utils/snsShare';
 import { personalityTypes } from '../data/personalityTypes';
@@ -277,6 +277,15 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   const [animationStarted, setAnimationStarted] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
   const [showHeartRain, setShowHeartRain] = useState(false);
+  const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({});
+  
+  // Toggle section function
+  const toggleSection = (section: string) => {
+    setOpenSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
 
   const calculateCompatibility = (user: TestResult, partner: TestResult): CompatibilityResult & { axisScores: { E: number, L: number, A: number, L2: number, O: number } } => {
     // 各軸の相性スコアを計算（類似軸と補完軸で異なる計算方法）
@@ -581,79 +590,149 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
               <ScrollAnimation animation="fadeInUp" delay={600}>
               <div className="rounded-xl shadow-lg p-4 sm:p-6 bg-white/10 backdrop-blur-sm border border-white/5">
                 <h3 className="text-lg sm:text-xl font-bold text-[#e0e7ff] mb-4 sm:mb-6 text-center">相性診断カード</h3>
-                <div className="space-y-4">
+                <div className="space-y-0">
                   {/* ① おすすめプレイ */}
-                  <div className="border-b border-white/20 pb-4">
-                    <div className="flex items-start space-x-3">
-                      <span className="text-lg flex-shrink-0">🛏</span>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-[#e0e7ff] mb-1 text-sm sm:text-base">2人のおすすめプレイ</h4>
+                  <div className="border-b border-white/20 pb-4 overflow-hidden">
+                    <button
+                      onClick={() => toggleSection('recommendedPlay')}
+                      className="w-full flex items-center justify-between rounded-lg p-2"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <span className="text-lg">🛏</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">2人のおすすめプレイ</h4>
+                      </div>
+                      {openSections.recommendedPlay ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                    </button>
+                    <div className={`transition-all duration-300 ${
+                      openSections.recommendedPlay ? 'max-h-96' : 'max-h-0'
+                    } overflow-hidden`}>
+                      <div className="mt-3 px-4 text-center">
                         <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.recommendedPlay}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* ② おすすめ体位 */}
-                  <div className="border-b border-white/20 pb-4">
-                    <div className="flex items-start space-x-3">
-                      <span className="text-lg flex-shrink-0">🧘‍♀️</span>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-[#e0e7ff] mb-1 text-sm sm:text-base">2人のおすすめ体位（48手）</h4>
+                  <div className="border-b border-white/20 pb-4 overflow-hidden">
+                    <button
+                      onClick={() => toggleSection('recommendedPosition')}
+                      className="w-full flex items-center justify-between rounded-lg p-2"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <span className="text-lg">🧘‍♀️</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">2人のおすすめ体位（48手）</h4>
+                      </div>
+                      {openSections.recommendedPosition ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                    </button>
+                    <div className={`transition-all duration-300 ${
+                      openSections.recommendedPosition ? 'max-h-96' : 'max-h-0'
+                    } overflow-hidden`}>
+                      <div className="mt-3 px-4 text-center">
                         <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.recommendedPosition}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* ③ 性欲バランス */}
-                  <div className="border-b border-white/20 pb-4">
-                    <div className="flex items-start space-x-3">
-                      <span className="text-lg flex-shrink-0">🔥</span>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-[#e0e7ff] mb-1 text-sm sm:text-base">性欲の強さバランス</h4>
+                  <div className="border-b border-white/20 pb-4 overflow-hidden">
+                    <button
+                      onClick={() => toggleSection('libidoBalance')}
+                      className="w-full flex items-center justify-between rounded-lg p-2"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <span className="text-lg">🔥</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">性欲の強さバランス</h4>
+                      </div>
+                      {openSections.libidoBalance ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                    </button>
+                    <div className={`transition-all duration-300 ${
+                      openSections.libidoBalance ? 'max-h-96' : 'max-h-0'
+                    } overflow-hidden`}>
+                      <div className="mt-3 px-4 text-center">
                         <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.libidoBalance}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* ④ S/M相性 */}
-                  <div className="border-b border-white/20 pb-4">
-                    <div className="flex items-start space-x-3">
-                      <span className="text-lg flex-shrink-0">😈</span>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-[#e0e7ff] mb-1 text-sm sm:text-base">S/Mの相性</h4>
+                  <div className="border-b border-white/20 pb-4 overflow-hidden">
+                    <button
+                      onClick={() => toggleSection('smCompatibility')}
+                      className="w-full flex items-center justify-between rounded-lg p-2"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <span className="text-lg">😈</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">S/Mの相性</h4>
+                      </div>
+                      {openSections.smCompatibility ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                    </button>
+                    <div className={`transition-all duration-300 ${
+                      openSections.smCompatibility ? 'max-h-96' : 'max-h-0'
+                    } overflow-hidden`}>
+                      <div className="mt-3 px-4 text-center">
                         <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.smCompatibility}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* ⑤ 付き合う前の価値観 */}
-                  <div className="border-b border-white/20 pb-4">
-                    <div className="flex items-start space-x-3">
-                      <span className="text-lg flex-shrink-0">💋</span>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-[#e0e7ff] mb-1 text-sm sm:text-base">付き合う前にXできるか？（価値観）</h4>
+                  <div className="border-b border-white/20 pb-4 overflow-hidden">
+                    <button
+                      onClick={() => toggleSection('beforeRelationship')}
+                      className="w-full flex items-center justify-between rounded-lg p-2"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <span className="text-lg">💋</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">付き合う前にXできるか？（価値観）</h4>
+                      </div>
+                      {openSections.beforeRelationship ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                    </button>
+                    <div className={`transition-all duration-300 ${
+                      openSections.beforeRelationship ? 'max-h-96' : 'max-h-0'
+                    } overflow-hidden`}>
+                      <div className="mt-3 px-4 text-center">
                         <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.beforeRelationship}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* ⑥ ギャップ度 */}
-                  <div className="border-b border-white/20 pb-4">
-                    <div className="flex items-start space-x-3">
-                      <span className="text-lg flex-shrink-0">⚡</span>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-[#e0e7ff] mb-1 text-sm sm:text-base">相性ギャップ度（思考＆欲望のズレ）</h4>
+                  <div className="border-b border-white/20 pb-4 overflow-hidden">
+                    <button
+                      onClick={() => toggleSection('gapAnalysis')}
+                      className="w-full flex items-center justify-between rounded-lg p-2"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <span className="text-lg">⚡</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">相性ギャップ度（思考＆欲望のズレ）</h4>
+                      </div>
+                      {openSections.gapAnalysis ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                    </button>
+                    <div className={`transition-all duration-300 ${
+                      openSections.gapAnalysis ? 'max-h-96' : 'max-h-0'
+                    } overflow-hidden`}>
+                      <div className="mt-3 px-4 text-center">
                         <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.gapAnalysis}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* ⑦ 関係性予測 */}
-                  <div>
-                    <div className="flex items-start space-x-3">
-                      <span className="text-lg flex-shrink-0">💞</span>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-semibold text-[#e0e7ff] mb-1 text-sm sm:text-base">関係性の行き先予測</h4>
+                  <div className="overflow-hidden">
+                    <button
+                      onClick={() => toggleSection('relationshipPrediction')}
+                      className="w-full flex items-center justify-between rounded-lg p-2"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <span className="text-lg">💞</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">関係性の行き先予測</h4>
+                      </div>
+                      {openSections.relationshipPrediction ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                    </button>
+                    <div className={`transition-all duration-300 ${
+                      openSections.relationshipPrediction ? 'max-h-96' : 'max-h-0'
+                    } overflow-hidden`}>
+                      <div className="mt-3 px-4 text-center">
                         <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.relationshipPrediction}</p>
                       </div>
                     </div>
