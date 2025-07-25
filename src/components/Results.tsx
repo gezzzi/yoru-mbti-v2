@@ -346,7 +346,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   <div className="mb-6 pb-6 border-b border-white/20 min-w-0">
                   <div className="space-y-4 min-w-0">
                   {/* 夜の性格 */}
-                  <div className="border-b border-white/20 pb-4 w-full">
+                  <div className="border-b border-white/20 pb-4 w-full overflow-hidden">
                     <button
                       onClick={() => toggleSection('nightPersonality')}
                       className="w-full flex items-center justify-between space-x-3 hover:bg-white/5 rounded-lg p-2 transition-colors"
@@ -355,9 +355,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                         <span className="text-lg flex-shrink-0">🧠</span>
                         <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base text-left">夜の性格</h4>
                       </div>
-                      {openSections.nightPersonality ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                      {openSections.nightPersonality ? <ChevronUp className="w-5 h-5 text-[#e0e7ff] flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff] flex-shrink-0" />}
                     </button>
-                    {openSections.nightPersonality && (
+                    <div className={`transition-all duration-300 ${
+                      openSections.nightPersonality ? 'max-h-96' : 'max-h-0'
+                    } overflow-hidden`}>
                       <div className="mt-3 pl-8">
                         <div className="text-[#e0e7ff]/80 text-sm space-y-1">
                           {type.nightPersonality ? (
@@ -369,11 +371,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                           )}
                         </div>
                       </div>
-                    )}
+                    </div>
                   </div>
                   
                   {/* S or M 傾向 */}
-                  <div>
+                  <div className="overflow-hidden">
                     <button
                       onClick={() => toggleSection('smTendency')}
                       className="w-full flex items-center justify-between space-x-3 hover:bg-white/5 rounded-lg p-2 transition-colors"
@@ -382,9 +384,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                         <span className="text-lg flex-shrink-0">😈</span>
                         <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base text-left">S or M 傾向</h4>
                       </div>
-                      {openSections.smTendency ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                      {openSections.smTendency ? <ChevronUp className="w-5 h-5 text-[#e0e7ff] flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff] flex-shrink-0" />}
                     </button>
-                    {openSections.smTendency && (
+                    <div className={`transition-all duration-300 ${
+                      openSections.smTendency ? 'max-h-96' : 'max-h-0'
+                    } overflow-hidden`}>
                       <div className="mt-3 pl-8">
                         <p className="text-[#e0e7ff] font-bold mb-1">
                           {result.additionalResults?.smTendency === 'S' 
@@ -401,7 +405,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                             : '相手や気分によって自在に立場を変えられる柔軟性があります。'}
                         </p>
                       </div>
-                    )}
+                    </div>
                   </div>
                   </div>
                 </div>
@@ -410,7 +414,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                 <div className="mb-6 pb-6 border-b border-white/20 min-w-0">
                   <div className="space-y-4 min-w-0">
                   {/* 性欲レベル */}
-                  <div className="border-b border-white/20 pb-4">
+                  <div className="border-b border-white/20 pb-4 overflow-hidden">
                     <button
                       onClick={() => toggleSection('libidoLevel')}
                       className="w-full flex items-center justify-between space-x-3 hover:bg-white/5 rounded-lg p-2 transition-colors"
@@ -419,9 +423,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                         <span className="text-lg flex-shrink-0">💋</span>
                         <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base text-left">性欲レベル</h4>
                       </div>
-                      {openSections.libidoLevel ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                      {openSections.libidoLevel ? <ChevronUp className="w-5 h-5 text-[#e0e7ff] flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff] flex-shrink-0" />}
                     </button>
-                    {openSections.libidoLevel && (
+                    <div className={`transition-all duration-300 ${
+                      openSections.libidoLevel ? 'max-h-96' : 'max-h-0'
+                    } overflow-hidden`}>
                       <div className="mt-3 pl-8">
                         <div className="flex items-center mb-1">
                           {[1, 2, 3, 4, 5].map((star) => (
@@ -442,11 +448,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                             : '気分やシチュエーションによって変化するタイプ。'}
                         </p>
                       </div>
-                    )}
+                    </div>
                   </div>
                   
                   {/* おすすめの体位 */}
-                  <div>
+                  <div className="overflow-hidden">
                     <button
                       onClick={() => toggleSection('positions')}
                       className="w-full flex items-center justify-between space-x-3 hover:bg-white/5 rounded-lg p-2 transition-colors"
@@ -455,9 +461,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                         <span className="text-lg flex-shrink-0">🍑</span>
                         <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base text-left">おすすめの体位（48手）</h4>
                       </div>
-                      {openSections.positions ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                      {openSections.positions ? <ChevronUp className="w-5 h-5 text-[#e0e7ff] flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff] flex-shrink-0" />}
                     </button>
-                    {openSections.positions && (
+                    <div className={`transition-all duration-300 ${
+                      openSections.positions ? 'max-h-96' : 'max-h-0'
+                    } overflow-hidden`}>
                       <div className="mt-3 pl-8">
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-2">
                           {(type.recommendedPositions || ['正常位', '騎乗位', '後背位', '駅弁', '対面座位', '寝バック', '立位']).map((position, index) => (
@@ -474,7 +482,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                             : '「深く」「情熱的に」「互いに求め合いたい」'}
                         </p>
                       </div>
-                    )}
+                    </div>
                   </div>
                   </div>
                 </div>
@@ -483,7 +491,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                 <div className="mb-6 pb-6 border-b border-white/20 min-w-0">
                   <div className="space-y-4 min-w-0">
                   {/* 相性のいいタイプ */}
-                  <div className="border-b border-white/20 pb-4">
+                  <div className="border-b border-white/20 pb-4 overflow-hidden">
                     <button
                       onClick={() => toggleSection('compatible')}
                       className="w-full flex items-center justify-between space-x-3 hover:bg-white/5 rounded-lg p-2 transition-colors"
@@ -492,9 +500,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                         <span className="text-lg flex-shrink-0">💘</span>
                         <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base text-left">相性のいいタイプ</h4>
                       </div>
-                      {openSections.compatible ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                      {openSections.compatible ? <ChevronUp className="w-5 h-5 text-[#e0e7ff] flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff] flex-shrink-0" />}
                     </button>
-                    {openSections.compatible && (
+                    <div className={`transition-all duration-300 ${
+                      openSections.compatible ? 'max-h-96' : 'max-h-0'
+                    } overflow-hidden`}>
                       <div className="mt-3 pl-8">
                         <div className="text-[#e0e7ff]/80 text-sm">
                           {type.compatibleTraits?.map((trait, index) => (
@@ -502,11 +512,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                           )) || <p>感度が高く、甘え上手な人。自分のリードを委ねてくれる相手に惹かれる。</p>}
                         </div>
                       </div>
-                    )}
+                    </div>
                   </div>
                   
                   {/* 相性が悪いタイプ */}
-                  <div className="border-b border-white/20 pb-4">
+                  <div className="border-b border-white/20 pb-4 overflow-hidden">
                     <button
                       onClick={() => toggleSection('incompatible')}
                       className="w-full flex items-center justify-between space-x-3 hover:bg-white/5 rounded-lg p-2 transition-colors"
@@ -515,9 +525,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                         <span className="text-lg flex-shrink-0">🚫</span>
                         <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base text-left">相性が悪いタイプ</h4>
                       </div>
-                      {openSections.incompatible ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                      {openSections.incompatible ? <ChevronUp className="w-5 h-5 text-[#e0e7ff] flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff] flex-shrink-0" />}
                     </button>
-                    {openSections.incompatible && (
+                    <div className={`transition-all duration-300 ${
+                      openSections.incompatible ? 'max-h-96' : 'max-h-0'
+                    } overflow-hidden`}>
                       <div className="mt-3 pl-8">
                         <div className="text-[#e0e7ff]/80 text-sm">
                           {type.incompatibleTraits?.map((trait, index) => (
@@ -525,11 +537,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                           )) || <p>ノリが合わない堅物系、リアクションが薄い人。受け身すぎる or 無反応な相手には温度差を感じやすい。</p>}
                         </div>
                       </div>
-                    )}
+                    </div>
                   </div>
                   
                   {/* 関係性の理想スタイル */}
-                  <div>
+                  <div className="overflow-hidden">
                     <button
                       onClick={() => toggleSection('relationship')}
                       className="w-full flex items-center justify-between space-x-3 hover:bg-white/5 rounded-lg p-2 transition-colors"
@@ -538,15 +550,17 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                         <span className="text-lg flex-shrink-0">🔄</span>
                         <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base text-left">関係性の理想スタイル</h4>
                       </div>
-                      {openSections.relationship ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                      {openSections.relationship ? <ChevronUp className="w-5 h-5 text-[#e0e7ff] flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff] flex-shrink-0" />}
                     </button>
-                    {openSections.relationship && (
+                    <div className={`transition-all duration-300 ${
+                      openSections.relationship ? 'max-h-96' : 'max-h-0'
+                    } overflow-hidden`}>
                       <div className="mt-3 pl-8">
                         <p className="text-[#e0e7ff]/80 text-sm">
                           {type.relationshipStyle || '気が合えば専属で深く繋がりたい。"身体の相性"から心も通わせていくのが理想。'}
                         </p>
                       </div>
-                    )}
+                    </div>
                   </div>
                   </div>
                 </div>
@@ -554,7 +568,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                 {/* こだわりセクション */}
                 <div className="mb-6 pb-6 border-b border-white/20 min-w-0">
                   <div className="space-y-4 min-w-0">
-                  <div>
+                  <div className="overflow-hidden">
                     <button
                       onClick={() => toggleSection('preferences')}
                       className="w-full flex items-center justify-between space-x-3 hover:bg-white/5 rounded-lg p-2 transition-colors"
@@ -563,9 +577,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                         <span className="text-lg flex-shrink-0">🔍</span>
                         <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base text-left">セックスでのこだわり</h4>
                       </div>
-                      {openSections.preferences ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                      {openSections.preferences ? <ChevronUp className="w-5 h-5 text-[#e0e7ff] flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff] flex-shrink-0" />}
                     </button>
-                    {openSections.preferences && (
+                    <div className={`transition-all duration-300 ${
+                      openSections.preferences ? 'max-h-96' : 'max-h-0'
+                    } overflow-hidden`}>
                       <div className="mt-3 pl-8">
                         <ul className="text-[#e0e7ff]/80 text-sm space-y-1">
                           {type.sexualPreferences?.map((pref, index) => (
@@ -591,7 +607,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                           )}
                         </ul>
                       </div>
-                    )}
+                    </div>
                   </div>
                   </div>
                 </div>
@@ -599,7 +615,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                 {/* アドバイスセクション */}
                 <div className="mb-6 min-w-0">
                   <div className="space-y-4 min-w-0">
-                  <div>
+                  <div className="overflow-hidden">
                     <button
                       onClick={() => toggleSection('advice')}
                       className="w-full flex items-center justify-between space-x-3 hover:bg-white/5 rounded-lg p-2 transition-colors"
@@ -608,9 +624,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                         <span className="text-lg flex-shrink-0">⚠️</span>
                         <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base text-left">あなたの短所とアドバイス</h4>
                       </div>
-                      {openSections.advice ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                      {openSections.advice ? <ChevronUp className="w-5 h-5 text-[#e0e7ff] flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff] flex-shrink-0" />}
                     </button>
-                    {openSections.advice && (
+                    <div className={`transition-all duration-300 ${
+                      openSections.advice ? 'max-h-96' : 'max-h-0'
+                    } overflow-hidden`}>
                       <div className="mt-3 pl-8">
                         <div className="bg-white/5 rounded-lg p-3 mb-3">
                           <p className="text-[#e0e7ff]/80 text-sm mb-2">
@@ -638,7 +656,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                           </li>
                         </ul>
                       </div>
-                    )}
+                    </div>
                   </div>
                   </div>
                 </div>
@@ -675,7 +693,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
               </div>
 
               {/* アクションボタン */}
-              <div className="text-center mt-6">
+              <div className="text-center mt-6 px-4 pb-4">
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link
                     href="/test"

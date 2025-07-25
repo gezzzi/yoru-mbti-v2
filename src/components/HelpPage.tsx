@@ -56,7 +56,7 @@ const HelpPage: React.FC = () => {
           <div className="space-y-12">
             {/* よくある質問 */}
             <ScrollAnimation animation="fadeIn" duration={800}>
-              <div id="faq" className="bg-white rounded-3xl p-8 shadow-lg scroll-mt-20">
+              <div id="faq" className="bg-white rounded-3xl p-8 shadow-lg scroll-mt-20 w-full">
                 <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">
                   よくある質問
                 </h2>
@@ -67,14 +67,14 @@ const HelpPage: React.FC = () => {
               <div className="space-y-4">
                 {faqData.map((faq, index) => (
                   <ScrollAnimation key={index} animation="fadeInUp" delay={200 + index * 100}>
-                    <div className="border border-gray-200 rounded-lg">
+                    <div className="border border-gray-200 rounded-lg overflow-hidden">
                     <button
                       onClick={() => toggleFaq(index)}
                       className="w-full px-6 py-4 text-left font-medium text-gray-900 hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition-colors duration-150 flex justify-between items-center"
                     >
-                      <span>{faq.question}</span>
+                      <span className="pr-4">{faq.question}</span>
                       <svg
-                        className={`w-5 h-5 transition-transform duration-200 ${
+                        className={`w-5 h-5 transition-transform duration-200 flex-shrink-0 ${
                           openFaq.includes(index) ? 'transform rotate-180' : ''
                         }`}
                         fill="none"
@@ -84,13 +84,15 @@ const HelpPage: React.FC = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </button>
-                    {openFaq.includes(index) && (
+                    <div className={`transition-all duration-300 ${
+                      openFaq.includes(index) ? 'max-h-96' : 'max-h-0'
+                    } overflow-hidden`}>
                       <div className="px-6 pt-4 pb-4">
                         <p className="text-gray-600 leading-relaxed">
                           {faq.answer}
                         </p>
                       </div>
-                    )}
+                    </div>
                   </div>
                   </ScrollAnimation>
                 ))}
