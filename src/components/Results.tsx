@@ -11,6 +11,10 @@ import SNSShareModal from './SNSShareModal';
 import html2canvas from 'html2canvas';
 import NeonText from './NeonText';
 import { ScrollAnimation } from './ScrollAnimation';
+import { TagDescriptionModal } from './TagDescriptionModal';
+import { tagDescriptions } from '../data/tagDescriptions';
+import { tagColors } from '../data/tagColors';
+import { tagShapes } from '../data/tagShapes';
 
 // Category color settings
 const categoryColorSchemes = {
@@ -85,6 +89,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const downloadRef = useRef<HTMLDivElement>(null);
+  const [selectedTag, setSelectedTag] = useState<{ tag: string; description: string } | null>(null);
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({
     nightPersonality: false,
     smTendency: false,
@@ -337,6 +342,35 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     </div>
                   </div>
                 </div>
+
+              {/* あなたに当てはまるタグ */}
+              {result.additionalResults?.tags && result.additionalResults.tags.length > 0 && (
+                <div className="rounded-xl px-4 pt-4 sm:px-6 sm:pt-6 pb-4 mt-0 mb-8 mx-4">
+                  <div className="flex flex-wrap gap-2 justify-center">
+                    {result.additionalResults.tags.map((tag, index) => {
+                      const colors = tagColors[tag] || { bg: '#6B7280', border: '#4B5563', text: '#FFFFFF' };
+                      const shape = tagShapes[tag] || 'rounded-full';
+                      return (
+                        <button 
+                          key={index} 
+                          className={`px-3 py-1.5 text-sm font-medium flex items-center gap-1 hover:brightness-90 hover:scale-105 transition-all cursor-pointer relative shadow-md animate-pulse-sequential ${shape}`}
+                          style={{ 
+                            backgroundColor: colors.bg,
+                            borderWidth: shape.includes('border-4') ? '4px' : shape.includes('border-2') ? '2px' : '2px',
+                            borderStyle: shape.includes('border-dashed') ? 'dashed' : 'solid',
+                            borderColor: colors.border,
+                            color: colors.text || '#FFFFFF',
+                            animationDelay: `${index * 0.3}s`
+                          }}
+                          onClick={() => setSelectedTag({ tag, description: tagDescriptions[tag] || '' })}
+                        >
+                          <span>{tag.replace(/^[^\s]+\s/, '')}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
               {/* 詳細情報統合カード */}
               <div className="rounded-xl shadow-lg bg-white/10 backdrop-blur-sm px-4 pt-4 sm:px-6 sm:pt-6 pb-2 sm:pb-3 mt-8 mx-4">
@@ -665,6 +699,16 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
       />
+
+      {/* Tag Description Modal */}
+      {selectedTag && (
+        <TagDescriptionModal
+          tag={selectedTag.tag}
+          description={selectedTag.description}
+          isOpen={!!selectedTag}
+          onClose={() => setSelectedTag(null)}
+        />
+      )}
     </div>
   );
 };

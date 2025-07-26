@@ -15,6 +15,7 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
   let tensionVocal = 0, tensionReactive = 0;
   let kissTotal = 0, kissCount = 0;
   let preferences: string[] = [];
+  let tags: string[] = []; // タグのリスト
   
   Object.entries(answers).forEach(([questionId, value]) => {
     const id = parseInt(questionId);
@@ -84,6 +85,11 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
           if (id === 37) preferences.push('前戯重視');
         }
         break;
+      case 'TAG':
+        if (value >= 4 && question.tagName) { // 4以上でタグを追加
+          tags.push(question.tagName);
+        }
+        break;
     }
   });
   
@@ -150,7 +156,8 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
         reactive: tensionReactive >= 4
       },
       kissImportance,
-      preferences
+      preferences,
+      tags
     }
   };
 };

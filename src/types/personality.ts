@@ -1,10 +1,11 @@
 export interface Question {
   id: number;
-  axis: 'EI' | 'LF' | 'AS' | 'LF2' | 'OS' | 'LIBIDO' | 'POSITION' | 'GAP' | 'TENSION' | 'KISS' | 'PREFERENCE';
+  axis: 'EI' | 'LF' | 'AS' | 'LF2' | 'OS' | 'LIBIDO' | 'POSITION' | 'GAP' | 'TENSION' | 'KISS' | 'PREFERENCE' | 'TAG';
   text: string;
   isReverse: boolean; // 質問のベクトルが逆の場合true
   smTendency?: 'S' | 'M'; // LF軸の質問で使用
   additionalType?: string; // 追加軸の詳細タイプ
+  tagName?: string; // タグ質問の場合のタグ名
   options: {
     text: string;
     value: number; // 0-6 scale (7段階評価)
@@ -70,5 +71,6 @@ export interface TestResult {
     };
     kissImportance: number;
     preferences: string[];
+    tags?: string[]; // 該当するタグのリスト
   };
 } 
