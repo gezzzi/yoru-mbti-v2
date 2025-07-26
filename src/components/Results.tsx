@@ -339,11 +339,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                 </div>
 
               {/* 詳細情報統合カード */}
-              <div className="rounded-xl shadow-lg bg-white/10 backdrop-blur-sm px-4 pt-4 sm:px-6 sm:pt-6 pb-0 mt-8 mx-4">
+              <div className="rounded-xl shadow-lg bg-white/10 backdrop-blur-sm px-4 pt-4 sm:px-6 sm:pt-6 pb-2 sm:pb-3 mt-8 mx-4">
                 <h3 className="text-lg sm:text-xl font-bold text-[#e0e7ff] mb-4 sm:mb-6 text-center">性格診断カード</h3>
-                <div className="space-y-0">
+                <div className="space-y-2">
                   {/* 夜の性格 */}
-                  <div className="border-b border-white/20 pb-4 mb-4 overflow-hidden">
+                  <div className="border-b border-white/20 pb-2 overflow-hidden">
                     <button
                       onClick={() => toggleSection('nightPersonality')}
                       className="w-full flex items-center justify-between rounded-lg p-2"
@@ -357,7 +357,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     <div className={`transition-all duration-300 ${
                       openSections.nightPersonality ? 'max-h-[500px]' : 'max-h-0'
                     } overflow-hidden`}>
-                      <div className="mt-3 px-4 text-center">
+                      <div className="mt-2 px-2 text-center">
                         <div className="text-[#e0e7ff]/80 text-sm space-y-1">
                           {type.nightPersonality ? (
                             type.nightPersonality.split(/(?=本番：|アフター：)/).map((text, index) => (
@@ -372,7 +372,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   </div>
                   
                   {/* S or M 傾向 */}
-                  <div className="border-b border-white/20 pb-4 mb-4 overflow-hidden">
+                  <div className="border-b border-white/20 pb-2 overflow-hidden">
                     <button
                       onClick={() => toggleSection('smTendency')}
                       className="w-full flex items-center justify-between rounded-lg p-2"
@@ -386,7 +386,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     <div className={`transition-all duration-300 ${
                       openSections.smTendency ? 'max-h-[500px]' : 'max-h-0'
                     } overflow-hidden`}>
-                      <div className="mt-3 px-4 text-center">
+                      <div className="mt-2 px-2 text-center">
                         <p className="text-[#e0e7ff] font-bold mb-1">
                           {result.additionalResults?.smTendency === 'S' 
                             ? 'S'
@@ -405,7 +405,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     </div>
                   </div>
                   {/* 性欲レベル */}
-                  <div className="border-b border-white/20 pb-4 mb-4 overflow-hidden">
+                  <div className="border-b border-white/20 pb-2 overflow-hidden">
                     <button
                       onClick={() => toggleSection('libidoLevel')}
                       className="w-full flex items-center justify-between rounded-lg p-2"
@@ -419,7 +419,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     <div className={`transition-all duration-300 ${
                       openSections.libidoLevel ? 'max-h-[500px]' : 'max-h-0'
                     } overflow-hidden`}>
-                      <div className="mt-3 px-4 text-center">
+                      <div className="mt-2 px-2 text-center">
                         <div className="flex items-center mb-1">
                           {[1, 2, 3, 4, 5].map((star) => (
                             <span key={star} className={`text-lg ${star <= (result.additionalResults?.libidoLevel || 3) ? 'text-pink-500' : 'text-gray-600'}`}>
@@ -443,7 +443,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   </div>
                   
                   {/* おすすめの体位 */}
-                  <div className="border-b border-white/20 pb-4 mb-4 overflow-hidden">
+                  <div className="border-b border-white/20 pb-2 overflow-hidden">
                     <button
                       onClick={() => toggleSection('positions')}
                       className="w-full flex items-center justify-between rounded-lg p-2"
@@ -457,7 +457,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     <div className={`transition-all duration-300 ${
                       openSections.positions ? 'max-h-[500px]' : 'max-h-0'
                     } overflow-hidden`}>
-                      <div className="mt-3 px-4 text-center">
+                      <div className="mt-2 px-2 text-center">
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-2">
                           {(type.recommendedPositions || ['正常位', '騎乗位', '後背位', '駅弁', '対面座位', '寝バック', '立位']).map((position, index) => (
                             <div key={index} className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-center text-[#e0e7ff] text-sm">
@@ -476,7 +476,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     </div>
                   </div>
                   {/* 相性と関係性 */}
-                  <div className="border-b border-white/20 pb-4 mb-4 overflow-hidden">
+                  <div className="border-b border-white/20 pb-2 overflow-hidden">
                     <button
                       onClick={() => toggleSection('compatibility')}
                       className="w-full flex items-center justify-between rounded-lg p-2"
@@ -490,7 +490,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     <div className={`transition-all duration-300 ${
                       openSections.compatibility ? 'max-h-[500px]' : 'max-h-0'
                     } overflow-hidden`}>
-                      <div className="mt-3 px-4 text-center">
+                      <div className="mt-2 px-2 text-center">
                         <div className="text-[#e0e7ff]/80 text-sm space-y-4">
                           <div>
                             <h5 className="font-semibold text-[#e0e7ff] mb-2">相性のいいタイプ</h5>
@@ -516,7 +516,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   </div>
                   
                   {/* セックスでのこだわり */}
-                  <div className="border-b border-white/20 pb-4 mb-4 overflow-hidden">
+                  <div className="border-b border-white/20 pb-2 overflow-hidden">
                     <button
                       onClick={() => toggleSection('preferences')}
                       className="w-full flex items-center justify-between rounded-lg p-2"
@@ -530,7 +530,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     <div className={`transition-all duration-300 ${
                       openSections.preferences ? 'max-h-[500px]' : 'max-h-0'
                     } overflow-hidden`}>
-                      <div className="mt-3 px-4 text-center">
+                      <div className="mt-2 px-2 text-center">
                         <ul className="text-[#e0e7ff]/80 text-sm space-y-1 list-none">
                           {type.sexualPreferences?.map((pref, index) => (
                             <li key={index} className="flex items-center justify-center">
@@ -559,7 +559,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   </div>
                   
                   {/* あなたの短所とアドバイス */}
-                  <div className="pb-4 overflow-hidden">
+                  <div className="pb-2 overflow-hidden">
                     <button
                       onClick={() => toggleSection('advice')}
                       className="w-full flex items-center justify-between rounded-lg p-2"
@@ -573,8 +573,8 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     <div className={`transition-all duration-300 ${
                       openSections.advice ? 'max-h-[500px]' : 'max-h-0'
                     } overflow-hidden`}>
-                      <div className="mt-3 px-4 text-center">
-                        <div className="bg-white/5 rounded-lg p-3 mb-3">
+                      <div className="mt-2 px-2 text-center">
+                        <div className="bg-white/5 rounded-lg p-2 mb-2">
                           <p className="text-[#e0e7ff]/80 text-sm mb-2">
                             <span className="font-bold text-pink-500">短所：</span>
                             {type.shortcomingsAdvice?.shortcoming || '気分屋な面があり、急に冷めることも。'}

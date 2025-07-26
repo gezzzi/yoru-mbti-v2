@@ -590,9 +590,9 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
               <ScrollAnimation animation="fadeInUp" delay={600}>
               <div className="rounded-xl shadow-lg p-4 sm:p-6 bg-white/10 backdrop-blur-sm border border-white/5">
                 <h3 className="text-lg sm:text-xl font-bold text-[#e0e7ff] mb-4 sm:mb-6 text-center">相性診断カード</h3>
-                <div className="space-y-0">
+                <div className="space-y-2">
                   {/* ① おすすめプレイ */}
-                  <div className="border-b border-white/20 pb-4 overflow-hidden">
+                  <div className="border-b border-white/20 pb-2 overflow-hidden">
                     <button
                       onClick={() => toggleSection('recommendedPlay')}
                       className="w-full flex items-center justify-between rounded-lg p-2"
@@ -606,14 +606,14 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     <div className={`transition-all duration-300 ${
                       openSections.recommendedPlay ? 'max-h-96' : 'max-h-0'
                     } overflow-hidden`}>
-                      <div className="mt-3 px-4 text-center">
+                      <div className="mt-2 px-2 text-center">
                         <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.recommendedPlay}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* ② おすすめ体位 */}
-                  <div className="border-b border-white/20 pb-4 overflow-hidden">
+                  <div className="border-b border-white/20 pb-2 overflow-hidden">
                     <button
                       onClick={() => toggleSection('recommendedPosition')}
                       className="w-full flex items-center justify-between rounded-lg p-2"
@@ -627,14 +627,14 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     <div className={`transition-all duration-300 ${
                       openSections.recommendedPosition ? 'max-h-96' : 'max-h-0'
                     } overflow-hidden`}>
-                      <div className="mt-3 px-4 text-center">
+                      <div className="mt-2 px-2 text-center">
                         <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.recommendedPosition}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* ③ 性欲バランス */}
-                  <div className="border-b border-white/20 pb-4 overflow-hidden">
+                  <div className="border-b border-white/20 pb-2 overflow-hidden">
                     <button
                       onClick={() => toggleSection('libidoBalance')}
                       className="w-full flex items-center justify-between rounded-lg p-2"
@@ -648,14 +648,14 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     <div className={`transition-all duration-300 ${
                       openSections.libidoBalance ? 'max-h-96' : 'max-h-0'
                     } overflow-hidden`}>
-                      <div className="mt-3 px-4 text-center">
+                      <div className="mt-2 px-2 text-center">
                         <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.libidoBalance}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* ④ S/M相性 */}
-                  <div className="border-b border-white/20 pb-4 overflow-hidden">
+                  <div className="border-b border-white/20 pb-2 overflow-hidden">
                     <button
                       onClick={() => toggleSection('smCompatibility')}
                       className="w-full flex items-center justify-between rounded-lg p-2"
@@ -669,14 +669,14 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     <div className={`transition-all duration-300 ${
                       openSections.smCompatibility ? 'max-h-96' : 'max-h-0'
                     } overflow-hidden`}>
-                      <div className="mt-3 px-4 text-center">
+                      <div className="mt-2 px-2 text-center">
                         <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.smCompatibility}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* ⑤ 付き合う前の価値観 */}
-                  <div className="border-b border-white/20 pb-4 overflow-hidden">
+                  <div className="border-b border-white/20 pb-2 overflow-hidden">
                     <button
                       onClick={() => toggleSection('beforeRelationship')}
                       className="w-full flex items-center justify-between rounded-lg p-2"
@@ -690,14 +690,14 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     <div className={`transition-all duration-300 ${
                       openSections.beforeRelationship ? 'max-h-96' : 'max-h-0'
                     } overflow-hidden`}>
-                      <div className="mt-3 px-4 text-center">
+                      <div className="mt-2 px-2 text-center">
                         <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.beforeRelationship}</p>
                       </div>
                     </div>
                   </div>
 
                   {/* ⑥ ギャップ度 */}
-                  <div className="border-b border-white/20 pb-4 overflow-hidden">
+                  <div className="border-b border-white/20 pb-2 overflow-hidden">
                     <button
                       onClick={() => toggleSection('gapAnalysis')}
                       className="w-full flex items-center justify-between rounded-lg p-2"
@@ -711,7 +711,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     <div className={`transition-all duration-300 ${
                       openSections.gapAnalysis ? 'max-h-96' : 'max-h-0'
                     } overflow-hidden`}>
-                      <div className="mt-3 px-4 text-center">
+                      <div className="mt-2 px-2 text-center">
                         <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.gapAnalysis}</p>
                       </div>
                     </div>
@@ -732,7 +732,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     <div className={`transition-all duration-300 ${
                       openSections.relationshipPrediction ? 'max-h-96' : 'max-h-0'
                     } overflow-hidden`}>
-                      <div className="mt-3 px-4 text-center">
+                      <div className="mt-2 px-2 text-center">
                         <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.relationshipPrediction}</p>
                       </div>
                     </div>
