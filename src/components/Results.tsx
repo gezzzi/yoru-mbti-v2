@@ -358,8 +358,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                             backgroundColor: colors.bg,
                             border: 'none',
                             color: colors.text || '#FFFFFF',
-                            '--animation-delay': `${index * 0.3}s`,
-                            '--glow-delay': `${index * 0.3 + 0.5}s`
+                            '--animation-delay': `${index * 0.3}s`
                           } as React.CSSProperties}
                           onClick={() => setSelectedTag({ tag, description: tagDescriptions[tag] || '' })}
                         >
@@ -392,13 +391,81 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     } overflow-hidden`}>
                       <div className="mt-2 px-2 text-center">
                         <div className="text-[#e0e7ff]/80 text-sm space-y-1">
-                          {type.nightPersonality ? (
-                            type.nightPersonality.split(/(?=本番：|アフター：)/).map((text, index) => (
-                              <p key={index}>{text.trim()}</p>
-                            ))
-                          ) : (
-                            <p>理性はあるけど、ベッドでは全部脱ぐタイプ。欲しいものは自分で奪う。</p>
-                          )}
+                          {(() => {
+                            const tags = result.additionalResults?.tags || [];
+                            let nightPersonality = '';
+                            
+                            // 基本的な性格描写（より詳細に）
+                            if (result.E > 50 && result.L > 50) {
+                              nightPersonality = '日常では想像もつかないほど情熱的な一面を持つ。夜の帳が下りると、内に秘めていた欲望が解き放たれ、パートナーを自分の世界へと誘い込む。視線、仕草、言葉のすべてを駆使して相手を翻弄し、二人だけの特別な時間を演出する天性のリーダー。';
+                            } else if (result.E > 50 && result.L <= 50) {
+                              nightPersonality = '明るく開放的な性格が夜にはさらに花開く。相手の欲望を素直に受け入れ、楽しみながら身を委ねることで、パートナーと一体となる喜びを知っている。笑顔と情熱的な反応で相手を魅了し、お互いが心地よくなれる空間を作り出す。';
+                            } else if (result.E <= 50 && result.L > 50) {
+                              nightPersonality = '普段の控えめな姿からは想像できない、深い情熱を内に秘めている。二人きりの空間では、静かに、しかし確実に主導権を握り、相手を自分のペースに引き込んでいく。言葉は少なくとも、その分行動で愛情と欲望を表現する。';
+                            } else {
+                              nightPersonality = '優しく穏やかな雰囲気の中で、ゆっくりと心と体を開いていく。相手の反応を丁寧に観察しながら、お互いが心地よいと感じるリズムを見つけ出す。深い信頼関係の中でこそ、本当の自分を解放できるタイプ。';
+                            }
+                            
+                            // 冒険性による追加（より具体的に）
+                            if (result.A > 50) {
+                              nightPersonality += '既成概念にとらわれず、新しい刺激や体験を積極的に求める探求者。お互いの未知の領域を開拓することに喜びを感じ、「今夜はどんな発見があるだろう」というワクワク感を大切にする。限界を超えた先にある快感を、パートナーと共に追求していく。';
+                            } else {
+                              nightPersonality += '慣れ親しんだ方法で、ゆっくりと確実に快感を高めていく。急がず焦らず、お互いの呼吸を合わせながら、深い繋がりを感じることを重視。安心できる関係性の中でこそ得られる、心からの解放感を何より大切にしている。';
+                            }
+                            
+                            // タグによる特徴的な要素を複数追加
+                            const personalityTraits = [];
+                            if (tags.includes('💬 言語プレイ派')) {
+                              personalityTraits.push('囁きや言葉責めで相手の理性を溶かしていく話術の達人でもあり');
+                            }
+                            if (tags.includes('🧪 実験精神旺盛')) {
+                              personalityTraits.push('未知の快感を探求することに強い好奇心を持ち');
+                            }
+                            if (tags.includes('🛁 アフターケア必須')) {
+                              personalityTraits.push('行為後の優しい時間を最も大切にする愛情深さを持ち');
+                            }
+                            if (tags.includes('🔥 責めたい派')) {
+                              personalityTraits.push('相手の限界ギリギリまで責め立てることで得られる征服感を求め');
+                            }
+                            if (tags.includes('🧸 甘やかされたい')) {
+                              personalityTraits.push('優しく包み込まれながら愛されることを心から望み');
+                            }
+                            if (tags.includes('🕯 ロマン重視')) {
+                              personalityTraits.push('ムードや雰囲気作りにこだわりを持ち');
+                            }
+                            if (tags.includes('🎧 感覚演出派')) {
+                              personalityTraits.push('五感すべてを使った演出で特別な空間を創り出し');
+                            }
+                            
+                            // 特徴を最大2つまで追加
+                            if (personalityTraits.length > 0) {
+                              nightPersonality += personalityTraits.slice(0, 2).join('、') + '、';
+                            }
+                            
+                            // Love/Freeによる関係性の描写
+                            if (result.L2 > 50) {
+                              nightPersonality += 'パートナーとの精神的な繋がりを何より重視する。体だけの関係では満たされず、心が通じ合ってこそ本当の快感を得られると信じている。一度結ばれた相手とは、より深い絆を築いていきたいと願う一途な面も。';
+                            } else {
+                              nightPersonality += 'その瞬間の情熱と快感を純粋に楽しむことができる。相手との適度な距離感を保ちながら、お互いが心地よい関係を築いていく。束縛や依存ではなく、自由な中での信頼関係を理想とする。';
+                            }
+                            
+                            // O/S軸とタグで締めくくり
+                            if (result.O > 50) {
+                              if (tags.includes('📣 オープン宣言派')) {
+                                nightPersonality += '性に対する考えや欲求を素直に表現し、パートナーとオープンに対話することで、より良い関係を築いていく。';
+                              } else {
+                                nightPersonality += '恥じらいを持ちながらも、信頼できる相手とは性について率直に話し合える関係を望んでいる。';
+                              }
+                            } else {
+                              if (tags.includes('🕶 秘密主義')) {
+                                nightPersonality += '他人には決して見せない秘密の顔を、特別な相手だけに開示する。その排他的な関係性に、何よりも価値を見出している。';
+                              } else {
+                                nightPersonality += '二人だけの秘密の花園で、誰にも邪魔されることなく愛を育んでいくことに、この上ない幸せを感じる。';
+                              }
+                            }
+                            
+                            return <p>{nightPersonality}</p>;
+                          })()}
                         </div>
                       </div>
                     </div>
@@ -412,7 +479,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     >
                       <div className="flex items-center space-x-3">
                         <span className="text-lg">😈</span>
-                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">S or M 傾向</h4>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">S or M</h4>
                       </div>
                       {openSections.smTendency ? <ChevronUp className="w-5 h-5 text-[#e0e7ff] " /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff] " />}
                     </button>
@@ -429,10 +496,10 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                         </p>
                         <p className="text-[#e0e7ff]/80 text-sm">
                           {result.additionalResults?.smTendency === 'S' 
-                            ? '支配したい気持ちが強く、相手をリードすることに喜びを感じます。'
+                            ? '支配したい気持ちが強く、相手をリードすることに喜びを感じる。'
                             : result.additionalResults?.smTendency === 'M'
-                            ? '委ねることに安心感を覚え、相手に導かれることを好みます。'
-                            : '相手や気分によって自在に立場を変えられる柔軟性があります。'}
+                            ? '委ねることに安心感を覚え、相手に導かれることを好む。'
+                            : '相手や気分によって自在に立場を変えられる柔軟性がある。'}
                         </p>
                       </div>
                     </div>
@@ -453,7 +520,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                       openSections.libidoLevel ? 'max-h-[500px]' : 'max-h-0'
                     } overflow-hidden`}>
                       <div className="mt-2 px-2 text-center">
-                        <div className="flex items-center mb-1">
+                        <div className="flex items-center justify-center mb-1">
                           {[1, 2, 3, 4, 5].map((star) => (
                             <span key={star} className={`text-lg ${star <= (result.additionalResults?.libidoLevel || 3) ? 'text-pink-500' : 'text-gray-600'}`}>
                               ★
@@ -467,9 +534,15 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                           </span>
                         </div>
                         <p className="text-[#e0e7ff]/80 text-sm">
-                          {result.additionalResults?.libidoLevel && result.additionalResults.libidoLevel >= 4 
-                            ? '平常時でも妄想が止まらないタイプ。'
-                            : '気分やシチュエーションによって変化するタイプ。'}
+                          {result.additionalResults?.libidoLevel === 5 
+                            ? '性欲が日常生活の原動力。常に頭の片隅にエロスが存在し、ちょっとした刺激で妄想が暴走する。'
+                            : result.additionalResults?.libidoLevel === 4 
+                            ? '性欲は人並み以上に強め。パートナーとの時間を積極的に求め、新しい刺激も歓迎する。'
+                            : result.additionalResults?.libidoLevel === 3 
+                            ? 'バランスの取れた性欲の持ち主。気分や相手次第で盛り上がり、日常生活とのメリハリもつけられる。'
+                            : result.additionalResults?.libidoLevel === 2 
+                            ? '性欲は控えめで、心の繋がりを重視。ムードや雰囲気が整ってこそスイッチが入る。'
+                            : 'かなり淡白な性欲の持ち主。性的なことより他の要素（会話、デート、趣味）を楽しむことを優先する。'}
                         </p>
                       </div>
                     </div>
@@ -527,20 +600,100 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                         <div className="text-[#e0e7ff]/80 text-sm space-y-4">
                           <div>
                             <h5 className="font-semibold text-[#e0e7ff] mb-2">相性のいいタイプ</h5>
-                            {type.compatibleTraits?.map((trait, index) => (
-                              <p key={index} className="mb-1">{trait}</p>
-                            )) || <p>感度が高く、甘え上手な人。自分のリードを委ねてくれる相手に惹かれる。</p>}
+                            {(() => {
+                              const compatibleTraits = [];
+                              
+                              // E/I軸での判定
+                              if (result.E > 50) {
+                                compatibleTraits.push('同じく外向的で社交的な人、または聞き上手で包容力のある内向的な人');
+                              } else {
+                                compatibleTraits.push('落ち着いた雰囲気で深い会話を楽しめる人、または明るく引っ張ってくれる人');
+                              }
+                              
+                              // Love/Free軸での判定
+                              if (result.L2 > 50) {
+                                compatibleTraits.push('感情的な繋がりを大切にし、愛情表現が豊かな人');
+                              } else {
+                                compatibleTraits.push('自立していて、適度な距離感を保てる人');
+                              }
+                              
+                              // Open/Secret軸での判定
+                              if (result.O > 50) {
+                                compatibleTraits.push('オープンマインドで、性について素直に話せる人');
+                              } else {
+                                compatibleTraits.push('プライバシーを尊重し、二人だけの秘密を守れる人');
+                              }
+                              
+                              // タグによる追加判定
+                              if (result.additionalResults?.tags?.includes('🛁 アフターケア必須')) {
+                                compatibleTraits.push('優しくて思いやりがあり、アフターケアを大切にできる人');
+                              }
+                              
+                              return compatibleTraits.slice(0, 3).map((trait, index) => (
+                                <p key={index} className="mb-1">{trait}</p>
+                              ));
+                            })()}
                           </div>
                           <div>
                             <h5 className="font-semibold text-[#e0e7ff] mb-2">相性が悪いタイプ</h5>
-                            {type.incompatibleTraits?.map((trait, index) => (
-                              <p key={index} className="mb-1">{trait}</p>
-                            )) || <p>ノリが合わない堅物系、リアクションが薄い人。受け身すぎる or 無反応な相手には温度差を感じやすい。</p>}
+                            {(() => {
+                              const incompatibleTraits = [];
+                              
+                              // E/I軸での判定
+                              if (result.E > 50) {
+                                incompatibleTraits.push('過度に内向的で、コミュニケーションを避ける人');
+                              } else {
+                                incompatibleTraits.push('騒がしすぎて、静かな時間を尊重しない人');
+                              }
+                              
+                              // Love/Free軸での判定
+                              if (result.L2 > 50) {
+                                incompatibleTraits.push('感情を軽視し、身体だけの関係を求める人');
+                              } else {
+                                incompatibleTraits.push('束縛が強く、自由を認めない人');
+                              }
+                              
+                              // タグによる追加判定
+                              if (result.additionalResults?.tags?.includes('🚪 NG明確')) {
+                                incompatibleTraits.push('相手の境界線を尊重せず、強引に進める人');
+                              }
+                              
+                              if (result.additionalResults?.tags?.includes('🙈 言い出しにくい派')) {
+                                incompatibleTraits.push('察しが悪く、相手の気持ちを読み取れない人');
+                              }
+                              
+                              return incompatibleTraits.slice(0, 3).map((trait, index) => (
+                                <p key={index} className="mb-1">{trait}</p>
+                              ));
+                            })()}
                           </div>
                           <div>
                             <h5 className="font-semibold text-[#e0e7ff] mb-2">関係性の理想スタイル</h5>
                             <p>
-                              {type.relationshipStyle || '気が合えば専属で深く繋がりたい。"身体の相性"から心も通わせていくのが理想。'}
+                              {(() => {
+                                const styles = [];
+                                
+                                // Love/Free軸が主軸
+                                if (result.L2 > 50) {
+                                  styles.push('感情的な繋がりを重視し、信頼関係を築いてから身体の関係に発展する');
+                                } else {
+                                  styles.push('カジュアルな関係から始まり、相性が良ければ継続する');
+                                }
+                                
+                                // Open/Secret軸での追加
+                                if (result.O > 50) {
+                                  styles.push('お互いの性的な好みをオープンに話し合える関係');
+                                } else {
+                                  styles.push('二人だけの秘密の世界を大切にする関係');
+                                }
+                                
+                                // タグによる追加
+                                if (result.additionalResults?.tags?.includes('🛁 アフターケア必須')) {
+                                  styles.push('行為後も優しく寄り添い、心のケアまでできる関係');
+                                }
+                                
+                                return styles.join('。');
+                              })()}
                             </p>
                           </div>
                         </div>
@@ -563,29 +716,116 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     <div className={`transition-all duration-300 ${
                       openSections.preferences ? 'max-h-[500px]' : 'max-h-0'
                     } overflow-hidden`}>
-                      <div className="mt-2 px-2 text-center">
+                      <div className="mt-2 px-2">
                         <ul className="text-[#e0e7ff]/80 text-sm space-y-1 list-none">
-                          {type.sexualPreferences?.map((pref, index) => (
-                            <li key={index} className="flex items-center justify-center">
-                              <span className="mr-2 text-pink-500">♥</span>
-                              <span>{pref}</span>
-                            </li>
-                          )) || (
-                            <>
-                              <li className="flex items-center justify-center">
+                          {(() => {
+                            const preferences = [];
+                            const tags = result.additionalResults?.tags || [];
+                            
+                            // タグに基づくこだわりの生成
+                            if (tags.includes('💬 言語プレイ派')) {
+                              preferences.push('言葉責めや声でのやり取りが必須');
+                            }
+                            if (tags.includes('🎭 ロールプレイ好き')) {
+                              preferences.push('シチュエーション設定があると興奮度が上がる');
+                            }
+                            if (tags.includes('🛁 アフターケア必須')) {
+                              preferences.push('行為後の優しい時間が何より大切');
+                            }
+                            if (tags.includes('🧪 実験精神旺盛')) {
+                              preferences.push('新しいプレイや体位に挑戦したい');
+                            }
+                            if (tags.includes('🧸 甘やかされたい')) {
+                              preferences.push('優しく包み込まれながら愛されたい');
+                            }
+                            if (tags.includes('🔥 責めたい派')) {
+                              preferences.push('相手の反応を引き出すことに喜びを感じる');
+                            }
+                            if (tags.includes('🧷 軽SM耐性あり')) {
+                              preferences.push('軽い拘束や支配/被支配のプレイが好き');
+                            }
+                            if (tags.includes('🕯 ロマン重視')) {
+                              preferences.push('ムード作りと雰囲気が大切');
+                            }
+                            if (tags.includes('⚡️ スピード勝負派')) {
+                              preferences.push('長い前戯より本番重視');
+                            }
+                            if (tags.includes('🏃‍♂️ 衝動トリガー型')) {
+                              preferences.push('突発的な情熱に身を任せたい');
+                            }
+                            if (tags.includes('📅 準備派')) {
+                              preferences.push('事前準備と清潔感が大切');
+                            }
+                            if (tags.includes('🕶 秘密主義')) {
+                              preferences.push('二人だけの秘密の世界を大切にしたい');
+                            }
+                            if (tags.includes('📣 オープン宣言派')) {
+                              preferences.push('お互いの欲求を素直に伝え合いたい');
+                            }
+                            if (tags.includes('🚪 NG明確')) {
+                              preferences.push('境界線をしっかり守ることが大前提');
+                            }
+                            if (tags.includes('🙈 言い出しにくい派')) {
+                              preferences.push('察してもらえる優しい相手が理想');
+                            }
+                            if (tags.includes('🎧 感覚演出派')) {
+                              preferences.push('音楽や照明で五感を刺激したい');
+                            }
+                            if (tags.includes('🧼 ケア＆衛生重視')) {
+                              preferences.push('清潔感とお互いのケアが最優先');
+                            }
+                            if (tags.includes('👀 見られたい派')) {
+                              preferences.push('相手の視線を感じることで興奮する');
+                            }
+                            if (tags.includes('🕵️‍♀️ 覗き見興奮派')) {
+                              preferences.push('秘密めいた雰囲気に興奮する');
+                            }
+                            if (tags.includes('🛡 安全第一派')) {
+                              preferences.push('安全性と信頼関係が何より大切');
+                            }
+                            if (tags.includes('📱 デジタル前戯派')) {
+                              preferences.push('メッセージでの前戯も楽しみたい');
+                            }
+                            if (tags.includes('🌙 深夜エロス')) {
+                              preferences.push('深夜の静かな時間が一番燃える');
+                            }
+                            if (tags.includes('☀️ 朝型エロス')) {
+                              preferences.push('朝の光の中での行為が好き');
+                            }
+                            if (tags.includes('🔄 リピート求め派')) {
+                              preferences.push('一度では満足できず何度も求める');
+                            }
+                            if (tags.includes('🗣 下ネタOK')) {
+                              preferences.push('日常会話でもエロい話題を楽しめる');
+                            }
+                            if (tags.includes('📚 学習研究派')) {
+                              preferences.push('テクニックや知識を深めることに興味あり');
+                            }
+                            if (tags.includes('🧭 ガイド派')) {
+                              preferences.push('相手を導きながら一緒に楽しみたい');
+                            }
+                            if (tags.includes('🤹‍♀️ マルチタスク派')) {
+                              preferences.push('複数の刺激を同時に楽しみたい');
+                            }
+                            if (tags.includes('💤 まったり派')) {
+                              preferences.push('ゆっくりとした時間の流れを大切にしたい');
+                            }
+                            
+                            // 最大5つまで表示
+                            const displayPreferences = preferences.slice(0, 5);
+                            
+                            // タグがない場合のデフォルト
+                            if (displayPreferences.length === 0) {
+                              displayPreferences.push('特定のこだわりはなく、相手との相性を重視');
+                            }
+                            
+                            return displayPreferences.map((pref, index) => (
+                              <li key={index} className="flex items-center">
                                 <span className="mr-2 text-pink-500">♥</span>
-                                <span>前戯が濃厚じゃないと冷める</span>
+                                <span>{pref}</span>
                               </li>
-                              <li className="flex items-center justify-center">
-                                <span className="mr-2 text-pink-500">♥</span>
-                                <span>キスは必須。なければ温度が下がる</span>
-                              </li>
-                              <li className="flex items-center justify-center">
-                                <span className="mr-2 text-pink-500">♥</span>
-                                <span>指先の絡ませ合いが好き</span>
-                              </li>
-                            </>
-                          )}
+                            ));
+                          })()}
                         </ul>
                       </div>
                     </div>
@@ -607,31 +847,94 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                       openSections.advice ? 'max-h-[500px]' : 'max-h-0'
                     } overflow-hidden`}>
                       <div className="mt-2 px-2 text-center">
-                        <div className="bg-white/5 rounded-lg p-2 mb-2">
-                          <p className="text-[#e0e7ff]/80 text-sm mb-2">
-                            <span className="font-bold text-pink-500">短所：</span>
-                            {type.shortcomingsAdvice?.shortcoming || '気分屋な面があり、急に冷めることも。'}
-                          </p>
-                          <p className="text-[#e0e7ff]/80 text-sm">
-                            <span className="font-bold text-pink-500">→ アドバイス：</span>
-                            {type.shortcomingsAdvice?.advice || '信頼関係と温度管理を大切にすれば長く愛される。'}
-                          </p>
-                        </div>
-                        <h5 className="font-semibold text-[#e0e7ff] mb-2 text-sm">より良い関係を築くための3つのヒント</h5>
-                        <ul className="text-[#e0e7ff]/80 text-sm space-y-1 list-none">
-                          <li className="flex items-start">
-                            <span className="mr-2 text-pink-500">♥</span>
-                            <span>自分の気分を素直に伝える習慣をつける</span>
-                          </li>
-                          <li className="flex items-start">
-                            <span className="mr-2 text-pink-500">♥</span>
-                            <span>相手のペースも尊重し、バランスを取る</span>
-                          </li>
-                          <li className="flex items-start">
-                            <span className="mr-2 text-pink-500">♥</span>
-                            <span>定期的に新しい刺激を取り入れてマンネリを防ぐ</span>
-                          </li>
-                        </ul>
+                        {(() => {
+                          const shortcomings = [];
+                          const advices = [];
+                          const hints = [];
+                          const tags = result.additionalResults?.tags || [];
+                          
+                          // タグに基づく短所の判定
+                          if (tags.includes('🙈 言い出しにくい派')) {
+                            shortcomings.push('自分の欲求や不満を伝えられず、我慢してストレスを溜めやすい');
+                            advices.push('小さなことから少しずつ伝える練習をして、相手との信頼関係を深める');
+                            hints.push('「今日は〇〇してみたい」など、軽い要望から始める');
+                          }
+                          
+                          if (tags.includes('🕶 秘密主義')) {
+                            // 秘密主義の度合いをチェック（他のオープン系タグがない場合は極端と判定）
+                            const isExtreme = !tags.includes('📣 オープン宣言派') && !tags.includes('🗣 下ネタOK');
+                            if (isExtreme) {
+                              shortcomings.push('過度に秘密主義で、パートナーとの心の距離が縮まりにくい');
+                              advices.push('段階的に自己開示を増やし、相手との親密度を高める');
+                              hints.push('相手の秘密を守ることで、自分も開示しやすい環境を作る');
+                            }
+                          }
+                          
+                          if (tags.includes('🏃‍♂️ 衝動トリガー型')) {
+                            // 準備派タグがない場合は極端と判定
+                            const isExtreme = !tags.includes('📅 準備派');
+                            if (isExtreme) {
+                              shortcomings.push('衝動的すぎて、相手の準備や気持ちを考慮せずに行動しがち');
+                              advices.push('行動前に一呼吸置いて、相手の状態を確認する習慣をつける');
+                              hints.push('「今大丈夫？」の一言を忘れずに');
+                            }
+                          }
+                          
+                          // 組み合わせによる短所
+                          if (tags.includes('⚡️ スピード勝負派') && !tags.includes('🛁 アフターケア必須')) {
+                            shortcomings.push('自分の満足を優先し、相手のアフターケアを疎かにしがち');
+                            advices.push('行為後の優しい時間も大切にして、相手との絆を深める');
+                            hints.push('終わった後の10分間は相手との時間を大切にする');
+                          }
+                          
+                          if (tags.includes('🧷 軽SM耐性あり') && !tags.includes('🚪 NG明確')) {
+                            shortcomings.push('自分の趣向を優先し、相手の境界線を見誤ることがある');
+                            advices.push('プレイ前に必ず相手のNGを確認し、安全な関係を築く');
+                            hints.push('「これは大丈夫？」と都度確認を取る');
+                          }
+                          
+                          // デフォルトの短所（該当するものがない場合）
+                          if (shortcomings.length === 0) {
+                            shortcomings.push('特に大きな短所はないが、時に自己中心的になることも');
+                            advices.push('相手の立場に立って考える習慣を持つことでより良い関係に');
+                            hints.push('定期的に相手の満足度を確認する');
+                          }
+                          
+                          // 一般的なヒントを追加
+                          if (hints.length < 3) {
+                            const generalHints = [
+                              '相手のペースも尊重し、バランスを取る',
+                              '定期的に新しい刺激を取り入れてマンネリを防ぐ',
+                              'お互いの好みを話し合う時間を作る',
+                              '感謝の気持ちを言葉で伝える習慣をつける'
+                            ];
+                            while (hints.length < 3) {
+                              hints.push(generalHints[hints.length]);
+                            }
+                          }
+                          
+                          return (
+                            <>
+                              <h5 className="font-semibold text-[#e0e7ff] mb-2 text-sm">短所</h5>
+                              <p className="text-[#e0e7ff]/80 text-sm mb-4">
+                                {shortcomings[0]}
+                              </p>
+                              <h5 className="font-semibold text-[#e0e7ff] mb-2 text-sm">アドバイス</h5>
+                              <p className="text-[#e0e7ff]/80 text-sm mb-4">
+                                {advices[0]}
+                              </p>
+                              <h5 className="font-semibold text-[#e0e7ff] mb-2 text-sm">より良い関係を築くための3つのヒント</h5>
+                              <ul className="text-[#e0e7ff]/80 text-sm space-y-1 list-none">
+                                {hints.slice(0, 3).map((hint, index) => (
+                                  <li key={index} className="flex items-start">
+                                    <span className="mr-2 text-yellow-500">💡</span>
+                                    <span>{hint}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </>
+                          );
+                        })()}
                       </div>
                     </div>
                   </div>

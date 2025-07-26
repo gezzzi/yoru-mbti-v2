@@ -8,7 +8,6 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
   let ECount = 0, LCount = 0, ACount = 0, L2Count = 0, OCount = 0;
   
   // 追加軸の集計用
-  let STotal = 0, MTotal = 0; // S/M傾向
   let libidoTotal = 0, libidoCount = 0;
   let positionScores = { cozy: 0, adventurous: 0, flexible: 0, back: 0, chill: 0 };
   let gapTotal = 0, gapCount = 0;
@@ -16,6 +15,7 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
   let kissTotal = 0, kissCount = 0;
   let preferences: string[] = [];
   let tags: string[] = []; // タグのリスト
+  let tagScores: { tag: string; score: number }[] = []; // タグとスコアのリスト
   
   Object.entries(answers).forEach(([questionId, value]) => {
     const id = parseInt(questionId);
@@ -35,12 +35,6 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
       case 'LF':
         LTotal += adjustedValue;
         LCount++;
-        // S/M傾向の判定
-        if (question.smTendency === 'S') {
-          STotal += adjustedValue;
-        } else if (question.smTendency === 'M') {
-          MTotal += adjustedValue;
-        }
         break;
       case 'AS':
         ATotal += adjustedValue;
@@ -86,12 +80,49 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
         }
         break;
       case 'TAG':
-        if (value >= 4 && question.tagName) { // 4以上でタグを追加
-          tags.push(question.tagName);
+        if (question.tagName) {
+          tagScores.push({ tag: question.tagName, score: value });
         }
         break;
     }
   });
+  
+  // タグを点数順にソートし、上位5つを選択（同率の場合はランダム）
+  // まず点数でグループ化
+  const scoreGroups = tagScores.reduce((groups, item) => {
+    if (item.score >= 4) { // 4点以上のタグのみ対象
+      if (!groups[item.score]) {
+        groups[item.score] = [];
+      }
+      groups[item.score].push(item.tag);
+    }
+    return groups;
+  }, {} as Record<number, string[]>);
+  
+  // 点数の高い順にソート
+  const sortedScores = Object.keys(scoreGroups)
+    .map(Number)
+    .sort((a, b) => b - a);
+  
+  // 上位5つのタグを選択
+  for (const score of sortedScores) {
+    const tagsAtScore = scoreGroups[score];
+    
+    // 同率の場合はシャッフルしてから追加
+    const shuffled = [...tagsAtScore].sort(() => Math.random() - 0.5);
+    
+    for (const tag of shuffled) {
+      if (tags.length < 5) {
+        tags.push(tag);
+      } else {
+        break;
+      }
+    }
+    
+    if (tags.length >= 5) {
+      break;
+    }
+  }
   
   // Calculate percentage scores (0-100%)
   // 50%の場合は51%にする（仕様書より）
@@ -127,12 +158,68 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
     code: typeCode
   };
   
-  // 追加結果の計算
-  const smScore = STotal - MTotal;
+  // S/M傾向の計算
+  // LF軸のスコアと特定のタグで判定
+  let smScore = 0;
+  
+  // LF軸（リード/フォロー）のスコア
+  // Lが高い（>50）ならS傾向、低い（<50）ならM傾向
+  if (L > 50) {
+    smScore += 2; // S傾向
+  } else if (L < 50) {
+    smScore -= 2; // M傾向
+  }
+  
+  // タグによる追加判定
+  if (tags.includes('🔥 責めたい派')) {
+    smScore += 2; // S傾向
+  }
+  if (tags.includes('🧸 甘やかされたい')) {
+    smScore -= 2; // M傾向
+  }
+  if (tags.includes('🧷 軽SM耐性あり')) {
+    // 軽SM耐性は両方の可能性があるので、他の要素に依存
+    smScore += smScore > 0 ? 1 : -1;
+  }
+  
   const smTendency = smScore > 0 ? 'S' : smScore < 0 ? 'M' : 'Both';
   
-  const libidoAvg = libidoCount > 0 ? libidoTotal / libidoCount : 3;
-  const libidoLevel = Math.min(5, Math.max(1, Math.round(libidoAvg))) as 1 | 2 | 3 | 4 | 5;
+  // 性欲レベルの計算
+  // 質問11の回答値と特定のタグで判定
+  let libidoScore = 0;
+  
+  // 質問11の回答値を基準にする（0-6の範囲）
+  const question11Value = libidoCount > 0 ? libidoTotal / libidoCount : 3;
+  libidoScore = question11Value;
+  
+  // タグによる追加判定（最大5に収まるように調整）
+  const libidoTags = [
+    '🌙 深夜エロス',
+    '☀️ 朝型エロス', 
+    '🔄 リピート求め派',
+    '🧪 実験精神旺盛',
+    '📱 デジタル前戯派'
+  ];
+  
+  // 該当するタグの数をカウント
+  const matchedLibidoTags = libidoTags.filter(tag => tags.includes(tag)).length;
+  
+  // 質問11の値（0-6）とタグの数（0-5）を組み合わせて最終的なレベルを決定
+  // 質問11が高い（4以上）場合はタグでさらに強化
+  // 質問11が低い（2以下）場合はタグの影響を抑える
+  if (question11Value >= 4) {
+    // ベースが高い場合：タグ1つにつき0.3追加
+    libidoScore = question11Value + (matchedLibidoTags * 0.3);
+  } else if (question11Value <= 2) {
+    // ベースが低い場合：タグ1つにつき0.1追加
+    libidoScore = question11Value + (matchedLibidoTags * 0.1);
+  } else {
+    // ベースが中間の場合：タグ1つにつき0.2追加
+    libidoScore = question11Value + (matchedLibidoTags * 0.2);
+  }
+  
+  // 1-5の範囲に収める
+  const libidoLevel = Math.min(5, Math.max(1, Math.round(libidoScore))) as 1 | 2 | 3 | 4 | 5;
   
   const gapLevel = gapCount > 0 ? Math.round((gapTotal / gapCount) / 6 * 100) : 50;
   

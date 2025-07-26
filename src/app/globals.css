@@ -61,9 +61,8 @@ body {
 }
 
 .animate-fadeIn {
-  animation: fadeIn 0.5s ease-out forwards, 
-             gentle-glow 3s ease-in-out infinite;
-  animation-delay: var(--animation-delay, 0s), var(--glow-delay, 0s);
+  animation: fadeIn 0.5s ease-out forwards;
+  animation-delay: var(--animation-delay, 0s);
   opacity: 0;
 }
 
