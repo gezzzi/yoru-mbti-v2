@@ -48,20 +48,68 @@ body {
   }
 }
 
-/* タグの順番に光るアニメーション */
-@keyframes pulse-sequential {
-  0%, 100% {
-    opacity: 0.6;
-    filter: brightness(1);
+/* タグのフェードイン効果 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
-  50% {
+  to {
     opacity: 1;
-    filter: brightness(1.3) drop-shadow(0 0 8px currentColor);
+    transform: translateY(0);
   }
 }
 
-.animate-pulse-sequential {
-  animation: pulse-sequential 3s ease-in-out infinite;
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out forwards, 
+             gentle-glow 3s ease-in-out infinite;
+  animation-delay: var(--animation-delay, 0s), var(--glow-delay, 0s);
+  opacity: 0;
+}
+
+/* タグの軽量な光るアニメーション */
+@keyframes gentle-glow {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  25% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 0.6;
+  }
+}
+
+.animate-gentle-glow {
+  animation: gentle-glow 3s ease-in-out infinite;
+  animation-delay: var(--glow-delay, 0s);
+  will-change: opacity;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+/* アニメーション中の影の変化 */
+@keyframes shadow-pulse {
+  0%, 100% {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.animate-gentle-glow {
+  animation: gentle-glow 3s ease-in-out infinite, shadow-pulse 3s ease-in-out infinite;
+}
+
+/* ホバー時は一時的にアニメーションを停止 */
+.animate-gentle-glow:hover {
+  animation-play-state: paused;
+  opacity: 1;
+  box-shadow: 0 8px 16px -3px rgba(0, 0, 0, 0.3);
 }
 
 /* デフォルト（クラスが適用される前） */

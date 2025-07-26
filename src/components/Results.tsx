@@ -353,15 +353,14 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                       return (
                         <button 
                           key={index} 
-                          className={`px-3 py-1.5 text-sm font-medium flex items-center gap-1 hover:brightness-90 hover:scale-105 transition-all cursor-pointer relative shadow-md animate-pulse-sequential ${shape}`}
+                          className={`px-4 py-2 text-base font-medium flex items-center gap-1 hover:brightness-110 hover:scale-105 transition-transform cursor-pointer relative shadow-md animate-fadeIn ${shape}`}
                           style={{ 
                             backgroundColor: colors.bg,
-                            borderWidth: shape.includes('border-4') ? '4px' : shape.includes('border-2') ? '2px' : '2px',
-                            borderStyle: shape.includes('border-dashed') ? 'dashed' : 'solid',
-                            borderColor: colors.border,
+                            border: 'none',
                             color: colors.text || '#FFFFFF',
-                            animationDelay: `${index * 0.3}s`
-                          }}
+                            '--animation-delay': `${index * 0.3}s`,
+                            '--glow-delay': `${index * 0.3 + 0.5}s`
+                          } as React.CSSProperties}
                           onClick={() => setSelectedTag({ tag, description: tagDescriptions[tag] || '' })}
                         >
                           <span>{tag.replace(/^[^\s]+\s/, '')}</span>
