@@ -15,6 +15,7 @@ import { TagDescriptionModal } from './TagDescriptionModal';
 import { tagDescriptions } from '../data/tagDescriptions';
 import { tagColors } from '../data/tagColors';
 import { tagShapes } from '../data/tagShapes';
+import { positions48, tagColors as positionTagColors, PositionTag } from '../data/positions48';
 
 // Category color settings
 const categoryColorSchemes = {
@@ -418,17 +419,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                             if (tags.includes('💬 言語プレイ派')) {
                               personalityTraits.push('囁きや言葉責めで相手の理性を溶かしていく話術の達人でもあり');
                             }
-                            if (tags.includes('🧪 実験精神旺盛')) {
-                              personalityTraits.push('未知の快感を探求することに強い好奇心を持ち');
-                            }
                             if (tags.includes('🛁 アフターケア必須')) {
                               personalityTraits.push('行為後の優しい時間を最も大切にする愛情深さを持ち');
                             }
-                            if (tags.includes('🔥 責めたい派')) {
+                            if (tags.includes('⛏️ 開拓派')) {
                               personalityTraits.push('相手の限界ギリギリまで責め立てることで得られる征服感を求め');
-                            }
-                            if (tags.includes('🧸 甘やかされたい')) {
-                              personalityTraits.push('優しく包み込まれながら愛されることを心から望み');
                             }
                             if (tags.includes('🕯 ロマン重視')) {
                               personalityTraits.push('ムードや雰囲気作りにこだわりを持ち');
@@ -451,17 +446,9 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                             
                             // O/S軸とタグで締めくくり
                             if (result.O > 50) {
-                              if (tags.includes('📣 オープン宣言派')) {
-                                nightPersonality += '性に対する考えや欲求を素直に表現し、パートナーとオープンに対話することで、より良い関係を築いていく。';
-                              } else {
-                                nightPersonality += '恥じらいを持ちながらも、信頼できる相手とは性について率直に話し合える関係を望んでいる。';
-                              }
+                              nightPersonality += '恥じらいを持ちながらも、信頼できる相手とは性について率直に話し合える関係を望んでいる。';
                             } else {
-                              if (tags.includes('🕶 秘密主義')) {
-                                nightPersonality += '他人には決して見せない秘密の顔を、特別な相手だけに開示する。その排他的な関係性に、何よりも価値を見出している。';
-                              } else {
-                                nightPersonality += '二人だけの秘密の花園で、誰にも邪魔されることなく愛を育んでいくことに、この上ない幸せを感じる。';
-                              }
+                              nightPersonality += '二人だけの秘密の花園で、誰にも邪魔されることなく愛を育んでいくことに、この上ない幸せを感じる。';
                             }
                             
                             return <p>{nightPersonality}</p>;
@@ -563,21 +550,86 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     <div className={`transition-all duration-300 ${
                       openSections.positions ? 'max-h-[500px]' : 'max-h-0'
                     } overflow-hidden`}>
-                      <div className="mt-2 px-2 text-center">
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-2">
-                          {(type.recommendedPositions || ['正常位', '騎乗位', '後背位', '駅弁', '対面座位', '寝バック', '立位']).map((position, index) => (
-                            <div key={index} className="bg-white/10 border border-white/20 rounded-lg px-3 py-1 text-center text-[#e0e7ff] text-sm">
-                              {position}
-                            </div>
-                          ))}
-                        </div>
-                        <p className="text-[#e0e7ff]/80 text-sm italic">
-                          {result.additionalResults?.smTendency === 'S' 
-                            ? '「深く」「支配的」「見下ろすように愛したい」'
-                            : result.additionalResults?.smTendency === 'M'
-                            ? '「深く」「受け身で」「見上げるように愛されたい」'
-                            : '「深く」「情熱的に」「互いに求め合いたい」'}
-                        </p>
+                      <div className="mt-2 px-2">
+                        {(() => {
+                          // Select positions based on personality traits
+                          const selectedPositions = [];
+                          const usedIds = new Set();
+                          
+                          // Determine tags based on personality
+                          const priorityTags: PositionTag[] = [];
+                          
+                          // Based on L axis (Lead/Follow) and SM tendency
+                          if (result.L > 50 || result.additionalResults?.smTendency === 'S') {
+                            priorityTags.push('②リード/フォロー');
+                          }
+                          
+                          // Based on A axis (Adventure vs Stable) - Adventure = Speed
+                          if (result.A > 50) {
+                            priorityTags.push('⚡️スピード勝負派');
+                          } else {
+                            priorityTags.push('🕯ロマン重視');
+                          }
+                          
+                          // Based on E axis (Extroversion) - Extroverted = Multitask
+                          if (result.E > 50) {
+                            priorityTags.push('🤹‍♀️マルチタスク派');
+                          }
+                          
+                          // Based on O axis (Open vs Secret) - Open = Voyeur excitement
+                          if (result.O > 50) {
+                            priorityTags.push('🕵️‍♀️覗き見興奮派');
+                          }
+                          
+                          // Get positions for each priority tag
+                          priorityTags.forEach(tag => {
+                            const tagPositions = positions48.filter(pos => 
+                              pos.tags.includes(tag) && !usedIds.has(pos.id)
+                            );
+                            // Take up to 2 positions per tag
+                            tagPositions.slice(0, 2).forEach(pos => {
+                              if (selectedPositions.length < 4) {
+                                selectedPositions.push(pos);
+                                usedIds.add(pos.id);
+                              }
+                            });
+                          });
+                          
+                          // If we need more positions, add random ones
+                          while (selectedPositions.length < 4) {
+                            const remainingPositions = positions48.filter(pos => !usedIds.has(pos.id));
+                            if (remainingPositions.length === 0) break;
+                            const randomPos = remainingPositions[Math.floor(Math.random() * remainingPositions.length)];
+                            selectedPositions.push(randomPos);
+                            usedIds.add(randomPos.id);
+                          }
+                          
+                          return (
+                            <>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                                {selectedPositions.map((position) => (
+                                  <div key={position.id} className="bg-white/10 border border-white/20 rounded-lg p-3 relative">
+                                    <span className="absolute top-3 right-3 text-xs text-[#e0e7ff]/60">No.{position.id}</span>
+                                    <div className="text-center mb-2">
+                                      <h5 className="font-semibold text-[#e0e7ff]">{position.name}</h5>
+                                    </div>
+                                    <p className="text-xs text-[#e0e7ff]/70 mb-2 text-center">（{position.kana}）</p>
+                                    <div className="flex flex-wrap gap-1 justify-center">
+                                      {position.tags.map(tag => (
+                                        <span
+                                          key={tag}
+                                          className={`px-2 py-0.5 text-xs rounded-full border ${positionTagColors[tag]}`}
+                                        >
+                                          {tag}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </>
+                          );
+                        })()}
                       </div>
                     </div>
                   </div>
@@ -732,13 +784,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                             if (tags.includes('🛁 アフターケア必須')) {
                               preferences.push('行為後の優しい時間が何より大切');
                             }
-                            if (tags.includes('🧪 実験精神旺盛')) {
-                              preferences.push('新しいプレイや体位に挑戦したい');
-                            }
-                            if (tags.includes('🧸 甘やかされたい')) {
-                              preferences.push('優しく包み込まれながら愛されたい');
-                            }
-                            if (tags.includes('🔥 責めたい派')) {
+                            if (tags.includes('⛏️ 開拓派')) {
                               preferences.push('相手の反応を引き出すことに喜びを感じる');
                             }
                             if (tags.includes('🧷 軽SM耐性あり')) {
@@ -756,12 +802,6 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                             if (tags.includes('📅 準備派')) {
                               preferences.push('事前準備と清潔感が大切');
                             }
-                            if (tags.includes('🕶 秘密主義')) {
-                              preferences.push('二人だけの秘密の世界を大切にしたい');
-                            }
-                            if (tags.includes('📣 オープン宣言派')) {
-                              preferences.push('お互いの欲求を素直に伝え合いたい');
-                            }
                             if (tags.includes('🚪 NG明確')) {
                               preferences.push('境界線をしっかり守ることが大前提');
                             }
@@ -773,9 +813,6 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                             }
                             if (tags.includes('🧼 ケア＆衛生重視')) {
                               preferences.push('清潔感とお互いのケアが最優先');
-                            }
-                            if (tags.includes('👀 見られたい派')) {
-                              preferences.push('相手の視線を感じることで興奮する');
                             }
                             if (tags.includes('🕵️‍♀️ 覗き見興奮派')) {
                               preferences.push('秘密めいた雰囲気に興奮する');
@@ -858,16 +895,6 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                             shortcomings.push('自分の欲求や不満を伝えられず、我慢してストレスを溜めやすい');
                             advices.push('小さなことから少しずつ伝える練習をして、相手との信頼関係を深める');
                             hints.push('「今日は〇〇してみたい」など、軽い要望から始める');
-                          }
-                          
-                          if (tags.includes('🕶 秘密主義')) {
-                            // 秘密主義の度合いをチェック（他のオープン系タグがない場合は極端と判定）
-                            const isExtreme = !tags.includes('📣 オープン宣言派') && !tags.includes('🗣 下ネタOK');
-                            if (isExtreme) {
-                              shortcomings.push('過度に秘密主義で、パートナーとの心の距離が縮まりにくい');
-                              advices.push('段階的に自己開示を増やし、相手との親密度を高める');
-                              hints.push('相手の秘密を守ることで、自分も開示しやすい環境を作る');
-                            }
                           }
                           
                           if (tags.includes('🏃‍♂️ 衝動トリガー型')) {

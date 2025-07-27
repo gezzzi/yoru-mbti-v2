@@ -171,11 +171,8 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
   }
   
   // タグによる追加判定
-  if (tags.includes('🔥 責めたい派')) {
+  if (tags.includes('⛏️ 開拓派')) {
     smScore += 2; // S傾向
-  }
-  if (tags.includes('🧸 甘やかされたい')) {
-    smScore -= 2; // M傾向
   }
   if (tags.includes('🧷 軽SM耐性あり')) {
     // 軽SM耐性は両方の可能性があるので、他の要素に依存
@@ -197,7 +194,7 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
     '🌙 深夜エロス',
     '☀️ 朝型エロス', 
     '🔄 リピート求め派',
-    '🧪 実験精神旺盛',
+    '⛏️ 開拓派',
     '📱 デジタル前戯派'
   ];
   
