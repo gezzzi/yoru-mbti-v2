@@ -27,6 +27,11 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
     let adjustedValue = question.isReverse ? (6 - value) : value;
     
     // Categorize by axis and accumulate scores
+    // タグ質問の処理（axis が null で tag が存在する場合）
+    if (!question.axis && question.tag) {
+      tagScores.push({ tag: question.tag, score: value });
+    }
+
     switch (question.axis) {
       case 'EI':
         ETotal += adjustedValue;
@@ -80,8 +85,8 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
         }
         break;
       case 'TAG':
-        if (question.tagName) {
-          tagScores.push({ tag: question.tagName, score: value });
+        if (question.tag) {
+          tagScores.push({ tag: question.tag, score: value });
         }
         break;
     }

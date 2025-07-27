@@ -15,7 +15,7 @@ import { TagDescriptionModal } from './TagDescriptionModal';
 import { tagDescriptions } from '../data/tagDescriptions';
 import { tagColors } from '../data/tagColors';
 import { tagShapes } from '../data/tagShapes';
-import { positions48, tagColors as positionTagColors, PositionTag } from '../data/positions48';
+import { positions48, getPositionsByMood, moodDescriptions, PositionMood } from '../data/positions48';
 
 // Category color settings
 const categoryColorSchemes = {
@@ -552,77 +552,116 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     } overflow-hidden`}>
                       <div className="mt-2 px-2">
                         {(() => {
-                          // Select positions based on personality traits
+                          // Select positions based on mood/situation system
                           const selectedPositions = [];
                           const usedIds = new Set();
                           
-                          // Determine tags based on personality
-                          const priorityTags: PositionTag[] = [];
+                          // Determine main mood based on personality
+                          const moodPriorities: PositionMood[] = [];
                           
-                          // Based on L axis (Lead/Follow) and SM tendency
-                          if (result.L > 50 || result.additionalResults?.smTendency === 'S') {
-                            priorityTags.push('②リード/フォロー');
-                          }
-                          
-                          // Based on A axis (Adventure vs Stable) - Adventure = Speed
-                          if (result.A > 50) {
-                            priorityTags.push('⚡️スピード勝負派');
+                          // 1. メインムードを決定（性格タイプから）
+                          if (result.L2 > 50 && result.A <= 50) {
+                            moodPriorities.push('romantic'); // ラブ型＆安定型
+                          } else if (result.L > 50 || result.additionalResults?.smTendency === 'S') {
+                            moodPriorities.push('wild'); // リード型またはS傾向
+                          } else if (result.E > 50 && result.O > 50) {
+                            moodPriorities.push('playful'); // 外向型＆開放型
+                          } else if (result.A > 50) {
+                            moodPriorities.push('technical'); // 冒険型
                           } else {
-                            priorityTags.push('🕯ロマン重視');
+                            moodPriorities.push('romantic'); // デフォルト
                           }
                           
-                          // Based on E axis (Extroversion) - Extroverted = Multitask
-                          if (result.E > 50) {
-                            priorityTags.push('🤹‍♀️マルチタスク派');
+                          // 2. タグから補助ムードを追加
+                          const tags = result.additionalResults?.tags || [];
+                          if (tags.includes('🕯 ロマン重視') || tags.includes('🛁 アフターケア必須')) {
+                            if (!moodPriorities.includes('romantic')) moodPriorities.push('romantic');
+                          }
+                          if (tags.includes('⚡️ スピード勝負派') || tags.includes('🧷 軽SM耐性あり')) {
+                            if (!moodPriorities.includes('wild')) moodPriorities.push('wild');
+                          }
+                          if (tags.includes('🎭 ロールプレイ好き') || tags.includes('🤹‍♀️ マルチタスク派')) {
+                            if (!moodPriorities.includes('playful')) moodPriorities.push('playful');
+                          }
+                          if (tags.includes('⛏️ 開拓派')) {
+                            if (!moodPriorities.includes('technical')) moodPriorities.push('technical');
                           }
                           
-                          // Based on O axis (Open vs Secret) - Open = Voyeur excitement
-                          if (result.O > 50) {
-                            priorityTags.push('🕵️‍♀️覗き見興奮派');
-                          }
+                          // 愛撫系は必ず1つ含める
+                          moodPriorities.push('foreplay');
                           
-                          // Get positions for each priority tag
-                          priorityTags.forEach(tag => {
-                            const tagPositions = positions48.filter(pos => 
-                              pos.tags.includes(tag) && !usedIds.has(pos.id)
-                            );
-                            // Take up to 2 positions per tag
-                            tagPositions.slice(0, 2).forEach(pos => {
-                              if (selectedPositions.length < 4) {
-                                selectedPositions.push(pos);
-                                usedIds.add(pos.id);
-                              }
-                            });
+                          // 3. 各ムードから体位を選択
+                          moodPriorities.forEach((mood, index) => {
+                            const moodPositions = getPositionsByMood(mood).filter(pos => !usedIds.has(pos.id));
+                            
+                            // 難易度フィルター（冒険度に応じて）
+                            let filtered = moodPositions;
+                            if (result.A < 30) {
+                              // 冒険度低い：簡単な体位のみ
+                              filtered = moodPositions.filter(pos => pos.difficulty === 'easy');
+                            } else if (result.A > 70) {
+                              // 冒険度高い：難しい体位も含める
+                              filtered = moodPositions;
+                            } else {
+                              // 中間：中級まで
+                              filtered = moodPositions.filter(pos => pos.difficulty !== 'hard');
+                            }
+                            
+                            // フィルター後に体位がない場合は元のリストから選択
+                            if (filtered.length === 0) filtered = moodPositions;
+                            
+                            // ランダムに1つ選択
+                            if (filtered.length > 0 && selectedPositions.length < 3) {
+                              const randomIndex = Math.floor(Math.random() * filtered.length);
+                              const selected = filtered[randomIndex];
+                              selectedPositions.push(selected);
+                              usedIds.add(selected.id);
+                            }
                           });
                           
-                          // If we need more positions, add random ones
-                          while (selectedPositions.length < 4) {
-                            const remainingPositions = positions48.filter(pos => !usedIds.has(pos.id));
-                            if (remainingPositions.length === 0) break;
+                          // 4. 「今日の運試し」として完全ランダムを1つ追加
+                          const remainingPositions = positions48.filter(pos => !usedIds.has(pos.id));
+                          if (remainingPositions.length > 0) {
                             const randomPos = remainingPositions[Math.floor(Math.random() * remainingPositions.length)];
                             selectedPositions.push(randomPos);
-                            usedIds.add(randomPos.id);
                           }
                           
                           return (
                             <>
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                                {selectedPositions.map((position) => (
+                                {selectedPositions.map((position, index) => (
                                   <div key={position.id} className="bg-white/10 border border-white/20 rounded-lg p-3 relative">
                                     <span className="absolute top-3 right-3 text-xs text-[#e0e7ff]/60">No.{position.id}</span>
+                                    {index === selectedPositions.length - 1 && (
+                                      <span className="absolute top-3 left-3 text-xs text-yellow-400">🎲 今日の運試し</span>
+                                    )}
                                     <div className="text-center mb-2">
                                       <h5 className="font-semibold text-[#e0e7ff]">{position.name}</h5>
                                     </div>
                                     <p className="text-xs text-[#e0e7ff]/70 mb-2 text-center">（{position.kana}）</p>
-                                    <div className="flex flex-wrap gap-1 justify-center">
-                                      {position.tags.map(tag => (
-                                        <span
-                                          key={tag}
-                                          className={`px-2 py-0.5 text-xs rounded-full border ${positionTagColors[tag]}`}
-                                        >
-                                          {tag}
-                                        </span>
-                                      ))}
+                                    <div className="flex flex-wrap gap-1 justify-center mb-2">
+                                      {position.moods.map(mood => {
+                                        const moodColors = {
+                                          'romantic': 'bg-pink-500/20 border-pink-400 text-pink-300',
+                                          'wild': 'bg-red-500/20 border-red-400 text-red-300',
+                                          'playful': 'bg-yellow-500/20 border-yellow-400 text-yellow-300',
+                                          'technical': 'bg-purple-500/20 border-purple-400 text-purple-300',
+                                          'foreplay': 'bg-blue-500/20 border-blue-400 text-blue-300'
+                                        };
+                                        return (
+                                          <span
+                                            key={mood}
+                                            className={`px-2 py-0.5 text-xs rounded-full border ${moodColors[mood]}`}
+                                          >
+                                            {moodDescriptions[mood].split(' - ')[0]}
+                                          </span>
+                                        );
+                                      })}
+                                    </div>
+                                    <div className="text-center">
+                                      <span className="text-xs text-[#e0e7ff]/50">
+                                        難易度: {position.difficulty === 'easy' ? '★☆☆' : position.difficulty === 'medium' ? '★★☆' : '★★★'}
+                                      </span>
                                     </div>
                                   </div>
                                 ))}
