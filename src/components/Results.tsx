@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import { TestResult } from '../types/personality';
 import { getCategoryColor, getCategoryName, personalityTypes } from '../data/personalityTypes';
@@ -15,7 +15,8 @@ import { TagDescriptionModal } from './TagDescriptionModal';
 import { tagDescriptions } from '../data/tagDescriptions';
 import { tagColors } from '../data/tagColors';
 import { tagShapes } from '../data/tagShapes';
-import { positions48, getPositionsByMood, moodDescriptions, PositionMood } from '../data/positions48';
+import { positions48, getPositionsByMood, moodDescriptions, PositionMood, Position48 } from '../data/positions48';
+import { PositionDescriptionModal } from './PositionDescriptionModal';
 
 // Category color settings
 const categoryColorSchemes = {
@@ -91,6 +92,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
   const [isDownloading, setIsDownloading] = useState(false);
   const downloadRef = useRef<HTMLDivElement>(null);
   const [selectedTag, setSelectedTag] = useState<{ tag: string; description: string } | null>(null);
+  const [selectedPosition, setSelectedPosition] = useState<Position48 | null>(null);
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({
     nightPersonality: false,
     smTendency: false,
@@ -109,6 +111,104 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
       [section]: !prev[section]
     }));
   };
+
+  // おすすめの体位を一度だけ計算してメモ化
+  const recommendedPositions = useMemo(() => {
+    // localStorageから保存済みの体位を取得
+    const storageKey = `recommended_positions_${type.code}`;
+    if (typeof window !== 'undefined') {
+      const savedPositions = localStorage.getItem(storageKey);
+      if (savedPositions) {
+        try {
+          const parsed = JSON.parse(savedPositions);
+          // 保存されたIDから実際の体位オブジェクトを復元
+          const restoredPositions = parsed.map((id: number) => 
+            positions48.find(p => p.id === id)
+          ).filter(Boolean);
+          if (restoredPositions.length > 0) {
+            return restoredPositions;
+          }
+        } catch (e) {
+          // パースエラーの場合は新規生成に進む
+        }
+      }
+    }
+    
+    // 新規生成の場合
+    const selectedPositions: Position48[] = [];
+    const usedIds = new Set<number>();
+    
+    // Determine main mood based on personality
+    const moodPriorities: PositionMood[] = [];
+    
+    // 1. メインムードを決定（性格タイプから）
+    if (result.L2 > 50 && result.A <= 50) {
+      moodPriorities.push('romantic'); // ラブ型＆安定型
+    } else if (result.L > 50 || result.additionalResults?.smTendency === 'S') {
+      moodPriorities.push('wild'); // リード型またはS傾向
+    } else if (result.E > 50 && result.O > 50) {
+      moodPriorities.push('playful'); // 外向型＆開放型
+    } else if (result.A > 50) {
+      moodPriorities.push('technical'); // 冒険型
+    } else {
+      moodPriorities.push('romantic'); // デフォルト
+    }
+    
+    // 2. タグから補助ムードを追加
+    const tags = result.additionalResults?.tags || [];
+    if (tags.includes('🕯 ロマン重視') || tags.includes('🛁 アフターケア必須')) {
+      if (!moodPriorities.includes('romantic')) moodPriorities.push('romantic');
+    }
+    if (tags.includes('⚡️ スピード勝負派') || tags.includes('🧷 軽SM耐性あり')) {
+      if (!moodPriorities.includes('wild')) moodPriorities.push('wild');
+    }
+    if (tags.includes('🎭 ロールプレイ好き') || tags.includes('🤹‍♀️ マルチタスク派')) {
+      if (!moodPriorities.includes('playful')) moodPriorities.push('playful');
+    }
+    if (tags.includes('⛏️ 開拓派')) {
+      if (!moodPriorities.includes('technical')) moodPriorities.push('technical');
+    }
+    
+    // 愛撫系は必ず1つ含める
+    moodPriorities.push('foreplay');
+    
+    // 3. 各ムードから体位を選択（ランダムに）
+    moodPriorities.forEach((mood, index) => {
+      const moodPositions = getPositionsByMood(mood).filter(pos => !usedIds.has(pos.id));
+      
+      // 難易度フィルター（冒険度に応じて）
+      let filtered = moodPositions;
+      if (result.A < 30) {
+        // 冒険度低い：簡単な体位のみ
+        filtered = moodPositions.filter(pos => pos.difficulty === 'easy');
+      } else if (result.A > 70) {
+        // 冒険度高い：難しい体位も含める
+        filtered = moodPositions;
+      } else {
+        // 中間：中級まで
+        filtered = moodPositions.filter(pos => pos.difficulty !== 'hard');
+      }
+      
+      // フィルター後に体位がない場合は元のリストから選択
+      if (filtered.length === 0) filtered = moodPositions;
+      
+      // ランダムに1つ選択
+      if (filtered.length > 0 && selectedPositions.length < 3) {
+        const randomIndex = Math.floor(Math.random() * filtered.length);
+        const selected = filtered[randomIndex];
+        selectedPositions.push(selected);
+        usedIds.add(selected.id);
+      }
+    });
+    
+    // 選択した体位のIDをlocalStorageに保存
+    if (typeof window !== 'undefined' && selectedPositions.length > 0) {
+      const positionIds = selectedPositions.map(p => p.id);
+      localStorage.setItem(storageKey, JSON.stringify(positionIds));
+    }
+    
+    return selectedPositions;
+  }, [result, type.code]);
 
   // 診断結果をローカルストレージに保存
   React.useEffect(() => {
@@ -551,90 +651,14 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                       openSections.positions ? 'max-h-[500px]' : 'max-h-0'
                     } overflow-hidden`}>
                       <div className="mt-2 px-2">
-                        {(() => {
-                          // Select positions based on mood/situation system
-                          const selectedPositions = [];
-                          const usedIds = new Set();
-                          
-                          // Determine main mood based on personality
-                          const moodPriorities: PositionMood[] = [];
-                          
-                          // 1. メインムードを決定（性格タイプから）
-                          if (result.L2 > 50 && result.A <= 50) {
-                            moodPriorities.push('romantic'); // ラブ型＆安定型
-                          } else if (result.L > 50 || result.additionalResults?.smTendency === 'S') {
-                            moodPriorities.push('wild'); // リード型またはS傾向
-                          } else if (result.E > 50 && result.O > 50) {
-                            moodPriorities.push('playful'); // 外向型＆開放型
-                          } else if (result.A > 50) {
-                            moodPriorities.push('technical'); // 冒険型
-                          } else {
-                            moodPriorities.push('romantic'); // デフォルト
-                          }
-                          
-                          // 2. タグから補助ムードを追加
-                          const tags = result.additionalResults?.tags || [];
-                          if (tags.includes('🕯 ロマン重視') || tags.includes('🛁 アフターケア必須')) {
-                            if (!moodPriorities.includes('romantic')) moodPriorities.push('romantic');
-                          }
-                          if (tags.includes('⚡️ スピード勝負派') || tags.includes('🧷 軽SM耐性あり')) {
-                            if (!moodPriorities.includes('wild')) moodPriorities.push('wild');
-                          }
-                          if (tags.includes('🎭 ロールプレイ好き') || tags.includes('🤹‍♀️ マルチタスク派')) {
-                            if (!moodPriorities.includes('playful')) moodPriorities.push('playful');
-                          }
-                          if (tags.includes('⛏️ 開拓派')) {
-                            if (!moodPriorities.includes('technical')) moodPriorities.push('technical');
-                          }
-                          
-                          // 愛撫系は必ず1つ含める
-                          moodPriorities.push('foreplay');
-                          
-                          // 3. 各ムードから体位を選択
-                          moodPriorities.forEach((mood, index) => {
-                            const moodPositions = getPositionsByMood(mood).filter(pos => !usedIds.has(pos.id));
-                            
-                            // 難易度フィルター（冒険度に応じて）
-                            let filtered = moodPositions;
-                            if (result.A < 30) {
-                              // 冒険度低い：簡単な体位のみ
-                              filtered = moodPositions.filter(pos => pos.difficulty === 'easy');
-                            } else if (result.A > 70) {
-                              // 冒険度高い：難しい体位も含める
-                              filtered = moodPositions;
-                            } else {
-                              // 中間：中級まで
-                              filtered = moodPositions.filter(pos => pos.difficulty !== 'hard');
-                            }
-                            
-                            // フィルター後に体位がない場合は元のリストから選択
-                            if (filtered.length === 0) filtered = moodPositions;
-                            
-                            // ランダムに1つ選択
-                            if (filtered.length > 0 && selectedPositions.length < 3) {
-                              const randomIndex = Math.floor(Math.random() * filtered.length);
-                              const selected = filtered[randomIndex];
-                              selectedPositions.push(selected);
-                              usedIds.add(selected.id);
-                            }
-                          });
-                          
-                          // 4. 「今日の運試し」として完全ランダムを1つ追加
-                          const remainingPositions = positions48.filter(pos => !usedIds.has(pos.id));
-                          if (remainingPositions.length > 0) {
-                            const randomPos = remainingPositions[Math.floor(Math.random() * remainingPositions.length)];
-                            selectedPositions.push(randomPos);
-                          }
-                          
-                          return (
-                            <>
-                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                                {selectedPositions.map((position, index) => (
-                                  <div key={position.id} className="bg-white/10 border border-white/20 rounded-lg p-3 relative">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                          {recommendedPositions.map((position: Position48, index: number) => (
+                                  <div 
+                                    key={position.id} 
+                                    className="bg-white/10 border border-white/20 rounded-lg p-3 relative cursor-pointer hover:bg-white/20 transition-colors"
+                                    onClick={() => setSelectedPosition(position)}
+                                  >
                                     <span className="absolute top-3 right-3 text-xs text-[#e0e7ff]/60">No.{position.id}</span>
-                                    {index === selectedPositions.length - 1 && (
-                                      <span className="absolute top-3 left-3 text-xs text-yellow-400">🎲 今日の運試し</span>
-                                    )}
                                     <div className="text-center mb-2">
                                       <h5 className="font-semibold text-[#e0e7ff]">{position.name}</h5>
                                     </div>
@@ -665,10 +689,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                                     </div>
                                   </div>
                                 ))}
-                              </div>
-                            </>
-                          );
-                        })()}
+                          </div>
                       </div>
                     </div>
                   </div>
@@ -1077,6 +1098,13 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
           onClose={() => setSelectedTag(null)}
         />
       )}
+
+      {/* Position Description Modal */}
+      <PositionDescriptionModal
+        position={selectedPosition}
+        isOpen={!!selectedPosition}
+        onClose={() => setSelectedPosition(null)}
+      />
     </div>
   );
 };
