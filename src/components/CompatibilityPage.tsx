@@ -222,8 +222,8 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
           // QRコードを読み取る
           const result = await QrScanner.scanImage(file);
           
-          // 読み取った結果がコードの形式かチェック
-          if (result && result.match(/^[A-Za-z0-9]{1,8}$/)) {
+          // 読み取った結果がコードの形式かチェック（旧形式と新形式の両方に対応）
+          if (result && result.match(/^[A-Za-z0-9]+(-[A-Za-z0-9]+)?$/)) {
             setPartnerCode(result.toUpperCase());
           } else {
             throw new Error('QRコードから有効なコードを読み取れませんでした');
@@ -256,8 +256,8 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
       // QRコードを読み取る
       const result = await QrScanner.scanImage(file);
       
-      // 読み取った結果がコードの形式かチェック
-      if (result && result.match(/^[A-Za-z0-9]{1,8}$/)) {
+      // 読み取った結果がコードの形式かチェック（旧形式と新形式の両方に対応）
+      if (result && result.match(/^[A-Za-z0-9]+(-[A-Za-z0-9]+)?$/)) {
         const code = result.toUpperCase();
         
         // コードを解析して診断結果を復元

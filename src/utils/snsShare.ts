@@ -1,6 +1,27 @@
 import { TestResult } from '../types/personality';
 
-// 5軸データから相性診断コードを生成（36進数表記）
+// 公開タグリスト
+const publicTags = [
+  '🔥 欲望の炎',
+  '💬 言語プレイ派',
+  '🛁 アフターケア必須',
+  '⛏️ 開拓派',
+  '🕯 ロマン重視',
+  '⚡️ スピード勝負派',
+  '🏃‍♂️ 衝動トリガー型',
+  '📅 準備派',
+  '🚪 NG明確',
+  '🙈 言い出しにくい派',
+  '🎧 感覚演出派',
+  '🧼 ケア＆衛生重視',
+  '🛡 安全第一派',
+  '🌙 深夜エロス',
+  '☀️ 朝型エロス',
+  '🔄 リピート求め派',
+  '🗣 下ネタOK'
+];
+
+// 5軸データと公開タグから相性診断コードを生成
 export const generateCompatibilityCode = (result: TestResult): string => {
   // 各軸の値を0-100の整数値に変換
   const v1 = Math.round(result.E);
@@ -9,24 +30,53 @@ export const generateCompatibilityCode = (result: TestResult): string => {
   const v4 = Math.round(result.L2);
   const v5 = Math.round(result.O);
   
-  // 数式: 値 = v1×101⁴ + v2×101³ + v3×101² + v4×101¹ + v5×101⁰
-  const value = v1 * Math.pow(101, 4) + 
-                v2 * Math.pow(101, 3) + 
-                v3 * Math.pow(101, 2) + 
-                v4 * Math.pow(101, 1) + 
-                v5 * Math.pow(101, 0);
+  // 公開タグのビットフラグを生成（最大17タグ = 17ビット）
+  let tagFlags = 0;
+  if (result.additionalResults?.tags) {
+    result.additionalResults.tags.forEach(tag => {
+      const index = publicTags.indexOf(tag);
+      if (index >= 0) {
+        tagFlags |= (1 << index);
+      }
+    });
+  }
   
-  // 36進数に変換
-  return value.toString(36).toUpperCase();
+  // 5軸データを1つの数値にエンコード
+  const axisValue = v1 * Math.pow(101, 4) + 
+                    v2 * Math.pow(101, 3) + 
+                    v3 * Math.pow(101, 2) + 
+                    v4 * Math.pow(101, 1) + 
+                    v5 * Math.pow(101, 0);
+  
+  // 36進数に変換（軸データとタグデータを分けて結合）
+  const axisCode = axisValue.toString(36).toUpperCase();
+  const tagCode = tagFlags.toString(36).toUpperCase();
+  
+  // ハイフンで区切って返す
+  return `${axisCode}-${tagCode}`;
 };
 
-// 相性診断コードから5軸データを復元（36進数表記）
+// 相性診断コードから5軸データと公開タグを復元
 export const parseCompatibilityCode = (code: string): TestResult | null => {
   if (!code || code.length === 0) return null;
   
   try {
+    // ハイフンで分割（新フォーマット）または旧フォーマットとして処理
+    const parts = code.split('-');
+    let axisCode: string;
+    let tagCode: string | null = null;
+    
+    if (parts.length === 2) {
+      // 新フォーマット：軸データ-タグデータ
+      axisCode = parts[0];
+      tagCode = parts[1];
+    } else {
+      // 旧フォーマット：軸データのみ
+      axisCode = code;
+    }
+    
     // 36進数から10進数に変換
-    const value = parseInt(code.toUpperCase(), 36);
+    const value = parseInt(axisCode.toUpperCase(), 36);
     
     // 数式の逆算: 値 = v1×101⁴ + v2×101³ + v3×101² + v4×101¹ + v5×101⁰
     // 各軸の値を順次計算
@@ -53,13 +103,25 @@ export const parseCompatibilityCode = (code: string): TestResult | null => {
       return null;
     }
     
+    // タグデータの復元
+    let tags: string[] = [];
+    if (tagCode) {
+      const tagFlags = parseInt(tagCode, 36);
+      for (let i = 0; i < publicTags.length; i++) {
+        if (tagFlags & (1 << i)) {
+          tags.push(publicTags[i]);
+        }
+      }
+    }
+    
     return {
       E: v1,
       L: v2,
       A: v3,
       L2: v4,
       O: v5,
-      type: null as any // 型判定は別途実行する必要がある
+      type: null as any, // 型判定は別途実行する必要がある
+      additionalResults: tags.length > 0 ? { tags } as any : undefined
     };
   } catch {
     return null;
