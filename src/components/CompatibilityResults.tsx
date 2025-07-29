@@ -306,9 +306,71 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     // 開放(O)/秘密(S) - 類似軸
     const oScore = 100 - Math.abs(user.O - partner.O);
     
-    // 総合相性度を計算（重み付き平均）
+    // 公開タグの相性スコアを計算
+    let tagCompatibilityScore = 0;
+    let tagBonus = 0;
+    
+    // ユーザーとパートナーのタグを取得
+    const userTagsArray = user.additionalResults?.tags || [];
+    const partnerTagsArray = partner.additionalResults?.tags || [];
+    const userTags = new Set(userTagsArray);
+    const partnerTags = new Set(partnerTagsArray);
+    
+    // 共通タグの数をカウント
+    const commonTags = userTagsArray.filter(tag => partnerTags.has(tag));
+    const totalUniqueTags = new Set([...userTagsArray, ...partnerTagsArray]).size;
+    
+    // タグベースの相性計算
+    if (totalUniqueTags > 0) {
+      // 共通タグ率（0-100%）
+      const commonTagRatio = (commonTags.length / totalUniqueTags) * 100;
+      
+      // 特定のタグの組み合わせによるボーナス
+      if (userTags.has('🔥 欲望の炎') && partnerTags.has('🔥 欲望の炎')) {
+        tagBonus += 10; // 両方情熱的
+      }
+      if (userTags.has('🛁 アフターケア必須') && partnerTags.has('🛁 アフターケア必須')) {
+        tagBonus += 8; // 両方ケア重視
+      }
+      if (userTags.has('💬 言語プレイ派') && partnerTags.has('💬 言語プレイ派')) {
+        tagBonus += 6; // 言葉責めの相性
+      }
+      if (userTags.has('🕯 ロマン重視') && partnerTags.has('🕯 ロマン重視')) {
+        tagBonus += 8; // ロマンチックな相性
+      }
+      if ((userTags.has('🌙 深夜エロス') && partnerTags.has('🌙 深夜エロス')) ||
+          (userTags.has('☀️ 朝型エロス') && partnerTags.has('☀️ 朝型エロス'))) {
+        tagBonus += 5; // 同じ時間帯の好み
+      }
+      if (userTags.has('🔄 リピート求め派') && partnerTags.has('🔄 リピート求め派')) {
+        tagBonus += 7; // 両方リピート重視
+      }
+      if (userTags.has('🗣 下ネタOK') && partnerTags.has('🗣 下ネタOK')) {
+        tagBonus += 5; // コミュニケーションの相性
+      }
+      
+      // 相反するタグによるペナルティ
+      if ((userTags.has('⚡️ スピード勝負派') && partnerTags.has('🕯 ロマン重視')) ||
+          (userTags.has('🕯 ロマン重視') && partnerTags.has('⚡️ スピード勝負派'))) {
+        tagBonus -= 10; // テンポの不一致
+      }
+      if ((userTags.has('🌙 深夜エロス') && partnerTags.has('☀️ 朝型エロス')) ||
+          (userTags.has('☀️ 朝型エロス') && partnerTags.has('🌙 深夜エロス'))) {
+        tagBonus -= 8; // 時間帯の不一致
+      }
+      if ((userTags.has('🏃‍♂️ 衝動トリガー型') && partnerTags.has('📅 準備派')) ||
+          (userTags.has('📅 準備派') && partnerTags.has('🏃‍♂️ 衝動トリガー型'))) {
+        tagBonus -= 8; // スタイルの不一致
+      }
+      
+      // タグ相性スコア = 共通タグ率 + ボーナス（最大100）
+      tagCompatibilityScore = Math.min(100, Math.max(0, commonTagRatio + tagBonus));
+    }
+    
+    // 総合相性度を計算（5軸70%、タグ30%の重み付け）
+    const axisCompatibility = (eScore * 0.15) + (lScore * 0.3) + (aScore * 0.25) + (l2Score * 0.2) + (oScore * 0.1);
     const compatibility = Math.max(0, Math.min(100, 
-      (eScore * 0.15) + (lScore * 0.3) + (aScore * 0.25) + (l2Score * 0.2) + (oScore * 0.1)
+      (axisCompatibility * 0.7) + (tagCompatibilityScore * 0.3)
     ));
 
     let description = '';

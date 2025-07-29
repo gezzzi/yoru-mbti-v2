@@ -161,7 +161,8 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
       A: parsedResult.A,
       L2: parsedResult.L2,
       O: parsedResult.O,
-      type: personalityType
+      type: personalityType,
+      additionalResults: parsedResult.additionalResults
     };
   };
 
