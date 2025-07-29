@@ -11,6 +11,8 @@ import NeonText from './NeonText';
 import { ScrollAnimation } from './ScrollAnimation';
 import Fireworks from './Fireworks';
 import HeartRain from './HeartRain';
+import { PositionDescriptionModal } from './PositionDescriptionModal';
+import { Position48, positions48 } from '../data/positions48';
 
 interface CompatibilityResult {
   compatibility: number;
@@ -278,6 +280,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   const [showFireworks, setShowFireworks] = useState(false);
   const [showHeartRain, setShowHeartRain] = useState(false);
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({});
+  const [selectedPosition, setSelectedPosition] = useState<Position48 | null>(null);
   
   // Toggle section function
   const toggleSection = (section: string) => {
@@ -636,21 +639,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     
     // おすすめ体位（5軸データと公開タグから決定）
     const recommendedPositions = (() => {
-      // positions48データをインポート（実際の実装では import が必要）
-      const positions48 = [
-        { id: 1, name: 'うしろやぐら', kana: 'うしろやぐら', moods: ['wild'], difficulty: 'easy' },
-        { id: 2, name: 'つり橋', kana: 'つりばし', moods: ['technical', 'wild'], difficulty: 'hard' },
-        { id: 3, name: '寄り添い', kana: 'よりそい', moods: ['romantic', 'foreplay'], difficulty: 'easy' },
-        { id: 4, name: '撞木ぞり', kana: 'しゅもくぞり', moods: ['technical', 'wild'], difficulty: 'hard' },
-        { id: 10, name: '時雨茶臼', kana: 'しぐれちゃうす', moods: ['romantic', 'playful'], difficulty: 'easy' },
-        { id: 17, name: '百閉', kana: 'ひゃくへい', moods: ['romantic', 'playful'], difficulty: 'easy' },
-        { id: 19, name: 'しがらみ', kana: 'しがらみ', moods: ['romantic'], difficulty: 'easy' },
-        { id: 22, name: '松葉崩し', kana: 'まつばくずし', moods: ['romantic', 'technical'], difficulty: 'medium' },
-        { id: 23, name: '碁盤攻め', kana: 'ごばんぜめ', moods: ['wild'], difficulty: 'easy' },
-        { id: 26, name: '仏壇返し', kana: 'ぶつだんがえし', moods: ['wild', 'technical'], difficulty: 'medium' },
-        { id: 33, name: '抱き上げ', kana: 'だきあげ', moods: ['wild'], difficulty: 'medium' },
-        { id: 35, name: '立ち鼎', kana: 'たちかなえ', moods: ['technical', 'wild'], difficulty: 'hard' }
-      ];
+      // positions48データを使用（importされている）
       
       // 両者のタグを取得
       const myTags = myResult.additionalResults?.tags || [];
@@ -707,16 +696,42 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         
         if (candidates.length > 0 && selectedPositions.length < 3) {
           // 性格タイプコードを使って決定的に選択
-          const seed = (myResult.E + partnerResult.E + myResult.L + partnerResult.L) % candidates.length;
-          const selected = candidates[seed];
+          const seed: number = (myResult.E + partnerResult.E + myResult.L + partnerResult.L) % candidates.length;
+          const selected: Position48 = candidates[seed];
           selectedPositions.push(selected);
           usedIds.add(selected.id);
         }
       }
       
-      // 最低1つは確保
-      if (selectedPositions.length === 0) {
-        selectedPositions.push(positions48[0]);
+      // 3つに満たない場合は追加で選択
+      while (selectedPositions.length < 3) {
+        // まだ選ばれていない体位から選択
+        const remainingPositions = positions48.filter(pos => 
+          !usedIds.has(pos.id) &&
+          (maxDifficulty === 'hard' || 
+           (maxDifficulty === 'medium' && pos.difficulty !== 'hard') ||
+           (maxDifficulty === 'easy' && pos.difficulty === 'easy'))
+        );
+        
+        if (remainingPositions.length > 0) {
+          // 決定的な選択（異なるseedを使用）
+          const seed: number = (myResult.O + partnerResult.O + selectedPositions.length * 37) % remainingPositions.length;
+          const selected: Position48 = remainingPositions[seed];
+          selectedPositions.push(selected);
+          usedIds.add(selected.id);
+        } else {
+          // 難易度制限を緩和して再選択
+          const allRemainingPositions = positions48.filter(pos => !usedIds.has(pos.id));
+          if (allRemainingPositions.length > 0) {
+            const seed: number = (myResult.L2 + partnerResult.L2 + selectedPositions.length * 31) % allRemainingPositions.length;
+            const selected: Position48 = allRemainingPositions[seed];
+            selectedPositions.push(selected);
+            usedIds.add(selected.id);
+          } else {
+            // すべての体位が選択済みの場合（通常はありえない）
+            break;
+          }
+        }
       }
       
       return selectedPositions;
@@ -1521,7 +1536,8 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                           {intimateCompatibility.recommendedPositions.map((position: any, index: number) => (
                             <div 
                               key={position.id} 
-                              className="bg-white/10 border border-white/20 rounded-lg p-3 relative"
+                              className="bg-white/10 border border-white/20 rounded-lg p-3 relative cursor-pointer hover:bg-white/20 transition-colors"
+                              onClick={() => setSelectedPosition(position)}
                             >
                               <span className="absolute top-3 right-3 text-xs text-[#e0e7ff]/60">No.{position.id}</span>
                               <div className="text-center mb-2">
@@ -1538,18 +1554,18 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                                     'foreplay': 'bg-blue-500/20 border-blue-400 text-blue-300'
                                   };
                                   const moodDescriptions: { [key: string]: string } = {
-                                    'romantic': 'ロマンチック - 愛情深く優しい',
-                                    'wild': 'ワイルド - 激しく情熱的',
-                                    'playful': 'プレイフル - 遊び心あふれる',
-                                    'technical': 'テクニカル - 技巧的で上級者向け',
-                                    'foreplay': '愛撫 - じっくりと感度を高める'
+                                    'romantic': 'ロマンチック',
+                                    'wild': 'ワイルド',
+                                    'playful': 'プレイフル',
+                                    'technical': 'テクニカル',
+                                    'foreplay': '愛撫'
                                   };
                                   return (
                                     <span
                                       key={mood}
                                       className={`px-2 py-0.5 text-xs rounded-full border ${moodColors[mood]}`}
                                     >
-                                      {moodDescriptions[mood].split(' - ')[0]}
+                                      {moodDescriptions[mood]}
                                     </span>
                                   );
                                 })}
@@ -1799,6 +1815,13 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
           </div>
         </div>
       )}
+      
+      {/* Position Description Modal */}
+      <PositionDescriptionModal
+        position={selectedPosition}
+        isOpen={!!selectedPosition}
+        onClose={() => setSelectedPosition(null)}
+      />
     </div>
   );
 };

@@ -677,7 +677,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                                             key={mood}
                                             className={`px-2 py-0.5 text-xs rounded-full border ${moodColors[mood]}`}
                                           >
-                                            {moodDescriptions[mood].split(' - ')[0]}
+                                            {moodDescriptions[mood]}
                                           </span>
                                         );
                                       })}

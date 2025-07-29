@@ -65,9 +65,9 @@ export const getPositionsByMood = (mood: PositionMood): Position48[] => {
 };
 
 export const moodDescriptions: Record<PositionMood, string> = {
-  'romantic': 'ロマンチック系 - 密着感と愛情を重視',
-  'wild': 'ワイルド系 - 激しさと征服感を追求',
-  'playful': '遊び心系 - 楽しさと新鮮さを演出',
-  'technical': 'テクニカル系 - 技巧と刺激を追求',
-  'foreplay': '愛撫系 - じっくりと感じ合う'
+  'romantic': 'ロマンチック',
+  'wild': 'ワイルド',
+  'playful': 'プレイフル',
+  'technical': 'テクニカル',
+  'foreplay': '愛撫'
 };

@@ -56,7 +56,7 @@ export const PositionDescriptionModal: React.FC<PositionDescriptionModalProps> =
               const moodLabels = {
                 'romantic': 'ロマンチック',
                 'wild': 'ワイルド',
-                'playful': '遊び心',
+                'playful': 'プレイフル',
                 'technical': 'テクニカル',
                 'foreplay': '愛撫'
               };
