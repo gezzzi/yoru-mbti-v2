@@ -95,13 +95,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
   const [selectedPosition, setSelectedPosition] = useState<Position48 | null>(null);
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({
     nightPersonality: false,
-    smTendency: false,
     libidoLevel: false,
     positions: false,
     compatible: false,
     incompatible: false,
     relationship: false,
-    preferences: false,
     advice: false
   });
 
@@ -496,15 +494,43 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                             const tags = result.additionalResults?.tags || [];
                             let nightPersonality = '';
                             
-                            // 基本的な性格描写（より詳細に）
+                            // 基本的な性格描写（より詳細に）+ S/M傾向を統合
                             if (result.E > 50 && result.L > 50) {
                               nightPersonality = '日常では想像もつかないほど情熱的な一面を持つ。夜の帳が下りると、内に秘めていた欲望が解き放たれ、パートナーを自分の世界へと誘い込む。視線、仕草、言葉のすべてを駆使して相手を翻弄し、二人だけの特別な時間を演出する天性のリーダー。';
+                              if (result.additionalResults?.smTendency === 'S') {
+                                nightPersonality += '支配欲求が強く、パートナーをリードすることに深い快感を覚え、相手の反応をコントロールしながら征服感を味わう。';
+                              } else if (result.additionalResults?.smTendency === 'M') {
+                                nightPersonality += 'しかし時には、信頼できる相手に身を委ね、支配されることで日常から解放される快感も知っている。';
+                              } else {
+                                nightPersonality += '相手や気分によって自在に立場を変えられる柔軟性を持ち、時にはリードし、時には委ね、その場の雰囲気で最適な役割を演じる。';
+                              }
                             } else if (result.E > 50 && result.L <= 50) {
                               nightPersonality = '明るく開放的な性格が夜にはさらに花開く。相手の欲望を素直に受け入れ、楽しみながら身を委ねることで、パートナーと一体となる喜びを知っている。笑顔と情熱的な反応で相手を魅了し、お互いが心地よくなれる空間を作り出す。';
+                              if (result.additionalResults?.smTendency === 'S') {
+                                nightPersonality += 'その明るさの裏に支配欲求を秘めており、笑顔で相手をリードする小悪魔的な一面も。';
+                              } else if (result.additionalResults?.smTendency === 'M') {
+                                nightPersonality += '委ねることに安心感と興奮を覚え、相手に身を任せることで得られる深い満足感を追求する。';
+                              } else {
+                                nightPersonality += '柔軟な性格で、パートナーとの関係性によって自在に役割を変化させる。';
+                              }
                             } else if (result.E <= 50 && result.L > 50) {
                               nightPersonality = '普段の控えめな姿からは想像できない、深い情熱を内に秘めている。二人きりの空間では、静かに、しかし確実に主導権を握り、相手を自分のペースに引き込んでいく。言葉は少なくとも、その分行動で愛情と欲望を表現する。';
+                              if (result.additionalResults?.smTendency === 'S') {
+                                nightPersonality += '静かな支配者として、相手を思い通りに導くことに密かな喜びを感じる。';
+                              } else if (result.additionalResults?.smTendency === 'M') {
+                                nightPersonality += 'ただし、心を許した相手には完全に身を委ね、支配されることで真の解放感を得る。';
+                              } else {
+                                nightPersonality += '状況に応じて支配と服従を使い分ける、奥深い性格の持ち主。';
+                              }
                             } else {
                               nightPersonality = '優しく穏やかな雰囲気の中で、ゆっくりと心と体を開いていく。相手の反応を丁寧に観察しながら、お互いが心地よいと感じるリズムを見つけ出す。深い信頼関係の中でこそ、本当の自分を解放できるタイプ。';
+                              if (result.additionalResults?.smTendency === 'S') {
+                                nightPersonality += '優しさの中にも、相手を導きたいという密かな支配欲求を抱えている。';
+                              } else if (result.additionalResults?.smTendency === 'M') {
+                                nightPersonality += '信頼できる相手に委ねることで、日常の殻を破り、本当の自分を解放する。';
+                              } else {
+                                nightPersonality += '相手との関係性によって、導く側にも導かれる側にもなれる適応力を持つ。';
+                              }
                             }
                             
                             // 冒険性による追加（より具体的に）
@@ -514,27 +540,90 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                               nightPersonality += '慣れ親しんだ方法で、ゆっくりと確実に快感を高めていく。急がず焦らず、お互いの呼吸を合わせながら、深い繋がりを感じることを重視。安心できる関係性の中でこそ得られる、心からの解放感を何より大切にしている。';
                             }
                             
-                            // タグによる特徴的な要素を複数追加
-                            const personalityTraits = [];
-                            if (tags.includes('💬 言語プレイ派')) {
-                              personalityTraits.push('囁きや言葉責めで相手の理性を溶かしていく話術の達人でもあり');
-                            }
-                            if (tags.includes('🛁 アフターケア必須')) {
-                              personalityTraits.push('行為後の優しい時間を最も大切にする愛情深さを持ち');
-                            }
-                            if (tags.includes('⛏️ 開拓派')) {
-                              personalityTraits.push('相手の限界ギリギリまで責め立てることで得られる征服感を求め');
-                            }
-                            if (tags.includes('🕯 ロマン重視')) {
-                              personalityTraits.push('ムードや雰囲気作りにこだわりを持ち');
-                            }
-                            if (tags.includes('🎧 感覚演出派')) {
-                              personalityTraits.push('五感すべてを使った演出で特別な空間を創り出し');
-                            }
+                            // タグによる特徴的な要素を重要度順に追加
+                            const tagPriorities = [
+                              // 最高優先度：性格の核心に関わるタグ
+                              { tag: '🛁 アフターケア必須', trait: '行為後の優しい時間を最も大切にする愛情深さを持つ', priority: 10 },
+                              { tag: '⛏️ 開拓派', trait: '相手の限界ギリギリまで責め立てることで得られる征服感を求める', priority: 10 },
+                              { tag: '🧷 軽SM耐性あり', trait: '軽い支配と服従のゲームで刺激を楽しむ', priority: 10 },
+                              { tag: '🕯 ロマン重視', trait: 'ムードや雰囲気作りにこだわりを持つ', priority: 9 },
+                              { tag: '⚡️ スピード勝負派', trait: '情熱的に一気に燃え上がるスピード感を大切にする', priority: 9 },
+                              
+                              // 高優先度：行動パターンに関わるタグ
+                              { tag: '💬 言語プレイ派', trait: '囁きや言葉責めで相手の理性を溶かしていく話術の達人でもある', priority: 8 },
+                              { tag: '🎭 ロールプレイ好き', trait: 'シチュエーション設定で非日常の世界に没入する', priority: 8 },
+                              { tag: '🏃‍♂️ 衝動トリガー型', trait: '突発的な欲望に素直に従う野性的な一面を持つ', priority: 8 },
+                              { tag: '🧭 ガイド派', trait: '相手を優しく導きながら共に高みを目指す', priority: 8 },
+                              
+                              // 中優先度：価値観や安全性に関わるタグ
+                              { tag: '🚪 NG明確', trait: 'お互いの境界線を尊重しながら安心して楽しむ', priority: 7 },
+                              { tag: '🛡 安全第一派', trait: '安全性と信頼関係を最優先に考える', priority: 7 },
+                              { tag: '🙈 言い出しにくい派', trait: '恥じらいを持ちながらも内に秘めた欲望を抱える', priority: 7 },
+                              { tag: '🎧 感覚演出派', trait: '五感すべてを使った演出で特別な空間を創り出す', priority: 6 },
+                              { tag: '📅 準備派', trait: '事前の準備と演出で完璧な時間を作り上げる', priority: 6 },
+                              { tag: '🧼 ケア＆衛生重視', trait: '清潔感と相手への気遣いを何より大切にする', priority: 6 },
+                              
+                              // 低優先度：補助的な特徴
+                              { tag: '🌙 深夜エロス', trait: '深夜の静寂の中でこそ本能が解放される', priority: 5 },
+                              { tag: '☀️ 朝型エロス', trait: '朝の光とともに訪れる優しい欲望を好む', priority: 5 },
+                              { tag: '📱 デジタル前戯派', trait: 'メッセージでの駆け引きから始まる高揚感を楽しむ', priority: 5 },
+                              { tag: '🕵️‍♀️ 覗き見興奮派', trait: '秘密めいた雰囲気やタブー感に興奮を覚える', priority: 5 },
+                              { tag: '🔄 リピート求め派', trait: '一度では満足せず何度も快感を求め続ける', priority: 4 },
+                              { tag: '🗣 下ネタOK', trait: '日常会話でもエロティックな話題を楽しめる開放性を持つ', priority: 4 },
+                              { tag: '📚 学習研究派', trait: 'より良い快感を追求するため知識と技術を磨く', priority: 4 },
+                              { tag: '🤹‍♀️ マルチタスク派', trait: '複数の刺激を同時に操る器用さを発揮する', priority: 3 },
+                              { tag: '💤 まったり派', trait: 'ゆったりとした時間の流れの中で深い満足を得る', priority: 3 },
+                            ];
+                            
+                            // 5点or6点を取ったタグのみを対象にする
+                            // additionalResultsからtagScoresを取得（型定義がない場合は仮定）
+                            const highScoreTags = result.additionalResults?.tagScores
+                              ?.filter((item: { tag: string; score: number }) => item.score >= 5)
+                              ?.map((item: { tag: string; score: number }) => item.tag) || [];
+                            
+                            // 5点or6点のタグの中から優先度順に選択
+                            const personalityTraits = tagPriorities
+                              .filter(item => highScoreTags.includes(item.tag))
+                              .sort((a, b) => b.priority - a.priority)
+                              .map(item => item.trait);
                             
                             // 特徴を最大2つまで追加
                             if (personalityTraits.length > 0) {
-                              nightPersonality += personalityTraits.slice(0, 2).join('、') + '、';
+                              const selectedTraits = personalityTraits.slice(0, 2);
+                              if (selectedTraits.length === 1) {
+                                // 1つの場合は文末を「〜である」などに変更して句点
+                                nightPersonality += selectedTraits[0] + '。';
+                              } else if (selectedTraits.length === 2) {
+                                // 2つの場合は1つ目を「〜であり」などに変更して読点、2つ目はそのまま句点
+                                const firstTrait = selectedTraits[0].replace(/である$/, 'であり').replace(/持つ$/, '持ち').replace(/する$/, 'し').replace(/める$/, 'め').replace(/れる$/, 'れ').replace(/える$/, 'え');
+                                nightPersonality += firstTrait + '、' + selectedTraits[1] + '。';
+                              }
+                            }
+                            
+                            // セックスでのこだわりを自然に統合
+                            const sexPreferences = [];
+                            if (tags.includes('💬 言語プレイ派') || tags.includes('🎭 ロールプレイ好き')) {
+                              sexPreferences.push('言葉や設定で興奮を高め');
+                            }
+                            if (tags.includes('⚡️ スピード勝負派') || tags.includes('🏃‍♂️ 衝動トリガー型')) {
+                              sexPreferences.push('情熱的に一気に燃え上がることを好み');
+                            }
+                            if (tags.includes('🕯 ロマン重視') || tags.includes('🎧 感覚演出派')) {
+                              sexPreferences.push('ムードや雰囲気作りにこだわりを持ち');
+                            }
+                            if (tags.includes('📅 準備派') || tags.includes('🧼 ケア＆衛生重視')) {
+                              sexPreferences.push('事前の準備と清潔感を大切にし');
+                            }
+                            if (tags.includes('🚪 NG明確') || tags.includes('🛡 安全第一派')) {
+                              sexPreferences.push('お互いの境界線と安全性を最優先に考え');
+                            }
+                            if (tags.includes('🌙 深夜エロス') || tags.includes('☀️ 朝型エロス')) {
+                              const timePreference = tags.includes('🌙 深夜エロス') ? '深夜の静寂' : '朝の光';
+                              sexPreferences.push(`${timePreference}の中でこそ本能が解放され`);
+                            }
+                            
+                            if (sexPreferences.length > 0) {
+                              nightPersonality += sexPreferences.slice(0, 2).join('、') + 'ながら、';
                             }
                             
                             // Love/Freeによる関係性の描写
@@ -558,39 +647,6 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     </div>
                   </div>
                   
-                  {/* S or M 傾向 */}
-                  <div className="border-b border-white/20 pb-2 overflow-hidden">
-                    <button
-                      onClick={() => toggleSection('smTendency')}
-                      className="w-full flex items-center justify-between rounded-lg p-2"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <span className="text-lg">😈</span>
-                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">S or M</h4>
-                      </div>
-                      {openSections.smTendency ? <ChevronUp className="w-5 h-5 text-[#e0e7ff] " /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff] " />}
-                    </button>
-                    <div className={`transition-all duration-300 ${
-                      openSections.smTendency ? 'max-h-[500px]' : 'max-h-0'
-                    } overflow-hidden`}>
-                      <div className="mt-2 px-2 text-center">
-                        <p className="text-[#e0e7ff] font-bold mb-1">
-                          {result.additionalResults?.smTendency === 'S' 
-                            ? 'S'
-                            : result.additionalResults?.smTendency === 'M'
-                            ? 'M' 
-                            : '中立'}
-                        </p>
-                        <p className="text-[#e0e7ff]/80 text-sm">
-                          {result.additionalResults?.smTendency === 'S' 
-                            ? '支配したい気持ちが強く、相手をリードすることに喜びを感じる。'
-                            : result.additionalResults?.smTendency === 'M'
-                            ? '委ねることに安心感を覚え、相手に導かれることを好む。'
-                            : '相手や気分によって自在に立場を変えられる柔軟性がある。'}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
                   {/* 性欲レベル */}
                   <div className="border-b border-white/20 pb-2 overflow-hidden">
                     <button
@@ -708,80 +764,138 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     <div className={`transition-all duration-300 ${
                       openSections.compatibility ? 'max-h-[500px]' : 'max-h-0'
                     } overflow-hidden`}>
-                      <div className="mt-2 px-2 text-center">
+                      <div className="mt-2 px-2 text-left">
                         <div className="text-[#e0e7ff]/80 text-sm space-y-4">
                           <div>
-                            <h5 className="font-semibold text-[#e0e7ff] mb-2">相性のいいタイプ</h5>
+                            <h5 className="font-semibold text-[#e0e7ff] mb-2 text-center">相性のいいタイプ</h5>
                             {(() => {
-                              const compatibleTraits = [];
+                              const compatibleTypes = [];
                               
-                              // E/I軸での判定
-                              if (result.E > 50) {
-                                compatibleTraits.push('同じく外向的で社交的な人、または聞き上手で包容力のある内向的な人');
-                              } else {
-                                compatibleTraits.push('落ち着いた雰囲気で深い会話を楽しめる人、または明るく引っ張ってくれる人');
-                              }
+                              // 現在のタイプのコードを分解
+                              const currentCode = type.code.split('-')[0];
                               
-                              // Love/Free軸での判定
-                              if (result.L2 > 50) {
-                                compatibleTraits.push('感情的な繋がりを大切にし、愛情表現が豊かな人');
-                              } else {
-                                compatibleTraits.push('自立していて、適度な距離感を保てる人');
-                              }
+                              // 性格タイプから相性の良いタイプを取得
+                              const getTypeNameByCode = (code: string) => {
+                                const foundType = personalityTypes.find(pt => pt.code === code);
+                                return foundType ? foundType.name : code;
+                              };
                               
-                              // Open/Secret軸での判定
-                              if (result.O > 50) {
-                                compatibleTraits.push('オープンマインドで、性について素直に話せる人');
+                              // E/I軸とL/F軸での判定
+                              if (result.E > 50 && result.L > 50) {
+                                // 外向的リード型 → 内向的フォロー型が相性良い
+                                compatibleTypes.push({ code: 'IFSL', name: getTypeNameByCode('IFSL'), reason: '落ち着いて話を聞き、あなたのリードを受け入れてくれる' });
+                                compatibleTypes.push({ code: 'IFAL', name: getTypeNameByCode('IFAL'), reason: '冒険心を共有しながら、あなたを支えてくれる' });
+                              } else if (result.E > 50 && result.L <= 50) {
+                                // 外向的フォロー型 → 外向的リード型が相性良い
+                                compatibleTypes.push({ code: 'ELAL', name: getTypeNameByCode('ELAL'), reason: '情熱的にリードし、あなたを楽しませてくれる' });
+                                compatibleTypes.push({ code: 'ELSL', name: getTypeNameByCode('ELSL'), reason: '安定感のあるリードで安心させてくれる' });
+                              } else if (result.E <= 50 && result.L > 50) {
+                                // 内向的リード型 → 外向的フォロー型が相性良い
+                                compatibleTypes.push({ code: 'EFSL', name: getTypeNameByCode('EFSL'), reason: '明るく素直に、あなたのペースに合わせてくれる' });
+                                compatibleTypes.push({ code: 'EFAL', name: getTypeNameByCode('EFAL'), reason: '冒険心を持ちながら、あなたに委ねてくれる' });
                               } else {
-                                compatibleTraits.push('プライバシーを尊重し、二人だけの秘密を守れる人');
+                                // 内向的フォロー型 → 内向的リード型が相性良い
+                                compatibleTypes.push({ code: 'ILAL', name: getTypeNameByCode('ILAL'), reason: '静かに情熱的で、優しくリードしてくれる' });
+                                compatibleTypes.push({ code: 'ILSL', name: getTypeNameByCode('ILSL'), reason: '安心感のある関係を築いてくれる' });
                               }
                               
                               // タグによる追加判定
+                              const tagTraits = [];
                               if (result.additionalResults?.tags?.includes('🛁 アフターケア必須')) {
-                                compatibleTraits.push('優しくて思いやりがあり、アフターケアを大切にできる人');
+                                tagTraits.push('優しくて思いやりがあり、アフターケアを大切にできる人');
                               }
                               
-                              return compatibleTraits.slice(0, 3).map((trait, index) => (
-                                <p key={index} className="mb-1">{trait}</p>
-                              ));
+                              // 性格タイプと一般的な特徴を組み合わせて表示
+                              const displayItems: string[] = [];
+                              compatibleTypes.slice(0, 2).forEach(type => {
+                                displayItems.push(`${type.name}(${type.code})：${type.reason}`);
+                              });
+                              tagTraits.forEach(trait => {
+                                displayItems.push(trait);
+                              });
+                              
+                              return displayItems.slice(0, 3).map((item, index) => {
+                                // 性格タイプ形式かタグ形式かを判定
+                                const isPersonalityType = item.includes('(') && item.includes(')');
+                                if (isPersonalityType) {
+                                  return (
+                                    <div key={index} className="mb-1 sm:ml-16 md:ml-32 lg:ml-48">
+                                      {item}
+                                    </div>
+                                  );
+                                }
+                                // タグベースの項目はそのまま表示
+                                return <p key={index} className="mb-1">{item}</p>;
+                              });
                             })()}
                           </div>
                           <div>
-                            <h5 className="font-semibold text-[#e0e7ff] mb-2">相性が悪いタイプ</h5>
+                            <h5 className="font-semibold text-[#e0e7ff] mb-2 text-center">相性が悪いタイプ</h5>
                             {(() => {
-                              const incompatibleTraits = [];
+                              const incompatibleTypes = [];
                               
-                              // E/I軸での判定
-                              if (result.E > 50) {
-                                incompatibleTraits.push('過度に内向的で、コミュニケーションを避ける人');
-                              } else {
-                                incompatibleTraits.push('騒がしすぎて、静かな時間を尊重しない人');
-                              }
+                              // 性格タイプから相性の悪いタイプを取得
+                              const getTypeNameByCode = (code: string) => {
+                                const foundType = personalityTypes.find(pt => pt.code === code);
+                                return foundType ? foundType.name : code;
+                              };
                               
-                              // Love/Free軸での判定
-                              if (result.L2 > 50) {
-                                incompatibleTraits.push('感情を軽視し、身体だけの関係を求める人');
+                              // E/I軸とL/F軸での判定
+                              if (result.E > 50 && result.L > 50) {
+                                // 外向的リード型 → 同じ外向的リード型は衝突
+                                incompatibleTypes.push({ code: 'ELAL', name: getTypeNameByCode('ELAL'), reason: '主導権争いで衝突しやすい' });
+                                incompatibleTypes.push({ code: 'ELAF', name: getTypeNameByCode('ELAF'), reason: '自由すぎて統制が取れない' });
+                              } else if (result.E > 50 && result.L <= 50) {
+                                // 外向的フォロー型 → 内向的フォロー型は相性悪い
+                                incompatibleTypes.push({ code: 'IFSL', name: getTypeNameByCode('IFSL'), reason: 'お互いに受け身で進展しない' });
+                                incompatibleTypes.push({ code: 'IFSF', name: getTypeNameByCode('IFSF'), reason: '刺激が足りず物足りない' });
+                              } else if (result.E <= 50 && result.L > 50) {
+                                // 内向的リード型 → 同じ内向的リード型は衝突
+                                incompatibleTypes.push({ code: 'ILAL', name: getTypeNameByCode('ILAL'), reason: '静かな主導権争いになりやすい' });
+                                incompatibleTypes.push({ code: 'ILSL', name: getTypeNameByCode('ILSL'), reason: 'お互いに譲らず硬直しやすい' });
                               } else {
-                                incompatibleTraits.push('束縛が強く、自由を認めない人');
+                                // 内向的フォロー型 → 外向的リード型の過激タイプ
+                                incompatibleTypes.push({ code: 'ELAF', name: getTypeNameByCode('ELAF'), reason: '自由奔放すぎてついていけない' });
+                                incompatibleTypes.push({ code: 'ELAL', name: getTypeNameByCode('ELAL'), reason: '強引すぎて圧倒される' });
                               }
                               
                               // タグによる追加判定
+                              const tagTraits = [];
                               if (result.additionalResults?.tags?.includes('🚪 NG明確')) {
-                                incompatibleTraits.push('相手の境界線を尊重せず、強引に進める人');
+                                tagTraits.push('相手の境界線を尊重せず、強引に進める人');
                               }
                               
                               if (result.additionalResults?.tags?.includes('🙈 言い出しにくい派')) {
-                                incompatibleTraits.push('察しが悪く、相手の気持ちを読み取れない人');
+                                tagTraits.push('察しが悪く、相手の気持ちを読み取れない人');
                               }
                               
-                              return incompatibleTraits.slice(0, 3).map((trait, index) => (
-                                <p key={index} className="mb-1">{trait}</p>
-                              ));
+                              // 性格タイプと一般的な特徴を組み合わせて表示
+                              const displayItems: string[] = [];
+                              incompatibleTypes.slice(0, 2).forEach(type => {
+                                displayItems.push(`${type.name}(${type.code})：${type.reason}`);
+                              });
+                              tagTraits.forEach(trait => {
+                                displayItems.push(trait);
+                              });
+                              
+                              return displayItems.slice(0, 3).map((item, index) => {
+                                // 性格タイプ形式かタグ形式かを判定
+                                const isPersonalityType = item.includes('(') && item.includes(')');
+                                if (isPersonalityType) {
+                                  return (
+                                    <div key={index} className="mb-1 sm:ml-16 md:ml-32 lg:ml-48">
+                                      {item}
+                                    </div>
+                                  );
+                                }
+                                // タグベースの項目はそのまま表示
+                                return <p key={index} className="mb-1">{item}</p>;
+                              });
                             })()}
                           </div>
                           <div>
-                            <h5 className="font-semibold text-[#e0e7ff] mb-2">関係性の理想スタイル</h5>
-                            <p>
+                            <h5 className="font-semibold text-[#e0e7ff] mb-2 text-center">関係性の理想スタイル</h5>
+                            <p className="text-center">
                               {(() => {
                                 const styles = [];
                                 
@@ -813,120 +927,6 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     </div>
                   </div>
                   
-                  {/* セックスでのこだわり */}
-                  <div className="border-b border-white/20 pb-2 overflow-hidden">
-                    <button
-                      onClick={() => toggleSection('preferences')}
-                      className="w-full flex items-center justify-between rounded-lg p-2"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <span className="text-lg">🔍</span>
-                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">セックスでのこだわり</h4>
-                      </div>
-                      {openSections.preferences ? <ChevronUp className="w-5 h-5 text-[#e0e7ff] " /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff] " />}
-                    </button>
-                    <div className={`transition-all duration-300 ${
-                      openSections.preferences ? 'max-h-[500px]' : 'max-h-0'
-                    } overflow-hidden`}>
-                      <div className="mt-2 px-2">
-                        <ul className="text-[#e0e7ff]/80 text-sm space-y-1 list-none">
-                          {(() => {
-                            const preferences = [];
-                            const tags = result.additionalResults?.tags || [];
-                            
-                            // タグに基づくこだわりの生成
-                            if (tags.includes('💬 言語プレイ派')) {
-                              preferences.push('言葉責めや声でのやり取りが必須');
-                            }
-                            if (tags.includes('🎭 ロールプレイ好き')) {
-                              preferences.push('シチュエーション設定があると興奮度が上がる');
-                            }
-                            if (tags.includes('🛁 アフターケア必須')) {
-                              preferences.push('行為後の優しい時間が何より大切');
-                            }
-                            if (tags.includes('⛏️ 開拓派')) {
-                              preferences.push('相手の反応を引き出すことに喜びを感じる');
-                            }
-                            if (tags.includes('🧷 軽SM耐性あり')) {
-                              preferences.push('軽い拘束や支配/被支配のプレイが好き');
-                            }
-                            if (tags.includes('🕯 ロマン重視')) {
-                              preferences.push('ムード作りと雰囲気が大切');
-                            }
-                            if (tags.includes('⚡️ スピード勝負派')) {
-                              preferences.push('長い前戯より本番重視');
-                            }
-                            if (tags.includes('🏃‍♂️ 衝動トリガー型')) {
-                              preferences.push('突発的な情熱に身を任せたい');
-                            }
-                            if (tags.includes('📅 準備派')) {
-                              preferences.push('事前準備と清潔感が大切');
-                            }
-                            if (tags.includes('🚪 NG明確')) {
-                              preferences.push('境界線をしっかり守ることが大前提');
-                            }
-                            if (tags.includes('🙈 言い出しにくい派')) {
-                              preferences.push('察してもらえる優しい相手が理想');
-                            }
-                            if (tags.includes('🎧 感覚演出派')) {
-                              preferences.push('音楽や照明で五感を刺激したい');
-                            }
-                            if (tags.includes('🧼 ケア＆衛生重視')) {
-                              preferences.push('清潔感とお互いのケアが最優先');
-                            }
-                            if (tags.includes('🕵️‍♀️ 覗き見興奮派')) {
-                              preferences.push('秘密めいた雰囲気に興奮する');
-                            }
-                            if (tags.includes('🛡 安全第一派')) {
-                              preferences.push('安全性と信頼関係が何より大切');
-                            }
-                            if (tags.includes('📱 デジタル前戯派')) {
-                              preferences.push('メッセージでの前戯も楽しみたい');
-                            }
-                            if (tags.includes('🌙 深夜エロス')) {
-                              preferences.push('深夜の静かな時間が一番燃える');
-                            }
-                            if (tags.includes('☀️ 朝型エロス')) {
-                              preferences.push('朝の光の中での行為が好き');
-                            }
-                            if (tags.includes('🔄 リピート求め派')) {
-                              preferences.push('一度では満足できず何度も求める');
-                            }
-                            if (tags.includes('🗣 下ネタOK')) {
-                              preferences.push('日常会話でもエロい話題を楽しめる');
-                            }
-                            if (tags.includes('📚 学習研究派')) {
-                              preferences.push('テクニックや知識を深めることに興味あり');
-                            }
-                            if (tags.includes('🧭 ガイド派')) {
-                              preferences.push('相手を導きながら一緒に楽しみたい');
-                            }
-                            if (tags.includes('🤹‍♀️ マルチタスク派')) {
-                              preferences.push('複数の刺激を同時に楽しみたい');
-                            }
-                            if (tags.includes('💤 まったり派')) {
-                              preferences.push('ゆっくりとした時間の流れを大切にしたい');
-                            }
-                            
-                            // 最大5つまで表示
-                            const displayPreferences = preferences.slice(0, 5);
-                            
-                            // タグがない場合のデフォルト
-                            if (displayPreferences.length === 0) {
-                              displayPreferences.push('特定のこだわりはなく、相手との相性を重視');
-                            }
-                            
-                            return displayPreferences.map((pref, index) => (
-                              <li key={index} className="flex items-center">
-                                <span className="mr-2 text-pink-500">♥</span>
-                                <span>{pref}</span>
-                              </li>
-                            ));
-                          })()}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
                   
                   {/* あなたの短所とアドバイス */}
                   <div className="pb-2 overflow-hidden">
@@ -1014,7 +1014,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                               <ul className="text-[#e0e7ff]/80 text-sm space-y-1 list-none">
                                 {hints.slice(0, 3).map((hint, index) => (
                                   <li key={index} className="flex items-start">
-                                    <span className="mr-2 text-yellow-500">💡</span>
+                                    <span className="sm:ml-16 md:ml-32 lg:ml-48 mr-2 text-yellow-500">💡</span>
                                     <span>{hint}</span>
                                   </li>
                                 ))}

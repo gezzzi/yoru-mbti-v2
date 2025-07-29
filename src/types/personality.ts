@@ -73,5 +73,6 @@ export interface TestResult {
     kissImportance: number;
     preferences: string[];
     tags?: string[]; // 該当するタグのリスト
+    tagScores?: { tag: string; score: number }[]; // タグとスコアのリスト
   };
 } 

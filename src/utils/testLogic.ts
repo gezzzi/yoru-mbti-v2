@@ -168,12 +168,13 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
   let smScore = 0;
   
   // LF軸（リード/フォロー）のスコア
-  // Lが高い（>50）ならS傾向、低い（<50）ならM傾向
-  if (L > 50) {
-    smScore += 2; // S傾向
-  } else if (L < 50) {
-    smScore -= 2; // M傾向
+  // 中立の範囲を広げるため、より明確な差がある場合のみS/M判定
+  if (L > 65) {
+    smScore += 2; // 明確なS傾向
+  } else if (L < 35) {
+    smScore -= 2; // 明確なM傾向
   }
+  // 35-65の範囲は中立寄り
   
   // タグによる追加判定
   if (tags.includes('⛏️ 開拓派')) {
@@ -184,7 +185,8 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
     smScore += smScore > 0 ? 1 : -1;
   }
   
-  const smTendency = smScore > 0 ? 'S' : smScore < 0 ? 'M' : 'Both';
+  // スコアが-1〜+1の範囲は中立
+  const smTendency = smScore >= 2 ? 'S' : smScore <= -2 ? 'M' : 'Both';
   
   // 性欲レベルの計算
   // 質問11の回答値と特定のタグで判定
@@ -246,7 +248,8 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
       },
       kissImportance,
       preferences,
-      tags
+      tags,
+      tagScores
     }
   };
 };
