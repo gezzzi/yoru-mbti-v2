@@ -21,8 +21,8 @@ const publicTags = [
   '🗣 下ネタOK'
 ];
 
-// 5軸データと公開タグから相性診断コードを生成
-export const generateCompatibilityCode = (result: TestResult): string => {
+// 5軸データと公開タグ、秘密の回答から相性診断コードを生成
+export const generateCompatibilityCode = (result: TestResult, secretAnswer?: { questionId: number; answer: number }): string => {
   // 各軸の値を0-100の整数値に変換
   const v1 = Math.round(result.E);
   const v2 = Math.round(result.L);
@@ -52,21 +52,33 @@ export const generateCompatibilityCode = (result: TestResult): string => {
   const axisCode = axisValue.toString(36).toUpperCase();
   const tagCode = tagFlags.toString(36).toUpperCase();
   
+  // 秘密の回答がある場合は追加
+  if (secretAnswer) {
+    const secretCode = `${secretAnswer.questionId.toString(36)}${secretAnswer.answer.toString(36)}`.toUpperCase();
+    return `${axisCode}-${tagCode}-${secretCode}`;
+  }
+  
   // ハイフンで区切って返す
   return `${axisCode}-${tagCode}`;
 };
 
-// 相性診断コードから5軸データと公開タグを復元
-export const parseCompatibilityCode = (code: string): TestResult | null => {
-  if (!code || code.length === 0) return null;
+// 相性診断コードから5軸データと公開タグ、秘密の回答を復元
+export const parseCompatibilityCode = (code: string): { result: TestResult | null; secretAnswer?: { questionId: number; answer: number } } => {
+  if (!code || code.length === 0) return { result: null };
   
   try {
     // ハイフンで分割（新フォーマット）または旧フォーマットとして処理
     const parts = code.split('-');
     let axisCode: string;
     let tagCode: string | null = null;
+    let secretCode: string | null = null;
     
-    if (parts.length === 2) {
+    if (parts.length === 3) {
+      // 秘密の回答付きフォーマット：軸データ-タグデータ-秘密データ
+      axisCode = parts[0];
+      tagCode = parts[1];
+      secretCode = parts[2];
+    } else if (parts.length === 2) {
       // 新フォーマット：軸データ-タグデータ
       axisCode = parts[0];
       tagCode = parts[1];
@@ -100,7 +112,7 @@ export const parseCompatibilityCode = (code: string): TestResult | null => {
     if (v1 < 0 || v1 > 100 || v2 < 0 || v2 > 100 || 
         v3 < 0 || v3 > 100 || v4 < 0 || v4 > 100 || 
         v5 < 0 || v5 > 100) {
-      return null;
+      return { result: null };
     }
     
     // タグデータの復元
@@ -114,7 +126,21 @@ export const parseCompatibilityCode = (code: string): TestResult | null => {
       }
     }
     
-    return {
+    // 秘密の回答の復元
+    let secretAnswer: { questionId: number; answer: number } | undefined;
+    if (secretCode && secretCode.length >= 2) {
+      try {
+        const questionId = parseInt(secretCode.substring(0, secretCode.length - 1), 36);
+        const answer = parseInt(secretCode.substring(secretCode.length - 1), 36);
+        if (questionId >= 36 && questionId <= 40 && answer >= 0 && answer <= 6) {
+          secretAnswer = { questionId, answer };
+        }
+      } catch {
+        // 秘密データの復元に失敗しても続行
+      }
+    }
+    
+    const result: TestResult = {
       E: v1,
       L: v2,
       A: v3,
@@ -123,8 +149,10 @@ export const parseCompatibilityCode = (code: string): TestResult | null => {
       type: null as any, // 型判定は別途実行する必要がある
       additionalResults: tags.length > 0 ? { tags } as any : undefined
     };
+    
+    return { result, secretAnswer };
   } catch {
-    return null;
+    return { result: null };
   }
 };
 

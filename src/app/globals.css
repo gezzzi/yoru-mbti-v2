@@ -208,11 +208,9 @@ body {
   -webkit-text-fill-color: transparent;
   text-shadow: none;
   animation: 
-    sequential-blink 3s infinite,
-    gentle-pulse 2s ease-in-out infinite;
+    sequential-blink 3s infinite;
   animation-delay: 
-    calc(var(--char-index) * 0.2s),
-    calc(var(--char-index) * 0.1s);
+    calc(var(--char-index) * 0.2s);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transform: translateZ(0);
@@ -234,11 +232,9 @@ body {
   -webkit-text-fill-color: transparent;
   text-shadow: none;
   animation: 
-    sequential-blink 3s infinite,
-    gentle-pulse 2s ease-in-out infinite;
+    sequential-blink 3s infinite;
   animation-delay: 
-    calc(var(--char-index) * 0.2s),
-    calc(var(--char-index) * 0.1s);
+    calc(var(--char-index) * 0.2s);
   -webkit-font-smoothing: antialiased;
   transform: translateZ(0);
 }
@@ -254,12 +250,8 @@ body {
   -webkit-text-fill-color: transparent;
   z-index: -1;
   text-shadow: none;
-  animation: 
-    rotate-slow 8s linear infinite,
-    outline-pulse 2s ease-in-out infinite;
-  animation-delay: 
-    calc(var(--char-index) * 0.3s),
-    calc(var(--char-index) * 0.1s);
+  /* animation removed */
+  /* animation-delay removed */
   -webkit-font-smoothing: antialiased;
   transform: translateZ(0);
 }
@@ -280,11 +272,9 @@ body {
   font-weight: bold;
   margin: 0 2px;
   animation: 
-    sequential-blink 3s infinite,
-    gentle-pulse 2s ease-in-out infinite;
+    sequential-blink 3s infinite;
   animation-delay: 
-    calc(var(--char-index) * 0.2s),
-    calc(var(--char-index) * 0.1s);
+    calc(var(--char-index) * 0.2s);
   -webkit-font-smoothing: antialiased;
   transform: translateZ(0);
   -webkit-backface-visibility: hidden;
@@ -301,11 +291,9 @@ body {
   text-stroke: 3px #ff00ff;
   filter: drop-shadow(0 0 5px #ff00ff);
   animation: 
-    sequential-blink 3s infinite,
-    gentle-pulse 2s ease-in-out infinite;
+    sequential-blink 3s infinite;
   animation-delay: 
-    calc(var(--char-index) * 0.2s),
-    calc(var(--char-index) * 0.1s);
+    calc(var(--char-index) * 0.2s);
 }
 
 .neon-char-iphone.special::before {
@@ -320,12 +308,8 @@ body {
   z-index: -1;
   text-shadow: none;
   filter: drop-shadow(0 0 5px #ff0099);
-  animation: 
-    rotate-slow 8s linear infinite,
-    outline-pulse 2s ease-in-out infinite;
-  animation-delay: 
-    calc(var(--char-index) * 0.3s),
-    calc(var(--char-index) * 0.1s);
+  /* animation removed */
+  /* animation-delay removed */
 }
 
 .neon-char-iphone.special::after {
@@ -349,10 +333,7 @@ body {
   }
 }
 
-@keyframes rotate-slow {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+/* rotate-slow animation removed */
 
 @keyframes outline-pulse {
   0%, 100% { 

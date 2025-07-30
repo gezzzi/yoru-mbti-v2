@@ -550,5 +550,85 @@ export const questions: Question[] = [
       { text: 'そう思わない', value: 1 },
       { text: '全くそう思わない', value: 0 }
     ]
+  },
+{
+    id: 36,
+    axis: null,
+    tag: '👀 エロい目線',
+    text: '最近、他の人をエロい目で見たことがある',
+    isReverse: false,
+    options: [
+      { text: '非常にそう思う', value: 6 },
+      { text: 'そう思う', value: 5 },
+      { text: 'ややそう思う', value: 4 },
+      { text: 'どちらでもない', value: 3 },
+      { text: 'あまりそう思わない', value: 2 },
+      { text: 'そう思わない', value: 1 },
+      { text: '全くそう思わない', value: 0 }
+    ]
+  },
+{
+    id: 37,
+    axis: null,
+    tag: '🌙 ワンナイト願望',
+    text: 'もしバレないなら、ワンナイトしてみたいと思う',
+    isReverse: false,
+    options: [
+      { text: '非常にそう思う', value: 6 },
+      { text: 'そう思う', value: 5 },
+      { text: 'ややそう思う', value: 4 },
+      { text: 'どちらでもない', value: 3 },
+      { text: 'あまりそう思わない', value: 2 },
+      { text: 'そう思わない', value: 1 },
+      { text: '全くそう思わない', value: 0 }
+    ]
+  },
+{
+    id: 38,
+    axis: null,
+    tag: '💭 妄想癖',
+    text: '正直、パートナー以外の人と"こうなったら…"って妄想したことがある',
+    isReverse: false,
+    options: [
+      { text: '非常にそう思う', value: 6 },
+      { text: 'そう思う', value: 5 },
+      { text: 'ややそう思う', value: 4 },
+      { text: 'どちらでもない', value: 3 },
+      { text: 'あまりそう思わない', value: 2 },
+      { text: 'そう思わない', value: 1 },
+      { text: '全くそう思わない', value: 0 }
+    ]
+  },
+{
+    id: 39,
+    axis: null,
+    tag: '💔 過去の影',
+    text: '元カレ/元カノをまだ思い出すことがある',
+    isReverse: false,
+    options: [
+      { text: '非常にそう思う', value: 6 },
+      { text: 'そう思う', value: 5 },
+      { text: 'ややそう思う', value: 4 },
+      { text: 'どちらでもない', value: 3 },
+      { text: 'あまりそう思わない', value: 2 },
+      { text: 'そう思わない', value: 1 },
+      { text: '全くそう思わない', value: 0 }
+    ]
+  },
+{
+    id: 40,
+    axis: null,
+    tag: '🤐 隠し事',
+    text: 'パートナーには言えない"隠し事"がある',
+    isReverse: false,
+    options: [
+      { text: '非常にそう思う', value: 6 },
+      { text: 'そう思う', value: 5 },
+      { text: 'ややそう思う', value: 4 },
+      { text: 'どちらでもない', value: 3 },
+      { text: 'あまりそう思わない', value: 2 },
+      { text: 'そう思わない', value: 1 },
+      { text: '全くそう思わない', value: 0 }
+    ]
   }
 ];

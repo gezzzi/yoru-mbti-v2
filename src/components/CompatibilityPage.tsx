@@ -61,6 +61,8 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
   const [isQRDownloading, setIsQRDownloading] = useState(false);
   const [isMyQRUploading, setIsMyQRUploading] = useState(false);
   const [uploadedQRImage, setUploadedQRImage] = useState<string | null>(null);
+  const [selectedSecretQuestion, setSelectedSecretQuestion] = useState<number | null>(null);
+  const [secretAnswer, setSecretAnswer] = useState<{ questionId: number; answer: number } | undefined>();
   const qrRef = useRef<HTMLDivElement>(null);
 
   // ローカルストレージから自分の診断結果を読み込む
@@ -71,8 +73,30 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
         try {
           const parsedResult: TestResult = JSON.parse(savedResult);
           setMyResult(parsedResult);
-          const code = generateCompatibilityCode(parsedResult);
-          setMyCode(code);
+          
+          // ランダムに秘密の質問を選択
+          const secretQuestions = [36, 37, 38, 39, 40];
+          const randomQuestion = secretQuestions[Math.floor(Math.random() * secretQuestions.length)];
+          setSelectedSecretQuestion(randomQuestion);
+          
+          // answerHistoryから回答を取得
+          const answerHistory = localStorage.getItem('answer_history');
+          if (answerHistory) {
+            const answers = JSON.parse(answerHistory);
+            
+            if (answers[randomQuestion] !== undefined) {
+              const answer = { questionId: randomQuestion, answer: answers[randomQuestion] };
+              setSecretAnswer(answer);
+              const code = generateCompatibilityCode(parsedResult, answer);
+              setMyCode(code);
+            } else {
+              const code = generateCompatibilityCode(parsedResult);
+              setMyCode(code);
+            }
+          } else {
+            const code = generateCompatibilityCode(parsedResult);
+            setMyCode(code);
+          }
         } catch (error) {
           console.error('保存された診断結果の読み込みに失敗しました:', error);
         }
@@ -140,9 +164,11 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
     return { compatibility, description, tips };
   };
 
-  const parseCode = (code: string): TestResult | null => {
-    const parsedResult = parseCompatibilityCode(code);
-    if (!parsedResult) return null;
+  const parseCode = (code: string): { result: TestResult | null; secretAnswer?: { questionId: number; answer: number } } => {
+    const parsed = parseCompatibilityCode(code);
+    if (!parsed.result) return { result: null };
+    
+    const parsedResult = parsed.result;
 
     // 4軸のタイプコードを生成
     const typeCode = 
@@ -156,13 +182,16 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
     ) || personalityTypes[0];
     
     return {
-      E: parsedResult.E,
-      L: parsedResult.L,
-      A: parsedResult.A,
-      L2: parsedResult.L2,
-      O: parsedResult.O,
-      type: personalityType,
-      additionalResults: parsedResult.additionalResults
+      result: {
+        E: parsedResult.E,
+        L: parsedResult.L,
+        A: parsedResult.A,
+        L2: parsedResult.L2,
+        O: parsedResult.O,
+        type: personalityType,
+        additionalResults: parsedResult.additionalResults
+      },
+      secretAnswer: parsed.secretAnswer
     };
   };
 
@@ -182,15 +211,20 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
       }
 
       // 相手のコードを解析
-      const parsedPartnerResult = parseCode(partnerCode);
+      const parsed = parseCode(partnerCode);
       
-      if (!parsedPartnerResult) {
+      if (!parsed.result) {
         throw new Error('QRコードが無効です');
+      }
+      
+      // 相手の秘密の回答をlocalStorageに保存
+      if (parsed.secretAnswer) {
+        localStorage.setItem('partner_secret_answer', JSON.stringify(parsed.secretAnswer));
       }
 
       // 結果ページに遷移
       if (onShowResults && myResult) {
-        onShowResults(myResult, parsedPartnerResult);
+        onShowResults(myResult, parsed.result);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'QRコードの解析に失敗しました');
@@ -224,7 +258,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
           const result = await QrScanner.scanImage(file);
           
           // 読み取った結果がコードの形式かチェック（旧形式と新形式の両方に対応）
-          if (result && result.match(/^[A-Za-z0-9]+(-[A-Za-z0-9]+)?$/)) {
+          if (result && result.match(/^[A-Za-z0-9]+(-[A-Za-z0-9]+)?(-[A-Za-z0-9]+)?$/)) {
             setPartnerCode(result.toUpperCase());
           } else {
             throw new Error('QRコードから有効なコードを読み取れませんでした');
@@ -262,19 +296,20 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
         const code = result.toUpperCase();
         
         // コードを解析して診断結果を復元
-        const parsedResult = parseCode(code);
+        const parsed = parseCode(code);
         
-        if (!parsedResult) {
+        if (!parsed.result) {
           throw new Error('QRコードから有効な診断結果を読み取れませんでした');
         }
 
         // 自分の結果として設定
-        setMyResult(parsedResult);
+        setMyResult(parsed.result);
+        setSecretAnswer(parsed.secretAnswer);
         setMyCode(code);
         
         // ローカルストレージにも保存
         if (typeof window !== 'undefined') {
-          localStorage.setItem('personality_test_result', JSON.stringify(parsedResult));
+          localStorage.setItem('personality_test_result', JSON.stringify(parsed.result));
         }
         
         setError('');

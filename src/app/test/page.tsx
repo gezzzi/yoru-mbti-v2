@@ -13,6 +13,7 @@ export default function TestPage() {
     // ローカルストレージに保存
     if (typeof window !== 'undefined') {
       localStorage.setItem('personality_test_result', JSON.stringify(result));
+      localStorage.setItem('answer_history', JSON.stringify(answers));
     }
     
     // 結果ページにリダイレクト

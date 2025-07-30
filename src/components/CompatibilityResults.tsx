@@ -13,6 +13,7 @@ import Fireworks from './Fireworks';
 import HeartRain from './HeartRain';
 import { PositionDescriptionModal } from './PositionDescriptionModal';
 import { Position48, positions48 } from '../data/positions48';
+import { questions } from '../data/questions';
 
 interface CompatibilityResult {
   compatibility: number;
@@ -138,7 +139,6 @@ const RadarChart: React.FC<{ axisScores: { E: number, L: number, A: number, L2: 
           strokeWidth="2"
           style={{
             opacity: animationProgress,
-            animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
           }}
         />
         
@@ -281,6 +281,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   const [showHeartRain, setShowHeartRain] = useState(false);
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({});
   const [selectedPosition, setSelectedPosition] = useState<Position48 | null>(null);
+  const [partnerSecretAnswer, setPartnerSecretAnswer] = useState<{ questionId: number; answer: number } | null>(null);
   
   // Toggle section function
   const toggleSection = (section: string) => {
@@ -429,6 +430,18 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   
   // カウントアップアニメーション用
   const animatedScore = useCountUp(Math.round(compatibility.compatibility), 4000, animationStarted);
+  
+  // localStorageから相手の秘密の回答を取得
+  useEffect(() => {
+    const secretAnswer = localStorage.getItem('partner_secret_answer');
+    if (secretAnswer) {
+      try {
+        setPartnerSecretAnswer(JSON.parse(secretAnswer));
+      } catch (error) {
+        console.error('秘密の回答の読み込みに失敗しました:', error);
+      }
+    }
+  }, []);
   
   // コンポーネントマウント時にアニメーションを開始
   useEffect(() => {
@@ -1655,7 +1668,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
             {showHeartRain && <HeartRain />}
             
             <div className="text-center relative z-10">
-              <div className="flex items-center justify-center mb-4 sm:mb-6 animate-pulse">
+              <div className="flex items-center justify-center mb-4 sm:mb-6">
                 {getCompatibilityIcon(compatibility.compatibility)}
                 <span className="ml-3 sm:ml-4 text-5xl sm:text-6xl md:text-7xl font-bold text-pink-400">
                   {animatedScore}%
@@ -1797,7 +1810,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                   </div>
 
                   {/* ⑦ 関係性予測 */}
-                  <div className="overflow-hidden">
+                  <div className="border-b border-white/20 pb-2 overflow-hidden">
                     <button
                       onClick={() => toggleSection('relationshipPrediction')}
                       className="w-full flex items-center justify-between rounded-lg p-2"
@@ -1816,6 +1829,69 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                       </div>
                     </div>
                   </div>
+                  
+                  {/* ⑥ 相手の秘密を知る */}
+                  {partnerSecretAnswer && (
+                    <div className="overflow-hidden">
+                      <button
+                        onClick={() => toggleSection('partnerSecret')}
+                        className="w-full flex items-center justify-between p-2 rounded-lg"
+                      >
+                        <div className="flex items-center gap-2 text-left">
+                          <span className="text-lg">🤫</span>
+                          <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">相手の秘密を知る</h4>
+                        </div>
+                        {openSections.partnerSecret ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                      </button>
+                      <div className={`transition-all duration-300 ${
+                        openSections.partnerSecret ? 'max-h-96' : 'max-h-0'
+                      } overflow-hidden`}>
+                        <div className="mt-2 px-2">
+                          <p className="text-xs text-[#e0e7ff]/70 mb-3 text-center">相手の質問の回答</p>
+                            {(() => {
+                              const question = questions.find(q => q.id === partnerSecretAnswer.questionId);
+                              if (!question) return null;
+                              
+                              return (
+                                <div className="space-y-3">
+                                  {/* 質問文 */}
+                                  <div className="text-center">
+                                    <p className="text-sm font-medium text-[#e0e7ff]">
+                                      {question.text}
+                                    </p>
+                                  </div>
+                                  
+                                  {/* 回答の丸 */}
+                                  <div className="flex justify-center items-center gap-1 flex-wrap">
+                                    {question.options.map((option, index) => (
+                                      <div
+                                        key={index}
+                                        className={`relative w-8 h-8 rounded-full border-2 ${
+                                          option.value === partnerSecretAnswer.answer
+                                            ? 'bg-gradient-to-br from-purple-500 to-pink-500 border-purple-400 scale-110'
+                                            : 'bg-white/10 border-white/30'
+                                        }`}
+                                      >
+                                        {option.value === partnerSecretAnswer.answer && (
+                                          <Check className="absolute inset-0 m-auto w-4 h-4 text-white" />
+                                        )}
+                                      </div>
+                                    ))}
+                                  </div>
+                                  
+                                  {/* 回答のテキスト */}
+                                  <p className="text-center text-sm text-[#e0e7ff]/90 mt-2">
+                                    相手の回答: <span className="font-bold text-pink-300">
+                                      {question.options.find(opt => opt.value === partnerSecretAnswer.answer)?.text}
+                                    </span>
+                                  </p>
+                                </div>
+                              );
+                            })()}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               </ScrollAnimation>
