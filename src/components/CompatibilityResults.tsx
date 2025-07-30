@@ -1899,39 +1899,39 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
               {/* アクションボタン */}
               <ScrollAnimation animation="fadeInUp" delay={800}>
               <div className="text-center space-y-4">
-                <div className="flex justify-center items-center gap-4">
+                <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-4">
                   <button 
                     onClick={handleDownload}
                     disabled={isDownloading}
-                    className="bg-white/10 backdrop-blur-sm border border-white/20 text-[#e0e7ff] px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-white/20 transition-all flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg text-sm sm:text-base"
+                    className="bg-blue-400 text-blue-800 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-blue-300 transition-all transform hover:scale-105 inline-flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg text-sm sm:text-base"
                   >
                     {isDownloading ? (
                       <>
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        <span>ダウンロード中...</span>
+                        <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-blue-800 border-t-transparent rounded-full animate-spin"></div>
+                        <span className="hidden sm:inline">ダウンロード中...</span>
+                        <span className="sm:hidden">保存中...</span>
                       </>
                     ) : (
                       <>
-                        <Download className="w-5 h-5" />
-                        <span>ダウンロード</span>
+                        <Download className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <span className="hidden sm:inline">ダウンロード</span>
+                        <span className="sm:hidden">保存</span>
                       </>
                     )}
                   </button>
                   <button
                     onClick={() => setShowShareModal(true)}
-                    className="bg-white/10 backdrop-blur-sm border border-white/20 text-[#e0e7ff] px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-white/20 transition-all flex items-center space-x-2 shadow-lg text-sm sm:text-base"
+                    className="bg-teal-500 text-teal-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-sm sm:text-base"
                   >
-                    <Share2 className="w-5 h-5" />
+                    <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span>シェア</span>
                   </button>
-                </div>
-                <div className="flex justify-center">
                   <button
                     onClick={onNewTest}
-                    className="bg-white/10 backdrop-blur-sm border border-white/20 text-[#e0e7ff] px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-white/20 transition-all flex items-center justify-center space-x-2 shadow-lg text-sm sm:text-base"
+                    className="bg-gradient-to-r from-[#ec4899] to-[#ffb8ce] text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:from-[#ffb8ce] hover:to-[#ffb8ce] transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-sm sm:text-base"
                   >
-                    <RefreshCw className="w-5 h-5" />
-                    <span>もう一度診断する</span>
+                    <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span>再診断</span>
                   </button>
                 </div>
               </div>

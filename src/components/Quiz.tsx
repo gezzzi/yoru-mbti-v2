@@ -247,7 +247,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
               {currentPageIndex > 0 && (
                 <button
                   onClick={handlePrevious}
-                  className="flex items-center justify-center px-8 py-4 rounded-full text-lg font-medium transition-all duration-200 transform hover:scale-105 bg-gray-600 text-white hover:bg-gray-700 shadow-lg hover:shadow-xl"
+                  className="flex items-center justify-center px-8 py-3 rounded-full text-lg font-medium transition-all duration-200 transform hover:scale-105 bg-gray-600 text-white hover:bg-gray-700 shadow-lg hover:shadow-xl"
                 >
                   <span className="mr-2">←</span>
                   戻る
@@ -260,13 +260,13 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
                 disabled={!isCurrentPageComplete}
                 className={`flex items-center justify-center px-16 py-4 rounded-full text-lg font-medium transition-all duration-200 transform hover:scale-105 min-w-[200px] ${
                   isCurrentPageComplete
-                    ? 'bg-[#818cf8] text-white hover:bg-[#a78bfa] shadow-lg hover:shadow-xl'
+                    ? 'bg-[#818cf8] text-white hover:bg-[#6366f1] shadow-lg hover:shadow-xl'
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
                 data-next-button={!isLastPage}
                 data-results-button={isLastPage}
               >
-                {isLastPage ? '結果を見る' : '次へ'}
+                {isLastPage ? '結果へ' : '次へ'}
                 <span className="ml-2">→</span>
               </button>
             </div>

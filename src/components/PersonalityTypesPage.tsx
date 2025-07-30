@@ -156,9 +156,12 @@ export default function PersonalityTypesPage() {
             </p>
             <Link
               href="/test"
-              className="inline-block px-12 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-lg rounded-2xl hover:from-purple-700 hover:to-pink-700 transform hover:scale-105 transition-all duration-200 shadow-xl"
+              className="inline-flex items-center px-12 py-4 bg-gradient-to-r from-[#6366f1] to-[#a78bfa] text-white font-semibold text-lg rounded-2xl hover:from-[#818cf8] hover:to-[#a78bfa] transform hover:scale-105 transition-all duration-200 shadow-xl"
             >
               診断テストを受ける
+              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </Link>
           </div>
         </ScrollAnimation>

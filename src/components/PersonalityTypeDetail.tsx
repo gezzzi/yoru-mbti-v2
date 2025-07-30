@@ -55,12 +55,12 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
           <div className="mb-8">
           <Link 
             href="/types" 
-            className="inline-flex items-center text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 transition-all duration-300 px-6 py-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 font-medium"
+            className="inline-flex items-center text-white bg-gray-600 hover:bg-gray-700 transition-all duration-300 px-6 py-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 font-medium"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            性格タイプ一覧に戻る
+            タイプ一覧に戻る
           </Link>
           </div>
         </ScrollAnimation>
@@ -105,15 +105,21 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
                   <div className="space-y-4 sm:space-y-0 sm:space-x-4 sm:flex sm:justify-center">
                     <Link
                       href="/test"
-                      className="inline-block px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold text-lg rounded-2xl hover:from-purple-700 hover:to-pink-700 transform hover:scale-105 transition-all duration-200 shadow-xl"
+                      className="inline-flex items-center px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-[#6366f1] to-[#a78bfa] text-white font-semibold rounded-2xl hover:from-[#818cf8] hover:to-[#a78bfa] transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl text-base md:text-lg"
                     >
-                      診断テストを受ける
+                      性格診断をする
+                      <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
                     </Link>
                     <Link
                       href="/compatibility"
-                      className="inline-block px-8 py-4 bg-gradient-to-r from-teal-500 to-blue-500 text-white font-semibold text-lg rounded-2xl hover:from-teal-600 hover:to-blue-600 transform hover:scale-105 transition-all duration-200 shadow-xl"
+                      className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#ec4899] to-[#ffb8ce] text-white font-semibold text-lg rounded-2xl hover:from-[#ffb8ce] hover:to-[#ffb8ce] transform hover:scale-105 transition-all duration-200 shadow-xl"
                     >
                       相性診断をする
+                      <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
                     </Link>
                   </div>
                 </div>

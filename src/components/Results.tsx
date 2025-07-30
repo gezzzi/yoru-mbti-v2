@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { TestResult } from '../types/personality';
 import { getCategoryColor, getCategoryName, personalityTypes } from '../data/personalityTypes';
 import { copyToClipboard } from '../utils/snsShare';
-import { Heart, RefreshCw, Share2, User, Shield, Zap, Eye, Download, ChevronDown, ChevronUp } from 'lucide-react';
+import { Heart, RefreshCw, Share2, User, Shield, Zap, Eye, Download, ChevronDown, ChevronUp, Dices } from 'lucide-react';
 import Image from 'next/image';
 import SNSShareModal from './SNSShareModal';
 import html2canvas from 'html2canvas';
@@ -1009,7 +1009,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   <button 
                     onClick={handleDownload}
                     disabled={isDownloading}
-                    className="bg-white/10 backdrop-blur-sm border border-white/20 text-[#e0e7ff] px-6 py-3 rounded-lg hover:bg-white/20 transition-all inline-flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                    className="bg-blue-400 text-blue-800 px-6 py-3 rounded-lg font-semibold hover:bg-blue-300 transition-all transform hover:scale-105 inline-flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
                   >
                     {isDownloading ? (
                       <>
@@ -1025,24 +1025,26 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   </button>
                   <button 
                     onClick={() => setShowShareModal(true)}
-                    className="bg-white/10 backdrop-blur-sm border border-white/20 text-[#e0e7ff] px-6 py-3 rounded-lg hover:bg-white/20 transition-all inline-flex items-center space-x-2 shadow-lg"
+                    className="bg-teal-500 text-teal-900 px-6 py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg"
                   >
                     <Share2 className="w-5 h-5" />
                     <span>シェア</span>
                   </button>
                   <Link
                     href="/test"
-                    className="bg-white/10 backdrop-blur-sm border border-white/20 text-[#e0e7ff] px-6 py-3 rounded-lg font-semibold hover:bg-white/20 transition-all inline-flex items-center shadow-lg"
+                    className="bg-gray-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-400 transition-all transform hover:scale-105 inline-flex items-center shadow-lg"
                   >
                     <RefreshCw className="w-5 h-5 mr-2" />
-                    もう一度診断する
+                    再診断
                   </Link>
                   <Link
                     href="/compatibility"
-                    className="bg-white/10 backdrop-blur-sm border border-white/20 text-[#e0e7ff] px-6 py-3 rounded-lg font-semibold hover:bg-white/20 transition-all inline-flex items-center shadow-lg"
+                    className="bg-gradient-to-r from-[#ec4899] to-[#ffb8ce] text-white px-6 py-3 rounded-lg font-semibold hover:from-[#ffb8ce] hover:to-[#ffb8ce] transition-all transform hover:scale-105 inline-flex items-center shadow-lg"
                   >
-                    <Heart className="w-5 h-5 mr-2" />
-                    相性診断をする
+                    相性診断へ進む
+                    <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </Link>
                 </div>
               </div>

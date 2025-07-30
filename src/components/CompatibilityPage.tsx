@@ -491,7 +491,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                       <button
                         onClick={handleQRDownload}
                         disabled={isQRDownloading}
-                        className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+                        className="flex items-center space-x-2 bg-blue-400 text-blue-800 px-4 py-2 rounded-lg font-semibold hover:bg-blue-300 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all transform hover:scale-105 whitespace-nowrap"
                       >
                         {isQRDownloading ? (
                           <>
@@ -506,41 +506,41 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                         )}
                       </button>
                       
-                      <label className="cursor-pointer">
-                        <button
-                          type="button"
-                          disabled={isMyQRUploading}
-                          className="flex items-center space-x-2 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
-                        >
-                          {isMyQRUploading ? (
-                            <>
-                              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                              <span>更新中...</span>
-                            </>
-                          ) : (
-                            <>
-                              <RefreshCw className="w-4 h-4" />
-                              <span>更新</span>
-                            </>
-                          )}
-                        </button>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleMyQRUpload}
-                          className="hidden"
-                          disabled={isMyQRUploading}
-                        />
-                      </label>
+                      <button
+                        onClick={() => setShowShareModal(true)}
+                        className="flex items-center space-x-2 bg-teal-500 text-teal-900 px-4 py-2 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 whitespace-nowrap"
+                      >
+                        <Share2 className="w-4 h-4" />
+                        <span>シェア</span>
+                      </button>
                     </div>
                     
-                    <button
-                      onClick={() => setShowShareModal(true)}
-                      className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors whitespace-nowrap"
-                    >
-                      <Share2 className="w-4 h-4" />
-                      <span>シェア</span>
-                    </button>
+                    <label className="cursor-pointer">
+                      <button
+                        type="button"
+                        disabled={isMyQRUploading}
+                        className="flex items-center space-x-2 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all transform hover:scale-105 whitespace-nowrap"
+                      >
+                        {isMyQRUploading ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                            <span>更新中...</span>
+                          </>
+                        ) : (
+                          <>
+                            <RefreshCw className="w-4 h-4" />
+                            <span>更新</span>
+                          </>
+                        )}
+                      </button>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleMyQRUpload}
+                        className="hidden"
+                        disabled={isMyQRUploading}
+                      />
+                    </label>
                   </div>
                 </div>
               </div>
@@ -611,7 +611,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
               <button
                 onClick={handleCheckCompatibility}
                 disabled={partnerCode.length === 0 || isLoading}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-8 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all flex items-center justify-center space-x-2"
+                className="bg-gradient-to-r from-[#ec4899] to-[#ffb8ce] text-white py-3 px-8 rounded-lg font-semibold hover:from-[#ffb8ce] hover:to-[#ffb8ce] transform hover:scale-105 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all flex items-center justify-center space-x-2 shadow-lg"
               >
                 {isLoading ? (
                   <>

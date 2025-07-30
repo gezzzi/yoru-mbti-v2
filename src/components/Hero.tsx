@@ -61,7 +61,7 @@ const Hero: React.FC = () => {
           </p>
         </ScrollAnimation>
         <ScrollAnimation animation="fadeInUp" delay={400}>
-          <div className="inline-block relative overflow-hidden rounded-full" onMouseEnter={handleMouseEnter}>
+          <div className="inline-block relative overflow-hidden rounded-full p-1" onMouseEnter={handleMouseEnter}>
             <Link
               href="/test"
               className="inline-flex items-center px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-[#6366f1] to-[#a78bfa] text-white font-semibold rounded-full hover:from-[#818cf8] hover:to-[#a78bfa] transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl text-base md:text-lg relative z-10"
