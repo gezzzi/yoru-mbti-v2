@@ -1,12 +1,31 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import NeonText from './NeonText';
 import { ScrollAnimation } from './ScrollAnimation';
 
 const Hero: React.FC = () => {
+  const [ripples, setRipples] = useState<{ x: number; y: number; id: number }[]>([]);
+  
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    // 既にリップルが存在する場合は追加しない
+    if (ripples.length > 0) return;
+    
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = rect.width / 2; // 中央から発生
+    const y = rect.height / 2; // 中央から発生
+    const newRipple = { x, y, id: Date.now() };
+    
+    setRipples([newRipple]);
+    
+    // リップルをアニメーション後に削除
+    setTimeout(() => {
+      setRipples([]);
+    }, 800);
+  };
+  
   useEffect(() => {
     // ページ読み込み時に一度だけビューポートタイプを決定
     const determineViewportType = () => {
@@ -42,15 +61,31 @@ const Hero: React.FC = () => {
           </p>
         </ScrollAnimation>
         <ScrollAnimation animation="fadeInUp" delay={400}>
-          <Link
-            href="/test"
-            className="inline-flex items-center px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-[#6366f1] to-[#a78bfa] text-white font-semibold rounded-full hover:from-[#818cf8] hover:to-[#a78bfa] transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl text-base md:text-lg"
-          >
-            テストを受ける
-            <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
+          <div className="inline-block relative overflow-hidden rounded-full" onMouseEnter={handleMouseEnter}>
+            <Link
+              href="/test"
+              className="inline-flex items-center px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-[#6366f1] to-[#a78bfa] text-white font-semibold rounded-full hover:from-[#818cf8] hover:to-[#a78bfa] transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl text-base md:text-lg relative z-10"
+            >
+              テストを受ける
+              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+            {/* リップルエフェクト */}
+            {ripples.map(ripple => (
+              <span
+                key={ripple.id}
+                className="absolute bg-white/40 rounded-full pointer-events-none animate-ripple z-0"
+                style={{
+                  left: ripple.x,
+                  top: ripple.y,
+                  width: '40px',
+                  height: '40px',
+                  transform: 'translate(-50%, -50%)',
+                }}
+              />
+            ))}
+          </div>
         </ScrollAnimation>
       </div>
       {/* 画像部分 */}

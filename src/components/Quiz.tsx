@@ -102,7 +102,26 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
     }
   };
 
-
+  const handlePrevious = () => {
+    if (currentPageIndex > 0) {
+      setHasTransitioned(true);
+      setCurrentPageIndex(prev => prev - 1);
+      
+      // Scroll to first question of previous page after a short delay
+      setTimeout(() => {
+        const firstQuestionOfPrevPage = questions[(currentPageIndex - 1) * questionsPerPage];
+        if (firstQuestionOfPrevPage) {
+          const firstQuestionElement = questionRefs.current[firstQuestionOfPrevPage.id];
+          if (firstQuestionElement) {
+            firstQuestionElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center'
+            });
+          }
+        }
+      }, 30);
+    }
+  };
 
   // Check if current page is complete
   const isCurrentPageComplete = currentPageQuestions.every(q => answers[q.id] !== undefined);
@@ -222,20 +241,35 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       <div className="py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center space-y-4">
-            <button
-              onClick={handleNext}
-              disabled={!isCurrentPageComplete}
-              className={`flex items-center justify-center px-16 py-4 rounded-full text-lg font-medium transition-all duration-200 transform hover:scale-105 min-w-[200px] ${
-                isCurrentPageComplete
-                  ? 'bg-[#818cf8] text-white hover:bg-[#a78bfa] shadow-lg hover:shadow-xl'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              }`}
-              data-next-button={!isLastPage}
-              data-results-button={isLastPage}
-            >
-              {isLastPage ? '結果を見る' : '次へ'}
-              <span className="ml-2">→</span>
-            </button>
+            {/* ボタンコンテナ */}
+            <div className="flex items-center gap-4">
+              {/* 戻るボタン - 2ページ目以降のみ表示 */}
+              {currentPageIndex > 0 && (
+                <button
+                  onClick={handlePrevious}
+                  className="flex items-center justify-center px-8 py-4 rounded-full text-lg font-medium transition-all duration-200 transform hover:scale-105 bg-gray-600 text-white hover:bg-gray-700 shadow-lg hover:shadow-xl"
+                >
+                  <span className="mr-2">←</span>
+                  戻る
+                </button>
+              )}
+              
+              {/* 次へ/結果を見るボタン */}
+              <button
+                onClick={handleNext}
+                disabled={!isCurrentPageComplete}
+                className={`flex items-center justify-center px-16 py-4 rounded-full text-lg font-medium transition-all duration-200 transform hover:scale-105 min-w-[200px] ${
+                  isCurrentPageComplete
+                    ? 'bg-[#818cf8] text-white hover:bg-[#a78bfa] shadow-lg hover:shadow-xl'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+                data-next-button={!isLastPage}
+                data-results-button={isLastPage}
+              >
+                {isLastPage ? '結果を見る' : '次へ'}
+                <span className="ml-2">→</span>
+              </button>
+            </div>
 
             <div className="text-sm text-gray-200">
               ページ {currentPageIndex + 1} / {totalPages}

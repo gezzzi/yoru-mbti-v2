@@ -66,6 +66,26 @@ body {
   opacity: 0;
 }
 
+/* リップルエフェクト */
+@keyframes ripple {
+  0% {
+    width: 40px;
+    height: 40px;
+    opacity: 0.6;
+  }
+  100% {
+    width: 400px;
+    height: 400px;
+    opacity: 0;
+  }
+}
+
+.animate-ripple {
+  animation: ripple 0.8s ease-out forwards;
+  width: 40px;
+  height: 40px;
+}
+
 /* タグの軽量な光るアニメーション */
 @keyframes gentle-glow {
   0%, 100% {

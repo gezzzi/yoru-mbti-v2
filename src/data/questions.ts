@@ -554,7 +554,7 @@ export const questions: Question[] = [
 {
     id: 36,
     axis: null,
-    tag: '👀 エロい目線',
+    tag: null,
     text: '最近、他の人をエロい目で見たことがある',
     isReverse: false,
     options: [
@@ -570,7 +570,7 @@ export const questions: Question[] = [
 {
     id: 37,
     axis: null,
-    tag: '🌙 ワンナイト願望',
+    tag: null,
     text: 'もしバレないなら、ワンナイトしてみたいと思う',
     isReverse: false,
     options: [
@@ -586,8 +586,8 @@ export const questions: Question[] = [
 {
     id: 38,
     axis: null,
-    tag: '💭 妄想癖',
-    text: '正直、パートナー以外の人と"こうなったら…"って妄想したことがある',
+    tag: null,
+    text: 'パートナー以外の人と"こうなったら…"って妄想したことがある',
     isReverse: false,
     options: [
       { text: '非常にそう思う', value: 6 },
@@ -602,7 +602,7 @@ export const questions: Question[] = [
 {
     id: 39,
     axis: null,
-    tag: '💔 過去の影',
+    tag: null,
     text: '元カレ/元カノをまだ思い出すことがある',
     isReverse: false,
     options: [
@@ -618,7 +618,7 @@ export const questions: Question[] = [
 {
     id: 40,
     axis: null,
-    tag: '🤐 隠し事',
+    tag: null,
     text: 'パートナーには言えない"隠し事"がある',
     isReverse: false,
     options: [
