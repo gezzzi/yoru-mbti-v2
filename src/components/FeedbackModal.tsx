@@ -130,6 +130,7 @@ export default function FeedbackModal({ onClose }: { onClose: () => void }) {
           <form onSubmit={handleSubmit} className="p-5 space-y-4">
             {/* 5段階評価 */}
             <div className="mb-5">
+              <p className="text-gray-700 font-medium mb-3">アプリのご利用ありがとうございます！</p>
               <p className="text-gray-700 font-medium mb-3">総合的な満足度を教えてください</p>
               <div className="flex justify-center items-center space-x-2 mb-2">
                 {[1, 2, 3, 4, 5].map((star) => (

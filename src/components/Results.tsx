@@ -353,8 +353,8 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
         <ScrollAnimation animation="fadeInUp" delay={200}>
           <div ref={downloadRef}>
             {/* Header Section */}
-            <div className="rounded-t-3xl shadow-xl overflow-hidden border-2 border-white/40 bg-gradient-to-br from-white/25 via-white/15 to-white/20 backdrop-blur-sm" style={{boxShadow: '0 0 40px rgba(255, 255, 255, 0.3)'}}>
-              <div className={`p-8 text-white flex justify-center ${categoryColorSchemes[type.category]} backdrop-blur-md`}>
+            <div className="rounded-t-3xl shadow-xl overflow-hidden border-2 border-white/40">
+              <div className="p-8 text-white flex justify-center">
                 <div className="w-full">
                   {/* 性格タイプ名 */}
                     <div className="font-head text-3xl md:text-4xl lg:text-5xl mb-6 mt-0 text-center text-white font-bold">
