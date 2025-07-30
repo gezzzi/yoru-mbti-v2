@@ -634,6 +634,152 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       }
     }
     
+    // 7. 性欲バランスの統合
+    const libidoAnalysis = () => {
+      const calculateLibidoLevel = (result: any, tags: string[]) => {
+        let baseLevel = 0;
+        baseLevel += result.E * 0.3;
+        baseLevel += result.A * 0.2;
+        baseLevel += result.O * 0.3;
+        baseLevel += (100 - result.L2) * 0.2;
+        
+        if (tags.includes('🔥 欲望の炎')) baseLevel += 20;
+        if (tags.includes('🔄 リピート求め派')) baseLevel += 15;
+        if (tags.includes('⚡️ スピード勝負派')) baseLevel += 10;
+        if (tags.includes('🏃‍♂️ 衝動トリガー型')) baseLevel += 10;
+        if (tags.includes('🌙 深夜エロス') || tags.includes('☀️ 朝型エロス')) baseLevel += 5;
+        if (tags.includes('💤 まったり派')) baseLevel -= 10;
+        if (tags.includes('🕯 ロマン重視')) baseLevel -= 5;
+        
+        return Math.min(100, Math.max(0, baseLevel));
+      };
+      
+      const myLibidoLevel = calculateLibidoLevel(myResult, myTags);
+      const partnerLibidoLevel = calculateLibidoLevel(partnerResult, partnerTags);
+      const difference = Math.abs(myLibidoLevel - partnerLibidoLevel);
+      
+      let analysis = '\n\n【性欲バランス】\n';
+      
+      if (difference < 15) {
+        if (myLibidoLevel >= 70 && partnerLibidoLevel >= 70) {
+          analysis += '毎晩バトルモード！お互いの欲望が爆発する情熱的な関係。';
+        } else if (myLibidoLevel >= 50 && partnerLibidoLevel >= 50) {
+          analysis += '良いバランスで盛り上がれる理想的な関係。';
+        } else if (myLibidoLevel < 30 && partnerLibidoLevel < 30) {
+          analysis += 'のんびり愛を深められる穏やかな関係。';
+        } else {
+          analysis += 'お互いのペースが合う理想的な関係。';
+        }
+      } else if (difference < 30) {
+        if (myLibidoLevel > partnerLibidoLevel) {
+          analysis += '少し温度差あり。あなたがリードして調整を。';
+        } else {
+          analysis += '少し温度差あり。相手のペースに合わせて。';
+        }
+      } else {
+        analysis += '温度差注意！コミュニケーションが重要。';
+      }
+      
+      if (combinedTags.has('🔥 欲望の炎') && combinedTags.has('🔄 リピート求め派')) {
+        analysis += '一晩では満足できない情熱的な夜になりそう。';
+      } else if (combinedTags.has('🕯 ロマン重視') && combinedTags.has('🛁 アフターケア必須')) {
+        analysis += '量より質を重視する深い関係に。';
+      } else if (combinedTags.has('⚡️ スピード勝負派') && combinedTags.has('🏃‍♂️ 衝動トリガー型')) {
+        analysis += '突発的な情熱が爆発しやすい。';
+      }
+      
+      return analysis;
+    };
+    
+    recommendedPlay += libidoAnalysis();
+    
+    // 8. S/M相性の統合
+    const smAnalysis = () => {
+      const calculateSMScore = (result: any, tags: string[]) => {
+        let sScore = 0;
+        let mScore = 0;
+        
+        if (result.L > 50) {
+          sScore += result.L - 50;
+        } else {
+          mScore += 50 - result.L;
+        }
+        
+        if (result.A > 60) sScore += 10;
+        if (result.O > 60) {
+          sScore += 5;
+        } else if (result.O < 40) {
+          mScore += 5;
+        }
+        
+        if (tags.includes('🧷 軽SM耐性あり')) {
+          sScore += 10;
+          mScore += 10;
+        }
+        if (tags.includes('⛏️ 開拓派')) sScore += 15;
+        if (tags.includes('🚪 NG明確')) sScore += 5;
+        if (tags.includes('🙈 言い出しにくい派')) mScore += 10;
+        if (tags.includes('🛁 アフターケア必須')) mScore += 5;
+        if (tags.includes('💬 言語プレイ派')) sScore += 5;
+        
+        return { sScore: Math.min(100, sScore), mScore: Math.min(100, mScore) };
+      };
+      
+      const myScores = calculateSMScore(myResult, myTags);
+      const partnerScores = calculateSMScore(partnerResult, partnerTags);
+      
+      const getTendency = (scores: { sScore: number; mScore: number }) => {
+        if (scores.sScore > scores.mScore + 20) return 'S';
+        if (scores.mScore > scores.sScore + 20) return 'M';
+        return 'Switch';
+      };
+      
+      const myTendency = getTendency(myScores);
+      const partnerTendency = getTendency(partnerScores);
+      
+      let analysis = '\n\n【S/M相性】\n';
+      
+      if (myTendency === 'S' && partnerTendency === 'M') {
+        analysis += 'ド安定な主従関係。あなたがリードし、相手が従う理想的な構図。';
+        if (combinedTags.has('🧷 軽SM耐性あり')) {
+          analysis += '軽いSMプレイも楽しめそう。';
+        }
+      } else if (myTendency === 'M' && partnerTendency === 'S') {
+        analysis += '完璧な支配関係。相手に導かれることで最高の快感を得られる。';
+        if (combinedTags.has('🛁 アフターケア必須')) {
+          analysis += 'アフターケアもバッチリ。';
+        }
+      } else if (myTendency === 'S' && partnerTendency === 'S') {
+        analysis += '主導権の取り合い勃発かも。交互にリードする工夫が必要。';
+        if (myScores.sScore > partnerScores.sScore) {
+          analysis += '基本的にはあなたがリード。';
+        }
+      } else if (myTendency === 'M' && partnerTendency === 'M') {
+        analysis += '優しい愛撫の応酬。お互いを思いやる穏やかな関係。';
+        if (combinedTags.has('🕯 ロマン重視')) {
+          analysis += 'ロマンチックな雰囲気で。';
+        }
+      } else if (myTendency === 'Switch' || partnerTendency === 'Switch') {
+        analysis += '交代プレイが楽しめる。気分や状況で立場を変えられる柔軟な関係。';
+        if (combinedTags.has('🎭 ロールプレイ好き')) {
+          analysis += 'ロールプレイで役割交代も。';
+        }
+      } else {
+        analysis += 'バランスの取れた関係。お互いの気持ちを尊重しながら楽しめる。';
+      }
+      
+      if (combinedTags.has('💬 言語プレイ派') && (myTendency === 'S' || partnerTendency === 'S')) {
+        analysis += '言葉責めで更に興奮度アップ。';
+      }
+      if (combinedTags.has('🚪 NG明確') && combinedTags.has('🙈 言い出しにくい派')) {
+        analysis += '事前の話し合いが重要。';
+      }
+      
+      return analysis;
+    };
+    
+    recommendedPlay += smAnalysis();
+    
     // プレイのポイント部分を削除
     // recommendedPlay += overallAdvice(); の行も削除
     
@@ -1585,47 +1731,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     </div>
                   </div>
 
-                  {/* ③ 性欲バランス */}
-                  <div className="border-b border-white/20 pb-2 overflow-hidden">
-                    <button
-                      onClick={() => toggleSection('libidoBalance')}
-                      className="w-full flex items-center justify-between rounded-lg p-2"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <span className="text-lg">🔥</span>
-                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">性欲の強さバランス</h4>
-                      </div>
-                      {openSections.libidoBalance ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
-                    </button>
-                    <div className={`transition-all duration-300 ${
-                      openSections.libidoBalance ? 'max-h-96' : 'max-h-0'
-                    } overflow-hidden`}>
-                      <div className="mt-2 px-2 text-center">
-                        <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.libidoBalance}</p>
-                      </div>
-                    </div>
-                  </div>
 
-                  {/* ④ S/M相性 */}
-                  <div className="border-b border-white/20 pb-2 overflow-hidden">
-                    <button
-                      onClick={() => toggleSection('smCompatibility')}
-                      className="w-full flex items-center justify-between rounded-lg p-2"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <span className="text-lg">😈</span>
-                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">S/Mの相性</h4>
-                      </div>
-                      {openSections.smCompatibility ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
-                    </button>
-                    <div className={`transition-all duration-300 ${
-                      openSections.smCompatibility ? 'max-h-96' : 'max-h-0'
-                    } overflow-hidden`}>
-                      <div className="mt-2 px-2 text-center">
-                        <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.smCompatibility}</p>
-                      </div>
-                    </div>
-                  </div>
 
                   {/* ⑤ 付き合う前の価値観 */}
                   <div className="border-b border-white/20 pb-2 overflow-hidden">
@@ -1635,7 +1741,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     >
                       <div className="flex items-center space-x-3">
                         <span className="text-lg">💋</span>
-                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">付き合う前にXできるか？（価値観）</h4>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">付き合う前にXできるか？</h4>
                       </div>
                       {openSections.beforeRelationship ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
                     </button>
@@ -1644,27 +1750,6 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     } overflow-hidden`}>
                       <div className="mt-2 px-2 text-center">
                         <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.beforeRelationship}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* ⑥ ギャップ度 */}
-                  <div className="border-b border-white/20 pb-2 overflow-hidden">
-                    <button
-                      onClick={() => toggleSection('gapAnalysis')}
-                      className="w-full flex items-center justify-between rounded-lg p-2"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <span className="text-lg">⚡</span>
-                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">相性ギャップ度（思考＆欲望のズレ）</h4>
-                      </div>
-                      {openSections.gapAnalysis ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
-                    </button>
-                    <div className={`transition-all duration-300 ${
-                      openSections.gapAnalysis ? 'max-h-96' : 'max-h-0'
-                    } overflow-hidden`}>
-                      <div className="mt-2 px-2 text-center">
-                        <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.gapAnalysis}</p>
                       </div>
                     </div>
                   </div>

@@ -633,6 +633,20 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                               nightPersonality += 'その瞬間の情熱と快感を純粋に楽しむことができる。相手との適度な距離感を保ちながら、お互いが心地よい関係を築いていく。束縛や依存ではなく、自由な中での信頼関係を理想とする。';
                             }
                             
+                            // 性欲レベルの統合
+                            const libidoLevel = result.additionalResults?.libidoLevel || 3;
+                            if (libidoLevel === 5) {
+                              nightPersonality += '情欲は日常生活の原動力となっており、常に頭の片隅にエロスが存在する。ちょっとした刺激で妄想が暴走し、';
+                            } else if (libidoLevel === 4) {
+                              nightPersonality += '欲望は人並み以上に強く、パートナーとの時間を積極的に求める。新しい刺激も歓迎し、';
+                            } else if (libidoLevel === 3) {
+                              nightPersonality += '程よい情熱を秘めており、気分や相手次第で自然に盛り上がる。日常生活とのメリハリもつけられ、';
+                            } else if (libidoLevel === 2) {
+                              nightPersonality += '欲求は控えめだが、心の繋がりがあればこそ燃え上がる。ムードや雰囲気が整ってこそスイッチが入り、';
+                            } else {
+                              nightPersonality += 'かなり淡白な気質で、肉体的なことより会話やデートなど精神的な要素を楽しむことを優先する。しかし、';
+                            }
+                            
                             // O/S軸とタグで締めくくり
                             if (result.O > 50) {
                               nightPersonality += '恥じらいを持ちながらも、信頼できる相手とは性について率直に話し合える関係を望んでいる。';
@@ -643,50 +657,6 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                             return <p>{nightPersonality}</p>;
                           })()}
                         </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* 性欲レベル */}
-                  <div className="border-b border-white/20 pb-2 overflow-hidden">
-                    <button
-                      onClick={() => toggleSection('libidoLevel')}
-                      className="w-full flex items-center justify-between rounded-lg p-2"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <span className="text-lg">💋</span>
-                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">性欲レベル</h4>
-                      </div>
-                      {openSections.libidoLevel ? <ChevronUp className="w-5 h-5 text-[#e0e7ff] " /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff] " />}
-                    </button>
-                    <div className={`transition-all duration-300 ${
-                      openSections.libidoLevel ? 'max-h-[500px]' : 'max-h-0'
-                    } overflow-hidden`}>
-                      <div className="mt-2 px-2 text-center">
-                        <div className="flex items-center justify-center mb-1">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <span key={star} className={`text-lg ${star <= (result.additionalResults?.libidoLevel || 3) ? 'text-pink-500' : 'text-gray-600'}`}>
-                              ★
-                            </span>
-                          ))}
-                          <span className="ml-2 text-[#e0e7ff]/80 text-sm">
-                            {result.additionalResults?.libidoLevel === 5 ? '（とても強い）' :
-                             result.additionalResults?.libidoLevel === 4 ? '（強い）' :
-                             result.additionalResults?.libidoLevel === 3 ? '（普通）' :
-                             result.additionalResults?.libidoLevel === 2 ? '（控えめ）' : '（穏やか）'}
-                          </span>
-                        </div>
-                        <p className="text-[#e0e7ff]/80 text-sm">
-                          {result.additionalResults?.libidoLevel === 5 
-                            ? '性欲が日常生活の原動力。常に頭の片隅にエロスが存在し、ちょっとした刺激で妄想が暴走する。'
-                            : result.additionalResults?.libidoLevel === 4 
-                            ? '性欲は人並み以上に強め。パートナーとの時間を積極的に求め、新しい刺激も歓迎する。'
-                            : result.additionalResults?.libidoLevel === 3 
-                            ? 'バランスの取れた性欲の持ち主。気分や相手次第で盛り上がり、日常生活とのメリハリもつけられる。'
-                            : result.additionalResults?.libidoLevel === 2 
-                            ? '性欲は控えめで、心の繋がりを重視。ムードや雰囲気が整ってこそスイッチが入る。'
-                            : 'かなり淡白な性欲の持ち主。性的なことより他の要素（会話、デート、趣味）を楽しむことを優先する。'}
-                        </p>
                       </div>
                     </div>
                   </div>
@@ -746,6 +716,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                                   </div>
                                 ))}
                           </div>
+                          <p className="text-[#e0e7ff]/80 text-sm text-center mt-2">
+                            {result.A > 70 ? '激しく情熱的に楽しむ' : 
+                             result.A < 30 ? 'ゆったり優しく楽しむ' : 
+                             'バランスよく焦らしながら楽しむ'}
+                          </p>
                       </div>
                     </div>
                   </div>
