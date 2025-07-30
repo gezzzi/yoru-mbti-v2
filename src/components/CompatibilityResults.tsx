@@ -490,24 +490,26 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     
     // 2. プレイスタイルの詳細分析（E/I軸とA/S軸）
     const playStyleAnalysis = () => {
-      let style = '';
+      let style = '\n\n';
       
       // E/I軸による積極性
       if (myResult.E > 70 && partnerResult.E > 70) {
-        style += '二人とも積極的で情熱的。激しく求め合い、時間を忘れて没頭する関係。';
+        style += '二人とも積極的で情熱的。激しく求め合い、時間を忘れて没頭する関係です。';
       } else if (myResult.E < 30 && partnerResult.E < 30) {
-        style += '二人とも控えめで優しい性格。ゆっくりと時間をかけて、相手の反応を確かめながら進める繊細な関係。';
+        style += '二人とも控えめで優しい性格。ゆっくりと時間をかけて、相手の反応を確かめながら進める繊細な関係です。';
       } else if (Math.abs(myResult.E - partnerResult.E) > 50) {
-        style += '積極性に差があるため、より積極的な方が優しくリードすることが大切。';
+        style += '積極性に差があるため、より積極的な方が優しくリードすることが大切です。';
       }
       
       // A/S軸による冒険心
+      if (style.length > 2) style += ' '; // 前の文がある場合はスペースを追加
+      
       if (myResult.A > 70 && partnerResult.A > 70) {
         style += '新しいプレイや体位に挑戦することに抵抗がない二人。マンネリとは無縁の刺激的な関係を築けます。';
       } else if (myResult.A < 30 && partnerResult.A < 30) {
         style += '慣れ親しんだ方法を大切にする二人。安心感の中で深い愛情を育めます。';
       } else if ((myResult.A > 60 && partnerResult.A < 40) || (myResult.A < 40 && partnerResult.A > 60)) {
-        style += '冒険派と安定派の組み合わせ。冒険派が新しい提案をし、安定派が受け入れやすいペースで進めることが重要。';
+        style += '冒険派と安定派の組み合わせ。冒険派が新しい提案をし、安定派が受け入れやすいペースで進めることが重要です。';
       }
       
       return style;
@@ -517,29 +519,32 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     
     // 3. コミュニケーションスタイル（O/S軸）
     const communicationAnalysis = () => {
+      let communication = '\n\n';
       if (myResult.O > 70 && partnerResult.O > 70) {
-        return '欲望を隠さず素直に伝え合える最高の関係。お互いの願望を叶え合うことで、満足度の高い時間を過ごせます。';
+        communication += '欲望を隠さず素直に伝え合える最高の関係。お互いの願望を叶え合うことで、満足度の高い時間を過ごせます。';
       } else if (myResult.O < 30 && partnerResult.O < 30) {
-        return '言葉よりも行動で示す二人。相手の表情や反応を細かく観察し、無言のコミュニケーションで深く理解し合えます。';
+        communication += '言葉よりも行動で示す二人。相手の表情や反応を細かく観察し、無言のコミュニケーションで深く理解し合えます。';
       } else if ((myResult.O > 60 && partnerResult.O < 40) || (myResult.O < 40 && partnerResult.O > 60)) {
-        return 'オープンな方が相手の本音を優しく引き出してあげることが大切。焦らず、相手のペースに合わせて心を開いてもらいましょう。';
+        communication += 'オープンな方が相手の本音を優しく引き出してあげることが大切。焦らず、相手のペースに合わせて心を開いてもらいましょう。';
       } else {
-        return '適度にオープンで、必要な時は素直に伝え合える健全な関係。';
+        communication += '適度にオープンで、必要な時は素直に伝え合える健全な関係です。';
       }
+      return communication;
     };
     
     recommendedPlay += communicationAnalysis();
     
     // 4. L2軸（Love/Free）による関係性の深さ
     const emotionalDepthAnalysis = () => {
+      let depth = '\n\n';
       if (myResult.L2 > 70 && partnerResult.L2 > 70) {
-        return '深い愛情を持って接する二人。体だけでなく心も繋がり、特別な関係を築けます。';
+        depth += '深い愛情を持って接する二人。体だけでなく心も繋がり、特別な関係を築けます。';
       } else if (myResult.L2 < 30 && partnerResult.L2 < 30) {
-        return '自由な関係を好む二人。お互いに縛られず、その時の気分で楽しめる大人の関係。';
+        depth += '自由な関係を好む二人。お互いに縛られず、その時の気分で楽しめる大人の関係です。';
       } else if (Math.abs(myResult.L2 - partnerResult.L2) > 50) {
-        return '愛情の示し方に違いがあります。お互いの価値観を尊重し、関係性の定義を明確にすることが大切。';
+        depth += '愛情の示し方に違いがあります。お互いの価値観を尊重し、関係性の定義を明確にすることが大切です。';
       }
-      return '';
+      return depth.length > 2 ? depth : '';
     };
     
     const emotionalDepth = emotionalDepthAnalysis();
@@ -547,80 +552,117 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     
     // 5. 公開タグによる具体的なプレイ提案
     const tagBasedRecommendations = () => {
-      let recommendations = '';
+      let recommendations = '\n\n';
+      let hasRecommendations = false;
       
       // 言語・コミュニケーション系
       if (combinedTags.has('💬 言語プレイ派')) {
         recommendations += '言葉責めや甘い囁きで興奮を高め合いましょう。恥ずかしい言葉も、二人だけの秘密の呪文に。';
+        hasRecommendations = true;
       }
       if (combinedTags.has('🗣 下ネタOK')) {
-        recommendations += '性的な会話を楽しみながら、お互いの欲望を確認し合える開放的な関係。';
+        if (hasRecommendations) recommendations += ' ';
+        recommendations += '性的な会話を楽しみながら、お互いの欲望を確認し合える開放的な関係です。';
+        hasRecommendations = true;
       }
       
       // ムード・準備系
       if (combinedTags.has('🕯 ロマン重視')) {
+        if (hasRecommendations) recommendations += ' ';
         recommendations += 'キャンドルの灯り、優しい音楽、アロマの香り。五感すべてで愛を感じる特別な時間を作りましょう。';
+        hasRecommendations = true;
       }
       if (combinedTags.has('🎧 感覚演出派')) {
-        recommendations += '音楽や照明、香りなど、五感を刺激する演出で非日常的な空間を創造。';
+        if (hasRecommendations) recommendations += ' ';
+        recommendations += '音楽や照明、香りなど、五感を刺激する演出で非日常的な空間を創造します。';
+        hasRecommendations = true;
       }
       if (combinedTags.has('📅 準備派')) {
+        if (hasRecommendations) recommendations += ' ';
         recommendations += '事前の準備を大切に。お互いの好みを確認し、特別な夜のための計画を立てましょう。';
+        hasRecommendations = true;
       }
       
       // テンポ・スタイル系
       if (combinedTags.has('⚡️ スピード勝負派')) {
-        recommendations += '情熱に身を任せた激しく短いセッション。燃え上がる炎のような時間を。';
+        if (hasRecommendations) recommendations += ' ';
+        recommendations += '情熱に身を任せた激しく短いセッション。燃え上がる炎のような時間を過ごします。';
+        hasRecommendations = true;
       }
       if (combinedTags.has('🏃‍♂️ 衝動トリガー型')) {
+        if (hasRecommendations) recommendations += ' ';
         recommendations += '予期せぬタイミングでの情熱的な出会い。日常の中に潜む特別な瞬間を逃さずに。';
+        hasRecommendations = true;
       }
       
       // 欲望・情熱系
       if (combinedTags.has('🔥 欲望の炎')) {
+        if (hasRecommendations) recommendations += ' ';
         recommendations += '抑えきれない情熱をぶつけ合う激しい時間。お互いの欲望を解放し、限界まで求め合いましょう。';
+        hasRecommendations = true;
       }
       if (combinedTags.has('🔄 リピート求め派')) {
-        recommendations += '一度では満足できない貪欲な関係。何度も求め合い、そのたびに新しい快感を発見。';
+        if (hasRecommendations) recommendations += ' ';
+        recommendations += '一度では満足できない貪欲な関係。何度も求め合い、そのたびに新しい快感を発見します。';
+        hasRecommendations = true;
       }
       
       // ケア・安全系
       if (combinedTags.has('🛁 アフターケア必須')) {
-        recommendations += '激しい時間の後は、優しく抱きしめ合い、お互いをケア。愛情を確認し合う大切な時間。';
+        if (hasRecommendations) recommendations += ' ';
+        recommendations += '激しい時間の後は、優しく抱きしめ合い、お互いをケア。愛情を確認し合う大切な時間です。';
+        hasRecommendations = true;
       }
       if (combinedTags.has('🧼 ケア＆衛生重視')) {
-        recommendations += '清潔感を大切に、お互いを思いやる丁寧なプレイ。心も体も清らかに。';
+        if (hasRecommendations) recommendations += ' ';
+        recommendations += '清潔感を大切に、お互いを思いやる丁寧なプレイ。心も体も清らかに保ちます。';
+        hasRecommendations = true;
       }
       if (combinedTags.has('🛡 安全第一派')) {
-        recommendations += '安全性を最優先に、お互いが安心して楽しめる環境作りを。';
+        if (hasRecommendations) recommendations += ' ';
+        recommendations += '安全性を最優先に、お互いが安心して楽しめる環境作りを心がけます。';
+        hasRecommendations = true;
       }
       
       // 境界・コミュニケーション系  
       if (combinedTags.has('🚪 NG明確')) {
+        if (hasRecommendations) recommendations += ' ';
         recommendations += 'お互いの境界線を明確にし、絶対に越えてはいけないラインを共有。安心感の中で楽しめます。';
+        hasRecommendations = true;
       }
       if (combinedTags.has('🙈 言い出しにくい派')) {
+        if (hasRecommendations) recommendations += ' ';
         recommendations += '言葉にしにくい欲望も、少しずつ打ち明けられる信頼関係を築きましょう。';
+        hasRecommendations = true;
       }
       
       // 時間帯系
       if (combinedTags.has('🌙 深夜エロス') && combinedTags.has('☀️ 朝型エロス')) {
-        recommendations += '24時間いつでも求め合える情熱的な関係。朝の優しい光も、夜の妖艶な闇も、二人の舞台に。';
+        if (hasRecommendations) recommendations += ' ';
+        recommendations += '24時間いつでも求め合える情熱的な関係。朝の優しい光も、夜の妖艶な闇も、二人の舞台になります。';
+        hasRecommendations = true;
       } else if (combinedTags.has('🌙 深夜エロス')) {
+        if (hasRecommendations) recommendations += ' ';
         recommendations += '夜の静けさの中で、秘密めいた時間を共有。暗闇が二人をより大胆にさせます。';
+        hasRecommendations = true;
       } else if (combinedTags.has('☀️ 朝型エロス')) {
-        recommendations += '朝の清々しい空気の中で、新しい一日を特別な形で始める幸せ。';
+        if (hasRecommendations) recommendations += ' ';
+        recommendations += '朝の清々しい空気の中で、新しい一日を特別な形で始める幸せを味わいます。';
+        hasRecommendations = true;
       }
       
       // 探求系
       if (combinedTags.has('⛏️ 開拓派')) {
-        recommendations += '未知の領域を開拓する冒険心。お互いの新しい一面を発見し続ける探求の旅。';
+        if (hasRecommendations) recommendations += ' ';
+        recommendations += '未知の領域を開拓する冒険心。お互いの新しい一面を発見し続ける探求の旅へ。';
+        hasRecommendations = true;
       }
       
-      return recommendations;
+      return hasRecommendations ? recommendations : '';
     };
     
-    recommendedPlay += tagBasedRecommendations();
+    const tagRecommendations = tagBasedRecommendations();
+    if (tagRecommendations) recommendedPlay += tagRecommendations;
     
     // 6. 共通タグによる特別な相性
     if (sharedTags.length > 0) {
@@ -1653,7 +1695,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                       {openSections.recommendedPlay ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
                     </button>
                     <div className={`transition-all duration-300 ${
-                      openSections.recommendedPlay ? 'max-h-96' : 'max-h-0'
+                      openSections.recommendedPlay ? 'max-h-[800px]' : 'max-h-0'
                     } overflow-hidden`}>
                       <div className="mt-2 px-2 text-center">
                         <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.recommendedPlay}</p>
@@ -1778,14 +1820,14 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
               </div>
               </ScrollAnimation>
 
-              {/* ダウンロード・シェアボタン */}
+              {/* アクションボタン */}
               <ScrollAnimation animation="fadeInUp" delay={800}>
-              <div className="text-center">
-                <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+              <div className="text-center space-y-4">
+                <div className="flex justify-center items-center gap-4">
                   <button 
                     onClick={handleDownload}
                     disabled={isDownloading}
-                    className="bg-gradient-to-r from-green-600 to-green-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:from-green-700 hover:to-green-800 transition-all flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg text-sm sm:text-base"
+                    className="bg-white/10 backdrop-blur-sm border border-white/20 text-[#e0e7ff] px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-white/20 transition-all flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg text-sm sm:text-base"
                   >
                     {isDownloading ? (
                       <>
@@ -1795,39 +1837,25 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     ) : (
                       <>
                         <Download className="w-5 h-5" />
-                        <span>結果をダウンロード</span>
+                        <span>ダウンロード</span>
                       </>
                     )}
                   </button>
                   <button
                     onClick={() => setShowShareModal(true)}
-                    className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all flex items-center space-x-2 shadow-lg text-sm sm:text-base"
+                    className="bg-white/10 backdrop-blur-sm border border-white/20 text-[#e0e7ff] px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-white/20 transition-all flex items-center space-x-2 shadow-lg text-sm sm:text-base"
                   >
                     <Share2 className="w-5 h-5" />
-                    <span>結果をシェア</span>
+                    <span>シェア</span>
                   </button>
                 </div>
-              </div>
-              </ScrollAnimation>
-
-              {/* アクションボタン */}
-              <ScrollAnimation animation="fadeInUp" delay={1000}>
-              <div className="text-center space-y-4">
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <button
-                    onClick={onBack}
-                    className="px-4 sm:px-6 py-2 sm:py-3 border border-white/20 text-[#e0e7ff] bg-white/10 rounded-lg hover:bg-white/20 transition-colors flex items-center justify-center space-x-2 text-sm sm:text-base"
-                  >
-                    <ArrowRight className="w-5 h-5 transform rotate-180" />
-                    <span>相性診断に戻る</span>
-                  </button>
-                  
+                <div className="flex justify-center">
                   <button
                     onClick={onNewTest}
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all flex items-center justify-center space-x-2 text-sm sm:text-base"
+                    className="bg-white/10 backdrop-blur-sm border border-white/20 text-[#e0e7ff] px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-white/20 transition-all flex items-center justify-center space-x-2 shadow-lg text-sm sm:text-base"
                   >
                     <RefreshCw className="w-5 h-5" />
-                    <span>新しい相性診断</span>
+                    <span>もう一度診断する</span>
                   </button>
                 </div>
               </div>

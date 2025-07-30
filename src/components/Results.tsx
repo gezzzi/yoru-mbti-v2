@@ -379,7 +379,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
             </div>
             {/* Main Content */}
             <div className="rounded-b-3xl shadow-xl overflow-hidden border-2 border-white/30" style={{backgroundColor: 'rgba(255, 255, 255, 0)', boxShadow: '0 0 20px rgba(255, 255, 255, 0.1)'}}>
-              <div className="p-8 grid grid-cols-1">
+              <div className="p-4 grid grid-cols-1">
 
                 {/* New Graph Design */}
                 <div className="mb-12">
@@ -1003,20 +1003,13 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                 </div>
               </div>{/* Close 詳細情報統合カード */}
 
-              {/* Action buttons - Download and Share */}
-              <div className="text-center mt-8">
-                <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-                  <button 
-                    onClick={() => setShowShareModal(true)}
-                    className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all flex items-center space-x-2 shadow-lg"
-                  >
-                    <Share2 className="w-5 h-5" />
-                    <span>結果をシェア</span>
-                  </button>
+              {/* アクションボタン */}
+              <div className="text-center mt-8 px-4 pb-4">
+                <div className="flex flex-wrap justify-center gap-4">
                   <button 
                     onClick={handleDownload}
                     disabled={isDownloading}
-                    className="bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-3 rounded-lg hover:from-green-700 hover:to-green-800 transition-all flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                    className="bg-white/10 backdrop-blur-sm border border-white/20 text-[#e0e7ff] px-6 py-3 rounded-lg hover:bg-white/20 transition-all inline-flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
                   >
                     {isDownloading ? (
                       <>
@@ -1026,26 +1019,27 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     ) : (
                       <>
                         <Download className="w-5 h-5" />
-                        <span>結果をダウンロード</span>
+                        <span>ダウンロード</span>
                       </>
                     )}
                   </button>
-                </div>
-              </div>
-
-              {/* アクションボタン */}
-              <div className="text-center mt-6 px-4 pb-4">
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <button 
+                    onClick={() => setShowShareModal(true)}
+                    className="bg-white/10 backdrop-blur-sm border border-white/20 text-[#e0e7ff] px-6 py-3 rounded-lg hover:bg-white/20 transition-all inline-flex items-center space-x-2 shadow-lg"
+                  >
+                    <Share2 className="w-5 h-5" />
+                    <span>シェア</span>
+                  </button>
                   <Link
                     href="/test"
-                    className="bg-white text-teal-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center justify-center border border-teal-600"
+                    className="bg-white/10 backdrop-blur-sm border border-white/20 text-[#e0e7ff] px-6 py-3 rounded-lg font-semibold hover:bg-white/20 transition-all inline-flex items-center shadow-lg"
                   >
                     <RefreshCw className="w-5 h-5 mr-2" />
                     もう一度診断する
                   </Link>
                   <Link
                     href="/compatibility"
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all flex items-center justify-center"
+                    className="bg-white/10 backdrop-blur-sm border border-white/20 text-[#e0e7ff] px-6 py-3 rounded-lg font-semibold hover:bg-white/20 transition-all inline-flex items-center shadow-lg"
                   >
                     <Heart className="w-5 h-5 mr-2" />
                     相性診断をする
