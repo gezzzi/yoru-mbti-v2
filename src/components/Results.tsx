@@ -321,6 +321,13 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
     if (!downloadRef.current) return;
 
     setIsDownloading(true);
+    
+    // iOSのため、先にリンクを作成してDOMに追加
+    const link = document.createElement('a');
+    link.download = `夜の性格診断結果_${type.name}_${type.code}.png`;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    
     try {
       const canvas = await html2canvas(downloadRef.current, {
         backgroundColor: '#0f172a', // Bluish-black background color
@@ -328,14 +335,24 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
         logging: false,
       } as any);
 
-      // 画像をダウンロード（QRコード保存と同じ方法）
-      const link = document.createElement('a');
-      link.download = `夜の性格診断結果_${type.name}_${type.code}.png`;
+      // 画像のData URLを設定してクリック
       link.href = canvas.toDataURL('image/png');
-      link.click();
+      
+      // タイムアウトを使用してクリックイベントを遅延実行
+      setTimeout(() => {
+        link.click();
+        // クリック後にリンクを削除
+        setTimeout(() => {
+          document.body.removeChild(link);
+        }, 100);
+      }, 100);
     } catch (error) {
       console.error('ダウンロードに失敗しました:', error);
       alert('ダウンロードに失敗しました。もう一度お試しください。');
+      // エラー時もリンクを削除
+      if (link.parentNode) {
+        document.body.removeChild(link);
+      }
     } finally {
       setIsDownloading(false);
     }
