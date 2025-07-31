@@ -328,52 +328,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
         logging: false,
       } as any);
 
-      // iOSデバイスの検出（より確実な方法）
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-                    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-      
-      if (isIOS) {
-        // iOSの場合: 画像を直接表示してユーザーに保存してもらう
-        const dataUrl = canvas.toDataURL('image/png');
-        
-        // 画像を表示するためのモーダルを作成
-        const modal = document.createElement('div');
-        modal.style.cssText = `
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0, 0, 0, 0.9);
-          z-index: 10000;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: 20px;
-        `;
-        
-        modal.innerHTML = `
-          <div style="background: white; padding: 20px; border-radius: 10px; max-width: 90%; text-align: center;">
-            <p style="margin-bottom: 10px; color: black; font-size: 16px;">
-              画像を長押しして「写真に保存」を選択してください
-            </p>
-            <img src="${dataUrl}" style="max-width: 100%; height: auto; border: 1px solid #ddd;" />
-            <button onclick="this.parentElement.parentElement.remove()" 
-              style="margin-top: 15px; padding: 10px 20px; background: #818cf8; color: white; border: none; border-radius: 5px; font-size: 16px;">
-              閉じる
-            </button>
-          </div>
-        `;
-        
-        document.body.appendChild(modal);
-      } else {
-        // PCの場合: 従来通り自動ダウンロード
-        const link = document.createElement('a');
-        link.download = `夜の性格診断結果_${type.name}_${type.code}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      }
+      // 画像をダウンロード（QRコード保存と同じ方法）
+      const link = document.createElement('a');
+      link.download = `夜の性格診断結果_${type.name}_${type.code}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
     } catch (error) {
       console.error('ダウンロードに失敗しました:', error);
       alert('ダウンロードに失敗しました。もう一度お試しください。');
