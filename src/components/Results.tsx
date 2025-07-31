@@ -398,17 +398,24 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
         
         modal.appendChild(container);
         document.body.appendChild(modal);
+        
+        // モーダルが閉じられた時にローディング状態を解除
+        const originalRemove = modal.remove;
+        modal.remove = function() {
+          setIsDownloading(false);
+          originalRemove.call(this);
+        };
       } else {
         // PCの場合: 従来通り自動ダウンロード
         const link = document.createElement('a');
         link.download = `夜の性格診断結果_${type.name}_${type.code}.png`;
         link.href = dataUrl;
         link.click();
+        setIsDownloading(false);
       }
     } catch (error) {
       console.error('ダウンロードに失敗しました:', error);
       alert('ダウンロードに失敗しました。もう一度お試しください。');
-    } finally {
       setIsDownloading(false);
     }
   };
