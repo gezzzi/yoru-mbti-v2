@@ -424,15 +424,11 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
             <div className="grid md:grid-cols-2 gap-4">
               {/* 新しく診断を受ける */}
               <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4 border border-yellow-200">
-                <h3 className="font-semibold text-yellow-800 mb-2 flex items-center justify-center">
-                  <TestTube className="w-5 h-5 mr-2" />
-                  新しく診断を受ける
-                </h3>
                 <button
                   onClick={() => onStartTest?.()}
                   className="w-full bg-yellow-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-yellow-700 transition-colors"
                 >
-                  性格診断テストを受ける
+                  新しく診断を受ける
                 </button>
               </div>
 
@@ -443,7 +439,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                   過去の診断結果を使用
                 </h3>
                 <div className="w-full">
-                  <label className="flex flex-col items-center justify-center w-full h-20 border-2 border-yellow-300 border-dashed rounded-lg cursor-pointer bg-yellow-50/80 hover:bg-yellow-100/80 backdrop-blur-sm transition-colors">
+                  <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-yellow-300 border-dashed rounded-lg cursor-pointer bg-yellow-50/80 hover:bg-yellow-100/80 backdrop-blur-sm transition-colors">
                     <div className="flex flex-col items-center justify-center pt-2 pb-2">
                       {isMyQRUploading ? (
                         <div className="flex items-center space-x-2">

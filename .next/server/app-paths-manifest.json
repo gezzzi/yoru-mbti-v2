@@ -2,14 +2,14 @@
   "/api/feedback/route": "app/api/feedback/route.js",
   "/coming-soon/page": "app/coming-soon/page.js",
   "/_not-found/page": "app/_not-found/page.js",
-  "/demo-neon-colors/page": "app/demo-neon-colors/page.js",
   "/compatibility/page": "app/compatibility/page.js",
+  "/debug-stars/page": "app/debug-stars/page.js",
+  "/demo-neon-colors/page": "app/demo-neon-colors/page.js",
   "/compatibility/results/page": "app/compatibility/results/page.js",
   "/page": "app/page.js",
-  "/debug-stars/page": "app/debug-stars/page.js",
   "/help/page": "app/help/page.js",
   "/results/page": "app/results/page.js",
-  "/types/page": "app/types/page.js",
   "/test/page": "app/test/page.js",
+  "/types/page": "app/types/page.js",
   "/types/[typeCode]/page": "app/types/[typeCode]/page.js"
 }
