@@ -339,6 +339,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
     }
   };
 
+
   const handleQRDownload = async () => {
     if (!qrRef.current) return;
 
@@ -427,9 +428,6 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                   <TestTube className="w-5 h-5 mr-2" />
                   新しく診断を受ける
                 </h3>
-                <p className="text-yellow-700 text-sm mb-3">
-                  25の質問に答えて、あなたの性格タイプを診断します。
-                </p>
                 <button
                   onClick={() => onStartTest?.()}
                   className="w-full bg-yellow-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-yellow-700 transition-colors"
@@ -444,9 +442,6 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                   <Upload className="w-5 h-5 mr-2" />
                   過去の診断結果を使用
                 </h3>
-                <p className="text-yellow-700 text-sm mb-3">
-                  以前に診断したQRコードをアップロードして結果を復元します。
-                </p>
                 <div className="w-full">
                   <label className="flex flex-col items-center justify-center w-full h-20 border-2 border-yellow-300 border-dashed rounded-lg cursor-pointer bg-yellow-50/80 hover:bg-yellow-100/80 backdrop-blur-sm transition-colors">
                     <div className="flex flex-col items-center justify-center pt-2 pb-2">
@@ -524,33 +519,6 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                         <span>シェア</span>
                       </button>
                     </div>
-                    
-                    <label className="cursor-pointer">
-                      <button
-                        type="button"
-                        disabled={isMyQRUploading}
-                        className="flex items-center space-x-2 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all transform hover:scale-105 whitespace-nowrap"
-                      >
-                        {isMyQRUploading ? (
-                          <>
-                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                            <span>更新中...</span>
-                          </>
-                        ) : (
-                          <>
-                            <RefreshCw className="w-4 h-4" />
-                            <span>更新</span>
-                          </>
-                        )}
-                      </button>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleMyQRUpload}
-                        className="hidden"
-                        disabled={isMyQRUploading}
-                      />
-                    </label>
                   </div>
                 </div>
               </div>

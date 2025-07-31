@@ -342,7 +342,7 @@ export const copyToClipboard = async (text: string): Promise<boolean> => {
 
 // 相性診断結果用のSNS投稿テキストを生成
 export const generateCompatibilityShareText = (myResult: TestResult, partnerResult: TestResult, compatibilityPercent: number): string => {
-  const siteUrl = 'http://localhost:3000';
+  const siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://your-site.com';
   const comment = 'あなたと相性抜群の相手はどんな人？'; // 興味を引く一言
   return `【夜の性格診断】\n` +
     `❤️ 相性診断結果 ❤️\n` +
