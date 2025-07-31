@@ -1616,12 +1616,6 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
 
     setIsDownloading(true);
     
-    // iOSのため、先にリンクを作成してDOMに追加
-    const link = document.createElement('a');
-    link.download = `相性診断結果_${myResult.type.code}_${partnerResult.type.code}.png`;
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    
     try {
       const canvas = await html2canvas(downloadRef.current, {
         backgroundColor: '#0f172a', // Bluish-black background color
@@ -1630,24 +1624,85 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         allowTaint: true,
       } as any);
 
-      // 画像のData URLを設定してクリック
-      link.href = canvas.toDataURL('image/png');
+      const dataUrl = canvas.toDataURL('image/png');
       
-      // タイムアウトを使用してクリックイベントを遅延実行
-      setTimeout(() => {
+      // iOSデバイスの検出
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      
+      if (isIOS) {
+        // iOSの場合: ダウンロードリンクを表示
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.9);
+          z-index: 10000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+        `;
+        
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = `相性診断結果_${myResult.type.code}_${partnerResult.type.code}.png`;
+        link.style.cssText = `
+          display: block;
+          padding: 15px 30px;
+          background: #818cf8;
+          color: white;
+          text-decoration: none;
+          border-radius: 8px;
+          font-size: 18px;
+          margin-bottom: 20px;
+        `;
+        link.textContent = '画像を開く';
+        
+        const closeBtn = document.createElement('button');
+        closeBtn.textContent = '閉じる';
+        closeBtn.style.cssText = `
+          display: block;
+          padding: 10px 20px;
+          background: #666;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          font-size: 16px;
+          cursor: pointer;
+        `;
+        closeBtn.onclick = () => modal.remove();
+        
+        const container = document.createElement('div');
+        container.style.cssText = `
+          background: white;
+          padding: 30px;
+          border-radius: 10px;
+          text-align: center;
+        `;
+        container.innerHTML = `
+          <p style="margin-bottom: 20px; color: black; font-size: 16px;">
+            「画像を開く」をタップして、<br>画像を長押しして「写真に保存」を選択してください
+          </p>
+        `;
+        container.appendChild(link);
+        container.appendChild(closeBtn);
+        
+        modal.appendChild(container);
+        document.body.appendChild(modal);
+      } else {
+        // PCの場合: 従来通り自動ダウンロード
+        const link = document.createElement('a');
+        link.download = `相性診断結果_${myResult.type.code}_${partnerResult.type.code}.png`;
+        link.href = dataUrl;
         link.click();
-        // クリック後にリンクを削除
-        setTimeout(() => {
-          document.body.removeChild(link);
-        }, 100);
-      }, 100);
+      }
     } catch (error) {
       console.error('ダウンロードに失敗しました:', error);
       alert('ダウンロードに失敗しました。もう一度お試しください。');
-      // エラー時もリンクを削除
-      if (link.parentNode) {
-        document.body.removeChild(link);
-      }
     } finally {
       setIsDownloading(false);
     }
