@@ -1616,102 +1616,118 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
 
     setIsDownloading(true);
     
-    try {
-      const canvas = await html2canvas(downloadRef.current, {
-        backgroundColor: '#0f172a', // Bluish-black background color
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-      } as any);
-
-      const dataUrl = canvas.toDataURL('image/png');
+    // iOSデバイスの検出
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    
+    if (isIOS) {
+      // iOSの場合: 即座に新しいウィンドウを開く
+      const newWindow = window.open('', '_blank');
       
-      // iOSデバイスの検出
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-                    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-      
-      if (isIOS) {
-        // iOSの場合: ダウンロードリンクを表示
-        const modal = document.createElement('div');
-        modal.style.cssText = `
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0, 0, 0, 0.9);
-          z-index: 10000;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 20px;
-        `;
+      if (newWindow) {
+        // ローディング画面を表示
+        newWindow.document.write(`
+          <html>
+            <head>
+              <title>相性診断結果_${myResult.type.code}_${partnerResult.type.code}</title>
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                body { 
+                  margin: 0; 
+                  padding: 20px; 
+                  background: #0f172a; 
+                  text-align: center; 
+                  font-family: -apple-system, sans-serif;
+                }
+                .loading { 
+                  color: white; 
+                  margin: 50px auto; 
+                  font-size: 18px; 
+                }
+                .spinner {
+                  width: 40px;
+                  height: 40px;
+                  margin: 20px auto;
+                  border: 3px solid rgba(255,255,255,0.3);
+                  border-top-color: white;
+                  border-radius: 50%;
+                  animation: spin 1s linear infinite;
+                }
+                @keyframes spin {
+                  to { transform: rotate(360deg); }
+                }
+                img { 
+                  max-width: 100%; 
+                  height: auto; 
+                  margin-top: 20px;
+                  box-shadow: 0 4px 6px rgba(0,0,0,0.3); 
+                }
+                .instruction { 
+                  color: white; 
+                  margin: 20px; 
+                  font-size: 16px; 
+                }
+              </style>
+            </head>
+            <body>
+              <div class="loading">
+                <div class="spinner"></div>
+                <p>画像を生成中...</p>
+              </div>
+            </body>
+          </html>
+        `);
         
-        const link = document.createElement('a');
-        link.href = dataUrl;
-        link.download = `相性診断結果_${myResult.type.code}_${partnerResult.type.code}.png`;
-        link.style.cssText = `
-          display: block;
-          padding: 15px 30px;
-          background: #818cf8;
-          color: white;
-          text-decoration: none;
-          border-radius: 8px;
-          font-size: 18px;
-          margin-bottom: 20px;
-        `;
-        link.textContent = '画像を開く';
-        
-        const closeBtn = document.createElement('button');
-        closeBtn.textContent = '閉じる';
-        closeBtn.style.cssText = `
-          display: block;
-          padding: 10px 20px;
-          background: #666;
-          color: white;
-          border: none;
-          border-radius: 5px;
-          font-size: 16px;
-          cursor: pointer;
-        `;
-        closeBtn.onclick = () => modal.remove();
-        
-        const container = document.createElement('div');
-        container.style.cssText = `
-          background: white;
-          padding: 30px;
-          border-radius: 10px;
-          text-align: center;
-        `;
-        container.innerHTML = `
-          <p style="margin-bottom: 20px; color: black; font-size: 16px;">
-            「画像を開く」をタップして、<br>画像を長押しして「写真に保存」を選択してください
-          </p>
-        `;
-        container.appendChild(link);
-        container.appendChild(closeBtn);
-        
-        modal.appendChild(container);
-        document.body.appendChild(modal);
-        
-        // モーダルが閉じられた時にローディング状態を解除
-        const originalRemove = modal.remove;
-        modal.remove = function() {
-          setIsDownloading(false);
-          originalRemove.call(this);
-        };
+        try {
+          // 画像を生成
+          const canvas = await html2canvas(downloadRef.current, {
+            backgroundColor: '#0f172a',
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+          } as any);
+          
+          const dataUrl = canvas.toDataURL('image/png');
+          
+          // 生成完了後、画像を表示
+          newWindow.document.body.innerHTML = `
+            <div class="instruction">画像を長押しして「写真に保存」を選択してください</div>
+            <img src="${dataUrl}" alt="相性診断結果">
+          `;
+        } catch (error) {
+          console.error('画像生成エラー:', error);
+          newWindow.document.body.innerHTML = `
+            <div class="instruction" style="color: #ff6b6b;">
+              画像の生成に失敗しました。<br>
+              ウィンドウを閉じて再度お試しください。
+            </div>
+          `;
+        }
       } else {
-        // PCの場合: 従来通り自動ダウンロード
+        alert('ポップアップがブロックされました。ブラウザの設定を確認してください。');
+      }
+      
+      setIsDownloading(false);
+    } else {
+      // PCの場合: 従来通り
+      try {
+        const canvas = await html2canvas(downloadRef.current, {
+          backgroundColor: '#0f172a',
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+        } as any);
+        
         const link = document.createElement('a');
         link.download = `相性診断結果_${myResult.type.code}_${partnerResult.type.code}.png`;
-        link.href = dataUrl;
+        link.href = canvas.toDataURL('image/png');
         link.click();
+      } catch (error) {
+        console.error('ダウンロードに失敗しました:', error);
+        alert('ダウンロードに失敗しました。もう一度お試しください。');
+      } finally {
         setIsDownloading(false);
       }
-    } catch (error) {
-      console.error('ダウンロードに失敗しました:', error);
-      alert('ダウンロードに失敗しました。もう一度お試しください。');
-      setIsDownloading(false);
     }
   };
 
