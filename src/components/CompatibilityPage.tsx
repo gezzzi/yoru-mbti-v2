@@ -170,16 +170,26 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
     
     const parsedResult = parsed.result;
 
-    // 4軸のタイプコードを生成
+    // 5軸のタイプコードを生成（O軸を含む）
     const typeCode = 
       (parsedResult.E > 50 ? 'E' : 'I') +
       (parsedResult.L > 50 ? 'L' : 'F') +
       (parsedResult.A > 50 ? 'A' : 'S') +
-      (parsedResult.L2 > 50 ? 'L' : 'F');
+      (parsedResult.L2 > 50 ? 'L' : 'F') +
+      '-' +
+      (parsedResult.O > 50 ? 'O' : 'S');
     
+    // 4文字のコードで基本タイプを検索
+    const baseTypeCode = typeCode.split('-')[0];
     const personalityType = personalityTypes.find(type => 
-      type.code === typeCode
+      type.code === baseTypeCode
     ) || personalityTypes[0];
+    
+    // 完全な5文字コードを含むタイプを返す
+    const personalityTypeWithFullCode = {
+      ...personalityType,
+      code: typeCode
+    };
     
     return {
       result: {
@@ -188,7 +198,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
         A: parsedResult.A,
         L2: parsedResult.L2,
         O: parsedResult.O,
-        type: personalityType,
+        type: personalityTypeWithFullCode,
         additionalResults: parsedResult.additionalResults
       },
       secretAnswer: parsed.secretAnswer

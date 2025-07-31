@@ -986,24 +986,24 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                 <div className="flex flex-wrap justify-center gap-4">
                   <button 
                     onClick={() => setShowShareModal(true)}
-                    className="bg-teal-500 text-teal-900 px-6 py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg"
+                    className="bg-teal-500 text-teal-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-sm sm:text-base"
                   >
-                    <Share2 className="w-5 h-5" />
+                    <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span>シェア</span>
                   </button>
                   <Link
                     href="/test"
-                    className="bg-gray-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-400 transition-all transform hover:scale-105 inline-flex items-center shadow-lg"
+                    className="bg-gray-500 text-gray-100 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-gray-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-sm sm:text-base"
                   >
-                    <RefreshCw className="w-5 h-5 mr-2" />
-                    再診断
+                    <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span>再診断</span>
                   </Link>
                   <Link
                     href="/compatibility"
-                    className="bg-gradient-to-r from-[#ec4899] to-[#ffb8ce] text-white px-6 py-3 rounded-lg font-semibold hover:from-[#ffb8ce] hover:to-[#ffb8ce] transition-all transform hover:scale-105 inline-flex items-center shadow-lg"
+                    className="bg-gradient-to-r from-[#ec4899] to-[#ffb8ce] text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:from-[#ffb8ce] hover:to-[#ffb8ce] transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-sm sm:text-base"
                   >
-                    相性診断へ進む
-                    <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <span>相性診断へ進む</span>
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </Link>

@@ -2,8 +2,8 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { TestResult, PersonalityType } from '../types/personality';
-import { Heart, Users, ArrowRight, Check, Share2, RefreshCw, User, Copy, Twitter, MessageCircle, X, ChevronUp, ChevronDown } from 'lucide-react';
-import { generateCompatibilityShareText, copyToClipboard } from '../utils/snsShare';
+import { Heart, Users, ArrowRight, Share2, RefreshCw, User, ChevronUp, ChevronDown, Check } from 'lucide-react';
+import { generateCompatibilityShareText } from '../utils/snsShare';
 import { personalityTypes } from '../data/personalityTypes';
 import Image from 'next/image';
 import NeonText from './NeonText';
@@ -13,6 +13,8 @@ import HeartRain from './HeartRain';
 import { PositionDescriptionModal } from './PositionDescriptionModal';
 import { Position48, positions48 } from '../data/positions48';
 import { questions } from '../data/questions';
+import FeedbackModal from './FeedbackModal';
+import SNSShareModal from './SNSShareModal';
 
 interface CompatibilityResult {
   compatibility: number;
@@ -273,13 +275,13 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
 
   const downloadRef = useRef<HTMLDivElement>(null);
   const [showShareModal, setShowShareModal] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [animationStarted, setAnimationStarted] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
   const [showHeartRain, setShowHeartRain] = useState(false);
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({});
   const [selectedPosition, setSelectedPosition] = useState<Position48 | null>(null);
   const [partnerSecretAnswer, setPartnerSecretAnswer] = useState<{ questionId: number; answer: number } | null>(null);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   
   // Toggle section function
   const toggleSection = (section: string) => {
@@ -1882,10 +1884,19 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                   </button>
                   <button
                     onClick={onNewTest}
-                    className="bg-gradient-to-r from-[#ec4899] to-[#ffb8ce] text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:from-[#ffb8ce] hover:to-[#ffb8ce] transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-sm sm:text-base"
+                    className="bg-gray-500 text-gray-100 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-gray-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-sm sm:text-base"
                   >
                     <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span>再診断</span>
+                  </button>
+                  <button
+                    onClick={() => setShowFeedbackModal(true)}
+                    className="bg-blue-400 text-blue-800 px-6 py-3 rounded-lg font-semibold hover:bg-blue-300 transition-all transform hover:scale-105 inline-flex items-center shadow-lg"
+                  >
+                    フィードバックへ
+                    <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -1896,68 +1907,13 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         </div>
       </div>
 
-      {/* シェアモーダル */}
-      {showShareModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-          <div className="bg-[#1a1f2e] rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-white/20">
-            <div className="flex items-center justify-between p-6 border-b border-white/20">
-              <h2 className="text-xl font-bold text-[#e0e7ff]">相性診断結果をシェア</h2>
-              <button onClick={() => setShowShareModal(false)} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-                <X className="w-5 h-5 text-[#e0e7ff]" />
-              </button>
-            </div>
-            <div className="p-6 space-y-6">
-              <textarea
-                value={shareText}
-                readOnly
-                className="w-full p-3 border border-white/20 bg-white/10 text-[#e0e7ff] rounded-lg resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                rows={8}
-              />
-              <div className="space-y-3">
-                <h3 className="font-medium text-[#e0e7ff]">シェア方法を選択</h3>
-                <div className="grid grid-cols-1 gap-3">
-                  {/* Twitter */}
-                  <button
-                    onClick={() => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, '_blank', 'width=550,height=420')}
-                    className="flex items-center justify-center space-x-3 w-full bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-600 transition-colors"
-                  >
-                    <Twitter className="w-5 h-5" />
-                    <span>Twitterでシェア</span>
-                  </button>
-                  {/* LINE */}
-                  <button
-                    onClick={() => window.open(`https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(window.location.origin)}&text=${encodeURIComponent(shareText)}`, '_blank', 'width=550,height=420')}
-                    className="flex items-center justify-center space-x-3 w-full bg-green-500 text-white py-3 px-4 rounded-lg hover:bg-green-600 transition-colors"
-                  >
-                    <MessageCircle className="w-5 h-5" />
-                    <span>LINEでシェア</span>
-                  </button>
-                  {/* コピー */}
-                  <button
-                    onClick={async () => {
-                      await copyToClipboard(shareText);
-                      setCopied(true);
-                      setTimeout(() => setCopied(false), 2000);
-                    }}
-                    className={`flex items-center justify-center space-x-3 w-full py-3 px-4 rounded-lg transition-colors ${copied ? 'bg-green-500/20 text-green-400 border border-green-400/30' : 'bg-white/10 text-[#e0e7ff] hover:bg-white/20 border border-white/20'}`}
-                  >
-                    {copied ? <Check className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-                    <span>{copied ? 'コピーしました！' : 'テキストをコピー'}</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="p-6 border-t border-white/20 bg-white/5 rounded-b-xl">
-              <button
-                onClick={() => setShowShareModal(false)}
-                className="w-full bg-white/10 text-[#e0e7ff] py-2 px-4 rounded-lg hover:bg-white/20 transition-colors border border-white/20"
-              >
-                閉じる
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* SNS Share Modal */}
+      <SNSShareModal 
+        result={myResult}
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        initialShareText={shareText}
+      />
       
       {/* Position Description Modal */}
       <PositionDescriptionModal
@@ -1965,6 +1921,11 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         isOpen={!!selectedPosition}
         onClose={() => setSelectedPosition(null)}
       />
+      
+      {/* Feedback Modal */}
+      {showFeedbackModal && (
+        <FeedbackModal onClose={() => setShowFeedbackModal(false)} />
+      )}
     </div>
   );
 };

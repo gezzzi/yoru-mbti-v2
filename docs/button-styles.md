@@ -54,9 +54,9 @@
 ```jsx
 <button 
   onClick={() => setShowShareModal(true)}
-  className="bg-teal-500 text-teal-900 px-6 py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg"
+  className="bg-teal-500 text-teal-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-sm sm:text-base"
 >
-  <Share2 className="w-5 h-5" />
+  <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
   <span>シェア</span>
 </button>
 ```
@@ -65,36 +65,44 @@
 - 背景色: `bg-teal-500` → ホバー時: `bg-teal-400`（薄くなる）
 - 文字色: `text-teal-900`
 - フォント: `font-semibold`
-- アイコン: Share2 (lucide-react)
+- パディング: `px-4 py-2`（モバイル）、`sm:px-6 sm:py-3`（デスクトップ）
+- テキストサイズ: `text-sm`（モバイル）、`sm:text-base`（デスクトップ）
+- アイコン: Share2 (lucide-react)、サイズ: `w-4 h-4`（モバイル）、`sm:w-5 sm:h-5`（デスクトップ）
 - ホバー効果: `hover:scale-105`（105%に拡大）
+- レイアウト: `inline-flex items-center space-x-2`
+- テキストは`<span>`タグで囲む
 
 ### 3. 再診断ボタン
 ```jsx
 <Link
   href="/test"
-  className="bg-purple-400 text-purple-800 px-6 py-3 rounded-lg font-semibold hover:bg-purple-300 transition-all transform hover:scale-105 inline-flex items-center shadow-lg"
+  className="bg-gray-500 text-gray-100 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-gray-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-sm sm:text-base"
 >
-  <RefreshCw className="w-5 h-5 mr-2" />
-  再診断
+  <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
+  <span>再診断</span>
 </Link>
 ```
 
 **特徴:**
-- 背景色: `bg-purple-400` → ホバー時: `bg-purple-300`（薄くなる）
-- 文字色: `text-purple-800`
+- 背景色: `bg-gray-500` → ホバー時: `bg-gray-400`（薄くなる）
+- 文字色: `text-gray-100`（ページの文字色に合わせた柔らかい白）
 - フォント: `font-semibold`
-- アイコン: RefreshCw (lucide-react)
+- パディング: `px-4 py-2`（モバイル）、`sm:px-6 sm:py-3`（デスクトップ）
+- テキストサイズ: `text-sm`（モバイル）、`sm:text-base`（デスクトップ）
+- アイコン: RefreshCw (lucide-react)、サイズ: `w-4 h-4`（モバイル）、`sm:w-5 sm:h-5`（デスクトップ）
 - ホバー効果: `hover:scale-105`（105%に拡大）
+- レイアウト: `inline-flex items-center space-x-2`
+- テキストは`<span>`タグで囲む
 - Next.js Linkコンポーネント使用
 
 ### 4. 相性診断へ進むボタン
 ```jsx
 <Link
   href="/compatibility"
-  className="bg-gradient-to-r from-[#ec4899] to-[#ffb8ce] text-white px-6 py-3 rounded-lg font-semibold hover:from-[#ffb8ce] hover:to-[#ffb8ce] transition-all transform hover:scale-105 inline-flex items-center shadow-lg"
+  className="bg-gradient-to-r from-[#ec4899] to-[#ffb8ce] text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:from-[#ffb8ce] hover:to-[#ffb8ce] transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-sm sm:text-base"
 >
-  相性診断へ進む
-  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <span>相性診断へ進む</span>
+  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
   </svg>
 </Link>
@@ -104,14 +112,27 @@
 - 背景色: グラデーション `from-[#ec4899] to-[#ffb8ce]` → ホバー時: `from-[#ffb8ce] to-[#ffb8ce]`（単色効果）
 - 文字色: `text-white`
 - フォント: `font-semibold`
-- アイコン: SVG矢印アイコン
+- パディング: `px-4 py-2`（モバイル）、`sm:px-6 sm:py-3`（デスクトップ）
+- テキストサイズ: `text-sm`（モバイル）、`sm:text-base`（デスクトップ）
+- アイコン: SVG矢印アイコン、サイズ: `w-4 h-4`（モバイル）、`sm:w-5 sm:h-5`（デスクトップ）
 - ホバー効果: `hover:scale-105`（105%に拡大）
+- レイアウト: `inline-flex items-center space-x-2`
+- テキストは`<span>`タグで囲む
 - Next.js Linkコンポーネント使用
 
 ## 共通のスタイル設定
 
-### パディング・サイズ
-- `px-6 py-3`: 水平方向に24px、垂直方向に12pxのパディング
+### パディング・サイズ（レスポンシブ）
+- モバイル: `px-4 py-2` (水平16px、垂直8px)
+- デスクトップ: `sm:px-6 sm:py-3` (水平24px、垂直12px)
+
+### テキストサイズ（レスポンシブ）
+- モバイル: `text-sm` (14px)
+- デスクトップ: `sm:text-base` (16px)
+
+### アイコンサイズ（レスポンシブ）
+- モバイル: `w-4 h-4` (16px × 16px)
+- デスクトップ: `sm:w-5 sm:h-5` (20px × 20px)
 
 ### 角丸
 - `rounded-lg`: 大きめの角丸
@@ -128,8 +149,8 @@
 
 ### レイアウト
 - `inline-flex items-center`: インラインフレックスボックスで中央揃え
-- `space-x-2`: アイコンとテキストの間隔（ダウンロード・シェアボタン）
-- `mr-2`: アイコンの右マージン（再診断・相性診断ボタン）
+- `space-x-2`: 子要素間の統一された間隔（推奨）
+- **重要**: テキストは必ず`<span>`タグで囲む（ホバー時のずれ防止）
 
 ## カラーパレット
 
