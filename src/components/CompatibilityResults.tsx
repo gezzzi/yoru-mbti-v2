@@ -2,8 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { TestResult, PersonalityType } from '../types/personality';
-import { Heart, Users, ArrowRight, Check, Download, Share2, RefreshCw, User, Copy, Twitter, MessageCircle, X, ChevronUp, ChevronDown } from 'lucide-react';
-import html2canvas from 'html2canvas';
+import { Heart, Users, ArrowRight, Check, Share2, RefreshCw, User, Copy, Twitter, MessageCircle, X, ChevronUp, ChevronDown } from 'lucide-react';
 import { generateCompatibilityShareText, copyToClipboard } from '../utils/snsShare';
 import { personalityTypes } from '../data/personalityTypes';
 import Image from 'next/image';
@@ -272,7 +271,6 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     ruby: partnerBasePersonalityType?.ruby
   };
 
-  const [isDownloading, setIsDownloading] = useState(false);
   const downloadRef = useRef<HTMLDivElement>(null);
   const [showShareModal, setShowShareModal] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -1610,126 +1608,6 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     return <Users className="w-10 h-10 md:w-12 md:h-12 text-pink-400" />;
   };
 
-  // ダウンロード機能
-  const handleDownload = async () => {
-    if (!downloadRef.current) return;
-
-    setIsDownloading(true);
-    
-    // iOSデバイスの検出
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    
-    if (isIOS) {
-      // iOSの場合: 即座に新しいウィンドウを開く
-      const newWindow = window.open('', '_blank');
-      
-      if (newWindow) {
-        // ローディング画面を表示
-        newWindow.document.write(`
-          <html>
-            <head>
-              <title>相性診断結果_${myResult.type.code}_${partnerResult.type.code}</title>
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <style>
-                body { 
-                  margin: 0; 
-                  padding: 20px; 
-                  background: #0f172a; 
-                  text-align: center; 
-                  font-family: -apple-system, sans-serif;
-                }
-                .loading { 
-                  color: white; 
-                  margin: 50px auto; 
-                  font-size: 18px; 
-                }
-                .spinner {
-                  width: 40px;
-                  height: 40px;
-                  margin: 20px auto;
-                  border: 3px solid rgba(255,255,255,0.3);
-                  border-top-color: white;
-                  border-radius: 50%;
-                  animation: spin 1s linear infinite;
-                }
-                @keyframes spin {
-                  to { transform: rotate(360deg); }
-                }
-                img { 
-                  max-width: 100%; 
-                  height: auto; 
-                  margin-top: 20px;
-                  box-shadow: 0 4px 6px rgba(0,0,0,0.3); 
-                }
-                .instruction { 
-                  color: white; 
-                  margin: 20px; 
-                  font-size: 16px; 
-                }
-              </style>
-            </head>
-            <body>
-              <div class="loading">
-                <div class="spinner"></div>
-                <p>画像を生成中...</p>
-              </div>
-            </body>
-          </html>
-        `);
-        
-        try {
-          // 画像を生成
-          const canvas = await html2canvas(downloadRef.current, {
-            backgroundColor: '#0f172a',
-            scale: 2,
-            useCORS: true,
-            allowTaint: true,
-          } as any);
-          
-          const dataUrl = canvas.toDataURL('image/png');
-          
-          // 生成完了後、画像を表示
-          newWindow.document.body.innerHTML = `
-            <div class="instruction">画像を長押しして「写真に保存」を選択してください</div>
-            <img src="${dataUrl}" alt="相性診断結果">
-          `;
-        } catch (error) {
-          console.error('画像生成エラー:', error);
-          newWindow.document.body.innerHTML = `
-            <div class="instruction" style="color: #ff6b6b;">
-              画像の生成に失敗しました。<br>
-              ウィンドウを閉じて再度お試しください。
-            </div>
-          `;
-        }
-      } else {
-        alert('ポップアップがブロックされました。ブラウザの設定を確認してください。');
-      }
-      
-      setIsDownloading(false);
-    } else {
-      // PCの場合: 従来通り
-      try {
-        const canvas = await html2canvas(downloadRef.current, {
-          backgroundColor: '#0f172a',
-          scale: 2,
-          useCORS: true,
-          allowTaint: true,
-        } as any);
-        
-        const link = document.createElement('a');
-        link.download = `相性診断結果_${myResult.type.code}_${partnerResult.type.code}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      } catch (error) {
-        console.error('ダウンロードに失敗しました:', error);
-        alert('ダウンロードに失敗しました。もう一度お試しください。');
-      } finally {
-        setIsDownloading(false);
-      }
-    }
-  };
 
   return (
     <div className="min-h-screen pt-16">
@@ -1995,25 +1873,6 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
               <ScrollAnimation animation="fadeInUp" delay={800}>
               <div className="text-center space-y-4">
                 <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-4">
-                  <button 
-                    onClick={handleDownload}
-                    disabled={isDownloading}
-                    className="bg-blue-400 text-blue-800 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-blue-300 transition-all transform hover:scale-105 inline-flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg text-sm sm:text-base"
-                  >
-                    {isDownloading ? (
-                      <>
-                        <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-blue-800 border-t-transparent rounded-full animate-spin"></div>
-                        <span className="hidden sm:inline">ダウンロード中...</span>
-                        <span className="sm:hidden">保存中...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Download className="w-4 h-4 sm:w-5 sm:h-5" />
-                        <span className="hidden sm:inline">ダウンロード</span>
-                        <span className="sm:hidden">保存</span>
-                      </>
-                    )}
-                  </button>
                   <button
                     onClick={() => setShowShareModal(true)}
                     className="bg-teal-500 text-teal-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-sm sm:text-base"
