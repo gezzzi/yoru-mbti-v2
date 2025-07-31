@@ -1623,33 +1623,44 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         allowTaint: true,
       } as any);
 
-      // iOSデバイスの検出
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+      // iOSデバイスの検出（より確実な方法）
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
       
       if (isIOS) {
-        // iOSの場合: 新しいタブで画像を開く
-        const dataUrl = canvas.toDataURL('image/png');
-        const newTab = window.open();
-        if (newTab) {
-          newTab.document.write(`
-            <html>
-              <head>
-                <title>相性診断結果_${myResult.type.code}_${partnerResult.type.code}</title>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <style>
-                  body { margin: 0; padding: 20px; background: #0f172a; text-align: center; }
-                  img { max-width: 100%; height: auto; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-                  .instruction { color: white; margin: 20px; font-size: 16px; font-family: -apple-system, sans-serif; }
-                </style>
-              </head>
-              <body>
-                <div class="instruction">画像を長押しして「写真に保存」を選択してください</div>
-                <img src="${dataUrl}" alt="相性診断結果">
-              </body>
-            </html>
-          `);
-          newTab.document.close();
-        }
+        // iOSの場合: Blob URLを使用
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            alert('画像の生成に失敗しました。');
+            return;
+          }
+          
+          // Blob URLを作成
+          const blobUrl = URL.createObjectURL(blob);
+          
+          // 新しいウィンドウで開く
+          const link = document.createElement('a');
+          link.href = blobUrl;
+          link.target = '_blank';
+          
+          // ダウンロード用のファイル名を設定（iOSでは無視されるが念のため）
+          link.download = `相性診断結果_${myResult.type.code}_${partnerResult.type.code}.png`;
+          
+          // クリックイベントを発火
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          // メモリリークを防ぐため、少し遅延してからURLを解放
+          setTimeout(() => {
+            URL.revokeObjectURL(blobUrl);
+          }, 100);
+          
+          // 保存方法の案内
+          setTimeout(() => {
+            alert('画像が新しいタブで開きました。\n画像を長押しして「写真に保存」を選択してください。');
+          }, 500);
+        }, 'image/png');
       } else {
         // PCの場合: 従来通り自動ダウンロード
         const link = document.createElement('a');

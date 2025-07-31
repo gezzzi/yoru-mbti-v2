@@ -119,9 +119,6 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose }
 
           {/* カスタマイズ可能な投稿テキスト */}
           <div>
-            <label className="block text-sm font-medium text-[#374151] mb-2">
-              投稿テキスト（編集可能）
-            </label>
             <textarea
               value={shareText}
               onChange={(e) => setShareText(e.target.value)}
@@ -141,7 +138,7 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose }
                 <button
                   onClick={handleWebShare}
                   disabled={isWebSharing}
-                  className="flex items-center justify-center space-x-3 w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 px-4 rounded-lg hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-semibold"
+                  className="flex items-center justify-center space-x-3 w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 px-4 rounded-lg hover:from-purple-700 hover:to-pink-700 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform font-semibold"
                 >
                   {isWebSharing ? (
                     <>
