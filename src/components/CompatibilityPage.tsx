@@ -434,62 +434,6 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
         
 
 
-        {/* 自分の診断結果がない場合の警告 */}
-        {!myResult && (
-          <ScrollAnimation animation="fadeInUp" delay={200}>
-            <div className="bg-yellow-50/90 backdrop-blur-sm border border-yellow-200 rounded-xl p-6 mb-8">
-              <div className="flex items-center justify-center mb-4">
-                <AlertCircle className="w-6 h-6 text-yellow-600 mr-3" />
-                <h2 className="text-xl font-bold text-yellow-800">性格診断結果が必要です</h2>
-              </div>
-            
-            <div className="grid md:grid-cols-2 gap-4">
-              {/* 新しく診断を受ける */}
-              <button
-                onClick={() => onStartTest?.()}
-                className="bg-yellow-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-yellow-700 transition-colors"
-              >
-                新しく診断を受ける
-              </button>
-
-              {/* 過去のQRコードをアップロード */}
-              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4 border border-yellow-200">
-                <h3 className="font-semibold text-yellow-800 mb-2 flex items-center justify-center">
-                  <Upload className="w-5 h-5 mr-2" />
-                  過去の診断結果を使用
-                </h3>
-                <div className="w-full">
-                  <label htmlFor="my-qr-upload" className="block">
-                    <div className="flex flex-col items-center justify-center w-full h-40 border-2 border-yellow-300 border-dashed rounded-lg cursor-pointer bg-yellow-50/80 hover:bg-yellow-100/80 backdrop-blur-sm transition-colors">
-                      <div className="flex flex-col items-center justify-center pt-2 pb-2">
-                        {isMyQRUploading ? (
-                          <div className="flex items-center space-x-2">
-                            <div className="w-5 h-5 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
-                            <span className="text-sm text-yellow-600">読み取り中...</span>
-                          </div>
-                        ) : (
-                          <>
-                            <Camera className="w-6 h-6 text-yellow-400 mb-1" />
-                            <p className="text-xs text-yellow-600">QRコードをアップロード</p>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                    <input
-                      id="my-qr-upload"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleMyQRUpload}
-                      className="hidden"
-                      disabled={isMyQRUploading}
-                    />
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          </ScrollAnimation>
-        )}
 
         {/* QRコード診断 */}
         {myResult && (

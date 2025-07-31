@@ -49,19 +49,17 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
           
           {/* デスクトップメニュー - 中央配置 */}
           <div className="hidden tablet:flex items-center space-x-8">
-            {hasTestResult && (
-              <Link 
-                href="/results"
-                onClick={closeMenu}
-                className={`text-sm font-medium transition-colors ${
-                  currentPage === 'results' 
-                    ? 'text-teal-300' 
-                    : 'text-white'
-                }`}
-              >
-                あなたの結果
-              </Link>
-            )}
+            <Link 
+              href="/results"
+              onClick={closeMenu}
+              className={`text-sm font-medium transition-colors ${
+                currentPage === 'results' 
+                  ? 'text-teal-300' 
+                  : 'text-white'
+              }`}
+            >
+              あなたの結果
+            </Link>
             <Link 
               href="/test"
               onClick={closeMenu}
@@ -113,19 +111,17 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
         {isMenuOpen && (
           <div className="tablet:hidden bg-slate-600">
             <div className="px-4 pt-2 pb-4 space-y-2">
-              {hasTestResult && (
-                <Link 
-                  href="/results"
-                  onClick={closeMenu}
-                  className={`block w-full text-left py-2 text-sm font-medium transition-colors ${
-                    currentPage === 'results' 
-                      ? 'text-teal-300' 
-                      : 'text-white'
-                  }`}
-                >
-                  あなたの結果
-                </Link>
-              )}
+              <Link 
+                href="/results"
+                onClick={closeMenu}
+                className={`block w-full text-left py-2 text-sm font-medium transition-colors ${
+                  currentPage === 'results' 
+                    ? 'text-teal-300' 
+                    : 'text-white'
+                }`}
+              >
+                あなたの結果
+              </Link>
               <Link 
                 href="/test"
                 onClick={closeMenu}
