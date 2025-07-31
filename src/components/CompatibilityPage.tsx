@@ -423,14 +423,12 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
             
             <div className="grid md:grid-cols-2 gap-4">
               {/* 新しく診断を受ける */}
-              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4 border border-yellow-200">
-                <button
-                  onClick={() => onStartTest?.()}
-                  className="w-full bg-yellow-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-yellow-700 transition-colors"
-                >
-                  新しく診断を受ける
-                </button>
-              </div>
+              <button
+                onClick={() => onStartTest?.()}
+                className="bg-yellow-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-yellow-700 transition-colors"
+              >
+                新しく診断を受ける
+              </button>
 
               {/* 過去のQRコードをアップロード */}
               <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4 border border-yellow-200">
