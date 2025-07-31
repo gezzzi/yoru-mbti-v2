@@ -264,14 +264,36 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
         setUploadedQRImage(imageDataUrl);
         
         try {
-          // QRコードを読み取る
-          const result = await QrScanner.scanImage(file);
+          // まず通常の読み取りを試みる
+          let qrText = '';
+          let readSuccess = false;
           
-          // 読み取った結果がコードの形式かチェック（旧形式と新形式の両方に対応）
-          if (result && result.match(/^[A-Za-z0-9]+(-[A-Za-z0-9]+)?(-[A-Za-z0-9]+)?$/)) {
-            setPartnerCode(result.toUpperCase());
+          try {
+            const result = await QrScanner.scanImage(file);
+            qrText = result;
+            readSuccess = true;
+          } catch (firstError) {
+            // 通常の読み取りに失敗した場合、高度な設定で再試行
+            try {
+              // QrScannerの高度な設定で再試行
+              const result = await QrScanner.scanImage(file, {
+                returnDetailedScanResult: true,
+                alsoTryWithoutScanRegion: true
+              });
+              
+              qrText = typeof result === 'string' ? result : result.data;
+              readSuccess = true;
+            } catch (secondError) {
+              // それでも失敗した場合
+              readSuccess = false;
+            }
+          }
+          
+          if (readSuccess && qrText && qrText.match(/^[A-Za-z0-9]+(-[A-Za-z0-9]+)?(-[A-Za-z0-9]+)?$/)) {
+            setPartnerCode(qrText.toUpperCase());
+            setError(''); // エラーをクリア
           } else {
-            throw new Error('QRコードから有効なコードを読み取れませんでした');
+            throw new Error('QRコードの読み取りに失敗しました。\n写真が鮮明で、QRコードがまっすぐ写っていることを確認してください。');
           }
         } catch (err) {
           setError(err instanceof Error ? err.message : 'QRコードの読み取りに失敗しました');
@@ -437,21 +459,24 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                   過去の診断結果を使用
                 </h3>
                 <div className="w-full">
-                  <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-yellow-300 border-dashed rounded-lg cursor-pointer bg-yellow-50/80 hover:bg-yellow-100/80 backdrop-blur-sm transition-colors">
-                    <div className="flex flex-col items-center justify-center pt-2 pb-2">
-                      {isMyQRUploading ? (
-                        <div className="flex items-center space-x-2">
-                          <div className="w-5 h-5 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
-                          <span className="text-sm text-yellow-600">読み取り中...</span>
-                        </div>
-                      ) : (
-                        <>
-                          <Camera className="w-6 h-6 text-yellow-400 mb-1" />
-                          <p className="text-xs text-yellow-600">QRコードをアップロード</p>
-                        </>
-                      )}
+                  <label htmlFor="my-qr-upload" className="block">
+                    <div className="flex flex-col items-center justify-center w-full h-40 border-2 border-yellow-300 border-dashed rounded-lg cursor-pointer bg-yellow-50/80 hover:bg-yellow-100/80 backdrop-blur-sm transition-colors">
+                      <div className="flex flex-col items-center justify-center pt-2 pb-2">
+                        {isMyQRUploading ? (
+                          <div className="flex items-center space-x-2">
+                            <div className="w-5 h-5 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
+                            <span className="text-sm text-yellow-600">読み取り中...</span>
+                          </div>
+                        ) : (
+                          <>
+                            <Camera className="w-6 h-6 text-yellow-400 mb-1" />
+                            <p className="text-xs text-yellow-600">QRコードをアップロード</p>
+                          </>
+                        )}
+                      </div>
                     </div>
                     <input
+                      id="my-qr-upload"
                       type="file"
                       accept="image/*"
                       onChange={handleMyQRUpload}
@@ -568,9 +593,21 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
 
                   {/* エラー表示 */}
                   {error && (
-                    <div className="flex items-center space-x-2 text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">
-                      <AlertCircle className="w-5 h-5" />
-                      <span className="text-sm">{error}</span>
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                      <div className="flex items-start space-x-2">
+                        <AlertCircle className="w-5 h-5 text-red-600 mt-0.5" />
+                        <div className="flex-1">
+                          <p className="text-sm text-red-600 whitespace-pre-line">{error}</p>
+                          {error.includes('読み取りに失敗') && (
+                            <ul className="mt-2 text-xs text-red-500 list-disc list-inside space-y-1">
+                              <li>QRコードが画面全体に大きく写るように撮影</li>
+                              <li>できるだけ正面から撮影</li>
+                              <li>明るい場所で撮影</li>
+                              <li>ピントが合っていることを確認</li>
+                            </ul>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   )}
 
