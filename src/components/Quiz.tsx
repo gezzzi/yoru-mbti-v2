@@ -243,16 +243,6 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
           <div className="flex flex-col items-center space-y-4">
             {/* ボタンコンテナ */}
             <div className="flex items-center gap-4">
-              {/* 戻るボタン - 2ページ目以降のみ表示 */}
-              {currentPageIndex > 0 && (
-                <button
-                  onClick={handlePrevious}
-                  className="flex items-center justify-center px-8 py-3 rounded-full text-lg font-medium transition-all duration-200 transform hover:scale-105 bg-gray-600 text-white hover:bg-gray-700 shadow-lg hover:shadow-xl"
-                >
-                  <span className="mr-2">←</span>
-                  戻る
-                </button>
-              )}
               
               {/* 次へ/結果を見るボタン */}
               <button

@@ -73,7 +73,7 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose }
       
       if (!success) {
         // フォールバック: 従来の方法でシェア
-        alert('このデバイスではワンタップシェアがサポートされていません。他の方法でシェアしてください。');
+        alert('このデバイスではQRコードを含めたシェアがサポートされていません。他の方法でシェアしてください。');
       }
     } catch (error) {
       console.error('Web Share APIでのシェアに失敗しました:', error);
@@ -87,43 +87,25 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose }
   const compatibilityCode = generateCompatibilityCode(result);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-[#ffffff] rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
         {/* ヘッダー */}
-        <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-bold text-gray-900">結果をシェア</h2>
+        <div className="flex items-center justify-between p-6 border-b border-[#e5e7eb]">
+          <h2 className="text-xl font-bold text-[#111827]">結果をシェア</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 hover:bg-[#f3f4f6] rounded-full transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 text-[#6b7280]" />
           </button>
         </div>
 
         {/* メインコンテンツ */}
         <div className="p-6 space-y-6">
-          {/* 診断結果サマリー */}
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-4 border border-purple-200">
-            <div className="flex items-center space-x-3 mb-3">
-              <span className="text-3xl">{result.type.emoji}</span>
-              <div>
-                <h3 className="font-bold text-gray-900">
-                  {result.type.ruby ? (
-                    <ruby>
-                      {result.type.name}
-                      <rt className="text-xs font-normal">{result.type.ruby}</rt>
-                    </ruby>
-                  ) : (
-                    result.type.name
-                  )}
-                </h3>
-                <p className="text-sm text-gray-600">{result.type.code}</p>
-              </div>
-            </div>
-            
-            {/* QRコード表示 */}
+          {/* QRコード表示 */}
+          <div className="bg-gradient-to-r from-[#f3f4f6] to-[#e5e7eb] rounded-lg p-4 border border-[#d1d5db]">
             <div className="flex flex-col items-center space-y-3">
-              <div className="bg-white p-3 rounded-lg shadow-sm" ref={qrRef}>
+              <div className="bg-[#ffffff] p-3 rounded-lg shadow-sm" ref={qrRef}>
                 <QRCode
                   value={compatibilityCode}
                   size={150}
@@ -136,23 +118,23 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose }
 
           {/* カスタマイズ可能な投稿テキスト */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-[#374151] mb-2">
               投稿テキスト（編集可能）
             </label>
             <textarea
               value={shareText}
               onChange={(e) => setShareText(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full p-3 border border-[#d1d5db] bg-[#ffffff] text-[#111827] rounded-lg resize-none focus:ring-2 focus:ring-[#3b82f6] focus:border-transparent"
               rows={8}
             />
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-[#6b7280] mt-1">
               文字数: {shareText.length}
             </p>
           </div>
 
           {/* SNSシェアボタン */}
           <div className="space-y-4">
-            <h3 className="font-medium text-gray-900">シェア方法を選択</h3>
+            <h3 className="font-medium text-[#111827]">シェア方法を選択</h3>
             
             <div className="space-y-3">
               {/* Web Share API Level 2 - ワンタップシェア */}
@@ -170,7 +152,7 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose }
                   ) : (
                     <>
                       <Share className="w-6 h-6" />
-                      <span>✨ ワンタップシェア（推奨）</span>
+                      <span>QRコードを含めてシェア（推奨）</span>
                     </>
                   )}
                 </button>
@@ -180,7 +162,7 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose }
               <div className="border-t pt-3">
                 <button
                   onClick={() => setShowOtherShares(!showOtherShares)}
-                  className="flex items-center justify-center space-x-2 w-full bg-gray-100 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors text-sm"
+                  className="flex items-center justify-center space-x-2 w-full bg-[#f3f4f6] text-[#374151] py-2 px-4 rounded-lg hover:bg-[#e5e7eb] transition-colors text-sm"
                 >
                   <span>その他のシェア方法</span>
                   <span className={`transition-transform ${showOtherShares ? 'rotate-180' : ''}`}>▼</span>
@@ -200,7 +182,7 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose }
                     {/* X(Twitter) */}
                     <button
                       onClick={handleTwitterShare}
-                      className="flex items-center justify-center space-x-2 bg-black text-white py-2 px-3 rounded-lg hover:bg-gray-800 transition-colors text-sm"
+                      className="flex items-center justify-center space-x-2 bg-[#000000] text-[#ffffff] py-2 px-3 rounded-lg hover:bg-[#1f2937] transition-colors text-sm"
                     >
                       <Twitter className="w-4 h-4" />
                       <span>X</span>
@@ -238,34 +220,13 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose }
             </div>
           </div>
 
-          {/* シェア方法の説明 */}
-          <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-            <h4 className="font-medium text-purple-900 mb-2">
-              {webShareSupported ? '🎆 おすすめ: ワンタップシェア' : '📱 QRコードの共有方法'}
-            </h4>
-            <div className="text-sm text-purple-800 space-y-2">
-              {webShareSupported ? (
-                <>
-                  <p>✨ <strong>ワンタップシェア</strong>ならテキストとQRコード画像が一度にシェアできます！</p>
-                  <p>📱 Instagram、Facebook、LINEなど多くのアプリで直接シェア可能</p>
-                </>
-              ) : (
-                <>
-                  <p>1. 「QRコードを保存」で画像をダウンロード</p>
-                  <p>2. 上記のテキストをコピーしてSNSに投稿</p>
-                  <p>3. 保存した画像を投稿に追加</p>
-                  <p className="font-medium mt-2 text-purple-900">友達がQRコードを読み取って相性診断できます！</p>
-                </>
-              )}
-            </div>
-          </div>
         </div>
 
         {/* フッター */}
-        <div className="p-6 border-t bg-gray-50 rounded-b-xl">
+        <div className="p-6 border-t border-[#e5e7eb] bg-[#f9fafb] rounded-b-xl">
           <button
             onClick={onClose}
-            className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors"
+            className="w-full bg-[#e5e7eb] text-[#1f2937] py-2 px-4 rounded-lg hover:bg-[#d1d5db] transition-colors"
           >
             閉じる
           </button>

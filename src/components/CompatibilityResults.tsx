@@ -1617,7 +1617,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     setIsDownloading(true);
     try {
       const canvas = await html2canvas(downloadRef.current, {
-        backgroundColor: '#ffffff',
+        backgroundColor: '#0f172a', // Bluish-black background color
         scale: 2,
         useCORS: true,
         allowTaint: true,

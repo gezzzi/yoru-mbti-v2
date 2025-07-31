@@ -322,7 +322,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
 
     setIsDownloading(true);
     try {
-      const canvas = await html2canvas(downloadRef.current);
+      const canvas = await html2canvas(downloadRef.current, {
+        backgroundColor: '#0f172a', // Bluish-black background color
+        scale: 2, // Higher quality
+        logging: false,
+      } as any);
 
       // Canvasを画像として保存
       const link = document.createElement('a');

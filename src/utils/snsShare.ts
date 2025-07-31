@@ -254,15 +254,14 @@ export const shareWithWebAPI = async (
 
 // SNS投稿テキストを生成
 export const generateSNSShareText = (result: TestResult): string => {
-  const compatibilityCode = generateCompatibilityCode(result);
   const siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://your-site.com';
   
   const shareText = `【夜の性格診断】
 🌙 私の性格診断結果 🌙
 タイプ: ${result.type.name}（${result.type.code}）
 相性診断してみて！
-[相性診断コード: ${compatibilityCode}]
-${siteUrl} #夜の性格診断 #相性チェック`;
+${siteUrl}
+#夜の性格診断 #相性チェック`;
 
   return shareText;
 };
