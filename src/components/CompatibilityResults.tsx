@@ -1623,11 +1623,40 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         allowTaint: true,
       } as any);
 
-      // Canvasを画像として保存
-      const link = document.createElement('a');
-      link.download = `相性診断結果_${myResult.type.code}_${partnerResult.type.code}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
+      // iOSデバイスの検出
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+      
+      if (isIOS) {
+        // iOSの場合: 新しいタブで画像を開く
+        const dataUrl = canvas.toDataURL('image/png');
+        const newTab = window.open();
+        if (newTab) {
+          newTab.document.write(`
+            <html>
+              <head>
+                <title>相性診断結果_${myResult.type.code}_${partnerResult.type.code}</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <style>
+                  body { margin: 0; padding: 20px; background: #0f172a; text-align: center; }
+                  img { max-width: 100%; height: auto; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+                  .instruction { color: white; margin: 20px; font-size: 16px; font-family: -apple-system, sans-serif; }
+                </style>
+              </head>
+              <body>
+                <div class="instruction">画像を長押しして「写真に保存」を選択してください</div>
+                <img src="${dataUrl}" alt="相性診断結果">
+              </body>
+            </html>
+          `);
+          newTab.document.close();
+        }
+      } else {
+        // PCの場合: 従来通り自動ダウンロード
+        const link = document.createElement('a');
+        link.download = `相性診断結果_${myResult.type.code}_${partnerResult.type.code}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      }
     } catch (error) {
       console.error('ダウンロードに失敗しました:', error);
       alert('ダウンロードに失敗しました。もう一度お試しください。');

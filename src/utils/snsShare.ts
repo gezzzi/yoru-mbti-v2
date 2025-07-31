@@ -221,7 +221,7 @@ export const shareWithWebAPI = async (
   qrCodeElement: HTMLDivElement,
   fileName: string,
   title?: string
-): Promise<boolean> => {
+): Promise<boolean | 'cancelled'> => {
   if (!isWebShareAPILevel2Supported()) {
     return false;
   }
@@ -246,7 +246,12 @@ export const shareWithWebAPI = async (
     // Web Share API Level 2でシェア
     await navigator.share(shareData);
     return true;
-  } catch (error) {
+  } catch (error: any) {
+    // ユーザーがキャンセルした場合は 'AbortError' が発生する
+    if (error.name === 'AbortError') {
+      console.log('ユーザーがシェアをキャンセルしました');
+      return 'cancelled';
+    }
     console.error('Web Share APIでのシェアに失敗しました:', error);
     return false;
   }

@@ -71,7 +71,10 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose }
         '夜の性格診断 - 相性診断コード'
       );
       
-      if (!success) {
+      if (success === 'cancelled') {
+        // ユーザーがキャンセルした場合は何も表示しない
+        return;
+      } else if (!success) {
         // フォールバック: 従来の方法でシェア
         alert('このデバイスではQRコードを含めたシェアがサポートされていません。他の方法でシェアしてください。');
       }
@@ -90,11 +93,11 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose }
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-[#ffffff] rounded-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
         {/* ヘッダー */}
-        <div className="flex items-center justify-between p-6 border-b border-[#e5e7eb]">
+        <div className="relative flex items-center justify-center p-6 border-b border-[#e5e7eb]">
           <h2 className="text-xl font-bold text-[#111827]">結果をシェア</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-[#f3f4f6] rounded-full transition-colors"
+            className="absolute right-6 p-2 hover:bg-[#f3f4f6] rounded-full transition-colors"
           >
             <X className="w-5 h-5 text-[#6b7280]" />
           </button>
@@ -102,17 +105,15 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose }
 
         {/* メインコンテンツ */}
         <div className="p-6 space-y-6">
-          {/* QRコード表示 */}
-          <div className="bg-gradient-to-r from-[#f3f4f6] to-[#e5e7eb] rounded-lg p-4 border border-[#d1d5db]">
-            <div className="flex flex-col items-center space-y-3">
-              <div className="bg-[#ffffff] p-3 rounded-lg shadow-sm" ref={qrRef}>
-                <QRCode
-                  value={compatibilityCode}
-                  size={150}
-                  level="M"
-                  className="w-full h-auto max-w-[150px]"
-                />
-              </div>
+          {/* 非表示のQRコード（シェア機能用に内部で保持） */}
+          <div className="hidden">
+            <div className="bg-[#ffffff] p-3 rounded-lg shadow-sm" ref={qrRef}>
+              <QRCode
+                value={compatibilityCode}
+                size={150}
+                level="M"
+                className="w-full h-auto max-w-[150px]"
+              />
             </div>
           </div>
 
@@ -134,8 +135,6 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose }
 
           {/* SNSシェアボタン */}
           <div className="space-y-4">
-            <h3 className="font-medium text-[#111827]">シェア方法を選択</h3>
-            
             <div className="space-y-3">
               {/* Web Share API Level 2 - ワンタップシェア */}
               {webShareSupported && (
@@ -159,7 +158,7 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose }
               )}
 
               {/* その他のシェアオプション */}
-              <div className="border-t pt-3">
+              <div className="pt-3">
                 <button
                   onClick={() => setShowOtherShares(!showOtherShares)}
                   className="flex items-center justify-center space-x-2 w-full bg-[#f3f4f6] text-[#374151] py-2 px-4 rounded-lg hover:bg-[#e5e7eb] transition-colors text-sm"
