@@ -330,72 +330,6 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       tagCompatibilityScore = tagResult.totalScore;
       tagCategoryScores = tagResult.categoryScores;
       tagDetailScores = tagResult.detailScores;
-    } else {
-      // 旧形式の互換性維持（タグスコアがない場合）
-      const userTagsArray = user.additionalResults?.tags || [];
-      const partnerTagsArray = partner.additionalResults?.tags || [];
-      const userTags = new Set(userTagsArray);
-      const partnerTags = new Set(partnerTagsArray);
-      
-      // 共通タグの数をカウント
-      const commonTags = userTagsArray.filter(tag => partnerTags.has(tag));
-      const totalUniqueTags = new Set([...userTagsArray, ...partnerTagsArray]).size;
-      
-      if (totalUniqueTags > 0) {
-        // 共通タグ率（0-100%）
-        const commonTagRatio = (commonTags.length / totalUniqueTags) * 100;
-        let tagBonus = 0;
-        
-        // 特定のタグの組み合わせによるボーナス
-        if (userTags.has('🔥 欲望の炎') && partnerTags.has('🔥 欲望の炎')) {
-          tagBonus += 10; // 両方情熱的
-        }
-        if (userTags.has('🛁 アフターケア必須') && partnerTags.has('🛁 アフターケア必須')) {
-          tagBonus += 8; // 両方ケア重視
-        }
-        if (userTags.has('💬 言語プレイ派') && partnerTags.has('💬 言語プレイ派')) {
-          tagBonus += 6; // 言葉責めの相性
-        }
-        if (userTags.has('🕯 ロマン重視') && partnerTags.has('🕯 ロマン重視')) {
-          tagBonus += 8; // ロマンチックな相性
-        }
-        if (userTags.has('☀️ 朝型エロス') && partnerTags.has('☀️ 朝型エロス')) {
-          tagBonus += 5; // 同じ時間帯の好み
-        }
-        if (userTags.has('🔄 リピート求め派') && partnerTags.has('🔄 リピート求め派')) {
-          tagBonus += 7; // 両方リピート重視
-        }
-        if (userTags.has('🗣 下ネタOK') && partnerTags.has('🗣 下ネタOK')) {
-          tagBonus += 5; // コミュニケーションの相性
-        }
-        
-        // 相反するタグによるペナルティ
-        if ((userTags.has('⚡️ スピード勝負派') && partnerTags.has('🕯 ロマン重視')) ||
-            (userTags.has('🕯 ロマン重視') && partnerTags.has('⚡️ スピード勝負派'))) {
-          tagBonus -= 10; // テンポの不一致
-        }
-        // 新しいタグの相性ボーナス
-        if (userTags.has('🪞 鏡プレイ好き') && partnerTags.has('🪞 鏡プレイ好き')) {
-          tagBonus += 7; // 視覚的な興奮の共有
-        }
-        if (userTags.has('🎮 ゲーム派') && partnerTags.has('🎮 ゲーム派')) {
-          tagBonus += 6; // 遊び心の共有
-        }
-        if (userTags.has('💋 キス魔') && partnerTags.has('💋 キス魔')) {
-          tagBonus += 8; // 愛情表現の一致
-        }
-        if (userTags.has('🧥 コスプレ派') && partnerTags.has('🧥 コスプレ派')) {
-          tagBonus += 7; // ファンタジーの共有
-        }
-        // 新しいタグとの相性
-        if ((userTags.has('💋 キス魔') && partnerTags.has('⚡️ スピード勝負派')) ||
-            (userTags.has('⚡️ スピード勝負派') && partnerTags.has('💋 キス魔'))) {
-          tagBonus -= 5; // ペースの不一致
-        }
-        
-        // タグ相性スコア = 共通タグ率 + ボーナス（最大100）
-        tagCompatibilityScore = Math.min(100, Math.max(0, commonTagRatio + tagBonus));
-      }
     }
     
     // 総合相性度を計算（5軸50%、タグ50%の重み付け）
@@ -498,18 +432,47 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     return () => clearTimeout(timer);
   }, [compatibility.compatibility]);
 
-  // 夜の相性分析を生成
+  // 夜の相性分析を生成（新しいタグ相性ロジックを使用）
   const generateIntimateCompatibility = () => {
-    // L/F軸、A/S軸、O/S軸、公開タグを使った詳細なプレイ分析
-    const myTags = myResult.additionalResults?.tags || [];
-    const partnerTags = partnerResult.additionalResults?.tags || [];
+    // 新しいタグ相性ロジックを使用
+    const myTagScores = myResult.additionalResults?.tagScores || [];
+    const partnerTagScores = partnerResult.additionalResults?.tagScores || [];
     
-    // 両者のタグを統合
-    const combinedTags = new Set([...myTags, ...partnerTags]);
-    const sharedTags = myTags.filter(tag => partnerTags.includes(tag));
+    // タグ相性計算（tagCompatibility.tsの関数を使用）
+    const tagCompatibilityResult = calculateImprovedTagCompatibility(myTagScores, partnerTagScores);
+    
+    // 高得点タグ（4点以上）を抽出
+    const myHighTags = myTagScores.filter(ts => ts.score >= 4).map(ts => ts.tag);
+    const partnerHighTags = partnerTagScores.filter(ts => ts.score >= 4).map(ts => ts.tag);
+    
+    // 両者の高得点タグを統合
+    const combinedTags = new Set([...myHighTags, ...partnerHighTags]);
+    const sharedTags = myHighTags.filter(tag => partnerHighTags.includes(tag));
     
     // おすすめプレイの詳細な分析を開始
     let recommendedPlay = '';
+    
+    // タグ相性スコアによる全体的な相性評価
+    const tagCompatibilityAnalysis = () => {
+      const score = tagCompatibilityResult.totalScore;
+      let analysis = '【タグ相性スコア：' + score + '点】\n';
+      
+      if (score >= 85) {
+        analysis += '運命的な相性！タグの一致度が驚異的に高く、完璧なパートナーです。';
+      } else if (score >= 70) {
+        analysis += '素晴らしい相性！多くの好みが一致し、満足度の高い関係を築けます。';
+      } else if (score >= 55) {
+        analysis += '良好な相性。違いを理解し合いながら、お互いに歩み寄れる関係です。';
+      } else if (score >= 40) {
+        analysis += '標準的な相性。お互いの違いを尊重し、コミュニケーションを大切に。';
+      } else {
+        analysis += 'チャレンジングな相性。お互いを理解する努力が必要ですが、それが成長につながります。';
+      }
+      
+      return analysis;
+    };
+    
+    recommendedPlay += tagCompatibilityAnalysis();
     
     // 1. 基本的な相性パターンの分析（L/F軸）
     const lAxisAnalysis = () => {
@@ -592,7 +555,47 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     const emotionalDepth = emotionalDepthAnalysis();
     if (emotionalDepth) recommendedPlay += emotionalDepth;
     
-    // 5. 公開タグによる具体的なプレイ提案
+    // 5. カテゴリ別相性分析
+    const categoryAnalysis = () => {
+      let analysis = '\n\n【カテゴリ別相性】\n';
+      const categories = tagCompatibilityResult.categoryScores;
+      
+      // intensity（情熱度）
+      if (categories.intensity !== undefined) {
+        analysis += `・情熱度：${categories.intensity}点`;
+        if (categories.intensity >= 80) analysis += ' - 激しく求め合う情熱的な関係';
+        else if (categories.intensity >= 60) analysis += ' - 程よい情熱のバランス';
+        else if (categories.intensity >= 40) analysis += ' - 一方がリードして調整必要';
+        else analysis += ' - 温度差あり、コミュニケーション重要';
+        analysis += '\n';
+      }
+      
+      // romantic（ロマンチック度）
+      if (categories.romantic !== undefined) {
+        analysis += `・ロマンチック度：${categories.romantic}点`;
+        if (categories.romantic >= 80) analysis += ' - 雰囲気を大切にする美しい関係';
+        else if (categories.romantic >= 60) analysis += ' - 愛情表現が似ている';
+        else if (categories.romantic >= 40) analysis += ' - ロマンスの価値観に差あり';
+        else analysis += ' - 雰囲気作りの好みが異なる';
+        analysis += '\n';
+      }
+      
+      // playful（遊び心）
+      if (categories.playful !== undefined) {
+        analysis += `・遊び心：${categories.playful}点`;
+        if (categories.playful >= 80) analysis += ' - 冒険心を共有する楽しい関係';
+        else if (categories.playful >= 60) analysis += ' - 適度な遊び心を共有';
+        else if (categories.playful >= 40) analysis += ' - 遊びの好みに違いあり';
+        else analysis += ' - プレイスタイルが大きく異なる';
+        analysis += '\n';
+      }
+      
+      return analysis;
+    };
+    
+    recommendedPlay += categoryAnalysis();
+    
+    // 6. 公開タグによる具体的なプレイ提案
     const tagBasedRecommendations = () => {
       let recommendations = '\n\n';
       let hasRecommendations = false;
@@ -704,19 +707,52 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     const tagRecommendations = tagBasedRecommendations();
     if (tagRecommendations) recommendedPlay += tagRecommendations;
     
-    // 6. 共通タグによる特別な相性
-    if (sharedTags.length > 0) {
-      recommendedPlay += `\n\n【特別な相性】\n`;
-      if (sharedTags.length === 1) {
-        recommendedPlay += `共通の嗜好「${sharedTags[0]}」が二人を強く結びつけます。この共通点を大切に、理解し合える関係を深めていけるでしょう。`;
-      } else if (sharedTags.length <= 3) {
-        recommendedPlay += `${sharedTags.join('、')}という共通の嗜好が、二人の相性を特別なものにしています。お互いを深く理解し合える最高のパートナー。`;
-      } else {
-        recommendedPlay += `驚くほど多くの共通点（${sharedTags.length}個）を持つ二人。まるで運命的な出会いのような、深い理解と共感に基づく関係を築けます。`;
+    // 7. 共通タグと相性の悪い組み合わせ分析
+    const detailedTagAnalysis = () => {
+      let analysis = '';
+      
+      // 共通タグによる特別な相性
+      if (sharedTags.length > 0) {
+        analysis += `\n\n【特別な相性】\n`;
+        if (sharedTags.length === 1) {
+          analysis += `共通の嗜好「${sharedTags[0]}」が二人を強く結びつけます。この共通点を大切に、理解し合える関係を深めていけるでしょう。`;
+        } else if (sharedTags.length <= 3) {
+          analysis += `${sharedTags.join('、')}という共通の嗜好が、二人の相性を特別なものにしています。お互いを深く理解し合える最高のパートナー。`;
+        } else {
+          analysis += `驚くほど多くの共通点（${sharedTags.length}個）を持つ二人。まるで運命的な出会いのような、深い理解と共感に基づく関係を築けます。`;
+        }
       }
-    }
+      
+      // 相性の悪い組み合わせの警告
+      const checkBadCombinations = () => {
+        const warnings: string[] = [];
+        
+        // スピード重視 vs ロマン重視
+        if ((myHighTags.includes('⚡️ スピード勝負派') && partnerHighTags.includes('🕯 ロマン重視')) ||
+            (partnerHighTags.includes('⚡️ スピード勝負派') && myHighTags.includes('🕯 ロマン重視'))) {
+          warnings.push('テンポの違いに注意。お互いのペースを尊重して。');
+        }
+        
+        // 開拓派 vs 安全第一派
+        if ((myHighTags.includes('⛏️ 開拓派') && partnerHighTags.includes('🛡 安全第一派')) ||
+            (partnerHighTags.includes('⛏️ 開拓派') && myHighTags.includes('🛡 安全第一派'))) {
+          warnings.push('リスク許容度に大きな差。事前の話し合いが重要。');
+        }
+        
+        if (warnings.length > 0) {
+          return '\n\n【注意ポイント】\n' + warnings.join('\n');
+        }
+        return '';
+      };
+      
+      analysis += checkBadCombinations();
+      
+      return analysis;
+    };
     
-    // 7. 性欲バランスの統合
+    recommendedPlay += detailedTagAnalysis();
+    
+    // 8. 性欲バランスの統合
     const libidoAnalysis = () => {
       const calculateLibidoLevel = (result: any, tags: string[]) => {
         let baseLevel = 0;
@@ -736,8 +772,8 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         return Math.min(100, Math.max(0, baseLevel));
       };
       
-      const myLibidoLevel = calculateLibidoLevel(myResult, myTags);
-      const partnerLibidoLevel = calculateLibidoLevel(partnerResult, partnerTags);
+      const myLibidoLevel = calculateLibidoLevel(myResult, myHighTags);
+      const partnerLibidoLevel = calculateLibidoLevel(partnerResult, partnerHighTags);
       const difference = Math.abs(myLibidoLevel - partnerLibidoLevel);
       
       let analysis = '\n\n【性欲バランス】\n';
@@ -1078,10 +1114,14 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     
     // ギャップ度（5軸データと公開タグから精細化）
     const generateGapAnalysis = () => {
-      // タグを取得
-      const myTags = myResult.additionalResults?.tags || [];
-      const partnerTags = partnerResult.additionalResults?.tags || [];
-      const combinedTags = new Set([...myTags, ...partnerTags]);
+      // タグスコアを取得
+      const myTagScores = myResult.additionalResults?.tagScores || [];
+      const partnerTagScores = partnerResult.additionalResults?.tagScores || [];
+      
+      // 高得点タグ（4点以上）を抽出
+      const myHighTags = myTagScores.filter(ts => ts.score >= 4).map(ts => ts.tag);
+      const partnerHighTags = partnerTagScores.filter(ts => ts.score >= 4).map(ts => ts.tag);
+      const combinedTags = new Set([...myHighTags, ...partnerHighTags]);
       
       // 各軸のギャップを計算
       const gaps = {
@@ -1107,17 +1147,32 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         minor: 0        // 小さな違い
       };
       
-      // 致命的な違いをチェック
-      if ((myTags.includes('🕯 ロマン重視') && partnerTags.includes('⚡️ スピード勝負派')) ||
-          (partnerTags.includes('🕯 ロマン重視') && myTags.includes('⚡️ スピード勝負派'))) {
-        tagDifferences.critical++;
-      }
-      
-      // 大きな違いをチェック
-      if ((myTags.includes('🛁 アフターケア必須') && !partnerTags.includes('🛁 アフターケア必須')) ||
-          (!myTags.includes('🛁 アフターケア必須') && partnerTags.includes('🛁 アフターケア必須'))) {
-        tagDifferences.significant++;
-      }
+      // 各タグスコアの差を分析
+      myTagScores.forEach(myTag => {
+        const partnerTag = partnerTagScores.find(pt => pt.tag === myTag.tag);
+        if (partnerTag) {
+          const scoreDiff = Math.abs(myTag.score - partnerTag.score);
+          
+          // 特定のタグ組み合わせで致命的な違いをチェック
+          if (myTag.tag === '🕯 ロマン重視' && myTag.score >= 4) {
+            const partnerSpeed = partnerTagScores.find(pt => pt.tag === '⚡️ スピード勝負派');
+            if (partnerSpeed && partnerSpeed.score >= 4) {
+              tagDifferences.critical++;
+            }
+          }
+          if (myTag.tag === '⚡️ スピード勝負派' && myTag.score >= 4) {
+            const partnerRomance = partnerTagScores.find(pt => pt.tag === '🕯 ロマン重視');
+            if (partnerRomance && partnerRomance.score >= 4) {
+              tagDifferences.critical++;
+            }
+          }
+          
+          // アフターケアの重要度の違い
+          if (myTag.tag === '🛁 アフターケア必須' && scoreDiff >= 3) {
+            tagDifferences.significant++;
+          }
+        }
+      });
       
       // タグの違いをスコアに反映
       gapScore += tagDifferences.critical * 20;
@@ -1129,9 +1184,9 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       if (gapScore < 25) {
         analysis = 'ほぼ完璧な相性！価値観が驚くほど一致';
         
-        // 共通タグがある場合
-        const sharedTags = myTags.filter(tag => partnerTags.includes(tag));
-        if (sharedTags.length > 3) {
+        // 共通の高得点タグがある場合
+        const sharedHighTags = myHighTags.filter(tag => partnerHighTags.includes(tag));
+        if (sharedHighTags.length > 3) {
           analysis += '。共通の嗜好が多く、理解し合える関係';
         }
       } else if (gapScore < 40) {
@@ -1166,7 +1221,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       if (combinedTags.has('🚪 NG明確') && combinedTags.has('💬 言語プレイ派')) {
         analysis += '。しっかりコミュニケーションを取れば大丈夫';
       }
-      if (myTags.includes('🔥 欲望の炎') && partnerTags.includes('🔥 欲望の炎')) {
+      if (myHighTags.includes('🔥 欲望の炎') && partnerHighTags.includes('🔥 欲望の炎')) {
         analysis += '。情熱がぶつかり合う激しい関係に';
       }
       

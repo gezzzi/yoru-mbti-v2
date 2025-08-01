@@ -298,7 +298,10 @@ export function calculateImprovedTagCompatibility(
     maxPossibleScore += 6 * importance.match; // 各タグの最大スコア（差0点 = 6点 × 重要度）
   });
   
-  const normalizedScore = (totalCompatibility / maxPossibleScore) * 100;
+  // インタラクションボーナスが負の場合のみ考慮（ペナルティとして機能）
+  // 正の場合は最大値を超えないようにする
+  const adjustedTotal = Math.max(0, totalCompatibility);
+  const normalizedScore = (adjustedTotal / maxPossibleScore) * 100;
   
   // カテゴリ別スコアの平均化
   const normalizedCategoryScores: { [key: string]: number } = {};
