@@ -342,8 +342,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       if (userTags.has('🕯 ロマン重視') && partnerTags.has('🕯 ロマン重視')) {
         tagBonus += 8; // ロマンチックな相性
       }
-      if ((userTags.has('🌙 深夜エロス') && partnerTags.has('🌙 深夜エロス')) ||
-          (userTags.has('☀️ 朝型エロス') && partnerTags.has('☀️ 朝型エロス'))) {
+      if (userTags.has('☀️ 朝型エロス') && partnerTags.has('☀️ 朝型エロス')) {
         tagBonus += 5; // 同じ時間帯の好み
       }
       if (userTags.has('🔄 リピート求め派') && partnerTags.has('🔄 リピート求め派')) {
@@ -358,13 +357,23 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
           (userTags.has('🕯 ロマン重視') && partnerTags.has('⚡️ スピード勝負派'))) {
         tagBonus -= 10; // テンポの不一致
       }
-      if ((userTags.has('🌙 深夜エロス') && partnerTags.has('☀️ 朝型エロス')) ||
-          (userTags.has('☀️ 朝型エロス') && partnerTags.has('🌙 深夜エロス'))) {
-        tagBonus -= 8; // 時間帯の不一致
+      // 新しいタグの相性ボーナス
+      if (userTags.has('🪞 鏡プレイ好き') && partnerTags.has('🪞 鏡プレイ好き')) {
+        tagBonus += 7; // 視覚的な興奮の共有
       }
-      if ((userTags.has('🏃‍♂️ 衝動トリガー型') && partnerTags.has('📅 準備派')) ||
-          (userTags.has('📅 準備派') && partnerTags.has('🏃‍♂️ 衝動トリガー型'))) {
-        tagBonus -= 8; // スタイルの不一致
+      if (userTags.has('🎮 ゲーム派') && partnerTags.has('🎮 ゲーム派')) {
+        tagBonus += 6; // 遊び心の共有
+      }
+      if (userTags.has('💋 キス魔') && partnerTags.has('💋 キス魔')) {
+        tagBonus += 8; // 愛情表現の一致
+      }
+      if (userTags.has('🧥 コスプレ派') && partnerTags.has('🧥 コスプレ派')) {
+        tagBonus += 7; // ファンタジーの共有
+      }
+      // 新しいタグとの相性
+      if ((userTags.has('💋 キス魔') && partnerTags.has('⚡️ スピード勝負派')) ||
+          (userTags.has('⚡️ スピード勝負派') && partnerTags.has('💋 キス魔'))) {
+        tagBonus -= 5; // ペースの不一致
       }
       
       // タグ相性スコア = 共通タグ率 + ボーナス（最大100）
@@ -585,14 +594,25 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         recommendations += 'キャンドルの灯り、優しい音楽、アロマの香り。五感すべてで愛を感じる特別な時間を作りましょう。';
         hasRecommendations = true;
       }
-      if (combinedTags.has('🎧 感覚演出派')) {
+      // 新しいタグの推奨
+      if (combinedTags.has('🪞 鏡プレイ好き')) {
         if (hasRecommendations) recommendations += ' ';
-        recommendations += '音楽や照明、香りなど、五感を刺激する演出で非日常的な空間を創造します。';
+        recommendations += '鏡越しに映る二人の姿を見つめながら、興奬を倍増させましょう。視覚的な刺激が新たな快感を生み出します。';
         hasRecommendations = true;
       }
-      if (combinedTags.has('📅 準備派')) {
+      if (combinedTags.has('🎮 ゲーム派')) {
         if (hasRecommendations) recommendations += ' ';
-        recommendations += '事前の準備を大切に。お互いの好みを確認し、特別な夜のための計画を立てましょう。';
+        recommendations += 'ルールやミッションを設定して、遊び心あふれる時間を。ゲーム感覚でお互いを刺激し合いましょう。';
+        hasRecommendations = true;
+      }
+      if (combinedTags.has('💋 キス魔')) {
+        if (hasRecommendations) recommendations += ' ';
+        recommendations += '唇を重ね、息を分かち合う濃密なキス。キスだけでも心も体も満たされる時間を大切に。';
+        hasRecommendations = true;
+      }
+      if (combinedTags.has('🧥 コスプレ派')) {
+        if (hasRecommendations) recommendations += ' ';
+        recommendations += '制服やコスチュームで非日常的な興奬を。視覚的なファンタジーが情熱をさらに燃え上がらせます。';
         hasRecommendations = true;
       }
       
@@ -643,22 +663,9 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         recommendations += 'お互いの境界線を明確にし、絶対に越えてはいけないラインを共有。安心感の中で楽しめます。';
         hasRecommendations = true;
       }
-      if (combinedTags.has('🙈 言い出しにくい派')) {
-        if (hasRecommendations) recommendations += ' ';
-        recommendations += '言葉にしにくい欲望も、少しずつ打ち明けられる信頼関係を築きましょう。';
-        hasRecommendations = true;
-      }
       
       // 時間帯系
-      if (combinedTags.has('🌙 深夜エロス') && combinedTags.has('☀️ 朝型エロス')) {
-        if (hasRecommendations) recommendations += ' ';
-        recommendations += '24時間いつでも求め合える情熱的な関係。朝の優しい光も、夜の妖艶な闇も、二人の舞台になります。';
-        hasRecommendations = true;
-      } else if (combinedTags.has('🌙 深夜エロス')) {
-        if (hasRecommendations) recommendations += ' ';
-        recommendations += '夜の静けさの中で、秘密めいた時間を共有。暗闇が二人をより大胆にさせます。';
-        hasRecommendations = true;
-      } else if (combinedTags.has('☀️ 朝型エロス')) {
+      if (combinedTags.has('☀️ 朝型エロス')) {
         if (hasRecommendations) recommendations += ' ';
         recommendations += '朝の清々しい空気の中で、新しい一日を特別な形で始める幸せを味わいます。';
         hasRecommendations = true;
@@ -702,7 +709,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         if (tags.includes('🔄 リピート求め派')) baseLevel += 15;
         if (tags.includes('⚡️ スピード勝負派')) baseLevel += 10;
         if (tags.includes('🏃‍♂️ 衝動トリガー型')) baseLevel += 10;
-        if (tags.includes('🌙 深夜エロス') || tags.includes('☀️ 朝型エロス')) baseLevel += 5;
+        if (tags.includes('☀️ 朝型エロス')) baseLevel += 5;
         if (tags.includes('💤 まったり派')) baseLevel -= 10;
         if (tags.includes('🕯 ロマン重視')) baseLevel -= 5;
         
@@ -747,93 +754,6 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     };
     
     recommendedPlay += libidoAnalysis();
-    
-    // 8. S/M相性の統合
-    const smAnalysis = () => {
-      const calculateSMScore = (result: any, tags: string[]) => {
-        let sScore = 0;
-        let mScore = 0;
-        
-        if (result.L > 50) {
-          sScore += result.L - 50;
-        } else {
-          mScore += 50 - result.L;
-        }
-        
-        if (result.A > 60) sScore += 10;
-        if (result.O > 60) {
-          sScore += 5;
-        } else if (result.O < 40) {
-          mScore += 5;
-        }
-        
-        if (tags.includes('🧷 軽SM耐性あり')) {
-          sScore += 10;
-          mScore += 10;
-        }
-        if (tags.includes('⛏️ 開拓派')) sScore += 15;
-        if (tags.includes('🚪 NG明確')) sScore += 5;
-        if (tags.includes('🙈 言い出しにくい派')) mScore += 10;
-        if (tags.includes('🛁 アフターケア必須')) mScore += 5;
-        if (tags.includes('💬 言語プレイ派')) sScore += 5;
-        
-        return { sScore: Math.min(100, sScore), mScore: Math.min(100, mScore) };
-      };
-      
-      const myScores = calculateSMScore(myResult, myTags);
-      const partnerScores = calculateSMScore(partnerResult, partnerTags);
-      
-      const getTendency = (scores: { sScore: number; mScore: number }) => {
-        if (scores.sScore > scores.mScore + 20) return 'S';
-        if (scores.mScore > scores.sScore + 20) return 'M';
-        return 'Switch';
-      };
-      
-      const myTendency = getTendency(myScores);
-      const partnerTendency = getTendency(partnerScores);
-      
-      let analysis = '\n\n【S/M相性】\n';
-      
-      if (myTendency === 'S' && partnerTendency === 'M') {
-        analysis += 'ド安定な主従関係。あなたがリードし、相手が従う理想的な構図。';
-        if (combinedTags.has('🧷 軽SM耐性あり')) {
-          analysis += '軽いSMプレイも楽しめそう。';
-        }
-      } else if (myTendency === 'M' && partnerTendency === 'S') {
-        analysis += '完璧な支配関係。相手に導かれることで最高の快感を得られる。';
-        if (combinedTags.has('🛁 アフターケア必須')) {
-          analysis += 'アフターケアもバッチリ。';
-        }
-      } else if (myTendency === 'S' && partnerTendency === 'S') {
-        analysis += '主導権の取り合い勃発かも。交互にリードする工夫が必要。';
-        if (myScores.sScore > partnerScores.sScore) {
-          analysis += '基本的にはあなたがリード。';
-        }
-      } else if (myTendency === 'M' && partnerTendency === 'M') {
-        analysis += '優しい愛撫の応酬。お互いを思いやる穏やかな関係。';
-        if (combinedTags.has('🕯 ロマン重視')) {
-          analysis += 'ロマンチックな雰囲気で。';
-        }
-      } else if (myTendency === 'Switch' || partnerTendency === 'Switch') {
-        analysis += '交代プレイが楽しめる。気分や状況で立場を変えられる柔軟な関係。';
-        if (combinedTags.has('🎭 ロールプレイ好き')) {
-          analysis += 'ロールプレイで役割交代も。';
-        }
-      } else {
-        analysis += 'バランスの取れた関係。お互いの気持ちを尊重しながら楽しめる。';
-      }
-      
-      if (combinedTags.has('💬 言語プレイ派') && (myTendency === 'S' || partnerTendency === 'S')) {
-        analysis += '言葉責めで更に興奮度アップ。';
-      }
-      if (combinedTags.has('🚪 NG明確') && combinedTags.has('🙈 言い出しにくい派')) {
-        analysis += '事前の話し合いが重要。';
-      }
-      
-      return analysis;
-    };
-    
-    recommendedPlay += smAnalysis();
     
     // プレイのポイント部分を削除
     // recommendedPlay += overallAdvice(); の行も削除
@@ -971,7 +891,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         if (tags.includes('🔄 リピート求め派')) baseLevel += 15;
         if (tags.includes('⚡️ スピード勝負派')) baseLevel += 10;
         if (tags.includes('🏃‍♂️ 衝動トリガー型')) baseLevel += 10;
-        if (tags.includes('🌙 深夜エロス') || tags.includes('☀️ 朝型エロス')) baseLevel += 5;
+        if (tags.includes('☀️ 朝型エロス')) baseLevel += 5;
         
         // タグによる減算
         if (tags.includes('💤 まったり派')) baseLevel -= 10;
@@ -1037,120 +957,6 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     
     const libidoBalance = generateLibidoBalance();
     
-    // S/M相性（5軸データと公開タグから精細化）
-    const generateSMCompatibility = () => {
-      // タグを取得
-      const myTags = myResult.additionalResults?.tags || [];
-      const partnerTags = partnerResult.additionalResults?.tags || [];
-      const combinedTags = new Set([...myTags, ...partnerTags]);
-      
-      // S/M傾向の計算（L軸だけでなく複数要素を考慮）
-      const calculateSMScore = (result: any, tags: string[]) => {
-        let sScore = 0;
-        let mScore = 0;
-        
-        // L軸（リード/フォロー）が基本
-        if (result.L > 50) {
-          sScore += result.L - 50;
-        } else {
-          mScore += 50 - result.L;
-        }
-        
-        // A軸（冒険/安定）でS傾向を調整
-        if (result.A > 60) {
-          sScore += 10; // 冒険的な人はS傾向が強まる
-        }
-        
-        // O軸（開放/秘密）でS傾向を調整
-        if (result.O > 60) {
-          sScore += 5; // 開放的な人は主導しやすい
-        } else if (result.O < 40) {
-          mScore += 5; // 秘密主義の人は従いやすい
-        }
-        
-        // タグによる加算
-        if (tags.includes('🧷 軽SM耐性あり')) {
-          // どちらの傾向も少し上がる（スイッチ的）
-          sScore += 10;
-          mScore += 10;
-        }
-        if (tags.includes('⛏️ 開拓派')) {
-          sScore += 15; // 開拓派はS傾向
-        }
-        if (tags.includes('🚪 NG明確')) {
-          sScore += 5; // 境界線を明確にする人は主導的
-        }
-        if (tags.includes('🙈 言い出しにくい派')) {
-          mScore += 10; // 言い出しにくい人はM傾向
-        }
-        if (tags.includes('🛁 アフターケア必須')) {
-          mScore += 5; // ケアを求める人は若干M傾向
-        }
-        if (tags.includes('💬 言語プレイ派')) {
-          sScore += 5; // 言葉責めはS傾向
-        }
-        
-        return { sScore: Math.min(100, sScore), mScore: Math.min(100, mScore) };
-      };
-      
-      const myScores = calculateSMScore(myResult, myTags);
-      const partnerScores = calculateSMScore(partnerResult, partnerTags);
-      
-      // 傾向の判定
-      const getTendency = (scores: { sScore: number; mScore: number }) => {
-        if (scores.sScore > scores.mScore + 20) return 'S';
-        if (scores.mScore > scores.sScore + 20) return 'M';
-        return 'Switch';
-      };
-      
-      const myTendency = getTendency(myScores);
-      const partnerTendency = getTendency(partnerScores);
-      
-      // 相性分析
-      let analysis = '';
-      
-      if (myTendency === 'S' && partnerTendency === 'M') {
-        analysis = 'ド安定な主従関係。あなたがリードし、相手が従う理想的な構図';
-        if (combinedTags.has('🧷 軽SM耐性あり')) {
-          analysis += '。軽いSMプレイも楽しめそう';
-        }
-      } else if (myTendency === 'M' && partnerTendency === 'S') {
-        analysis = '完璧な支配関係。相手に導かれることで最高の快感を得られる';
-        if (combinedTags.has('🛁 アフターケア必須')) {
-          analysis += '。アフターケアもバッチリ';
-        }
-      } else if (myTendency === 'S' && partnerTendency === 'S') {
-        analysis = '主導権の取り合い勃発かも。交互にリードする工夫が必要';
-        if (myScores.sScore > partnerScores.sScore) {
-          analysis += '。基本的にはあなたがリード';
-        }
-      } else if (myTendency === 'M' && partnerTendency === 'M') {
-        analysis = '優しい愛撫の応酬。お互いを思いやる穏やかな関係';
-        if (combinedTags.has('🕯 ロマン重視')) {
-          analysis += '。ロマンチックな雰囲気で';
-        }
-      } else if (myTendency === 'Switch' || partnerTendency === 'Switch') {
-        analysis = '交代プレイが楽しめる。気分や状況で立場を変えられる柔軟な関係';
-        if (combinedTags.has('🎭 ロールプレイ好き')) {
-          analysis += '。ロールプレイで役割交代も';
-        }
-      } else {
-        analysis = 'バランスの取れた関係。お互いの気持ちを尊重しながら楽しめる';
-      }
-      
-      // 特定のタグによる追加アドバイス
-      if (combinedTags.has('💬 言語プレイ派') && (myTendency === 'S' || partnerTendency === 'S')) {
-        analysis += '。言葉責めで更に興奮度アップ';
-      }
-      if (combinedTags.has('🚪 NG明確') && combinedTags.has('🙈 言い出しにくい派')) {
-        analysis += '。事前の話し合いが重要';
-      }
-      
-      return analysis;
-    };
-    
-    const smCompatibility = generateSMCompatibility();
-    
     // 付き合う前の価値観（5軸データと公開タグから精細化）
     const generateBeforeRelationship = () => {
       // タグを取得
@@ -1185,9 +991,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         if (tags.includes('🔥 欲望の炎')) score += 15;
         if (tags.includes('🗣 下ネタOK')) score += 10;
         if (tags.includes('🕯 ロマン重視')) score -= 20;
-        if (tags.includes('📅 準備派')) score -= 15;
         if (tags.includes('🛁 アフターケア必須')) score -= 10;
-        if (tags.includes('🙈 言い出しにくい派')) score -= 15;
         
         return Math.min(100, Math.max(0, score));
       };
@@ -1218,17 +1022,13 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       } else if (myAnswer === 'YES' && partnerAnswer === 'NO') {
         analysis = '感情とタイミングが鍵。あなたの気持ちと相手の準備次第';
         
-        if (combinedTags.has('📅 準備派')) {
-          analysis += '。相手のペースを尊重して';
-        } else if (myScore >= 70) {
+        if (myScore >= 70) {
           analysis += '。焦らずじっくり関係を築いて';
         }
       } else if (myAnswer === 'NO' && partnerAnswer === 'YES') {
         analysis = '価値観の違いに注意。相手の積極性に戸惑うかも';
         
-        if (combinedTags.has('🙈 言い出しにくい派')) {
-          analysis += '。断りづらい時は正直に伝えて';
-        } else if (combinedTags.has('🚪 NG明確')) {
+        if (combinedTags.has('🚪 NG明確')) {
           analysis += '。境界線をしっかり伝えることが大切';
         }
       } else { // NO × NO
@@ -1292,18 +1092,10 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
           (partnerTags.includes('🕯 ロマン重視') && myTags.includes('⚡️ スピード勝負派'))) {
         tagDifferences.critical++;
       }
-      if ((myTags.includes('📅 準備派') && partnerTags.includes('🏃‍♂️ 衝動トリガー型')) ||
-          (partnerTags.includes('📅 準備派') && myTags.includes('🏃‍♂️ 衝動トリガー型'))) {
-        tagDifferences.critical++;
-      }
       
       // 大きな違いをチェック
       if ((myTags.includes('🛁 アフターケア必須') && !partnerTags.includes('🛁 アフターケア必須')) ||
           (!myTags.includes('🛁 アフターケア必須') && partnerTags.includes('🛁 アフターケア必須'))) {
-        tagDifferences.significant++;
-      }
-      if ((myTags.includes('🚪 NG明確') && partnerTags.includes('🙈 言い出しにくい派')) ||
-          (partnerTags.includes('🚪 NG明確') && myTags.includes('🙈 言い出しにくい派'))) {
         tagDifferences.significant++;
       }
       
@@ -1410,14 +1202,10 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       
       // タグの相性による安定性調整
       if (sharedTags.length > 3) stabilityScore += 15;
-      if ((myTags.includes('📅 準備派') && partnerTags.includes('🏃‍♂️ 衝動トリガー型')) ||
-          (partnerTags.includes('📅 準備派') && myTags.includes('🏃‍♂️ 衝動トリガー型'))) {
-        stabilityScore -= 20; // 相反する性質
-      }
       
       // 4. 情熱の持続性
       passionScore = (physicalIntensity + emotionalDepth) / 2;
-      if (combinedTags.has('🌙 深夜エロス') || combinedTags.has('☀️ 朝型エロス')) {
+      if (combinedTags.has('☀️ 朝型エロス')) {
         passionScore += 5; // 特定の時間帯での情熱
       }
       
@@ -1561,18 +1349,10 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       }
       
       // 特定のタグ組み合わせによる追加予測
-      if (combinedTags.has('🚪 NG明確') && combinedTags.has('🙈 言い出しにくい派')) {
-        prediction += 'コミュニケーションの改善が必須です。';
-        prediction += '一方はNGを明確に持っているのに、もう一方は言い出しにくい性格のため、誤解や不満が溜まりやすい関係性です。';
-        prediction += '定期的に本音で話し合う機会を作り、お互いの境界線を尊重することが大切でしょう。';
-      }
       if (sharedTags.includes('🛁 アフターケア必須') && emotionalDepth >= 50) {
         prediction += '優しさが絆を深める鍵となります。';
         prediction += '激しい夜の後の優しいケアが、二人の関係をより深いものにしていくでしょう。';
         prediction += 'お互いを大切に思う気持ちが、日々の行動に表れる素敵な関係性です。';
-      }
-      if (combinedTags.has('🌙 深夜エロス') && combinedTags.has('☀️ 朝型エロス')) {
-        prediction += '時間帯の好みは違えど、24時間いつでも求め合える情熱的な関係になりそうです。';
       }
       if (sharedTags.includes('🗣 下ネタOK')) {
         prediction += '性に対してオープンな二人は、恥ずかしがることなく欲望を伝え合える理想的な関係を築けるでしょう。';
@@ -1588,7 +1368,6 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       recommendedPosition: positionAnalysis,
       recommendedPositions, // 体位オブジェクトの配列も返す
       libidoBalance,
-      smCompatibility,
       beforeRelationship,
       gapAnalysis,
       relationshipPrediction
@@ -1678,7 +1457,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     >
                       <div className="flex items-center space-x-3">
                         <span className="text-lg">🛏</span>
-                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">2人のおすすめプレイ</h4>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">2人の夜の相性</h4>
                       </div>
                       {openSections.recommendedPlay ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
                     </button>
@@ -1822,7 +1601,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                         openSections.partnerSecret ? 'max-h-96' : 'max-h-0'
                       } overflow-hidden`}>
                         <div className="mt-2 px-2">
-                          <p className="text-xs text-[#e0e7ff]/70 mb-3 text-center">相手の質問の回答</p>
+                          <p className="text-xs text-[#e0e7ff]/70 mb-3 text-center">相手の回答</p>
                             {(() => {
                               const question = questions.find(q => q.id === partnerSecretAnswer.questionId);
                               if (!question) return null;

@@ -27,10 +27,6 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
     let adjustedValue = question.isReverse ? (6 - value) : value;
     
     // Categorize by axis and accumulate scores
-    // タグ質問の処理（axis が null で tag が存在する場合）
-    if (!question.axis && question.tag) {
-      tagScores.push({ tag: question.tag, score: value });
-    }
 
     switch (question.axis) {
       case 'EI':
@@ -85,14 +81,21 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
         }
         break;
       case 'TAG':
-        if (question.tag) {
-          tagScores.push({ tag: question.tag, score: value });
-        }
+        // タグ質問は下で処理
         break;
     }
   });
   
-  // タグを点数順にソートし、上位5つを選択（同率の場合はランダム）
+  // すべてのタグ質問（質問11-35）のスコアを収集
+  for (let i = 11; i <= 35; i++) {
+    const question = questions.find(q => q.id === i);
+    if (question && question.tag) {
+      const value = answers[i.toString()] !== undefined ? answers[i.toString()] : 3; // 未回答は3（どちらでもない）
+      tagScores.push({ tag: question.tag, score: value });
+    }
+  }
+  
+  // タグを点数順にソートし、上位2つを選択（同率の場合はランダム）
   // まず点数でグループ化
   const scoreGroups = tagScores.reduce((groups, item) => {
     if (item.score >= 4) { // 4点以上のタグのみ対象
@@ -109,7 +112,7 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
     .map(Number)
     .sort((a, b) => b - a);
   
-  // 上位5つのタグを選択
+  // 上位2つのタグを選択
   for (const score of sortedScores) {
     const tagsAtScore = scoreGroups[score];
     
@@ -117,14 +120,14 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
     const shuffled = [...tagsAtScore].sort(() => Math.random() - 0.5);
     
     for (const tag of shuffled) {
-      if (tags.length < 5) {
+      if (tags.length < 2) {
         tags.push(tag);
       } else {
         break;
       }
     }
     
-    if (tags.length >= 5) {
+    if (tags.length >= 2) {
       break;
     }
   }

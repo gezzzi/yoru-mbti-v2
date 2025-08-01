@@ -298,8 +298,8 @@ export const questions: Question[] = [
 {
     id: 20,
     axis: null,
-    tag: '📅 準備派',
-    text: '最適な体調や環境を整えてから楽しみたい',
+    tag: '🪞 鏡プレイ好き',
+    text: '鏡に映る姿を見ながらだと、よりムードが高まる。',
     isReverse: false,
     options: [
       { text: '非常にそう思う', value: 6 },
@@ -330,8 +330,8 @@ export const questions: Question[] = [
 {
     id: 22,
     axis: null,
-    tag: '🙈 言い出しにくい派',
-    text: '嫌でも言いにくく我慢しがち',
+    tag: '🎮 ゲーム派',
+    text: 'ミッションやゲーム感覚の要素があるとさらに盛り上がる。',
     isReverse: false,
     options: [
       { text: '非常にそう思う', value: 6 },
@@ -346,8 +346,8 @@ export const questions: Question[] = [
 {
     id: 23,
     axis: null,
-    tag: '🎧 感覚演出派',
-    text: '音楽や香り、触れ方の順序にこだわる',
+    tag: '🧥 コスプレ派',
+    text: '制服やコスチューム姿だと普段より興奮が高まる。',
     isReverse: false,
     options: [
       { text: '非常にそう思う', value: 6 },
@@ -426,8 +426,8 @@ export const questions: Question[] = [
 {
     id: 28,
     axis: null,
-    tag: '🌙 深夜エロス',
-    text: '夜更かしするとムラムラしがち',
+    tag: '💋 キス魔',
+    text: 'キスがないと始まった気がしない',
     isReverse: false,
     options: [
       { text: '非常にそう思う', value: 6 },

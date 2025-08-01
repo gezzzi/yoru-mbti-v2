@@ -1,27 +1,35 @@
 import { TestResult } from '../types/personality';
 
-// 公開タグリスト
-const publicTags = [
+// タグの定義（順序が重要）
+const ALL_TAGS = [
   '🔥 欲望の炎',
   '💬 言語プレイ派',
+  '🎭 ロールプレイ好き',
   '🛁 アフターケア必須',
   '⛏️ 開拓派',
+  '🧷 軻SM耐性あり',
   '🕯 ロマン重視',
   '⚡️ スピード勝負派',
   '🏃‍♂️ 衝動トリガー型',
-  '📅 準備派',
+  '🪞 鏡プレイ好き',
   '🚪 NG明確',
-  '🙈 言い出しにくい派',
-  '🎧 感覚演出派',
+  '🎮 ゲーム派',
+  '🧥 コスプレ派',
   '🧼 ケア＆衛生重視',
+  '🕵️‍♀️ 覗き見興奬派',
   '🛡 安全第一派',
-  '🌙 深夜エロス',
+  '📱 デジタル前戯派',
+  '💋 キス魔',
   '☀️ 朝型エロス',
   '🔄 リピート求め派',
-  '🗣 下ネタOK'
+  '🗣 下ネタOK',
+  '📚 学習研究派',
+  '🧭 ガイド派',
+  '🤹‍♀️ マルチタスク派',
+  '💤 まったり派'
 ];
 
-// 5軸データと公開タグ、秘密の回答から相性診断コードを生成
+// 5軸データとすべてのタグスコア、秘密の回答から相性診断コードを生成
 export const generateCompatibilityCode = (result: TestResult, secretAnswer?: { questionId: number; answer: number }): string => {
   // 各軸の値を0-100の整数値に変換
   const v1 = Math.round(result.E);
@@ -30,17 +38,6 @@ export const generateCompatibilityCode = (result: TestResult, secretAnswer?: { q
   const v4 = Math.round(result.L2);
   const v5 = Math.round(result.O);
   
-  // 公開タグのビットフラグを生成（最大17タグ = 17ビット）
-  let tagFlags = 0;
-  if (result.additionalResults?.tags) {
-    result.additionalResults.tags.forEach(tag => {
-      const index = publicTags.indexOf(tag);
-      if (index >= 0) {
-        tagFlags |= (1 << index);
-      }
-    });
-  }
-  
   // 5軸データを1つの数値にエンコード
   const axisValue = v1 * Math.pow(101, 4) + 
                     v2 * Math.pow(101, 3) + 
@@ -48,26 +45,49 @@ export const generateCompatibilityCode = (result: TestResult, secretAnswer?: { q
                     v4 * Math.pow(101, 1) + 
                     v5 * Math.pow(101, 0);
   
-  // 36進数に変換（軸データとタグデータを分けて結合）
+  // 36進数に変換
   const axisCode = axisValue.toString(36).toUpperCase();
-  const tagCode = tagFlags.toString(36).toUpperCase();
+  
+  // すべてのタグスコアをエンコード
+  let tagCode = '';
+  if (result.additionalResults?.tagScores) {
+    // 各タグのスコアを0-6の値と1文字にエンコード
+    const scores: string[] = [];
+    ALL_TAGS.forEach(tag => {
+      const tagScore = result.additionalResults?.tagScores?.find(ts => ts.tag === tag);
+      const score = tagScore ? tagScore.score : 3; // デフォルトは3（どちらでもない）
+      scores.push(score.toString());
+    });
+    
+    // 25個のスコアを5グループに分けてエンコード
+    // 各グループを5桁の7進数に変換（0-16806 = 7^5-1）
+    for (let i = 0; i < 5; i++) {
+      const groupScores = scores.slice(i * 5, (i + 1) * 5);
+      let groupValue = 0;
+      groupScores.forEach((score, index) => {
+        groupValue += parseInt(score) * Math.pow(7, 4 - index);
+      });
+      // グループの値を36進数に変換（3文字固定）
+      tagCode += groupValue.toString(36).toUpperCase().padStart(3, '0');
+    }
+  }
   
   // 秘密の回答がある場合は追加
   if (secretAnswer) {
     const secretCode = `${secretAnswer.questionId.toString(36)}${secretAnswer.answer.toString(36)}`.toUpperCase();
-    return `${axisCode}-${tagCode}-${secretCode}`;
+    return tagCode ? `${axisCode}-${tagCode}-${secretCode}` : `${axisCode}--${secretCode}`;
   }
   
   // ハイフンで区切って返す
-  return `${axisCode}-${tagCode}`;
+  return tagCode ? `${axisCode}-${tagCode}` : axisCode;
 };
 
-// 相性診断コードから5軸データと公開タグ、秘密の回答を復元
+// 相性診断コードから5軸データとすべてのタグスコア、秘密の回答を復元
 export const parseCompatibilityCode = (code: string): { result: TestResult | null; secretAnswer?: { questionId: number; answer: number } } => {
   if (!code || code.length === 0) return { result: null };
   
   try {
-    // ハイフンで分割（新フォーマット）または旧フォーマットとして処理
+    // ハイフンで分割
     const parts = code.split('-');
     let axisCode: string;
     let tagCode: string | null = null;
@@ -79,11 +99,11 @@ export const parseCompatibilityCode = (code: string): { result: TestResult | nul
       tagCode = parts[1];
       secretCode = parts[2];
     } else if (parts.length === 2) {
-      // 新フォーマット：軸データ-タグデータ
+      // タグデータ付き：軸データ-タグデータ
       axisCode = parts[0];
       tagCode = parts[1];
     } else {
-      // 旧フォーマット：軸データのみ
+      // 軸データのみ
       axisCode = code;
     }
     
@@ -115,14 +135,32 @@ export const parseCompatibilityCode = (code: string): { result: TestResult | nul
       return { result: null };
     }
     
-    // タグデータの復元
+    // タグスコアの復元
     let tags: string[] = [];
-    if (tagCode) {
-      const tagFlags = parseInt(tagCode, 36);
-      for (let i = 0; i < publicTags.length; i++) {
-        if (tagFlags & (1 << i)) {
-          tags.push(publicTags[i]);
+    let tagScores: { tag: string; score: number }[] = [];
+    
+    if (tagCode && tagCode.length === 15) { // 5グループ × 3文字 = 15文字
+      try {
+        // 5グループに分割
+        for (let i = 0; i < 5; i++) {
+          const groupCode = tagCode.substring(i * 3, (i + 1) * 3);
+          const groupValue = parseInt(groupCode.toUpperCase(), 36);
+          
+          // グループの値から5つのスコアを復元
+          for (let j = 0; j < 5; j++) {
+            const tagIndex = i * 5 + j;
+            if (tagIndex < ALL_TAGS.length) {
+              const score = Math.floor(groupValue / Math.pow(7, 4 - j)) % 7;
+              tagScores.push({ tag: ALL_TAGS[tagIndex], score });
+              // スコア4以上のタグをtags配列に追加
+              if (score >= 4) {
+                tags.push(ALL_TAGS[tagIndex]);
+              }
+            }
+          }
         }
+      } catch {
+        // タグデータの復元に失敗
       }
     }
     
@@ -147,7 +185,7 @@ export const parseCompatibilityCode = (code: string): { result: TestResult | nul
       L2: v4,
       O: v5,
       type: null as any, // 型判定は別途実行する必要がある
-      additionalResults: tags.length > 0 ? { tags } as any : undefined
+      additionalResults: (tags.length > 0 || tagScores.length > 0) ? { tags, tagScores } as any : undefined
     };
     
     return { result, secretAnswer };

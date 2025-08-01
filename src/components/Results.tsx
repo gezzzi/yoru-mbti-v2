@@ -536,13 +536,13 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                               // 中優先度：価値観や安全性に関わるタグ
                               { tag: '🚪 NG明確', trait: 'お互いの境界線を尊重しながら安心して楽しむ', priority: 7 },
                               { tag: '🛡 安全第一派', trait: '安全性と信頼関係を最優先に考える', priority: 7 },
-                              { tag: '🙈 言い出しにくい派', trait: '恥じらいを持ちながらも内に秘めた欲望を抱える', priority: 7 },
-                              { tag: '🎧 感覚演出派', trait: '五感すべてを使った演出で特別な空間を創り出す', priority: 6 },
-                              { tag: '📅 準備派', trait: '事前の準備と演出で完璧な時間を作り上げる', priority: 6 },
+                              { tag: '🪞 鏡プレイ好き', trait: '鏡に映る姿を見ながら興奮を高める', priority: 7 },
+                              { tag: '🎮 ゲーム派', trait: '遊び心を交えた刺激的な体験を楽しむ', priority: 7 },
+                              { tag: '💋 キス魔', trait: 'キスから始まる情熱的なひとときを求める', priority: 7 },
+                              { tag: '🧥 コスプレ派', trait: '衣装で変身し新たな自分を解放する', priority: 6 },
                               { tag: '🧼 ケア＆衛生重視', trait: '清潔感と相手への気遣いを何より大切にする', priority: 6 },
                               
                               // 低優先度：補助的な特徴
-                              { tag: '🌙 深夜エロス', trait: '深夜の静寂の中でこそ本能が解放される', priority: 5 },
                               { tag: '☀️ 朝型エロス', trait: '朝の光とともに訪れる優しい欲望を好む', priority: 5 },
                               { tag: '📱 デジタル前戯派', trait: 'メッセージでの駆け引きから始まる高揚感を楽しむ', priority: 5 },
                               { tag: '🕵️‍♀️ 覗き見興奮派', trait: '秘密めいた雰囲気やタブー感に興奮を覚える', priority: 5 },
@@ -586,18 +586,20 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                             if (tags.includes('⚡️ スピード勝負派') || tags.includes('🏃‍♂️ 衝動トリガー型')) {
                               sexPreferences.push('情熱的に一気に燃え上がることを好み');
                             }
-                            if (tags.includes('🕯 ロマン重視') || tags.includes('🎧 感覚演出派')) {
-                              sexPreferences.push('ムードや雰囲気作りにこだわりを持ち');
+                            if (tags.includes('🕯 ロマン重視') || tags.includes('🧼 ケア＆衛生重視')) {
+                              sexPreferences.push('ムードや清潔感にこだわりを持ち');
                             }
-                            if (tags.includes('📅 準備派') || tags.includes('🧼 ケア＆衛生重視')) {
-                              sexPreferences.push('事前の準備と清潔感を大切にし');
+                            if (tags.includes('🪞 鏡プレイ好き') || tags.includes('🧥 コスプレ派')) {
+                              sexPreferences.push('視覚的な刺激や演出を重視し');
+                            }
+                            if (tags.includes('🎮 ゲーム派') || tags.includes('💋 キス魔')) {
+                              sexPreferences.push('遊び心やスキンシップを大切にし');
                             }
                             if (tags.includes('🚪 NG明確') || tags.includes('🛡 安全第一派')) {
                               sexPreferences.push('お互いの境界線と安全性を最優先に考え');
                             }
-                            if (tags.includes('🌙 深夜エロス') || tags.includes('☀️ 朝型エロス')) {
-                              const timePreference = tags.includes('🌙 深夜エロス') ? '深夜の静寂' : '朝の光';
-                              sexPreferences.push(`${timePreference}の中でこそ本能が解放され`);
+                            if (tags.includes('☀️ 朝型エロス')) {
+                              sexPreferences.push('朝の光の中でこそ本能が解放され');
                             }
                             
                             if (sexPreferences.length > 0) {
@@ -768,17 +770,12 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                               });
                               
                               return displayItems.slice(0, 3).map((item, index) => {
-                                // 性格タイプ形式かタグ形式かを判定
-                                const isPersonalityType = item.includes('(') && item.includes(')');
-                                if (isPersonalityType) {
-                                  return (
-                                    <div key={index} className="mb-1 sm:ml-16 md:ml-32 lg:ml-48">
-                                      {item}
-                                    </div>
-                                  );
-                                }
-                                // タグベースの項目はそのまま表示
-                                return <p key={index} className="mb-1">{item}</p>;
+                                // すべての項目に同じ余白を適用
+                                return (
+                                  <div key={index} className="mb-1 sm:ml-16 md:ml-32 lg:ml-48">
+                                    {item}
+                                  </div>
+                                );
                               });
                             })()}
                           </div>
@@ -818,8 +815,20 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                                 tagTraits.push('相手の境界線を尊重せず、強引に進める人');
                               }
                               
-                              if (result.additionalResults?.tags?.includes('🙈 言い出しにくい派')) {
-                                tagTraits.push('察しが悪く、相手の気持ちを読み取れない人');
+                              if (result.additionalResults?.tags?.includes('🪞 鏡プレイ好き')) {
+                                tagTraits.push('自分の身体や外見に自信がない人');
+                              }
+                              
+                              if (result.additionalResults?.tags?.includes('🎮 ゲーム派')) {
+                                tagTraits.push('シリアスで真剣すぎる雰囲気の人');
+                              }
+                              
+                              if (result.additionalResults?.tags?.includes('💋 キス魔')) {
+                                tagTraits.push('キスを重要視しない淡白な人');
+                              }
+                              
+                              if (result.additionalResults?.tags?.includes('🧥 コスプレ派')) {
+                                tagTraits.push('現実的でロマンチックな演出を理解しない人');
                               }
                               
                               // 性格タイプと一般的な特徴を組み合わせて表示
@@ -832,17 +841,12 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                               });
                               
                               return displayItems.slice(0, 3).map((item, index) => {
-                                // 性格タイプ形式かタグ形式かを判定
-                                const isPersonalityType = item.includes('(') && item.includes(')');
-                                if (isPersonalityType) {
-                                  return (
-                                    <div key={index} className="mb-1 sm:ml-16 md:ml-32 lg:ml-48">
-                                      {item}
-                                    </div>
-                                  );
-                                }
-                                // タグベースの項目はそのまま表示
-                                return <p key={index} className="mb-1">{item}</p>;
+                                // すべての項目に同じ余白を適用
+                                return (
+                                  <div key={index} className="mb-1 sm:ml-16 md:ml-32 lg:ml-48">
+                                    {item}
+                                  </div>
+                                );
                               });
                             })()}
                           </div>
@@ -904,20 +908,34 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                           const tags = result.additionalResults?.tags || [];
                           
                           // タグに基づく短所の判定
-                          if (tags.includes('🙈 言い出しにくい派')) {
-                            shortcomings.push('自分の欲求や不満を伝えられず、我慢してストレスを溜めやすい');
-                            advices.push('小さなことから少しずつ伝える練習をして、相手との信頼関係を深める');
-                            hints.push('「今日は〇〇してみたい」など、軽い要望から始める');
+                          if (tags.includes('🪞 鏡プレイ好き')) {
+                            shortcomings.push('自分の外見や他人からの視線を過度に気にして、リラックスできない');
+                            advices.push('相手はあなたの全てを受け入れていることを思い出し、自分らしさを大切にする');
+                            hints.push('照明を調整して、自分が一番リラックスできる環境を作る');
+                          }
+                          
+                          if (tags.includes('🎮 ゲーム派')) {
+                            shortcomings.push('遊びの要素を求めすぎて、相手を疲れさせてしまうことがある');
+                            advices.push('相手のペースや気分を尊重し、シンプルなひとときも大切にする');
+                            hints.push('ゲーム要素は月に1-2回の特別なスパイスとして活用');
+                          }
+                          
+                          if (tags.includes('💋 キス魔')) {
+                            shortcomings.push('キスにこだわりすぎて、他の刺激や展開がおろそかになることがある');
+                            advices.push('キスも大切にしながら、全身を使った愛情表現もバランスよく取り入れる');
+                            hints.push('キスの合間に優しく相手の体に触れることも忘れずに');
+                          }
+                          
+                          if (tags.includes('🧥 コスプレ派')) {
+                            shortcomings.push('コスプレや演出に依存して、素の自分では自信が持てないことがある');
+                            advices.push('コスプレはスパイスとして楽しみつつ、自然体の魅力も磨いていく');
+                            hints.push('普段の下着や部屋着でも魅力的に見せる工夫を');
                           }
                           
                           if (tags.includes('🏃‍♂️ 衝動トリガー型')) {
-                            // 準備派タグがない場合は極端と判定
-                            const isExtreme = !tags.includes('📅 準備派');
-                            if (isExtreme) {
-                              shortcomings.push('衝動的すぎて、相手の準備や気持ちを考慮せずに行動しがち');
-                              advices.push('行動前に一呼吸置いて、相手の状態を確認する習慣をつける');
-                              hints.push('「今大丈夫？」の一言を忘れずに');
-                            }
+                            shortcomings.push('衝動的すぎて、相手の準備や気持ちを考慮せずに行動しがち');
+                            advices.push('行動前に一呼吸置いて、相手の状態を確認する習慣をつける');
+                            hints.push('「今大丈夫？」の一言を忘れずに');
                           }
                           
                           // 組み合わせによる短所
