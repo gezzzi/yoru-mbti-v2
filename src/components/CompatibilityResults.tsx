@@ -15,6 +15,7 @@ import { Position48, positions48 } from '../data/positions48';
 import { questions } from '../data/questions';
 import FeedbackModal from './FeedbackModal';
 import SNSShareModal from './SNSShareModal';
+import { calculateImprovedTagCompatibility, TagScore } from '../utils/tagCompatibility';
 
 interface CompatibilityResult {
   compatibility: number;
@@ -291,7 +292,11 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     }));
   };
 
-  const calculateCompatibility = (user: TestResult, partner: TestResult): CompatibilityResult & { axisScores: { E: number, L: number, A: number, L2: number, O: number } } => {
+  const calculateCompatibility = (user: TestResult, partner: TestResult): CompatibilityResult & { 
+    axisScores: { E: number, L: number, A: number, L2: number, O: number },
+    tagCategoryScores: { [key: string]: number },
+    tagDetailScores: { tag: string; score: number; reason: string }[]
+  } => {
     // 各軸の相性スコアを計算（類似軸と補完軸で異なる計算方法）
     
     // 外向性(E)/内向性(I) - 類似軸
@@ -310,80 +315,93 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     // 開放(O)/秘密(S) - 類似軸
     const oScore = 100 - Math.abs(user.O - partner.O);
     
-    // 公開タグの相性スコアを計算
+    // 改善されたタグ相性計算を使用
     let tagCompatibilityScore = 0;
-    let tagBonus = 0;
+    let tagCategoryScores: { [key: string]: number } = {};
+    let tagDetailScores: { tag: string; score: number; reason: string }[] = [];
     
-    // ユーザーとパートナーのタグを取得
-    const userTagsArray = user.additionalResults?.tags || [];
-    const partnerTagsArray = partner.additionalResults?.tags || [];
-    const userTags = new Set(userTagsArray);
-    const partnerTags = new Set(partnerTagsArray);
+    // タグスコアの準備
+    const userTagScores: TagScore[] = user.additionalResults?.tagScores || [];
+    const partnerTagScores: TagScore[] = partner.additionalResults?.tagScores || [];
     
-    // 共通タグの数をカウント
-    const commonTags = userTagsArray.filter(tag => partnerTags.has(tag));
-    const totalUniqueTags = new Set([...userTagsArray, ...partnerTagsArray]).size;
-    
-    // タグベースの相性計算
-    if (totalUniqueTags > 0) {
-      // 共通タグ率（0-100%）
-      const commonTagRatio = (commonTags.length / totalUniqueTags) * 100;
+    if (userTagScores.length > 0 && partnerTagScores.length > 0) {
+      // 新しい改善されたタグ相性計算を使用
+      const tagResult = calculateImprovedTagCompatibility(userTagScores, partnerTagScores);
+      tagCompatibilityScore = tagResult.totalScore;
+      tagCategoryScores = tagResult.categoryScores;
+      tagDetailScores = tagResult.detailScores;
+    } else {
+      // 旧形式の互換性維持（タグスコアがない場合）
+      const userTagsArray = user.additionalResults?.tags || [];
+      const partnerTagsArray = partner.additionalResults?.tags || [];
+      const userTags = new Set(userTagsArray);
+      const partnerTags = new Set(partnerTagsArray);
       
-      // 特定のタグの組み合わせによるボーナス
-      if (userTags.has('🔥 欲望の炎') && partnerTags.has('🔥 欲望の炎')) {
-        tagBonus += 10; // 両方情熱的
-      }
-      if (userTags.has('🛁 アフターケア必須') && partnerTags.has('🛁 アフターケア必須')) {
-        tagBonus += 8; // 両方ケア重視
-      }
-      if (userTags.has('💬 言語プレイ派') && partnerTags.has('💬 言語プレイ派')) {
-        tagBonus += 6; // 言葉責めの相性
-      }
-      if (userTags.has('🕯 ロマン重視') && partnerTags.has('🕯 ロマン重視')) {
-        tagBonus += 8; // ロマンチックな相性
-      }
-      if (userTags.has('☀️ 朝型エロス') && partnerTags.has('☀️ 朝型エロス')) {
-        tagBonus += 5; // 同じ時間帯の好み
-      }
-      if (userTags.has('🔄 リピート求め派') && partnerTags.has('🔄 リピート求め派')) {
-        tagBonus += 7; // 両方リピート重視
-      }
-      if (userTags.has('🗣 下ネタOK') && partnerTags.has('🗣 下ネタOK')) {
-        tagBonus += 5; // コミュニケーションの相性
-      }
+      // 共通タグの数をカウント
+      const commonTags = userTagsArray.filter(tag => partnerTags.has(tag));
+      const totalUniqueTags = new Set([...userTagsArray, ...partnerTagsArray]).size;
       
-      // 相反するタグによるペナルティ
-      if ((userTags.has('⚡️ スピード勝負派') && partnerTags.has('🕯 ロマン重視')) ||
-          (userTags.has('🕯 ロマン重視') && partnerTags.has('⚡️ スピード勝負派'))) {
-        tagBonus -= 10; // テンポの不一致
+      if (totalUniqueTags > 0) {
+        // 共通タグ率（0-100%）
+        const commonTagRatio = (commonTags.length / totalUniqueTags) * 100;
+        let tagBonus = 0;
+        
+        // 特定のタグの組み合わせによるボーナス
+        if (userTags.has('🔥 欲望の炎') && partnerTags.has('🔥 欲望の炎')) {
+          tagBonus += 10; // 両方情熱的
+        }
+        if (userTags.has('🛁 アフターケア必須') && partnerTags.has('🛁 アフターケア必須')) {
+          tagBonus += 8; // 両方ケア重視
+        }
+        if (userTags.has('💬 言語プレイ派') && partnerTags.has('💬 言語プレイ派')) {
+          tagBonus += 6; // 言葉責めの相性
+        }
+        if (userTags.has('🕯 ロマン重視') && partnerTags.has('🕯 ロマン重視')) {
+          tagBonus += 8; // ロマンチックな相性
+        }
+        if (userTags.has('☀️ 朝型エロス') && partnerTags.has('☀️ 朝型エロス')) {
+          tagBonus += 5; // 同じ時間帯の好み
+        }
+        if (userTags.has('🔄 リピート求め派') && partnerTags.has('🔄 リピート求め派')) {
+          tagBonus += 7; // 両方リピート重視
+        }
+        if (userTags.has('🗣 下ネタOK') && partnerTags.has('🗣 下ネタOK')) {
+          tagBonus += 5; // コミュニケーションの相性
+        }
+        
+        // 相反するタグによるペナルティ
+        if ((userTags.has('⚡️ スピード勝負派') && partnerTags.has('🕯 ロマン重視')) ||
+            (userTags.has('🕯 ロマン重視') && partnerTags.has('⚡️ スピード勝負派'))) {
+          tagBonus -= 10; // テンポの不一致
+        }
+        // 新しいタグの相性ボーナス
+        if (userTags.has('🪞 鏡プレイ好き') && partnerTags.has('🪞 鏡プレイ好き')) {
+          tagBonus += 7; // 視覚的な興奮の共有
+        }
+        if (userTags.has('🎮 ゲーム派') && partnerTags.has('🎮 ゲーム派')) {
+          tagBonus += 6; // 遊び心の共有
+        }
+        if (userTags.has('💋 キス魔') && partnerTags.has('💋 キス魔')) {
+          tagBonus += 8; // 愛情表現の一致
+        }
+        if (userTags.has('🧥 コスプレ派') && partnerTags.has('🧥 コスプレ派')) {
+          tagBonus += 7; // ファンタジーの共有
+        }
+        // 新しいタグとの相性
+        if ((userTags.has('💋 キス魔') && partnerTags.has('⚡️ スピード勝負派')) ||
+            (userTags.has('⚡️ スピード勝負派') && partnerTags.has('💋 キス魔'))) {
+          tagBonus -= 5; // ペースの不一致
+        }
+        
+        // タグ相性スコア = 共通タグ率 + ボーナス（最大100）
+        tagCompatibilityScore = Math.min(100, Math.max(0, commonTagRatio + tagBonus));
       }
-      // 新しいタグの相性ボーナス
-      if (userTags.has('🪞 鏡プレイ好き') && partnerTags.has('🪞 鏡プレイ好き')) {
-        tagBonus += 7; // 視覚的な興奮の共有
-      }
-      if (userTags.has('🎮 ゲーム派') && partnerTags.has('🎮 ゲーム派')) {
-        tagBonus += 6; // 遊び心の共有
-      }
-      if (userTags.has('💋 キス魔') && partnerTags.has('💋 キス魔')) {
-        tagBonus += 8; // 愛情表現の一致
-      }
-      if (userTags.has('🧥 コスプレ派') && partnerTags.has('🧥 コスプレ派')) {
-        tagBonus += 7; // ファンタジーの共有
-      }
-      // 新しいタグとの相性
-      if ((userTags.has('💋 キス魔') && partnerTags.has('⚡️ スピード勝負派')) ||
-          (userTags.has('⚡️ スピード勝負派') && partnerTags.has('💋 キス魔'))) {
-        tagBonus -= 5; // ペースの不一致
-      }
-      
-      // タグ相性スコア = 共通タグ率 + ボーナス（最大100）
-      tagCompatibilityScore = Math.min(100, Math.max(0, commonTagRatio + tagBonus));
     }
     
-    // 総合相性度を計算（5軸70%、タグ30%の重み付け）
+    // 総合相性度を計算（5軸50%、タグ50%の重み付け）
     const axisCompatibility = (eScore * 0.15) + (lScore * 0.3) + (aScore * 0.25) + (l2Score * 0.2) + (oScore * 0.1);
     const compatibility = Math.max(0, Math.min(100, 
-      (axisCompatibility * 0.7) + (tagCompatibilityScore * 0.3)
+      (axisCompatibility * 0.5) + (tagCompatibilityScore * 0.5)
     ));
 
     let description = '';
@@ -430,7 +448,9 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         A: Math.max(0, Math.min(100, aScore)),
         L2: Math.max(0, Math.min(100, l2Score)),
         O: Math.max(0, Math.min(100, oScore))
-      }
+      },
+      tagCategoryScores,
+      tagDetailScores
     };
   };
 
