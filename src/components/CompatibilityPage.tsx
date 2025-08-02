@@ -7,7 +7,7 @@ import { personalityTypes } from '../data/personalityTypes';
 import { Heart, AlertCircle, TestTube, User, Share2, Copy, Check, Upload, Camera, Download, RefreshCw } from 'lucide-react';
 import SNSShareModal from './SNSShareModal';
 import Image from 'next/image';
-import QRCode from 'react-qr-code';
+import QRCodeWithLogo from './QRCodeWithLogo';
 import QrScanner from 'qr-scanner';
 import NeonText from './NeonText';
 import { ScrollAnimation } from './ScrollAnimation';
@@ -367,12 +367,24 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
 
     setIsQRDownloading(true);
     try {
-      // QRコードのSVGをCanvasに変換
+      // まずCanvas要素を探す
+      const canvas = qrRef.current.querySelector('canvas');
+      if (canvas) {
+        // Canvas要素の場合
+        const link = document.createElement('a');
+        link.download = `QRコード診断_${myResult?.type.code}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        setIsQRDownloading(false);
+        return;
+      }
+
+      // SVG要素の場合（フォールバック）
       const svg = qrRef.current.querySelector('svg');
       if (!svg) throw new Error('QRコードが見つかりません');
 
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
+      const canvasElement = document.createElement('canvas');
+      const ctx = canvasElement.getContext('2d');
       const img = document.createElement('img') as HTMLImageElement;
       
       // SVGをData URLに変換
@@ -381,14 +393,14 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
       const svgUrl = URL.createObjectURL(svgBlob);
 
       img.onload = () => {
-        canvas.width = 400;
-        canvas.height = 400;
+        canvasElement.width = 400;
+        canvasElement.height = 400;
         ctx?.drawImage(img, 0, 0, 400, 400);
         
         // 画像をダウンロード
         const link = document.createElement('a');
         link.download = `QRコード診断_${myResult?.type.code}.png`;
-        link.href = canvas.toDataURL('image/png');
+        link.href = canvasElement.toDataURL('image/png');
         link.click();
         
         URL.revokeObjectURL(svgUrl);
@@ -447,10 +459,11 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                  <h3 className="text-lg font-semibold text-[#e0e7ff] text-center">あなたのQRコード</h3>
                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 flex flex-col items-center gap-4 border border-white/5">
                   <div className="bg-white/90 backdrop-blur-xs p-4 rounded-lg shadow-sm border border-white/40" ref={qrRef}>
-                    <QRCode
+                    <QRCodeWithLogo
                       value={myCode}
                       size={200}
-                      level="M"
+                      logoSrc="/icon-192.png"
+                      logoSizeRatio={0.25}
                       className="w-full h-auto max-w-[200px]"
                     />
                   </div>

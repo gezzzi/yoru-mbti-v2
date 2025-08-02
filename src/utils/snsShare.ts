@@ -196,15 +196,32 @@ export const parseCompatibilityCode = (code: string): { result: TestResult | nul
   }
 };
 
-// QRコードのSVGをFileオブジェクトに変換
+// QRコードのSVGまたはCanvasをFileオブジェクトに変換
 export const convertQRCodeToFile = async (qrCodeElement: HTMLDivElement, fileName: string): Promise<File | null> => {
   try {
+    // まずcanvas要素を探す
+    const canvas = qrCodeElement.querySelector('canvas');
+    if (canvas) {
+      // Canvas要素の場合
+      return new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const file = new File([blob], fileName, { type: 'image/png' });
+            resolve(file);
+          } else {
+            reject(new Error('Canvas to Blob conversion failed'));
+          }
+        }, 'image/png');
+      });
+    }
+
+    // SVG要素の場合（フォールバック）
     const svg = qrCodeElement.querySelector('svg');
     if (!svg) throw new Error('QRコードが見つかりません');
 
     // SVGをCanvasに変換
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    const canvasElement = document.createElement('canvas');
+    const ctx = canvasElement.getContext('2d');
     const img = document.createElement('img') as HTMLImageElement;
     
     // SVGをData URLに変換
@@ -214,12 +231,12 @@ export const convertQRCodeToFile = async (qrCodeElement: HTMLDivElement, fileNam
 
     return new Promise((resolve, reject) => {
       img.onload = () => {
-        canvas.width = 400;
-        canvas.height = 400;
+        canvasElement.width = 400;
+        canvasElement.height = 400;
         ctx?.drawImage(img, 0, 0, 400, 400);
         
         // CanvasをBlobに変換
-        canvas.toBlob((blob) => {
+        canvasElement.toBlob((blob) => {
           if (blob) {
             // BlobをFileに変換
             const file = new File([blob], fileName, { type: 'image/png' });

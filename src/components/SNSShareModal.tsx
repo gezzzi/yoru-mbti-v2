@@ -14,7 +14,7 @@ import {
   isWebShareAPILevel2Supported
 } from '../utils/snsShare';
 import { X, Twitter, MessageCircle, Share, Facebook, Instagram, Hash } from 'lucide-react';
-import QRCode from 'react-qr-code';
+import QRCodeWithLogo from './QRCodeWithLogo';
 
 interface SNSShareModalProps {
   result: TestResult;
@@ -108,11 +108,12 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose, 
         <div className="p-6 space-y-6">
           {/* 非表示のQRコード（シェア機能用に内部で保持） */}
           <div className="hidden">
-            <div className="bg-white/10 p-3 rounded-lg shadow-sm" ref={qrRef}>
-              <QRCode
+            <div className="bg-white p-3 rounded-lg shadow-sm" ref={qrRef}>
+              <QRCodeWithLogo
                 value={compatibilityCode}
                 size={150}
-                level="M"
+                logoSrc="/icon-192.png"
+                logoSizeRatio={0.25}
                 className="w-full h-auto max-w-[150px]"
               />
             </div>
