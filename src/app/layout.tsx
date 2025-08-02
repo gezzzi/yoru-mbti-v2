@@ -9,6 +9,28 @@ import FeedbackButton from '../components/FeedbackButton';
 export const metadata: Metadata = {
   title: "夜の性格診断",
   description: "あなたの隠された夜の性格を診断します",
+  openGraph: {
+    title: "夜の性格診断",
+    description: "あなたの隠された夜の性格を診断します",
+    url: "https://nightpersonality.com",
+    siteName: "夜の性格診断",
+    images: [
+      {
+        url: "https://nightpersonality.com/og.png",
+        width: 512,
+        height: 512,
+        alt: "夜の性格診断",
+      }
+    ],
+    locale: "ja_JP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "夜の性格診断",
+    description: "あなたの隠された夜の性格を診断します",
+    images: ["https://nightpersonality.com/og.png"],
+  },
   alternates: {
     canonical: "https://nightpersonality.com",
   },
