@@ -45,8 +45,10 @@ export const generateCompatibilityCode = (result: TestResult, secretAnswer?: { q
                     v4 * Math.pow(101, 1) + 
                     v5 * Math.pow(101, 0);
   
-  // 36進数に変換
-  const axisCode = axisValue.toString(36).toUpperCase();
+  // 36進数に変換し、7文字固定長にパディング
+  // 最大値は 100×(101^4 + 101^3 + 101^2 + 101 + 1) ≈ 10,510,100,500
+  // これは36進数で "5YRHQX" (6文字) なので、7文字でパディングすれば十分
+  const axisCode = axisValue.toString(36).toUpperCase().padStart(7, '0');
   
   // すべてのタグスコアをエンコード
   let tagCode = '';
@@ -174,7 +176,7 @@ export const parseCompatibilityCode = (code: string): { result: TestResult | nul
           secretAnswer = { questionId, answer };
         }
       } catch {
-        // 秘密データの復元に失敗しても続行
+        // 秘密データの復元に失敗
       }
     }
     

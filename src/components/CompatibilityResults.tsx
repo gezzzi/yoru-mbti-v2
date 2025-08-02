@@ -452,27 +452,27 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     // おすすめプレイの詳細な分析を開始
     let recommendedPlay = '';
     
-    // タグ相性スコアによる全体的な相性評価
-    const tagCompatibilityAnalysis = () => {
-      const score = tagCompatibilityResult.totalScore;
-      let analysis = '【タグ相性スコア：' + score + '点】\n';
+    // 全体的な相性評価（5軸とタグの総合評価）
+    const overallCompatibilityAnalysis = () => {
+      const score = compatibility.compatibility;
+      let analysis = '【総合相性度：' + Math.round(score) + '％】\n';
       
       if (score >= 85) {
-        analysis += '運命的な相性！タグの一致度が驚異的に高く、完璧なパートナーです。';
+        analysis += '運命的な相性！性格も好みも驚異的にマッチしています。理想的なパートナーです。';
       } else if (score >= 70) {
-        analysis += '素晴らしい相性！多くの好みが一致し、満足度の高い関係を築けます。';
+        analysis += '素晴らしい相性！お互いを深く理解し合える、満足度の高い関係を築けます。';
       } else if (score >= 55) {
-        analysis += '良好な相性。違いを理解し合いながら、お互いに歩み寄れる関係です。';
+        analysis += '良好な相性。お互いの違いを尊重しながら、素敵な関係を築いていけるでしょう。';
       } else if (score >= 40) {
-        analysis += '標準的な相性。お互いの違いを尊重し、コミュニケーションを大切に。';
+        analysis += '標準的な相性。コミュニケーションを大切にすることで、より良い関係へ。';
       } else {
-        analysis += 'チャレンジングな相性。お互いを理解する努力が必要ですが、それが成長につながります。';
+        analysis += 'チャレンジングな相性。お互いを理解する努力が、新しい発見につながります。';
       }
       
       return analysis;
     };
     
-    recommendedPlay += tagCompatibilityAnalysis();
+    recommendedPlay += overallCompatibilityAnalysis();
     
     // 1. 基本的な相性パターンの分析（L/F軸）
     const lAxisAnalysis = () => {
@@ -555,47 +555,8 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     const emotionalDepth = emotionalDepthAnalysis();
     if (emotionalDepth) recommendedPlay += emotionalDepth;
     
-    // 5. カテゴリ別相性分析
-    const categoryAnalysis = () => {
-      let analysis = '\n\n【カテゴリ別相性】\n';
-      const categories = tagCompatibilityResult.categoryScores;
-      
-      // intensity（情熱度）
-      if (categories.intensity !== undefined) {
-        analysis += `・情熱度：${categories.intensity}点`;
-        if (categories.intensity >= 80) analysis += ' - 激しく求め合う情熱的な関係';
-        else if (categories.intensity >= 60) analysis += ' - 程よい情熱のバランス';
-        else if (categories.intensity >= 40) analysis += ' - 一方がリードして調整必要';
-        else analysis += ' - 温度差あり、コミュニケーション重要';
-        analysis += '\n';
-      }
-      
-      // romantic（ロマンチック度）
-      if (categories.romantic !== undefined) {
-        analysis += `・ロマンチック度：${categories.romantic}点`;
-        if (categories.romantic >= 80) analysis += ' - 雰囲気を大切にする美しい関係';
-        else if (categories.romantic >= 60) analysis += ' - 愛情表現が似ている';
-        else if (categories.romantic >= 40) analysis += ' - ロマンスの価値観に差あり';
-        else analysis += ' - 雰囲気作りの好みが異なる';
-        analysis += '\n';
-      }
-      
-      // playful（遊び心）
-      if (categories.playful !== undefined) {
-        analysis += `・遊び心：${categories.playful}点`;
-        if (categories.playful >= 80) analysis += ' - 冒険心を共有する楽しい関係';
-        else if (categories.playful >= 60) analysis += ' - 適度な遊び心を共有';
-        else if (categories.playful >= 40) analysis += ' - 遊びの好みに違いあり';
-        else analysis += ' - プレイスタイルが大きく異なる';
-        analysis += '\n';
-      }
-      
-      return analysis;
-    };
     
-    recommendedPlay += categoryAnalysis();
-    
-    // 6. 公開タグによる具体的なプレイ提案
+    // 5. 公開タグによる具体的なプレイ提案
     const tagBasedRecommendations = () => {
       let recommendations = '\n\n';
       let hasRecommendations = false;
@@ -707,7 +668,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     const tagRecommendations = tagBasedRecommendations();
     if (tagRecommendations) recommendedPlay += tagRecommendations;
     
-    // 7. 共通タグと相性の悪い組み合わせ分析
+    // 6. 共通タグと相性の悪い組み合わせ分析
     const detailedTagAnalysis = () => {
       let analysis = '';
       
@@ -752,7 +713,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     
     recommendedPlay += detailedTagAnalysis();
     
-    // 8. 性欲バランスの統合
+    // 7. 性欲バランスの統合
     const libidoAnalysis = () => {
       const calculateLibidoLevel = (result: any, tags: string[]) => {
         let baseLevel = 0;

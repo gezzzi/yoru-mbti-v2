@@ -228,7 +228,7 @@ body {
   -webkit-text-fill-color: transparent;
   text-shadow: none;
   animation: 
-    sequential-blink 3s infinite;
+    sequential-blink 3s 20;
   animation-delay: 
     calc(var(--char-index) * 0.2s);
   -webkit-font-smoothing: antialiased;
@@ -252,7 +252,7 @@ body {
   -webkit-text-fill-color: transparent;
   text-shadow: none;
   animation: 
-    sequential-blink 3s infinite;
+    sequential-blink 3s 20;
   animation-delay: 
     calc(var(--char-index) * 0.2s);
   -webkit-font-smoothing: antialiased;
@@ -292,7 +292,7 @@ body {
   font-weight: bold;
   margin: 0 2px;
   animation: 
-    sequential-blink 3s infinite;
+    sequential-blink 3s 20;
   animation-delay: 
     calc(var(--char-index) * 0.2s);
   -webkit-font-smoothing: antialiased;
@@ -311,7 +311,7 @@ body {
   text-stroke: 3px #ff00ff;
   filter: drop-shadow(0 0 5px #ff00ff);
   animation: 
-    sequential-blink 3s infinite;
+    sequential-blink 3s 20;
   animation-delay: 
     calc(var(--char-index) * 0.2s);
 }
