@@ -223,10 +223,11 @@ body {
   display: inline-block;
   position: relative;
   color: transparent;
-  -webkit-text-stroke: 2px #ffeb3b;
-  text-stroke: 2px #ffeb3b;
+  -webkit-text-stroke: 2px #c084fc;
+  text-stroke: 2px #c084fc;
   -webkit-text-fill-color: transparent;
   text-shadow: none;
+  filter: drop-shadow(0 0 6px #c084fc);
   animation: 
     sequential-blink 3s 20;
   animation-delay: 
@@ -285,10 +286,11 @@ body {
   display: inline-block;
   position: relative;
   color: transparent;
-  -webkit-text-stroke: 2px #ffeb3b;
-  text-stroke: 2px #ffeb3b;
+  -webkit-text-stroke: 2px #c084fc;
+  text-stroke: 2px #c084fc;
   -webkit-text-fill-color: transparent;
   text-shadow: none;
+  filter: drop-shadow(0 0 6px #c084fc);
   font-weight: bold;
   margin: 0 2px;
   animation: 
@@ -460,8 +462,8 @@ body {
 /* Test 1: Minimal stroke approach */
 .debug-test-1 .neon-char {
   color: transparent !important;
-  -webkit-text-stroke: 2px #ffeb3b !important;
-  text-stroke: 2px #ffeb3b !important;
+  -webkit-text-stroke: 2px #c084fc !important;
+  text-stroke: 2px #c084fc !important;
   text-shadow: none !important;
   -webkit-font-smoothing: antialiased !important;
   font-weight: bold !important;
@@ -475,7 +477,7 @@ body {
 
 /* Test 2: Solid color approach */
 .debug-test-2 .neon-char {
-  color: #ffeb3b !important;
+  color: #c084fc !important;
   -webkit-text-stroke: none !important;
   text-stroke: none !important;
   text-shadow: 0 0 5px #fff44f, 0 0 10px #fffde7 !important;
@@ -494,15 +496,15 @@ body {
   background: linear-gradient(transparent, transparent);
   background-clip: text;
   -webkit-background-clip: text;
-  border: 1px solid #ffeb3b;
+  border: 1px solid #c084fc;
   box-shadow: 
-    0 0 5px #ffeb3b,
+    0 0 5px #c084fc,
     0 0 10px #ffc107;
 }
 
 /* Test 4: SVG filter approach *//*
 .debug-test-4 .neon-char {
-  color: #ffeb3b;
+  color: #c084fc;
   filter: url(#neon-glow);
 }
 */
