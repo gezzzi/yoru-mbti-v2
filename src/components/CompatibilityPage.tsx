@@ -462,7 +462,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                     <QRCodeWithLogo
                       value={myCode}
                       size={200}
-                      logoSrc="/icon-192.png"
+                      logoSrc="/icon-512.png"
                       logoSizeRatio={0.25}
                       className="w-full h-auto max-w-[200px]"
                     />

@@ -14,7 +14,7 @@ interface QRCodeWithLogoProps {
 const QRCodeWithLogo: React.FC<QRCodeWithLogoProps> = ({
   value,
   size = 200,
-  logoSrc = '/icon-192.png',
+  logoSrc = '/icon-512.png',
   logoSizeRatio = 0.25, // QRコードサイズの25%
   className = '',
 }) => {
