@@ -284,6 +284,7 @@ body {
   -webkit-text-fill-color: transparent;
   z-index: -1;
   text-shadow: none;
+  filter: drop-shadow(0 0 6px #ff0099);
   /* animation removed */
   /* animation-delay removed */
   -webkit-font-smoothing: antialiased;
@@ -336,7 +337,7 @@ body {
 .neon-char-iphone.special {
   -webkit-text-stroke: 3px #ff00ff;
   text-stroke: 3px #ff00ff;
-  filter: drop-shadow(0 0 5px #ff00ff);
+  filter: drop-shadow(0 0 6px #ff00ff);
   animation: 
     sequential-blink 3s 20;
   animation-delay: 
@@ -354,7 +355,7 @@ body {
   -webkit-text-fill-color: transparent;
   z-index: -1;
   text-shadow: none;
-  filter: none;
+  filter: drop-shadow(0 0 6px #ff0099);
   /* animation removed */
   /* animation-delay removed */
 }
