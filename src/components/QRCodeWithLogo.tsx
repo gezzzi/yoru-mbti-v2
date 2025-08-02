@@ -15,7 +15,7 @@ const QRCodeWithLogo: React.FC<QRCodeWithLogoProps> = ({
   value,
   size = 200,
   logoSrc = '/icon-512.png',
-  logoSizeRatio = 0.25, // QRコードサイズの25%
+  logoSizeRatio = 0.18, // QRコードサイズの18%
   className = '',
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -25,7 +25,25 @@ const QRCodeWithLogo: React.FC<QRCodeWithLogoProps> = ({
       if (!canvasRef.current) return;
 
       try {
-        // QRコード生成
+        // デバイスピクセル比を取得（Retina対応）
+        const dpr = window.devicePixelRatio || 1;
+        const scaledSize = size * dpr;
+
+        // Canvas要素の実際のサイズを設定（高解像度）
+        canvasRef.current.width = scaledSize;
+        canvasRef.current.height = scaledSize;
+
+        // Canvas要素の表示サイズを設定
+        canvasRef.current.style.width = `${size}px`;
+        canvasRef.current.style.height = `${size}px`;
+
+        // QRコード生成（高解像度）
+        const ctx = canvasRef.current.getContext('2d');
+        if (!ctx) return;
+
+        // スケーリングを適用
+        ctx.scale(dpr, dpr);
+
         await QRCode.toCanvas(canvasRef.current, value, {
           width: size,
           margin: 2,
@@ -37,8 +55,9 @@ const QRCodeWithLogo: React.FC<QRCodeWithLogoProps> = ({
         });
 
         // ロゴ追加
-        const ctx = canvasRef.current.getContext('2d');
-        if (!ctx) return;
+        // アンチエイリアスと高品質な画像スケーリングを有効化
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
 
         const logo = new Image();
         logo.crossOrigin = 'anonymous'; // CORS対応
@@ -47,19 +66,36 @@ const QRCodeWithLogo: React.FC<QRCodeWithLogoProps> = ({
         logo.onload = () => {
           const logoSize = size * logoSizeRatio;
           const logoPosition = (size - logoSize) / 2;
+          const padding = size * 0.03; // パディングをQRコードサイズの3%に（比例調整）
+          const backgroundSize = logoSize + padding * 2;
+          const backgroundPosition = (size - backgroundSize) / 2;
+          const borderRadius = logoSize * 0.2; // 角丸の半径（ロゴサイズの20%）
 
-          // 白い背景を円形で描画
+          // 角丸正方形を描画する関数
+          const drawRoundedRect = (x: number, y: number, width: number, height: number, radius: number) => {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+          };
+
+          // 白い背景を角丸正方形で描画（アンチエイリアス付き）
           ctx.save();
-          ctx.beginPath();
-          ctx.arc(size / 2, size / 2, logoSize / 2 + 8, 0, 2 * Math.PI);
+          drawRoundedRect(backgroundPosition, backgroundPosition, backgroundSize, backgroundSize, borderRadius + 2);
           ctx.fillStyle = 'white';
           ctx.fill();
           ctx.restore();
 
-          // ロゴを円形にクリップして描画
+          // ロゴを角丸正方形にクリップして描画
           ctx.save();
-          ctx.beginPath();
-          ctx.arc(size / 2, size / 2, logoSize / 2, 0, 2 * Math.PI);
+          drawRoundedRect(logoPosition, logoPosition, logoSize, logoSize, borderRadius);
           ctx.clip();
           ctx.drawImage(logo, logoPosition, logoPosition, logoSize, logoSize);
           ctx.restore();
@@ -80,7 +116,6 @@ const QRCodeWithLogo: React.FC<QRCodeWithLogoProps> = ({
     <canvas 
       ref={canvasRef} 
       className={className}
-      style={{ maxWidth: '100%', height: 'auto' }}
     />
   );
 };

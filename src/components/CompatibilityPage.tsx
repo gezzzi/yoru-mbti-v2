@@ -463,7 +463,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                       value={myCode}
                       size={200}
                       logoSrc="/icon-512.png"
-                      logoSizeRatio={0.25}
+                      logoSizeRatio={0.18}
                       className="w-full h-auto max-w-[200px]"
                     />
                   </div>

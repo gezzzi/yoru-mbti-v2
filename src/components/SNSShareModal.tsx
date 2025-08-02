@@ -113,7 +113,7 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose, 
                 value={compatibilityCode}
                 size={150}
                 logoSrc="/icon-512.png"
-                logoSizeRatio={0.25}
+                logoSizeRatio={0.18}
                 className="w-full h-auto max-w-[150px]"
               />
             </div>
