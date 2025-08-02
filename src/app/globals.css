@@ -229,7 +229,7 @@ body {
   text-shadow: none;
   filter: drop-shadow(0 0 6px #c084fc);
   animation: 
-    sequential-blink 3s 10;
+    sequential-blink 3s 5;
   animation-delay: 
     calc(var(--char-index) * 0.2s);
   -webkit-font-smoothing: antialiased;
@@ -266,7 +266,7 @@ body {
   text-shadow: none;
   filter: drop-shadow(0 0 6px #ff00ff);
   animation: 
-    sequential-blink 3s 10;
+    sequential-blink 3s 5;
   animation-delay: 
     calc(var(--char-index) * 0.2s);
   -webkit-font-smoothing: antialiased;
@@ -308,7 +308,7 @@ body {
   font-weight: bold;
   margin: 0 2px;
   animation: 
-    sequential-blink 3s 10;
+    sequential-blink 3s 5;
   animation-delay: 
     calc(var(--char-index) * 0.2s);
   -webkit-font-smoothing: antialiased;
@@ -339,7 +339,7 @@ body {
   text-stroke: 3px #ff00ff;
   filter: drop-shadow(0 0 6px #ff00ff);
   animation: 
-    sequential-blink 3s 10;
+    sequential-blink 3s 5;
   animation-delay: 
     calc(var(--char-index) * 0.2s);
 }
