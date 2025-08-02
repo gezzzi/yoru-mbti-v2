@@ -515,4 +515,77 @@ body {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Intersection Observer animations for NeonText */
+/* Initial state - before first animation */
+.neon-text:not(.has-animated) .neon-char,
+.neon-text:not(.has-animated) .neon-char-iphone {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: none;
+}
+
+/* Animated state - fade in animation */
+.neon-text.has-animated .neon-char,
+.neon-text.has-animated .neon-char-iphone {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  transition-delay: calc(var(--char-index) * 0.05s);
+}
+
+/* Pause blinking animation when out of view */
+.neon-text:not(.in-view) .neon-char,
+.neon-text:not(.in-view) .neon-char-iphone {
+  animation-play-state: paused !important;
+}
+
+/* Resume blinking animation when in view */
+.neon-text.in-view .neon-char,
+.neon-text.in-view .neon-char-iphone {
+  animation-play-state: running !important;
+}
+
+/* Initial state for pseudo elements */
+.neon-text:not(.has-animated) .neon-char::before,
+.neon-text:not(.has-animated) .neon-char-iphone::before,
+.neon-text:not(.has-animated) .neon-char.special::before,
+.neon-text:not(.has-animated) .neon-char-iphone.special::before,
+.neon-text:not(.has-animated) .neon-char.special::after,
+.neon-text:not(.has-animated) .neon-char-iphone.special::after {
+  opacity: 0;
+}
+
+/* Pause/resume blinking animation for pseudo elements */
+.neon-text:not(.in-view) .neon-char::before,
+.neon-text:not(.in-view) .neon-char-iphone::before,
+.neon-text:not(.in-view) .neon-char.special::before,
+.neon-text:not(.in-view) .neon-char-iphone.special::before,
+.neon-text:not(.in-view) .neon-char.special::after,
+.neon-text:not(.in-view) .neon-char-iphone.special::after {
+  animation-play-state: paused !important;
+}
+
+.neon-text.in-view .neon-char::before,
+.neon-text.in-view .neon-char-iphone::before,
+.neon-text.in-view .neon-char.special::before,
+.neon-text.in-view .neon-char-iphone.special::before,
+.neon-text.in-view .neon-char.special::after,
+.neon-text.in-view .neon-char-iphone.special::after {
+  animation-play-state: running !important;
+}
+
+/* Intersection Observer animations for SimpleNeonText */
+.simple-neon-text:not(.in-view) .simple-neon-char {
+  opacity: 0;
+  transform: translateY(20px) scale(0.8);
+  text-shadow: none;
+}
+
+.simple-neon-text.in-view .simple-neon-char {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out, text-shadow 0.6s ease-out;
+  transition-delay: calc(var(--char-index, 0) * 0.05s);
 } 

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 
 interface NeonTextProps {
   text: string | string[]; // 文字列または文字列配列（改行対応）
@@ -10,6 +11,17 @@ interface NeonTextProps {
 
 const NeonText: React.FC<NeonTextProps> = ({ text, specialCharIndex, className = '' }) => {
   const [isIPhone, setIsIPhone] = React.useState(false);
+  const [hasAnimated, setHasAnimated] = React.useState(false);
+  const { ref, isIntersecting } = useIntersectionObserver({
+    threshold: 0.3,
+    triggerOnce: false,
+  });
+
+  React.useEffect(() => {
+    if (isIntersecting && !hasAnimated) {
+      setHasAnimated(true);
+    }
+  }, [isIntersecting, hasAnimated]);
 
   React.useEffect(() => {
     const userAgent = navigator.userAgent;
@@ -20,7 +32,7 @@ const NeonText: React.FC<NeonTextProps> = ({ text, specialCharIndex, className =
   if (Array.isArray(text)) {
     let charIndex = 0;
     return (
-      <div className={`neon-text ${className}`}>
+      <div ref={ref} className={`neon-text ${className} ${hasAnimated ? 'has-animated' : ''} ${isIntersecting ? 'in-view' : ''}`}>
         {text.map((line, lineIndex) => (
           <div key={lineIndex} className="block">
             {line.split('').map((char, index) => {
@@ -45,7 +57,7 @@ const NeonText: React.FC<NeonTextProps> = ({ text, specialCharIndex, className =
   // 従来の文字列処理
   const characters = text.split('');
   return (
-    <div className={`neon-text ${className}`}>
+    <div ref={ref} className={`neon-text ${className} ${hasAnimated ? 'has-animated' : ''} ${isIntersecting ? 'in-view' : ''}`}>
       {characters.map((char, index) => (
         <span
           key={index}
