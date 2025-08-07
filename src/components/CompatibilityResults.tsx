@@ -282,7 +282,10 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({});
   const [selectedPosition, setSelectedPosition] = useState<Position48 | null>(null);
   const [partnerSecretAnswer, setPartnerSecretAnswer] = useState<{ questionId: number; answer: number } | null>(null);
+  const [mySecretAnswer, setMySecretAnswer] = useState<{ questionId: number; answer: number } | null>(null);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [showSecretModal, setShowSecretModal] = useState(false);
+  const [showSecretConfirm, setShowSecretConfirm] = useState(false);
   
   // Toggle section function
   const toggleSection = (section: string) => {
@@ -394,14 +397,23 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   // カウントアップアニメーション用
   const animatedScore = useCountUp(Math.round(compatibility.compatibility), 4000, animationStarted);
   
-  // localStorageから相手の秘密の回答を取得
+  // localStorageから秘密の回答を取得
   useEffect(() => {
-    const secretAnswer = localStorage.getItem('partner_secret_answer');
-    if (secretAnswer) {
+    const partnerSecret = localStorage.getItem('partner_secret_answer');
+    if (partnerSecret) {
       try {
-        setPartnerSecretAnswer(JSON.parse(secretAnswer));
+        setPartnerSecretAnswer(JSON.parse(partnerSecret));
       } catch (error) {
-        console.error('秘密の回答の読み込みに失敗しました:', error);
+        console.error('相手の秘密の回答の読み込みに失敗しました:', error);
+      }
+    }
+    
+    const mySecret = localStorage.getItem('my_secret_answer');
+    if (mySecret) {
+      try {
+        setMySecretAnswer(JSON.parse(mySecret));
+      } catch (error) {
+        console.error('自分の秘密の回答の読み込みに失敗しました:', error);
       }
     }
   }, []);
@@ -1620,71 +1632,24 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     </div>
                   </div>
                   
-                  {/* ⑥ 相手の秘密を知る */}
-                  {partnerSecretAnswer && (
-                    <div className="overflow-hidden">
-                      <button
-                        onClick={() => toggleSection('partnerSecret')}
-                        className="w-full flex items-center justify-between p-2 rounded-lg"
-                      >
-                        <div className="flex items-center gap-2 text-left">
-                          <span className="text-lg">🤫</span>
-                          <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">相手の秘密を知る</h4>
-                        </div>
-                        {openSections.partnerSecret ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
-                      </button>
-                      <div className={`transition-all duration-300 ${
-                        openSections.partnerSecret ? 'max-h-96' : 'max-h-0'
-                      } overflow-hidden`}>
-                        <div className="mt-2 px-2">
-                          <p className="text-xs text-[#e0e7ff]/70 mb-3 text-center">相手の回答</p>
-                            {(() => {
-                              const question = questions.find(q => q.id === partnerSecretAnswer.questionId);
-                              if (!question) return null;
-                              
-                              return (
-                                <div className="space-y-3">
-                                  {/* 質問文 */}
-                                  <div className="text-center">
-                                    <p className="text-sm font-medium text-[#e0e7ff]">
-                                      {question.text}
-                                    </p>
-                                  </div>
-                                  
-                                  {/* 回答の丸 */}
-                                  <div className="flex justify-center items-center gap-1 flex-wrap">
-                                    {question.options.map((option, index) => (
-                                      <div
-                                        key={index}
-                                        className={`relative w-8 h-8 rounded-full border-2 ${
-                                          option.value === partnerSecretAnswer.answer
-                                            ? 'bg-gradient-to-br from-purple-500 to-pink-500 border-purple-400 scale-110'
-                                            : 'bg-white/10 border-white/30'
-                                        }`}
-                                      >
-                                        {option.value === partnerSecretAnswer.answer && (
-                                          <Check className="absolute inset-0 m-auto w-4 h-4 text-white" />
-                                        )}
-                                      </div>
-                                    ))}
-                                  </div>
-                                  
-                                  {/* 回答のテキスト */}
-                                  <p className="text-center text-sm text-[#e0e7ff]/90 mt-2">
-                                    相手の回答: <span className="font-bold text-pink-300">
-                                      {question.options.find(opt => opt.value === partnerSecretAnswer.answer)?.text}
-                                    </span>
-                                  </p>
-                                </div>
-                              );
-                            })()}
-                        </div>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </div>
               </ScrollAnimation>
+
+              {/* 秘密のボタン */}
+              {(mySecretAnswer || partnerSecretAnswer) && (
+                <ScrollAnimation animation="fadeInUp" delay={700}>
+                  <div className="text-center">
+                    <button
+                      onClick={() => setShowSecretConfirm(true)}
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 inline-flex items-center gap-2 shadow-lg"
+                    >
+                      <span className="text-lg">🔐</span>
+                      <span>秘密を見る</span>
+                    </button>
+                  </div>
+                </ScrollAnimation>
+              )}
 
               {/* アクションボタン */}
               <ScrollAnimation animation="fadeInUp" delay={800}>
@@ -1740,6 +1705,166 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       {/* Feedback Modal */}
       {showFeedbackModal && (
         <FeedbackModal onClose={() => setShowFeedbackModal(false)} />
+      )}
+
+      {/* 秘密確認モーダル */}
+      {showSecretConfirm && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-gradient-to-br from-purple-900/90 to-pink-900/90 rounded-2xl p-6 max-w-md w-full border border-white/20 shadow-2xl">
+            <div className="text-center space-y-4">
+              <div className="text-4xl">🔐</div>
+              <h3 className="text-xl font-bold text-white">本当に秘密を確認しますか？</h3>
+              <p className="text-sm text-white/80">
+                お互いの秘密の回答が表示されます。<br />
+                一度見たら、二人の関係が変わるかもしれません...
+              </p>
+              <div className="flex gap-3 justify-center pt-4">
+                <button
+                  onClick={() => setShowSecretConfirm(false)}
+                  className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                >
+                  やめておく
+                </button>
+                <button
+                  onClick={() => {
+                    setShowSecretConfirm(false);
+                    setShowSecretModal(true);
+                  }}
+                  className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-colors font-semibold"
+                >
+                  確認する
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 秘密表示モーダル */}
+      {showSecretModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-gradient-to-br from-purple-900/90 to-pink-900/90 rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-white/20 shadow-2xl">
+            <div className="space-y-6">
+              <div className="flex justify-between items-center">
+                <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                  <span>🔓</span>
+                  <span>秘密の回答</span>
+                </h3>
+                <button
+                  onClick={() => setShowSecretModal(false)}
+                  className="text-white/60 hover:text-white transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* 自分の秘密 */}
+              {mySecretAnswer && (
+                <div className="bg-white/10 rounded-xl p-4 space-y-3">
+                  <h4 className="font-semibold text-purple-300 flex items-center gap-2">
+                    <span>👤</span>
+                    <span>あなたの秘密</span>
+                  </h4>
+                  {(() => {
+                    const question = questions.find(q => q.id === mySecretAnswer.questionId);
+                    if (!question) return null;
+                    
+                    return (
+                      <div className="space-y-3">
+                        <div className="text-center">
+                          <p className="text-sm font-medium text-white">
+                            {question.text}
+                          </p>
+                        </div>
+                        
+                        <div className="flex justify-center items-center gap-1 flex-wrap">
+                          {question.options.map((option, index) => (
+                            <div
+                              key={index}
+                              className={`relative w-8 h-8 rounded-full border-2 ${
+                                option.value === mySecretAnswer.answer
+                                  ? 'bg-gradient-to-br from-purple-500 to-pink-500 border-purple-400 scale-110'
+                                  : 'bg-white/10 border-white/30'
+                              }`}
+                            >
+                              {option.value === mySecretAnswer.answer && (
+                                <Check className="absolute inset-0 m-auto w-4 h-4 text-white" />
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <p className="text-center text-sm text-white/90 mt-2">
+                          あなたの回答: <span className="font-bold text-purple-300">
+                            {question.options.find(opt => opt.value === mySecretAnswer.answer)?.text}
+                          </span>
+                        </p>
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
+
+              {/* 相手の秘密 */}
+              {partnerSecretAnswer && (
+                <div className="bg-white/10 rounded-xl p-4 space-y-3">
+                  <h4 className="font-semibold text-pink-300 flex items-center gap-2">
+                    <span>💑</span>
+                    <span>相手の秘密</span>
+                  </h4>
+                  {(() => {
+                    const question = questions.find(q => q.id === partnerSecretAnswer.questionId);
+                    if (!question) return null;
+                    
+                    return (
+                      <div className="space-y-3">
+                        <div className="text-center">
+                          <p className="text-sm font-medium text-white">
+                            {question.text}
+                          </p>
+                        </div>
+                        
+                        <div className="flex justify-center items-center gap-1 flex-wrap">
+                          {question.options.map((option, index) => (
+                            <div
+                              key={index}
+                              className={`relative w-8 h-8 rounded-full border-2 ${
+                                option.value === partnerSecretAnswer.answer
+                                  ? 'bg-gradient-to-br from-purple-500 to-pink-500 border-purple-400 scale-110'
+                                  : 'bg-white/10 border-white/30'
+                              }`}
+                            >
+                              {option.value === partnerSecretAnswer.answer && (
+                                <Check className="absolute inset-0 m-auto w-4 h-4 text-white" />
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <p className="text-center text-sm text-white/90 mt-2">
+                          相手の回答: <span className="font-bold text-pink-300">
+                            {question.options.find(opt => opt.value === partnerSecretAnswer.answer)?.text}
+                          </span>
+                        </p>
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
+
+              <div className="text-center pt-4">
+                <button
+                  onClick={() => setShowSecretModal(false)}
+                  className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-colors font-semibold"
+                >
+                  閉じる
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

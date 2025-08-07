@@ -227,6 +227,11 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
         throw new Error('QRコードが無効です');
       }
       
+      // 自分の秘密の回答をlocalStorageに保存
+      if (secretAnswer) {
+        localStorage.setItem('my_secret_answer', JSON.stringify(secretAnswer));
+      }
+      
       // 相手の秘密の回答をlocalStorageに保存
       if (parsed.secretAnswer) {
         localStorage.setItem('partner_secret_answer', JSON.stringify(parsed.secretAnswer));
