@@ -815,5 +815,15 @@ const generateQuestions = (): Question[] => {
   });
 };
 
-// エクスポート用の質問配列
-export const questions: Question[] = generateQuestions();
+// 質問をシャッフルする関数（Fisher-Yates アルゴリズム）
+function shuffleQuestions(array: Question[]): Question[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+// エクスポート用の質問配列（シャッフル済み）
+export const questions: Question[] = shuffleQuestions(generateQuestions());
