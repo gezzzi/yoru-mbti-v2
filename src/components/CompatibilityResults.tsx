@@ -10,6 +10,8 @@ import NeonText from './NeonText';
 import { ScrollAnimation } from './ScrollAnimation';
 import Fireworks from './Fireworks';
 import HeartRain from './HeartRain';
+import SnowfallAnimation from './SnowfallAnimation';
+import PetalAnimation from './PetalAnimation';
 import { PositionDescriptionModal } from './PositionDescriptionModal';
 import { Position48, positions48 } from '../data/positions48';
 import { questions } from '../data/questions';
@@ -279,6 +281,8 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   const [animationStarted, setAnimationStarted] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
   const [showHeartRain, setShowHeartRain] = useState(false);
+  const [showSnowfall, setShowSnowfall] = useState(false);
+  const [showPetals, setShowPetals] = useState(false);
   const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({});
   const [selectedPosition, setSelectedPosition] = useState<Position48 | null>(null);
   const [partnerSecretAnswer, setPartnerSecretAnswer] = useState<{ questionId: number; answer: number } | null>(null);
@@ -422,14 +426,28 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   useEffect(() => {
     const timer = setTimeout(() => {
       setAnimationStarted(true);
-      setShowHeartRain(true); // ハートレインを開始
       
-      // カウントアップが終わったらハートレインを停止
-      setTimeout(() => {
-        setShowHeartRain(false);
-      }, 5000);
+      // 相性度に応じてアニメーションを選択
+      if (compatibility.compatibility < 40) {
+        setShowSnowfall(true); // 雪の結晶
+        setTimeout(() => {
+          setShowSnowfall(false);
+        }, 5000);
+      } else if (compatibility.compatibility < 60) {
+        setTimeout(() => {
+          setShowPetals(true); // 桜吹雪
+          setTimeout(() => {
+            setShowPetals(false);
+          }, 5500);
+        }, 1000);
+      } else {
+        setShowHeartRain(true); // ハートレイン
+        setTimeout(() => {
+          setShowHeartRain(false);
+        }, 5000);
+      }
       
-      // 80%以上の場合、ハートレインが終わるタイミングで花火表示
+      // 80%以上の場合、アニメーションが終わるタイミングで花火表示
       if (compatibility.compatibility >= 80) {
         setTimeout(() => {
           setShowFireworks(true);
@@ -437,7 +455,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
           setTimeout(() => {
             setShowFireworks(false);
           }, 4000);
-        }, 5000); // ハートレインが終わるタイミング
+        }, 5000); // アニメーションが終わるタイミング
       }
     }, 500); // 少し遅延を入れて自然に
     
@@ -1433,8 +1451,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   };
 
   const getCompatibilityIcon = (score: number) => {
-    if (score >= 60) return <Heart className="w-10 h-10 md:w-12 md:h-12 text-pink-400" />;
-    return <Users className="w-10 h-10 md:w-12 md:h-12 text-pink-400" />;
+    return <Heart className="w-10 h-10 md:w-12 md:h-12 text-pink-400" />;
   };
 
 
@@ -1466,15 +1483,20 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
               {/* 相性スコア */}
               <ScrollAnimation animation="fadeInUp" delay={200}>
               <div className="rounded-xl shadow-lg p-4 sm:p-6 bg-white/10 backdrop-blur-sm border border-white/5 relative">
-            {/* ハートレインアニメーション（コンテナ内） */}
+            {/* アニメーション（相性度に応じて切り替え） */}
+            {showSnowfall && <SnowfallAnimation />}
+            {showPetals && <PetalAnimation />}
             {showHeartRain && <HeartRain />}
             
             <div className="text-center relative z-10">
-              <div className="flex items-center justify-center mb-4 sm:mb-6">
-                {getCompatibilityIcon(compatibility.compatibility)}
-                <span className="ml-3 sm:ml-4 text-5xl sm:text-6xl md:text-7xl font-bold text-pink-400">
-                  {animatedScore}%
-                </span>
+              <div className="flex flex-col items-center mb-4 sm:mb-6">
+                <div className="text-lg sm:text-xl text-[#e0e7ff]/80 mb-4">マッチ度</div>
+                <div className="flex items-center justify-center">
+                  {getCompatibilityIcon(compatibility.compatibility)}
+                  <span className="ml-3 sm:ml-4 text-5xl sm:text-6xl md:text-7xl font-bold text-pink-400">
+                    {animatedScore}%
+                  </span>
+                </div>
               </div>
               <p className="text-base sm:text-lg font-medium text-[#e0e7ff]/90 leading-relaxed">
                 {compatibility.description}
