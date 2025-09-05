@@ -29,7 +29,25 @@
       "Bash(awk:*)",
       "Bash(npx babel:*)",
       "Bash(cp:*)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
+      "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
+      "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
+      "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
+      "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
+      "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
+      "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
+      "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
+      "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
+      "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
+      "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
+      "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
+      "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
+      "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
+      "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
+      "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
+      "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
+      "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)"
     ],
     "deny": []
   }

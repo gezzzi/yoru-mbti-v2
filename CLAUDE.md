@@ -36,16 +36,37 @@ This creates 32 possible combinations, mapped to 16 personality types (e.g., AUR
 3. **Personality Types** (`src/data/personalityTypes.ts`): Detailed descriptions for each type
 4. **Results Display**: Shows type with radar chart, description, and sharing options
 
+### Key Features
+
+#### Compatibility Test System
+- **Partner Selection**: Two-path system - QR code scan or manual type selection
+- **Compatibility Calculation**: Complex algorithm based on 5-axis scores, tags, and type combinations
+- **Results Animations**: 
+  - 0-39%: Snowfall animation (5 seconds)
+  - 40-59%: Petal/sakura animation (1 second delay, 5.5 seconds duration)
+  - 60-100%: Heart rain animation (5 seconds)
+  - 80%+: Additional fireworks animation (4 seconds after initial animation)
+- **Secret Questions**: Special intimate questions revealed after compatibility calculation
+- **48 Positions**: Recommends specific positions based on compatibility scores
+
+#### Visual Components
+- **Neon Text Effects**: Custom glowing text animations with usage limits
+- **Radar Charts**: Animated SVG charts for visualizing 5-axis scores
+- **QR Code Generation**: Built-in QR codes with logo for sharing results
+
 ### Key Components Structure
 - **Quiz Flow**: `test/page.tsx` → `components/Quiz.tsx` → `results/page.tsx`
 - **Results**: Uses `components/Results.tsx` with screenshot/QR code sharing
+- **Compatibility**: `compatibility/page.tsx` → `CompatibilityPage.tsx` → `CompatibilityResults.tsx`
 - **Navigation**: `components/NavigationWrapper.tsx` wraps the app navigation
 - **Type Details**: Individual pages under `app/types/[typeId]/`
+- **Animation Components**: `HeartRain.tsx`, `Fireworks.tsx`, `SnowfallAnimation.tsx`, `PetalAnimation.tsx`
 
 ### State Management
 - Uses React state hooks and URL parameters for state
 - Test answers stored in `answerHistory` state during quiz
 - Results passed via URL query parameters
+- Compatibility test uses extensive URL params for both users' scores
 
 ### API Routes
 - `/api/feedback`: Handles user feedback submission using Resend email service
@@ -54,6 +75,7 @@ This creates 32 possible combinations, mapped to 16 personality types (e.g., AUR
 - Tailwind CSS with custom tablet breakpoint (820px)
 - Dark theme with purple/pink gradient aesthetics
 - Responsive design with mobile-first approach
+- Custom animations defined in `tailwind.config.ts`
 
 ## Important Implementation Details
 
@@ -77,8 +99,11 @@ Required for feedback system:
 - **Modify personality types**: Edit `src/data/personalityTypes.ts`
 - **Update test logic**: Modify `src/utils/testLogic.ts`
 - **Add new pages**: Follow Next.js App Router conventions in `src/app/`
+- **Modify animations**: Update animation components and timing in `CompatibilityResults.tsx`
+- **Add new positions**: Update `src/data/positions48.ts`
 
 ### Performance Considerations
 - Images are optimized and use Next.js Image component
 - Sitemap is auto-generated during build for SEO
 - Google Analytics tracking is implemented
+- Large components like `CompatibilityResults.tsx` may need offset/limit for reading

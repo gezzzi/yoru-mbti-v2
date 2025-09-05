@@ -32,6 +32,89 @@ interface CompatibilityResultsProps {
   onNewTest: () => void;
 }
 
+// 横型プログレスバーコンポーネント
+const HorizontalProgressBar: React.FC<{ 
+  percentage: number, 
+  colorFrom: string, 
+  colorTo: string,
+  isVisible?: boolean,
+  delay?: number 
+}> = ({ percentage, colorFrom, colorTo, isVisible = false, delay = 100 }) => {
+  const [animationProgress, setAnimationProgress] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  useEffect(() => {
+    if (isVisible && !hasAnimated) {
+      const timer = setTimeout(() => {
+        setAnimationProgress(percentage);
+        setHasAnimated(true);
+      }, delay);
+      return () => clearTimeout(timer);
+    }
+  }, [percentage, isVisible, hasAnimated, delay]);
+
+  return (
+    <>
+      <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
+        <div 
+          className={`h-full bg-gradient-to-r ${colorFrom} ${colorTo} rounded-full transition-all duration-1000`}
+          style={{ width: `${animationProgress}%` }}
+        />
+      </div>
+      <p className="text-xs text-[#e0e7ff]/60 mt-1 text-right">{Math.round(percentage)}%</p>
+    </>
+  );
+};
+
+// 円形プログレスバーコンポーネント
+const CircularProgressBar: React.FC<{ percentage: number, size?: number }> = ({ percentage, size = 200 }) => {
+  const [animationProgress, setAnimationProgress] = useState(0);
+  const strokeWidth = 12;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = radius * 2 * Math.PI;
+  const strokeDashoffset = circumference - (animationProgress / 100) * circumference;
+
+  useEffect(() => {
+    setAnimationProgress(percentage);
+  }, [percentage]);
+
+  return (
+    <svg width={size} height={size} className="transform -rotate-90">
+      {/* Background circle */}
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        stroke="rgba(255, 255, 255, 0.1)"
+        strokeWidth={strokeWidth}
+        fill="none"
+      />
+      {/* Progress circle */}
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={radius}
+        stroke="url(#progressGradient)"
+        strokeWidth={strokeWidth}
+        fill="none"
+        strokeDasharray={circumference}
+        strokeDashoffset={strokeDashoffset}
+        strokeLinecap="round"
+        style={{
+          transition: 'stroke-dashoffset 1s linear',
+        }}
+      />
+      <defs>
+        <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#f9a8d4" />
+          <stop offset="50%" stopColor="#ec4899" />
+          <stop offset="100%" stopColor="#db2777" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+};
+
 // レーダーチャートコンポーネント
 const RadarChart: React.FC<{ axisScores: { E: number, L: number, A: number, L2: number, O: number }, totalScore: number }> = ({ axisScores, totalScore }) => {
   const [animationProgress, setAnimationProgress] = useState(0);
@@ -290,6 +373,30 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [showSecretModal, setShowSecretModal] = useState(false);
   const [showSecretConfirm, setShowSecretConfirm] = useState(false);
+  const [cardVisible, setCardVisible] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Intersection observer for card visibility
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setCardVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => {
+      if (cardRef.current) {
+        observer.unobserve(cardRef.current);
+      }
+    };
+  }, []);
   
   // Toggle section function
   const toggleSection = (section: string) => {
@@ -1491,11 +1598,14 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
             <div className="text-center relative z-10">
               <div className="flex flex-col items-center mb-4 sm:mb-6">
                 <div className="text-lg sm:text-xl text-[#e0e7ff]/80 mb-4">マッチ度</div>
-                <div className="flex items-center justify-center">
-                  {getCompatibilityIcon(compatibility.compatibility)}
-                  <span className="ml-3 sm:ml-4 text-5xl sm:text-6xl md:text-7xl font-bold text-pink-400">
-                    {animatedScore}%
-                  </span>
+                <div className="relative flex items-center justify-center">
+                  <CircularProgressBar percentage={animatedScore} size={180} />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    {getCompatibilityIcon(compatibility.compatibility)}
+                    <span className="mt-2 text-4xl sm:text-5xl md:text-6xl font-bold text-pink-400">
+                      {animatedScore}%
+                    </span>
+                  </div>
                 </div>
               </div>
               <p className="text-base sm:text-lg font-medium text-[#e0e7ff]/90 leading-relaxed">
@@ -1505,18 +1615,9 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
           </div>
               </ScrollAnimation>
 
-              {/* 相性レーダーチャート */}
-              <ScrollAnimation animation="fadeInUp" delay={400}>
-              <div className="rounded-xl shadow-lg p-6 bg-white/10 backdrop-blur-sm border border-white/5">
-                <div className="flex justify-center">
-                  <RadarChart axisScores={compatibility.axisScores} totalScore={compatibility.compatibility} />
-                </div>
-              </div>
-              </ScrollAnimation>
-
               {/* 夜の相性診断カード */}
               <ScrollAnimation animation="fadeInUp" delay={600}>
-              <div className="rounded-xl shadow-lg p-4 sm:p-6 bg-white/10 backdrop-blur-sm border border-white/5">
+              <div ref={cardRef} className="rounded-xl shadow-lg p-4 sm:p-6 bg-white/10 backdrop-blur-sm border border-white/5">
                 <h3 className="text-lg sm:text-xl font-bold text-[#e0e7ff] mb-4 sm:mb-6 text-center">相性診断カード</h3>
                 <div className="space-y-2">
                   {/* ① おすすめプレイ */}
@@ -1527,10 +1628,20 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     >
                       <div className="flex items-center space-x-3">
                         <span className="text-lg">🛏</span>
-                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">2人の夜の相性</h4>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">夜の相性</h4>
                       </div>
                       {openSections.recommendedPlay ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
                     </button>
+                    {/* プログレスバー */}
+                    <div className="px-4 pb-2">
+                      <HorizontalProgressBar 
+                        percentage={compatibility.compatibility}
+                        colorFrom="from-purple-500"
+                        colorTo="to-pink-500"
+                        isVisible={cardVisible}
+                        delay={700}
+                      />
+                    </div>
                     <div className={`transition-all duration-300 ${
                       openSections.recommendedPlay ? 'max-h-[800px]' : 'max-h-0'
                     } overflow-hidden`}>
@@ -1548,10 +1659,20 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     >
                       <div className="flex items-center space-x-3">
                         <span className="text-lg">🧘‍♀️</span>
-                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">2人のおすすめ体位（48手）</h4>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">おすすめ体位（48手）</h4>
                       </div>
                       {openSections.recommendedPosition ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
                     </button>
+                    {/* プログレスバー */}
+                    <div className="px-4 pb-2">
+                      <HorizontalProgressBar 
+                        percentage={compatibility.axisScores.E}
+                        colorFrom="from-blue-500"
+                        colorTo="to-cyan-500"
+                        isVisible={cardVisible}
+                        delay={900}
+                      />
+                    </div>
                     <div className={`transition-all duration-300 ${
                       openSections.recommendedPosition ? 'max-h-[600px]' : 'max-h-0'
                     } overflow-hidden`}>
@@ -1624,6 +1745,16 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                       </div>
                       {openSections.beforeRelationship ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
                     </button>
+                    {/* プログレスバー */}
+                    <div className="px-4 pb-2">
+                      <HorizontalProgressBar 
+                        percentage={compatibility.axisScores.A}
+                        colorFrom="from-green-500"
+                        colorTo="to-emerald-500"
+                        isVisible={cardVisible}
+                        delay={1100}
+                      />
+                    </div>
                     <div className={`transition-all duration-300 ${
                       openSections.beforeRelationship ? 'max-h-96' : 'max-h-0'
                     } overflow-hidden`}>
@@ -1645,6 +1776,16 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                       </div>
                       {openSections.relationshipPrediction ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
                     </button>
+                    {/* プログレスバー */}
+                    <div className="px-4 pb-2">
+                      <HorizontalProgressBar 
+                        percentage={compatibility.axisScores.O}
+                        colorFrom="from-amber-500"
+                        colorTo="to-orange-500"
+                        isVisible={cardVisible}
+                        delay={1300}
+                      />
+                    </div>
                     <div className={`transition-all duration-300 ${
                       openSections.relationshipPrediction ? 'max-h-96' : 'max-h-0'
                     } overflow-hidden`}>
