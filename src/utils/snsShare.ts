@@ -29,8 +29,8 @@ const ALL_TAGS = [
   '💤 まったり派'
 ];
 
-// 5軸データとすべてのタグスコア、秘密の回答から相性診断コードを生成
-export const generateCompatibilityCode = (result: TestResult, secretAnswer?: { questionId: number; answer: number }): string => {
+// 5軸データとすべてのタグスコア、秘密の回答、ユーザー名から相性診断コードを生成
+export const generateCompatibilityCode = (result: TestResult, secretAnswer?: { questionId: number; answer: number }, username?: string): string => {
   // 各軸の値を0-100の整数値に変換
   const v1 = Math.round(result.E);
   const v2 = Math.round(result.L);
@@ -75,22 +75,42 @@ export const generateCompatibilityCode = (result: TestResult, secretAnswer?: { q
   }
   
   // 秘密の回答がある場合は追加
+  let finalCode = tagCode ? `${axisCode}-${tagCode}` : axisCode;
+  
   if (secretAnswer) {
     const secretCode = `${secretAnswer.questionId.toString(36)}${secretAnswer.answer.toString(36)}`.toUpperCase();
-    return tagCode ? `${axisCode}-${tagCode}-${secretCode}` : `${axisCode}--${secretCode}`;
+    finalCode += `-${secretCode}`;
   }
   
-  // ハイフンで区切って返す
-  return tagCode ? `${axisCode}-${tagCode}` : axisCode;
+  // ユーザー名がある場合はBase64エンコードして追加
+  if (username && username.trim()) {
+    const encodedUsername = btoa(encodeURIComponent(username.trim()));
+    finalCode += `_${encodedUsername}`;
+  }
+  
+  return finalCode;
 };
 
-// 相性診断コードから5軸データとすべてのタグスコア、秘密の回答を復元
-export const parseCompatibilityCode = (code: string): { result: TestResult | null; secretAnswer?: { questionId: number; answer: number } } => {
+// 相性診断コードから5軸データとすべてのタグスコア、秘密の回答、ユーザー名を復元
+export const parseCompatibilityCode = (code: string): { result: TestResult | null; secretAnswer?: { questionId: number; answer: number }; username?: string } => {
   if (!code || code.length === 0) return { result: null };
   
   try {
+    // ユーザー名を分離
+    let mainCode = code;
+    let username: string | undefined;
+    if (code.includes('_')) {
+      const [codePart, usernamePart] = code.split('_');
+      mainCode = codePart;
+      try {
+        username = decodeURIComponent(atob(usernamePart));
+      } catch {
+        // ユーザー名のデコードに失敗した場合は無視
+      }
+    }
+    
     // ハイフンで分割
-    const parts = code.split('-');
+    const parts = mainCode.split('-');
     let axisCode: string;
     let tagCode: string | null = null;
     let secretCode: string | null = null;
@@ -106,7 +126,7 @@ export const parseCompatibilityCode = (code: string): { result: TestResult | nul
       tagCode = parts[1];
     } else {
       // 軸データのみ
-      axisCode = code;
+      axisCode = mainCode;
     }
     
     // 36進数から10進数に変換
@@ -190,7 +210,7 @@ export const parseCompatibilityCode = (code: string): { result: TestResult | nul
       additionalResults: (tags.length > 0 || tagScores.length > 0) ? { tags, tagScores } as any : undefined
     };
     
-    return { result, secretAnswer };
+    return { result, secretAnswer, username };
   } catch {
     return { result: null };
   }

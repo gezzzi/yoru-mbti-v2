@@ -88,6 +88,8 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
   };
   
   const [showShareModal, setShowShareModal] = useState(false);
+  const [username, setUsername] = useState('');
+  const [hasEnteredUsername, setHasEnteredUsername] = useState(false);
   const downloadRef = useRef<HTMLDivElement>(null);
   const [selectedTag, setSelectedTag] = useState<{ tag: string; description: string } | null>(null);
   const [selectedPosition, setSelectedPosition] = useState<Position48 | null>(null);
@@ -206,12 +208,26 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
     return selectedPositions;
   }, [result, type.code]);
 
-  // 診断結果をローカルストレージに保存
+  // 診断結果とユーザー名をローカルストレージに保存
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('personality_test_result', JSON.stringify(result));
+      if (username && hasEnteredUsername) {
+        localStorage.setItem('personality_test_username', username);
+      }
     }
-  }, [result]);
+  }, [result, username, hasEnteredUsername]);
+
+  // 保存されたユーザー名を取得
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedUsername = localStorage.getItem('personality_test_username');
+      if (savedUsername) {
+        setUsername(savedUsername);
+        setHasEnteredUsername(true);
+      }
+    }
+  }, []);
 
   const dimensions: PersonalityDimension[] = [
     {
@@ -324,6 +340,47 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight drop-shadow-lg select-none text-center">
               <NeonText text={["あなたの", "診断結果"]} specialCharIndex={5} className="gap-1" />
             </h1>
+            {/* Username Input */}
+            {!hasEnteredUsername && (
+              <div className="max-w-md mx-auto mt-6 px-4">
+                <p className="text-[#e0e7ff] mb-3 text-sm">相性診断で使用するユーザー名を入力してください</p>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="ユーザー名を入力"
+                    className="flex-1 px-4 py-2 rounded-lg bg-white/10 border border-white/30 text-white placeholder-white/50 focus:outline-none focus:border-white/50"
+                    maxLength={20}
+                  />
+                  <button
+                    onClick={() => {
+                      if (username.trim()) {
+                        setHasEnteredUsername(true);
+                        localStorage.setItem('personality_test_username', username);
+                      }
+                    }}
+                    disabled={!username.trim()}
+                    className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    保存
+                  </button>
+                </div>
+              </div>
+            )}
+            {hasEnteredUsername && username && (
+              <div className="text-center mt-4">
+                <p className="text-[#e0e7ff] text-sm">ユーザー名: <span className="font-bold text-lg">{username}</span></p>
+                <button
+                  onClick={() => {
+                    setHasEnteredUsername(false);
+                  }}
+                  className="text-xs text-[#e0e7ff]/70 hover:text-[#e0e7ff] mt-1 underline"
+                >
+                  変更
+                </button>
+              </div>
+            )}
           </div>
         </ScrollAnimation>
         

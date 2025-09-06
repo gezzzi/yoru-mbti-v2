@@ -179,20 +179,32 @@ const questionVariations: { [key: number]: string[] } = {
   ]
 };
 
-// ランダムに質問テキストを選択する関数
-function getRandomQuestionText(id: number): string {
+// シードベースの疑似乱数生成器
+function seededRandom(seed: number): () => number {
+  let x = seed;
+  return () => {
+    x = (x * 1103515245 + 12345) % 2147483648;
+    return x / 2147483648;
+  };
+}
+
+// シードを使って質問テキストを選択する関数
+function getSeededQuestionText(id: number, rng: () => number): string {
   const variations = questionVariations[id];
   if (!variations) {
     // バリエーションがない場合（36-40の質問）は元のテキストを返す
     return '';
   }
-  // ランダムに1つ選択
-  const randomIndex = Math.floor(Math.random() * variations.length);
+  // シードベースで選択
+  const randomIndex = Math.floor(rng() * variations.length);
   return variations[randomIndex];
 }
 
 // 質問データを生成
 const generateQuestions = (): Question[] => {
+  // 固定シードを使用して一貫性を保つ
+  const rng = seededRandom(42);
+  
   const baseQuestions: Omit<Question, 'text'>[] = [
     {
       id: 1,
@@ -801,8 +813,8 @@ const generateQuestions = (): Question[] => {
     let text: string;
     
     if (baseQuestion.id <= 35) {
-      // 1-35の質問はランダムに選択
-      text = getRandomQuestionText(baseQuestion.id);
+      // 1-35の質問はシードベースで選択
+      text = getSeededQuestionText(baseQuestion.id, rng);
     } else {
       // 36-40の質問は固定
       text = fixedQuestionTexts[baseQuestion.id] || '';
@@ -816,14 +828,16 @@ const generateQuestions = (): Question[] => {
 };
 
 // 質問をシャッフルする関数（Fisher-Yates アルゴリズム）
-function shuffleQuestions(array: Question[]): Question[] {
+function shuffleQuestions(array: Question[], rng: () => number): Question[] {
   const shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(rng() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
   return shuffled;
 }
 
 // エクスポート用の質問配列（シャッフル済み）
-export const questions: Question[] = shuffleQuestions(generateQuestions());
+// 固定シードを使用してサーバーとクライアントで一貫性を保つ
+const shuffleRng = seededRandom(123);
+export const questions: Question[] = shuffleQuestions(generateQuestions(), shuffleRng);

@@ -18,6 +18,7 @@ import { questions } from '../data/questions';
 import FeedbackModal from './FeedbackModal';
 import SNSShareModal from './SNSShareModal';
 import { calculateImprovedTagCompatibility, TagScore } from '../utils/tagCompatibility';
+import { getTagRecommendations, selectAndFormatRecommendations, stabilizeRecommendedPlayText } from './CompatibilityResultsHelper';
 
 interface CompatibilityResult {
   compatibility: number;
@@ -374,6 +375,8 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   const [showSecretModal, setShowSecretModal] = useState(false);
   const [showSecretConfirm, setShowSecretConfirm] = useState(false);
   const [cardVisible, setCardVisible] = useState(false);
+  const [myUsername, setMyUsername] = useState<string>('');
+  const [partnerUsername, setPartnerUsername] = useState<string>('');
   const cardRef = useRef<HTMLDivElement>(null);
 
   // Intersection observer for card visibility
@@ -508,7 +511,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   // カウントアップアニメーション用
   const animatedScore = useCountUp(Math.round(compatibility.compatibility), 4000, animationStarted);
   
-  // localStorageから秘密の回答を取得
+  // localStorageから秘密の回答とユーザー名を取得
   useEffect(() => {
     const partnerSecret = localStorage.getItem('partner_secret_answer');
     if (partnerSecret) {
@@ -526,6 +529,17 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       } catch (error) {
         console.error('自分の秘密の回答の読み込みに失敗しました:', error);
       }
+    }
+    
+    // ユーザー名を取得
+    const myName = localStorage.getItem('personality_test_username');
+    if (myName) {
+      setMyUsername(myName);
+    }
+    
+    const partnerName = localStorage.getItem('partner_username');
+    if (partnerName) {
+      setPartnerUsername(partnerName);
     }
   }, []);
   
@@ -589,116 +603,69 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     // おすすめプレイの詳細な分析を開始
     let recommendedPlay = '';
     
-    // 全体的な相性評価（5軸とタグの総合評価）
-    const overallCompatibilityAnalysis = () => {
-      const score = compatibility.compatibility;
-      let analysis = '【総合相性度：' + Math.round(score) + '％】\n';
-      
-      if (score >= 85) {
-        analysis += '運命的な相性！性格も好みも驚異的にマッチしています。理想的なパートナーです。';
-      } else if (score >= 70) {
-        analysis += '素晴らしい相性！お互いを深く理解し合える、満足度の高い関係を築けます。';
-      } else if (score >= 55) {
-        analysis += '良好な相性。お互いの違いを尊重しながら、素敵な関係を築いていけるでしょう。';
-      } else if (score >= 40) {
-        analysis += '標準的な相性。コミュニケーションを大切にすることで、より良い関係へ。';
-      } else {
-        analysis += 'チャレンジングな相性。お互いを理解する努力が、新しい発見につながります。';
-      }
-      
-      return analysis;
-    };
+    // 全体的な相性評価（情景豊かに）
+    const score = compatibility.compatibility;
+    if (score >= 80) {
+      recommendedPlay = `【相性度 ${Math.round(score)}%】\n月明かりが二人を包む夜、息遣いまでもが完璧に重なり合う。まるで長年連れ添った恋人のように、言葉を交わさずとも求めるものが分かる運命的な相性。`;
+    } else if (score >= 60) {
+      recommendedPlay = `【相性度 ${Math.round(score)}%】\n夜風が優しく頬を撫でるように、お互いの温もりが心地よく溶け合う。時に情熱的に、時に優しく、絶妙なリズムで愛を深めていける関係。`;
+    } else if (score >= 40) {
+      recommendedPlay = `【相性度 ${Math.round(score)}%】\n未知の扉を開くような新鮮な興奮が待っている。お互いの違いが生む化学反応が、予想外の快感を生み出すかもしれない刺激的な出会い。`;
+    } else {
+      recommendedPlay = `【相性度 ${Math.round(score)}%】\n霧の中を手探りで進むような探求の時間。じっくりと相手を知ることで、隠された宝物のような喜びを発見できる可能性を秘めた関係。`;
+    }
     
-    recommendedPlay += overallCompatibilityAnalysis();
+    // リード/フォローのダイナミクス（L/F軸）
+    let dynamics = '\n\n【関係性】';
+    if (myResult.L > 70 && partnerResult.L < 30) {
+      dynamics += 'あなたの指先が相手の肌を這うたび、甘い吐息が漏れる。完全に身を委ねる相手と、すべてを受け止めるあなた。支配と服従の美しいハーモニー。';
+    } else if (myResult.L < 30 && partnerResult.L > 70) {
+      dynamics += '強い腕に抱きしめられ、すべてを任せる安心感。相手のリードに身を委ね、未知の快感へと導かれていく心地よい時間。';
+    } else if (Math.abs(myResult.L - partnerResult.L) < 20) {
+      dynamics += '時には獣のように求め合い、時には優しく包み込む。その日の気分で役割が入れ替わる、変幻自在な関係性。';
+    } else {
+      dynamics += '押しては引き、引いては押す。絶妙な駆け引きが生む緊張感が、より深い快感へと導いていく。';
+    }
+    recommendedPlay += dynamics;
     
-    // 1. 基本的な相性パターンの分析（L/F軸）
-    const lAxisAnalysis = () => {
-      if (myResult.L > 70 && partnerResult.L < 30) {
-        return 'あなたが完全にリードし、相手が身を委ねる理想的なD/s関係。あなたの支配欲と相手の服従欲が完璧にマッチしています。';
-      } else if (myResult.L < 30 && partnerResult.L > 70) {
-        return '相手があなたを導き、あなたが従う美しい主従関係。相手の支配欲とあなたの服従欲が調和しています。';
-      } else if (myResult.L > 60 && partnerResult.L > 60) {
-        return '両者ともリード好き。主導権を奪い合う激しい関係になりそう。交代制を採用することで、お互いの欲求を満たせます。';
-      } else if (myResult.L < 40 && partnerResult.L < 40) {
-        return 'お互いに受け身な優しい関係。相手を思いやりながら、ゆっくりと愛を育んでいけます。';
-      } else if (Math.abs(myResult.L - partnerResult.L) < 20) {
-        return '対等な関係で、その時の気分によって役割を自然に交代できる柔軟な関係性。';
-      } else {
-        return '適度な主従関係のバランスが取れており、お互いの役割が自然に決まります。';
-      }
-    };
+    // スタイル分析（E/I軸とA/S軸を統合）
+    let style = '\n\n【スタイル】';
+    const eMatch = Math.abs(myResult.E - partnerResult.E) < 30;
+    const aMatch = Math.abs(myResult.A - partnerResult.A) < 30;
     
-    recommendedPlay += lAxisAnalysis();
+    if (eMatch && aMatch) {
+      style += '呼吸のリズムまでもが自然に重なり、まるで一つの生き物のように動く二人。長い前戯から絶頂まで、完璧なテンポで進む至福の時間。';
+    } else if ((myResult.E + partnerResult.E) > 100 && (myResult.A + partnerResult.A) > 100) {
+      style += '炎のような情熱が部屋中を包み込む。汗ばむ肌と肌がぶつかり合い、新しい体位や未知の快感を次々と開拓していく冒険的な夜。';
+    } else if ((myResult.E + partnerResult.E) < 60 && (myResult.A + partnerResult.A) < 60) {
+      style += 'ゆっくりと溶けるチョコレートのような、とろけるような時間。一つ一つの仕草を大切に、相手の反応を確かめながら愛を深めていく。';
+    } else {
+      style += 'パズルのピースが組み合わさるように、お互いの違いが新しい快感を生み出す。予想外の化学反応が、忘れられない夜を作り出す。';
+    }
+    recommendedPlay += style;
     
-    // 2. プレイスタイルの詳細分析（E/I軸とA/S軸）
-    const playStyleAnalysis = () => {
-      let style = '\n\n';
-      
-      // E/I軸による積極性
-      if (myResult.E > 70 && partnerResult.E > 70) {
-        style += '二人とも積極的で情熱的。激しく求め合い、時間を忘れて没頭する関係です。';
-      } else if (myResult.E < 30 && partnerResult.E < 30) {
-        style += '二人とも控えめで優しい性格。ゆっくりと時間をかけて、相手の反応を確かめながら進める繊細な関係です。';
-      } else if (Math.abs(myResult.E - partnerResult.E) > 50) {
-        style += '積極性に差があるため、より積極的な方が優しくリードすることが大切です。';
-      }
-      
-      // A/S軸による冒険心
-      if (style.length > 2) style += ' '; // 前の文がある場合はスペースを追加
-      
-      if (myResult.A > 70 && partnerResult.A > 70) {
-        style += '新しいプレイや体位に挑戦することに抵抗がない二人。マンネリとは無縁の刺激的な関係を築けます。';
-      } else if (myResult.A < 30 && partnerResult.A < 30) {
-        style += '慣れ親しんだ方法を大切にする二人。安心感の中で深い愛情を育めます。';
-      } else if ((myResult.A > 60 && partnerResult.A < 40) || (myResult.A < 40 && partnerResult.A > 60)) {
-        style += '冒険派と安定派の組み合わせ。冒険派が新しい提案をし、安定派が受け入れやすいペースで進めることが重要です。';
-      }
-      
-      return style;
-    };
+    // コミュニケーション（O軸）
+    if (myResult.O > 60 || partnerResult.O > 60) {
+      recommendedPlay += ' 「もっと...」「そこが...」恥じらいを捨てた言葉が、二人の興奮を最高潮へと導く。';
+    } else if (myResult.O < 40 && partnerResult.O < 40) {
+      recommendedPlay += ' 瞳と瞳で語り合い、小さな震えや吐息で気持ちを伝え合う、無言の会話。';
+    }
     
-    recommendedPlay += playStyleAnalysis();
-    
-    // 3. コミュニケーションスタイル（O/S軸）
-    const communicationAnalysis = () => {
-      let communication = '\n\n';
-      if (myResult.O > 70 && partnerResult.O > 70) {
-        communication += '欲望を隠さず素直に伝え合える最高の関係。お互いの願望を叶え合うことで、満足度の高い時間を過ごせます。';
-      } else if (myResult.O < 30 && partnerResult.O < 30) {
-        communication += '言葉よりも行動で示す二人。相手の表情や反応を細かく観察し、無言のコミュニケーションで深く理解し合えます。';
-      } else if ((myResult.O > 60 && partnerResult.O < 40) || (myResult.O < 40 && partnerResult.O > 60)) {
-        communication += 'オープンな方が相手の本音を優しく引き出してあげることが大切。焦らず、相手のペースに合わせて心を開いてもらいましょう。';
-      } else {
-        communication += '適度にオープンで、必要な時は素直に伝え合える健全な関係です。';
-      }
-      return communication;
-    };
-    
-    recommendedPlay += communicationAnalysis();
-    
-    // 4. L2軸（Love/Free）による関係性の深さ
-    const emotionalDepthAnalysis = () => {
-      let depth = '\n\n';
-      if (myResult.L2 > 70 && partnerResult.L2 > 70) {
-        depth += '深い愛情を持って接する二人。体だけでなく心も繋がり、特別な関係を築けます。';
-      } else if (myResult.L2 < 30 && partnerResult.L2 < 30) {
-        depth += '自由な関係を好む二人。お互いに縛られず、その時の気分で楽しめる大人の関係です。';
-      } else if (Math.abs(myResult.L2 - partnerResult.L2) > 50) {
-        depth += '愛情の示し方に違いがあります。お互いの価値観を尊重し、関係性の定義を明確にすることが大切です。';
-      }
-      return depth.length > 2 ? depth : '';
-    };
-    
-    const emotionalDepth = emotionalDepthAnalysis();
-    if (emotionalDepth) recommendedPlay += emotionalDepth;
+    // 感情の深さ（L2軸）
+    if (Math.abs(myResult.L2 - partnerResult.L2) < 30) {
+      recommendedPlay += '\n\n【絆】抱きしめ合った瞬間、心臓の鼓動が重なり、魂まで溶け合うような一体感。同じ深さで愛を注ぎ合える奇跡的な関係。';
+    } else if (myResult.L2 > 70 || partnerResult.L2 > 70) {
+      recommendedPlay += '\n\n【絆】涙が出るほど愛おしい。体を重ねるたびに、心の距離も縮まっていく。単なる快楽を超えた、深い愛情に包まれた特別な時間。';
+    }
     
     
-    // 5. 公開タグによる具体的なプレイ提案
+    // タグから厳選された提案（最大3つ、より詳細に）
     const tagBasedRecommendations = () => {
-      let recommendations = '\n\n';
-      let hasRecommendations = false;
+      const allRecommendations = getTagRecommendations(combinedTags);
+      const seed = myResult.A + partnerResult.A + myResult.O + partnerResult.O;
+      return selectAndFormatRecommendations(allRecommendations, 3, seed);
       
-      // 言語・コミュニケーション系
+      /* 以下の古いコードをコメントアウト
       if (combinedTags.has('💬 言語プレイ派')) {
         recommendations += '言葉責めや甘い囁きで興奮を高め合いましょう。恥ずかしい言葉も、二人だけの秘密の呪文に。';
         hasRecommendations = true;
@@ -800,12 +767,21 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       }
       
       return hasRecommendations ? recommendations : '';
+      */
     };
     
     const tagRecommendations = tagBasedRecommendations();
     if (tagRecommendations) recommendedPlay += tagRecommendations;
     
-    // 6. 共通タグと相性の悪い組み合わせ分析
+    // 共通の特徴があれば簡潔に言及
+    if (sharedTags.length > 0) {
+      recommendedPlay += `\n\n【共通点】${sharedTags[0]}`;
+      if (sharedTags.length > 1) {
+        recommendedPlay += `他${sharedTags.length - 1}個`;
+      }
+    }
+    
+    /* 削除済み: 詳細な分析セクション
     const detailedTagAnalysis = () => {
       let analysis = '';
       
@@ -850,7 +826,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     
     recommendedPlay += detailedTagAnalysis();
     
-    // 7. 性欲バランスの統合
+    // 7. 性欲バランスの統合 - 削除
     const libidoAnalysis = () => {
       const calculateLibidoLevel = (result: any, tags: string[]) => {
         let baseLevel = 0;
@@ -908,9 +884,11 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     };
     
     recommendedPlay += libidoAnalysis();
+    */
     
-    // プレイのポイント部分を削除
-    // recommendedPlay += overallAdvice(); の行も削除
+    // テキストの最終調整（800-900文字目標）
+    const seed = myResult.E + partnerResult.E + myResult.L + partnerResult.L;
+    recommendedPlay = stabilizeRecommendedPlayText(recommendedPlay, 800, 900, seed);
     
     // おすすめ体位（5軸データと公開タグから決定）
     const recommendedPositions = (() => {
@@ -1596,15 +1574,36 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
             {showHeartRain && <HeartRain />}
             
             <div className="text-center relative z-10">
+              {/* ユーザー名表示 */}
+              <div className="flex justify-center items-center gap-4 sm:gap-8 mb-6">
+                {/* あなた */}
+                <div className="text-center">
+                  {myUsername && (
+                    <p className="text-[#e0e7ff] text-2xl sm:text-3xl md:text-4xl font-bold">{myUsername}</p>
+                  )}
+                </div>
+                
+                {/* ハートアイコン */}
+                <div className="text-pink-400">
+                  <Heart className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12" />
+                </div>
+                
+                {/* 相手 */}
+                <div className="text-center">
+                  {partnerUsername && (
+                    <p className="text-[#e0e7ff] text-2xl sm:text-3xl md:text-4xl font-bold">{partnerUsername}</p>
+                  )}
+                </div>
+              </div>
+              
               <div className="flex flex-col items-center mb-4 sm:mb-6">
-                <div className="text-lg sm:text-xl text-[#e0e7ff]/80 mb-4">マッチ度</div>
                 <div className="relative flex items-center justify-center">
                   <CircularProgressBar percentage={animatedScore} size={180} />
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    {getCompatibilityIcon(compatibility.compatibility)}
-                    <span className="mt-2 text-4xl sm:text-5xl md:text-6xl font-bold text-pink-400">
+                    <span className="text-4xl sm:text-5xl md:text-6xl font-bold text-pink-400">
                       {animatedScore}%
                     </span>
+                    <span className="mt-1 text-base sm:text-lg text-[#e0e7ff]/80">マッチ度</span>
                   </div>
                 </div>
               </div>

@@ -88,7 +88,9 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose, 
   };
 
 
-  const compatibilityCode = generateCompatibilityCode(result);
+  // ローカルストレージからユーザー名を取得
+  const username = typeof window !== 'undefined' ? localStorage.getItem('personality_test_username') || undefined : undefined;
+  const compatibilityCode = generateCompatibilityCode(result, undefined, username);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">

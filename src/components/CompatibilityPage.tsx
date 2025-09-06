@@ -63,6 +63,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
   const [uploadedQRImage, setUploadedQRImage] = useState<string | null>(null);
   const [selectedSecretQuestion, setSelectedSecretQuestion] = useState<number | null>(null);
   const [secretAnswer, setSecretAnswer] = useState<{ questionId: number; answer: number } | undefined>();
+  const [partnerUsername, setPartnerUsername] = useState<string | undefined>();
   const qrRef = useRef<HTMLDivElement>(null);
 
   // ローカルストレージから自分の診断結果を読み込む
@@ -73,6 +74,9 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
         try {
           const parsedResult: TestResult = JSON.parse(savedResult);
           setMyResult(parsedResult);
+          
+          // ユーザー名を取得
+          const username = localStorage.getItem('personality_test_username') || undefined;
           
           // ランダムに秘密の質問を選択
           const secretQuestions = [36, 37, 38, 39, 40];
@@ -87,14 +91,14 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
             if (answers[randomQuestion] !== undefined) {
               const answer = { questionId: randomQuestion, answer: answers[randomQuestion] };
               setSecretAnswer(answer);
-              const code = generateCompatibilityCode(parsedResult, answer);
+              const code = generateCompatibilityCode(parsedResult, answer, username);
               setMyCode(code);
             } else {
-              const code = generateCompatibilityCode(parsedResult);
+              const code = generateCompatibilityCode(parsedResult, undefined, username);
               setMyCode(code);
             }
           } else {
-            const code = generateCompatibilityCode(parsedResult);
+            const code = generateCompatibilityCode(parsedResult, undefined, username);
             setMyCode(code);
           }
         } catch (error) {
@@ -164,7 +168,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
     return { compatibility, description, tips };
   };
 
-  const parseCode = (code: string): { result: TestResult | null; secretAnswer?: { questionId: number; answer: number } } => {
+  const parseCode = (code: string): { result: TestResult | null; secretAnswer?: { questionId: number; answer: number }; username?: string } => {
     const parsed = parseCompatibilityCode(code);
     if (!parsed.result) return { result: null };
     
@@ -201,7 +205,8 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
         type: personalityTypeWithFullCode,
         additionalResults: parsedResult.additionalResults
       },
-      secretAnswer: parsed.secretAnswer
+      secretAnswer: parsed.secretAnswer,
+      username: parsed.username
     };
   };
 
@@ -235,6 +240,12 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
       // 相手の秘密の回答をlocalStorageに保存
       if (parsed.secretAnswer) {
         localStorage.setItem('partner_secret_answer', JSON.stringify(parsed.secretAnswer));
+      }
+      
+      // 相手のユーザー名を保存
+      if (parsed.username) {
+        localStorage.setItem('partner_username', parsed.username);
+        setPartnerUsername(parsed.username);
       }
 
       // 結果ページに遷移
@@ -294,8 +305,13 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
             }
           }
           
-          if (readSuccess && qrText && qrText.match(/^[A-Za-z0-9]+(-[A-Za-z0-9]+)?(-[A-Za-z0-9]+)?$/)) {
-            setPartnerCode(qrText.toUpperCase());
+          if (readSuccess && qrText && qrText.match(/^[A-Za-z0-9]+(-[A-Za-z0-9]+)?(-[A-Za-z0-9]+)?(_[A-Za-z0-9+/=]+)?$/)) {
+            setPartnerCode(qrText);
+            // パートナーのユーザー名を抽出
+            const parsed = parseCompatibilityCode(qrText);
+            if (parsed.username) {
+              setPartnerUsername(parsed.username);
+            }
             setError(''); // エラーをクリア
           } else {
             throw new Error('QRコードの読み取りに失敗しました。\n写真が鮮明で、QRコードがまっすぐ写っていることを確認してください。');
@@ -329,8 +345,8 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
       const result = await QrScanner.scanImage(file);
       
       // 読み取った結果がコードの形式かチェック（旧形式と新形式の両方に対応）
-      if (result && result.match(/^[A-Za-z0-9]+(-[A-Za-z0-9]+)?$/)) {
-        const code = result.toUpperCase();
+      if (result && result.match(/^[A-Za-z0-9]+(-[A-Za-z0-9]+)?(_[A-Za-z0-9+/=]+)?$/)) {
+        const code = result;
         
         // コードを解析して診断結果を復元
         const parsed = parseCode(code);
