@@ -72,37 +72,37 @@ export default function TestCompatibilityPage() {
   const applyPreset = (preset: string) => {
     switch(preset) {
       case 'perfect':
-        // 完全一致（100%相性）
+        // 完全一致（100%相性）- D/Sは補完軸なので片方高く片方低く
         setUser1Scores({ 'E/I': 80, 'D/S': 80, 'T/S': 20, 'R/H': 70, 'A/N': 30 });
-        setUser2Scores({ 'E/I': 80, 'D/S': 80, 'T/S': 20, 'R/H': 70, 'A/N': 30 });
+        setUser2Scores({ 'E/I': 80, 'D/S': 20, 'T/S': 20, 'R/H': 70, 'A/N': 30 });
         setUser1Tags([{ tag: '🔥 欲望の炎', score: 5 }, { tag: '💬 言語プレイ派', score: 5 }]);
         setUser2Tags([{ tag: '🔥 欲望の炎', score: 5 }, { tag: '💬 言語プレイ派', score: 5 }]);
         break;
       case 'good':
-        // 良い相性（60-80%）
-        setUser1Scores({ 'E/I': 70, 'D/S': 60, 'T/S': 40, 'R/H': 65, 'A/N': 45 });
-        setUser2Scores({ 'E/I': 65, 'D/S': 55, 'T/S': 45, 'R/H': 60, 'A/N': 50 });
+        // 良い相性（60-80%）- D/Sは補完的に
+        setUser1Scores({ 'E/I': 70, 'D/S': 70, 'T/S': 40, 'R/H': 65, 'A/N': 45 });
+        setUser2Scores({ 'E/I': 65, 'D/S': 35, 'T/S': 45, 'R/H': 60, 'A/N': 50 });
         setUser1Tags([{ tag: '🕯 ロマン重視', score: 4 }, { tag: '💋 キス魔', score: 4 }]);
         setUser2Tags([{ tag: '🛁 アフターケア必須', score: 4 }, { tag: '💋 キス魔', score: 3 }]);
         break;
       case 'medium':
-        // 中程度（40-59%）
-        setUser1Scores({ 'E/I': 70, 'D/S': 30, 'T/S': 80, 'R/H': 20, 'A/N': 75 });
-        setUser2Scores({ 'E/I': 30, 'D/S': 70, 'T/S': 20, 'R/H': 80, 'A/N': 25 });
+        // 中程度（40-59%）- 各軸で違いを作る
+        setUser1Scores({ 'E/I': 70, 'D/S': 50, 'T/S': 80, 'R/H': 20, 'A/N': 75 });
+        setUser2Scores({ 'E/I': 30, 'D/S': 50, 'T/S': 20, 'R/H': 80, 'A/N': 25 });
         setUser1Tags([{ tag: '⚡️ スピード勝負派', score: 3 }, { tag: '🎮 ゲーム派', score: 3 }]);
         setUser2Tags([{ tag: '💤 まったり派', score: 3 }, { tag: '🧼 ケア＆衛生重視', score: 3 }]);
         break;
       case 'poor':
-        // 低い相性（0-39%）
-        setUser1Scores({ 'E/I': 90, 'D/S': 10, 'T/S': 95, 'R/H': 5, 'A/N': 90 });
-        setUser2Scores({ 'E/I': 10, 'D/S': 90, 'T/S': 5, 'R/H': 95, 'A/N': 10 });
+        // 低い相性（0-39%）- D/Sも同じ側にして相性を悪くする
+        setUser1Scores({ 'E/I': 90, 'D/S': 80, 'T/S': 95, 'R/H': 5, 'A/N': 90 });
+        setUser2Scores({ 'E/I': 10, 'D/S': 85, 'T/S': 5, 'R/H': 95, 'A/N': 10 });
         setUser1Tags([{ tag: '🚪 NG明確', score: 2 }, { tag: '🛡 安全第一派', score: 2 }]);
         setUser2Tags([{ tag: '⛏️ 開拓派', score: 5 }, { tag: '🧷 軽SM耐性あり', score: 5 }]);
         break;
       case 'fireworks':
-        // 花火が出る相性（80%以上）
-        setUser1Scores({ 'E/I': 75, 'D/S': 72, 'T/S': 28, 'R/H': 74, 'A/N': 26 });
-        setUser2Scores({ 'E/I': 78, 'D/S': 75, 'T/S': 25, 'R/H': 77, 'A/N': 23 });
+        // 花火が出る相性（80%以上）- D/Sは補完的に
+        setUser1Scores({ 'E/I': 75, 'D/S': 75, 'T/S': 28, 'R/H': 74, 'A/N': 26 });
+        setUser2Scores({ 'E/I': 78, 'D/S': 25, 'T/S': 25, 'R/H': 77, 'A/N': 23 });
         setUser1Tags([{ tag: '🏃‍♂️ 衝動トリガー型', score: 5 }, { tag: '🔄 リピート求め派', score: 4 }]);
         setUser2Tags([{ tag: '🏃‍♂️ 衝動トリガー型', score: 4 }, { tag: '☀️ 朝型エロス', score: 4 }]);
         break;
@@ -113,9 +113,6 @@ export default function TestCompatibilityPage() {
   const addTag = (user: 'user1' | 'user2', tag: string, score: number) => {
     const setTags = user === 'user1' ? setUser1Tags : setUser2Tags;
     const currentTags = user === 'user1' ? user1Tags : user2Tags;
-    
-    // すでに2つある場合は追加しない
-    if (currentTags.length >= 2) return;
     
     // 同じタグがすでにある場合は追加しない
     if (currentTags.some(t => t.tag === tag)) return;
@@ -291,7 +288,7 @@ export default function TestCompatibilityPage() {
               
               {/* タグ選択 */}
               <div className="mt-6 border-t border-white/20 pt-4">
-                <h3 className="text-white font-semibold mb-3">タグ（最大2つ）</h3>
+                <h3 className="text-white font-semibold mb-3">タグ</h3>
                 
                 {/* 選択されたタグ */}
                 {user1Tags.length > 0 && (
@@ -302,7 +299,7 @@ export default function TestCompatibilityPage() {
                         <select
                           value={tagData.score}
                           onChange={(e) => updateTagScore('user1', index, parseInt(e.target.value))}
-                          className="bg-white/20 text-white rounded px-2 py-1 text-sm"
+                          className="bg-white/20 text-white rounded px-2 py-1 text-sm [&>option]:bg-purple-900 [&>option]:text-white"
                         >
                           {[1, 2, 3, 4, 5].map(score => (
                             <option key={score} value={score}>{score}点</option>
@@ -320,24 +317,22 @@ export default function TestCompatibilityPage() {
                 )}
                 
                 {/* タグ追加 */}
-                {user1Tags.length < 2 && (
-                  <div className="space-y-2">
-                    <select
-                      onChange={(e) => {
-                        if (e.target.value) {
-                          addTag('user1', e.target.value, 4);
-                          e.target.value = '';
-                        }
-                      }}
-                      className="w-full bg-white/10 text-white rounded-lg px-3 py-2 text-sm"
-                    >
-                      <option value="">タグを選択...</option>
-                      {availableTags.map(tag => (
-                        <option key={tag} value={tag}>{tag}</option>
-                      ))}
-                    </select>
-                  </div>
-                )}
+                <div className="space-y-2">
+                  <select
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        addTag('user1', e.target.value, 4);
+                        e.target.value = '';
+                      }
+                    }}
+                    className="w-full bg-white/10 text-white rounded-lg px-3 py-2 text-sm [&>option]:bg-purple-900 [&>option]:text-white"
+                  >
+                    <option value="">タグを選択...</option>
+                    {availableTags.map(tag => (
+                      <option key={tag} value={tag} className="bg-purple-900 text-white">{tag}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -377,7 +372,7 @@ export default function TestCompatibilityPage() {
               
               {/* タグ選択 */}
               <div className="mt-6 border-t border-white/20 pt-4">
-                <h3 className="text-white font-semibold mb-3">タグ（最大2つ）</h3>
+                <h3 className="text-white font-semibold mb-3">タグ</h3>
                 
                 {/* 選択されたタグ */}
                 {user2Tags.length > 0 && (
@@ -406,24 +401,22 @@ export default function TestCompatibilityPage() {
                 )}
                 
                 {/* タグ追加 */}
-                {user2Tags.length < 2 && (
-                  <div className="space-y-2">
-                    <select
-                      onChange={(e) => {
-                        if (e.target.value) {
-                          addTag('user2', e.target.value, 4);
-                          e.target.value = '';
-                        }
-                      }}
-                      className="w-full bg-white/10 text-white rounded-lg px-3 py-2 text-sm"
-                    >
-                      <option value="">タグを選択...</option>
-                      {availableTags.map(tag => (
-                        <option key={tag} value={tag}>{tag}</option>
-                      ))}
-                    </select>
-                  </div>
-                )}
+                <div className="space-y-2">
+                  <select
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        addTag('user2', e.target.value, 4);
+                        e.target.value = '';
+                      }
+                    }}
+                    className="w-full bg-white/10 text-white rounded-lg px-3 py-2 text-sm [&>option]:bg-purple-900 [&>option]:text-white"
+                  >
+                    <option value="">タグを選択...</option>
+                    {availableTags.map(tag => (
+                      <option key={tag} value={tag} className="bg-purple-900 text-white">{tag}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </div>
           </div>

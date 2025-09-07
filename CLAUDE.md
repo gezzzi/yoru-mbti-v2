@@ -31,23 +31,29 @@ The app uses a unique 5-axis system (not traditional MBTI):
 This creates 32 possible combinations, mapped to 16 personality types (e.g., AURA_MYSTIC, SHADOW_EXPLORER).
 
 ### Core Data Flow
-1. **Questions** (`src/data/questions.ts`): 25 questions, 5 per axis
+1. **Questions** (`src/data/questions.ts`): 25 base questions with 3 variations each, 5 per axis
 2. **Test Logic** (`src/utils/testLogic.ts`): Calculates personality type from answers
-3. **Personality Types** (`src/data/personalityTypes.ts`): Detailed descriptions for each type
+   - Processes 5 axes + additional metrics (libido, gap, tension, kiss importance)
+   - Tag scoring system (質問11-35) with top 2 tags selected based on scores
+3. **Personality Types** (`src/data/personalityTypes.ts`): 16 personality type definitions
 4. **Results Display**: Shows type with radar chart, description, and sharing options
 
 ### Key Features
 
 #### Compatibility Test System
 - **Partner Selection**: Two-path system - QR code scan or manual type selection
-- **Compatibility Calculation**: Complex algorithm based on 5-axis scores, tags, and type combinations
+- **Compatibility Calculation**: 2値化ロジック - (5軸の共通数 + タグの共通数) / (5軸数 + タグの和集合)
+  - L/F軸は補完軸（異なる場合に共通とカウント）
+  - その他の軸は類似軸（同じ場合に共通とカウント）
+  - タグは4点以上（0-6スケール）を「持っている」と判定
+  - 重みづけシステム対応（現在は全て1.0）
 - **Results Animations**: 
   - 0-39%: Snowfall animation (5 seconds)
   - 40-59%: Petal/sakura animation (1 second delay, 5.5 seconds duration)
   - 60-100%: Heart rain animation (5 seconds)
   - 80%+: Additional fireworks animation (4 seconds after initial animation)
 - **Secret Questions**: Special intimate questions revealed after compatibility calculation
-- **48 Positions**: Recommends specific positions based on compatibility scores
+- **48 Positions**: Recommends positions based on mood categories (romantic/wild/playful/technical/foreplay)
 
 #### Visual Components
 - **Neon Text Effects**: Custom glowing text animations with usage limits
@@ -93,6 +99,8 @@ This creates 32 possible combinations, mapped to 16 personality types (e.g., AUR
 ### Environment Variables
 Required for feedback system:
 - `RESEND_API_KEY`: For sending feedback emails
+- `FEEDBACK_TO`: Email address to receive feedback
+- `FEEDBACK_FROM`: From address for feedback emails
 
 ### Common Tasks
 - **Add new question**: Update `src/data/questions.ts` (maintain 5 questions per axis)
@@ -101,9 +109,12 @@ Required for feedback system:
 - **Add new pages**: Follow Next.js App Router conventions in `src/app/`
 - **Modify animations**: Update animation components and timing in `CompatibilityResults.tsx`
 - **Add new positions**: Update `src/data/positions48.ts`
+- **Adjust compatibility weights**: Edit `axisWeights` and `tagWeights` in `CompatibilityResults.tsx:420-436`
+- **Test compatibility**: Use `/test-match` page to test different scenarios
 
 ### Performance Considerations
 - Images are optimized and use Next.js Image component
-- Sitemap is auto-generated during build for SEO
-- Google Analytics tracking is implemented
-- Large components like `CompatibilityResults.tsx` may need offset/limit for reading
+- Sitemap is auto-generated during build for SEO (nightpersonality.com)
+- Google Analytics tracking is implemented (ID: G-HLM13T0M2K)
+- Large components like `CompatibilityResults.tsx` (2100+ lines) may need offset/limit for reading
+- Custom viewport height handling for mobile devices (svh/lvh classes)
