@@ -414,46 +414,160 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     tagCategoryScores: { [key: string]: number },
     tagDetailScores: { tag: string; score: number; reason: string }[]
   } => {
-    // 各軸の相性スコアを計算（類似軸と補完軸で異なる計算方法）
+    // 2値化ロジック: 共通数 / 和集合
     
-    // 外向性(E)/内向性(I) - 類似軸
-    const eScore = 100 - Math.abs(user.E - partner.E);
+    // 重みづけ設定（後で調整可能）
+    const axisWeights = {
+      E: 1.0,  // E/I軸の重み
+      L: 1.0,  // L/F軸の重み（補完軸）
+      A: 1.0,  // A/S軸の重み
+      L2: 1.0, // L2/F2軸の重み
+      O: 1.0   // O/S軸の重み
+    };
     
-    // リード(L)/フォロー(F) - 補完軸
-    // 合計値が100に近いほど良い
-    const lScore = 100 - Math.abs((user.L + partner.L) - 100);
+    const tagWeights: { [key: string]: number } = {
+      '🔥 欲望の炎': 1.0,
+      '💋 キス魔': 1.0,
+      '🕯 ロマン重視': 1.0,
+      '⚡️ スピード勝負派': 1.0,
+      '🛁 アフターケア必須': 1.0,
+      // 他のタグも全て1.0（デフォルト）
+    };
+    const defaultTagWeight = 1.0;
     
-    // 冒険(A)/安定(S) - 類似軸
-    const aScore = 100 - Math.abs(user.A - partner.A);
+    // 5軸の共通判定（50%を閾値として使用）
+    let axisCommonWeighted = 0;
+    let axisTotalWeighted = 0;
     
-    // ラブ(L)/フリー(F) - 類似軸
-    const l2Score = 100 - Math.abs(user.L2 - partner.L2);
+    // E/I軸 - 類似軸（両者が同じ側なら共通）
+    const userE = user.E >= 50 ? 'E' : 'I';
+    const partnerE = partner.E >= 50 ? 'E' : 'I';
+    if (userE === partnerE) axisCommonWeighted += axisWeights.E;
+    axisTotalWeighted += axisWeights.E;
     
-    // 開放(O)/秘密(S) - 類似軸
-    const oScore = 100 - Math.abs(user.O - partner.O);
+    // L/F軸 - 補完軸（片方L、片方Fなら共通）
+    const userL = user.L >= 50 ? 'L' : 'F';
+    const partnerL = partner.L >= 50 ? 'L' : 'F';
+    if (userL !== partnerL) axisCommonWeighted += axisWeights.L; // 補完軸なので異なる場合に共通
+    axisTotalWeighted += axisWeights.L;
     
-    // 改善されたタグ相性計算を使用
-    let tagCompatibilityScore = 0;
-    let tagCategoryScores: { [key: string]: number } = {};
-    let tagDetailScores: { tag: string; score: number; reason: string }[] = [];
+    // A/S軸 - 類似軸
+    const userA = user.A >= 50 ? 'A' : 'S';
+    const partnerA = partner.A >= 50 ? 'A' : 'S';
+    if (userA === partnerA) axisCommonWeighted += axisWeights.A;
+    axisTotalWeighted += axisWeights.A;
     
-    // タグスコアの準備
+    // L2/F2軸 - 類似軸
+    const userL2 = user.L2 >= 50 ? 'L' : 'F';
+    const partnerL2 = partner.L2 >= 50 ? 'L' : 'F';
+    if (userL2 === partnerL2) axisCommonWeighted += axisWeights.L2;
+    axisTotalWeighted += axisWeights.L2;
+    
+    // O/S軸 - 類似軸
+    const userO = user.O >= 50 ? 'O' : 'S';
+    const partnerO = partner.O >= 50 ? 'O' : 'S';
+    if (userO === partnerO) axisCommonWeighted += axisWeights.O;
+    axisTotalWeighted += axisWeights.O;
+    
+    // タグの2値化と共通判定
+    // タグスコア4点以上（元の0-6スケールで）を「持っている」とする
+    const userTags = new Set<string>();
+    const partnerTags = new Set<string>();
+    
     const userTagScores: TagScore[] = user.additionalResults?.tagScores || [];
     const partnerTagScores: TagScore[] = partner.additionalResults?.tagScores || [];
     
-    if (userTagScores.length > 0 && partnerTagScores.length > 0) {
-      // 新しい改善されたタグ相性計算を使用
-      const tagResult = calculateImprovedTagCompatibility(userTagScores, partnerTagScores);
-      tagCompatibilityScore = tagResult.totalScore;
-      tagCategoryScores = tagResult.categoryScores;
-      tagDetailScores = tagResult.detailScores;
-    }
+    // スコア4点以上のタグを取得
+    userTagScores.forEach(tagScore => {
+      if (tagScore.score >= 4) {
+        userTags.add(tagScore.tag);
+      }
+    });
     
-    // 総合相性度を計算（5軸50%、タグ50%の重み付け）
-    const axisCompatibility = (eScore * 0.15) + (lScore * 0.3) + (aScore * 0.25) + (l2Score * 0.2) + (oScore * 0.1);
-    const compatibility = Math.max(0, Math.min(100, 
-      (axisCompatibility * 0.5) + (tagCompatibilityScore * 0.5)
-    ));
+    partnerTagScores.forEach(tagScore => {
+      if (tagScore.score >= 4) {
+        partnerTags.add(tagScore.tag);
+      }
+    });
+    
+    // タグの共通数と和集合を計算（重み付き）
+    let tagCommonWeighted = 0;
+    let tagUnionWeighted = 0;
+    
+    // Set.from()を使ってTypeScriptエラーを回避
+    const unionTags = new Set<string>();
+    userTags.forEach(tag => unionTags.add(tag));
+    partnerTags.forEach(tag => unionTags.add(tag));
+    
+    unionTags.forEach(tag => {
+      const weight = tagWeights[tag] || defaultTagWeight;
+      tagUnionWeighted += weight;
+      
+      if (userTags.has(tag) && partnerTags.has(tag)) {
+        tagCommonWeighted += weight;
+      }
+    });
+    
+    // 相性度の計算（重み付き）
+    // 分子: 5軸の重み付き共通数 + タグの重み付き共通数
+    // 分母: 5軸の重み付き合計 + タグの重み付き和集合
+    const numerator = axisCommonWeighted + tagCommonWeighted;
+    const denominator = axisTotalWeighted + tagUnionWeighted;
+    
+    // 0除算を防ぐ
+    const compatibility = denominator > 0 
+      ? Math.round((numerator / denominator) * 100)
+      : 0;
+    
+    // 既存の詳細スコア計算（表示用）
+    // 各軸のスコア（0-100で表示用に計算）
+    const eScore = userE === partnerE ? 100 : 0;
+    const lScore = userL !== partnerL ? 100 : 0; // 補完軸
+    const aScore = userA === partnerA ? 100 : 0;
+    const l2Score = userL2 === partnerL2 ? 100 : 0;
+    const oScore = userO === partnerO ? 100 : 0;
+    
+    // タグカテゴリースコア（ダミー値、後で詳細実装可能）
+    let tagCategoryScores: { [key: string]: number } = {};
+    let tagDetailScores: { tag: string; score: number; reason: string }[] = [];
+    
+    // 共通タグを取得
+    const commonTags = new Set<string>();
+    userTags.forEach(tag => {
+      if (partnerTags.has(tag)) {
+        commonTags.add(tag);
+      }
+    });
+    
+    // 共通タグの詳細
+    commonTags.forEach(tag => {
+      tagDetailScores.push({
+        tag: tag,
+        score: 100,
+        reason: '両者が持っている'
+      });
+    });
+    
+    // 片方のみが持つタグ
+    userTags.forEach(tag => {
+      if (!partnerTags.has(tag)) {
+        tagDetailScores.push({
+          tag: tag,
+          score: 0,
+          reason: 'ユーザー1のみ'
+        });
+      }
+    });
+    
+    partnerTags.forEach(tag => {
+      if (!userTags.has(tag)) {
+        tagDetailScores.push({
+          tag: tag,
+          score: 0,
+          reason: 'ユーザー2のみ'
+        });
+      }
+    });
 
     let description = '';
     let tips: string[] = [];
