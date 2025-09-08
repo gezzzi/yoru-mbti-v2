@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Check } from 'lucide-react';
+import UsernameInput from './UsernameInput';
 import { questions } from '../data/questions';
 import { Question } from '../types/personality';
 import { getProgressPercentage } from '../utils/testLogic';
@@ -9,7 +10,7 @@ import NeonText from './NeonText';
 import { ScrollAnimation } from './ScrollAnimation';
 
 interface QuizProps {
-  onComplete: (answers: Record<string, number>) => void;
+  onComplete: (answers: Record<string, number>, username?: string) => void;
   onBack: () => void;
 }
 
@@ -17,24 +18,37 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [hasTransitioned, setHasTransitioned] = useState(false);
+  const [username, setUsername] = useState('');
   const questionRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   
   const questionsPerPage = 6;
-  const totalPages = Math.ceil(questions.length / questionsPerPage);
-  const currentPageQuestions = questions.slice(
-    currentPageIndex * questionsPerPage,
-    (currentPageIndex + 1) * questionsPerPage
-  );
+  const totalQuestions = questions.length + 1; // 40問 + ユーザー名入力
+  const totalPages = Math.ceil(totalQuestions / questionsPerPage);
   
+  // 現在のページの質問を取得（最後のページには質問とユーザー名入力が混在）
+  const startIdx = currentPageIndex * questionsPerPage;
+  const endIdx = Math.min((currentPageIndex + 1) * questionsPerPage, questions.length);
+  const currentPageQuestions = questions.slice(startIdx, endIdx);
+  
+  // 最後のページかつ、ユーザー名入力を表示すべきか
   const isLastPage = currentPageIndex === totalPages - 1;
+  const shouldShowUsernameInput = isLastPage && startIdx < totalQuestions;
+  const isUsernameInputPage = startIdx === questions.length; // 41問目のみのページ
+  
   const answeredQuestions = Object.keys(answers).length;
-  const progress = getProgressPercentage(answeredQuestions, questions.length);
+  const totalProgress = username ? answeredQuestions + 1 : answeredQuestions;
+  const progress = Math.round((totalProgress / totalQuestions) * 100);
 
   const handleAnswerSelect = (questionId: number, value: number) => {
     setAnswers(prev => ({
       ...prev,
       [questionId]: value
     }));
+
+    // ユーザー名入力ページでは自動スクロールしない
+    if (isUsernameInputPage || (shouldShowUsernameInput && currentPageQuestions.length === 0)) {
+      return;
+    }
 
     // Auto-scroll to next question after a short delay
     setTimeout(() => {
@@ -62,6 +76,15 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
             block: 'center'
           });
         }
+      } else if (shouldShowUsernameInput && nextQuestionIndex === currentPageQuestions.length) {
+        // 最後の質問の後、ユーザー名入力欄にスクロール
+        const usernameInput = document.querySelector('[data-username-input]');
+        if (usernameInput && !document.activeElement?.tagName?.match(/INPUT|TEXTAREA/)) {
+          usernameInput.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          });
+        }
       } else {
         // If it's the last question overall, scroll to "結果を見る" button at a comfortable position
         const resultsButton = document.querySelector('[data-results-button]');
@@ -76,13 +99,20 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   };
 
   const handleNext = () => {
-    // Check if all questions on current page are answered
+    // 現在のページの質問がすべて回答されているかチェック
     const currentPageAnswered = currentPageQuestions.every(q => answers[q.id] !== undefined);
     
-    if (!currentPageAnswered) return;
-    
-    if (isLastPage) {
-      onComplete(answers);
+    // 最後のページでユーザー名入力が表示されている場合
+    if (isLastPage && (shouldShowUsernameInput || isUsernameInputPage)) {
+      // 質問がある場合は質問をチェック
+      if (currentPageQuestions.length > 0 && !currentPageAnswered) return;
+      // ユーザー名が入力されていない場合は終了
+      if (!username.trim()) return;
+      // すべてOKなら結果へ
+      handleUsernameSubmit();
+    } else if (!currentPageAnswered) {
+      // 通常の質問ページで回答が完了していない場合
+      return;
     } else {
       setHasTransitioned(true);
       setCurrentPageIndex(prev => prev + 1);
@@ -101,6 +131,14 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       }, 30);
     }
   };
+
+  const handleUsernameSubmit = () => {
+    if (username.trim()) {
+      localStorage.setItem('personality_test_username', username);
+      onComplete(answers, username);
+    }
+  };
+
 
   const handlePrevious = () => {
     if (currentPageIndex > 0) {
@@ -123,8 +161,31 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
     }
   };
 
+  // 保存されたユーザー名を取得
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedUsername = localStorage.getItem('personality_test_username');
+      if (savedUsername) {
+        setUsername(savedUsername);
+      }
+    }
+  }, []);
+
+
   // Check if current page is complete
-  const isCurrentPageComplete = currentPageQuestions.every(q => answers[q.id] !== undefined);
+  const isCurrentPageComplete = (() => {
+    // 通常の質問ページ
+    const questionsAnswered = currentPageQuestions.every(q => answers[q.id] !== undefined);
+    
+    // 最後のページでユーザー名入力がある場合
+    if (isLastPage && (shouldShowUsernameInput || isUsernameInputPage)) {
+      // 質問とユーザー名の両方をチェック
+      return questionsAnswered && username.trim() !== '';
+    }
+    
+    // 通常のページ
+    return questionsAnswered;
+  })();
 
   // Scale values from strongly agree to strongly disagree (7-point scale)
   // 0-6 scale to match questions.ts: 6=非常にそう思う, 3=どちらでもない, 0=全くそう思わない
@@ -187,6 +248,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
     </div>
   );
 
+
   return (
     <div className="min-h-screen pt-16">
       {/* Header with transparent background */}
@@ -205,7 +267,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium text-gray-100">
-              質問 {currentPageIndex * questionsPerPage + 1}-{Math.min((currentPageIndex + 1) * questionsPerPage, questions.length)} / {questions.length}
+              {isUsernameInputPage ? '質問 41 / 41' : `質問 ${currentPageIndex * questionsPerPage + 1}-${Math.min((currentPageIndex + 1) * questionsPerPage, questions.length)} / 41`}
             </span>
             <span className="text-sm font-medium text-gray-100">
               {progress}% 完了
@@ -220,12 +282,20 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
         </div>
       </ScrollAnimation>
 
-      {/* Questions */}
+      {/* Questions and Username Input */}
       {hasTransitioned ? (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {currentPageQuestions.map((question) => (
             <QuestionItem key={question.id} question={question} />
           ))}
+          {(shouldShowUsernameInput || isUsernameInputPage) && (
+            <UsernameInput 
+              username={username}
+              setUsername={setUsername}
+              onSubmit={handleUsernameSubmit}
+              isLastPage={isLastPage}
+            />
+          )}
         </div>
       ) : (
         <ScrollAnimation animation="fadeInUp" delay={400}>
@@ -233,6 +303,14 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
             {currentPageQuestions.map((question) => (
               <QuestionItem key={question.id} question={question} />
             ))}
+            {(shouldShowUsernameInput || isUsernameInputPage) && (
+              <UsernameInput 
+                username={username}
+                setUsername={setUsername}
+                onSubmit={handleUsernameSubmit}
+                isLastPage={isLastPage}
+              />
+            )}
           </div>
         </ScrollAnimation>
       )}
@@ -256,7 +334,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
                 data-next-button={!isLastPage}
                 data-results-button={isLastPage}
               >
-                {isLastPage ? '結果へ' : '次へ'}
+                {isLastPage ? '結果を見る' : '次へ'}
                 <span className="ml-2">→</span>
               </button>
             </div>

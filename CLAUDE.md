@@ -8,7 +8,7 @@ This is a Next.js 14 application called "夜の性格診断" (Night Personality 
 ## Development Commands
 ```bash
 # Development
-npm run dev          # Start development server on localhost:3000
+npm run dev          # Start development server (usually on port 3000 or 3001)
 
 # Production
 npm run build        # Build for production (also generates sitemap)
@@ -22,11 +22,11 @@ npm run lint         # Run ESLint
 
 ### Personality System
 The app uses a unique 5-axis system (not traditional MBTI):
-- **E/I**: エクスタシー (Ecstasy) / インティメート (Intimate)
-- **D/S**: ドミナント (Dominant) / サブミッシブ (Submissive)
-- **T/S**: テンダー (Tender) / ストリクト (Strict)
-- **R/H**: リアリスト (Realist) / ヘドニスト (Hedonist)
-- **A/N**: アナリティカル (Analytical) / ナチュラル (Natural)
+- **E/I**: エクスタシー (Ecstasy) / インティメート (Intimate) - Extroversion/Introversion equivalent
+- **D/S**: ドミナント (Dominant) / サブミッシブ (Submissive) - **Complementary axis** (L/F in code)
+- **T/S**: テンダー (Tender) / ストリクト (Strict) - Adventure/Stable (A/S in code)
+- **R/H**: リアリスト (Realist) / ヘドニスト (Hedonist) - Love/Free (L2/F2 in code)
+- **A/N**: アナリティカル (Analytical) / ナチュラル (Natural) - Open/Secret (O/S in code)
 
 This creates 32 possible combinations, mapped to 16 personality types (e.g., AURA_MYSTIC, SHADOW_EXPLORER).
 
@@ -42,11 +42,12 @@ This creates 32 possible combinations, mapped to 16 personality types (e.g., AUR
 
 #### Compatibility Test System
 - **Partner Selection**: Two-path system - QR code scan or manual type selection
-- **Compatibility Calculation**: 2値化ロジック - (5軸の共通数 + タグの共通数) / (5軸数 + タグの和集合)
-  - L/F軸は補完軸（異なる場合に共通とカウント）
-  - その他の軸は類似軸（同じ場合に共通とカウント）
-  - タグは4点以上（0-6スケール）を「持っている」と判定
-  - 重みづけシステム対応（現在は全て1.0）
+- **Compatibility Calculation**: Binary logic - (5-axis matches + tag matches) / (5 axes + tag union)
+  - D/S axis (L/F in code) is **complementary** - counts as match when different
+  - All other axes are **similar** - count as match when same
+  - Tags scored 4+ (on 0-6 scale) are considered "possessed"
+  - Weight system supported (currently all weights = 1.0)
+  - Threshold: 50% determines which side of axis
 - **Results Animations**: 
   - 0-39%: Snowfall animation (5 seconds)
   - 40-59%: Petal/sakura animation (1 second delay, 5.5 seconds duration)
@@ -110,7 +111,10 @@ Required for feedback system:
 - **Modify animations**: Update animation components and timing in `CompatibilityResults.tsx`
 - **Add new positions**: Update `src/data/positions48.ts`
 - **Adjust compatibility weights**: Edit `axisWeights` and `tagWeights` in `CompatibilityResults.tsx:420-436`
-- **Test compatibility**: Use `/test-match` page to test different scenarios
+- **Test compatibility**: Use `/test-match` page to test different scenarios with presets:
+  - Perfect match (100%): D/S axis complementary (80/20)
+  - Good match (60-80%): D/S axis complementary (70/35)
+  - Poor match (0-39%): D/S axis same side (80/85)
 
 ### Performance Considerations
 - Images are optimized and use Next.js Image component
