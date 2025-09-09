@@ -20,6 +20,8 @@ const Footer: React.FC = () => {
             <h3 className="font-semibold text-gray-100 mb-4">ヘルプ</h3>
             <ul className="space-y-2 text-sm text-gray-200">
               <li><a href="/help" className="hover:text-teal-300">よくある質問</a></li>
+              <li><a href="/test-solo" className="hover:text-teal-300">個人テスト (dev)</a></li>
+              <li><a href="/test-match" className="hover:text-teal-300">相性テスト (dev)</a></li>
             </ul>
           </div>
         </div>

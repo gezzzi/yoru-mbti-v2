@@ -31,12 +31,15 @@ The app uses a unique 5-axis system (not traditional MBTI):
 This creates 32 possible combinations, mapped to 16 personality types (e.g., AURA_MYSTIC, SHADOW_EXPLORER).
 
 ### Core Data Flow
-1. **Questions** (`src/data/questions.ts`): 25 base questions with 3 variations each, 5 per axis
-2. **Test Logic** (`src/utils/testLogic.ts`): Calculates personality type from answers
+1. **Questions** (`src/data/questions.ts`): 40 questions total (質問1-40) covering 5 axes
+2. **Username Input**: 41st step - collects username for personality and compatibility tests
+   - Separate component (`src/components/UsernameInput.tsx`) to prevent re-rendering issues
+   - Required field (no default value) - must be entered to see results
+3. **Test Logic** (`src/utils/testLogic.ts`): Calculates personality type from answers
    - Processes 5 axes + additional metrics (libido, gap, tension, kiss importance)
    - Tag scoring system (質問11-35) with top 2 tags selected based on scores
-3. **Personality Types** (`src/data/personalityTypes.ts`): 16 personality type definitions
-4. **Results Display**: Shows type with radar chart, description, and sharing options
+4. **Personality Types** (`src/data/personalityTypes.ts`): 16 personality type definitions
+5. **Results Display**: Shows type with radar chart, description, and sharing options
 
 ### Key Features
 
@@ -62,8 +65,10 @@ This creates 32 possible combinations, mapped to 16 personality types (e.g., AUR
 - **QR Code Generation**: Built-in QR codes with logo for sharing results
 
 ### Key Components Structure
-- **Quiz Flow**: `test/page.tsx` → `components/Quiz.tsx` → `results/page.tsx`
+- **Quiz Flow**: `test/page.tsx` → `components/Quiz.tsx` (includes `UsernameInput.tsx`) → `results/page.tsx`
 - **Results**: Uses `components/Results.tsx` with screenshot/QR code sharing
+  - Username displayed at top (stored in localStorage)
+  - No longer collects username on results page
 - **Compatibility**: `compatibility/page.tsx` → `CompatibilityPage.tsx` → `CompatibilityResults.tsx`
 - **Navigation**: `components/NavigationWrapper.tsx` wraps the app navigation
 - **Type Details**: Individual pages under `app/types/[typeId]/`
@@ -72,7 +77,8 @@ This creates 32 possible combinations, mapped to 16 personality types (e.g., AUR
 ### State Management
 - Uses React state hooks and URL parameters for state
 - Test answers stored in `answerHistory` state during quiz
-- Results passed via URL query parameters
+- Username stored in localStorage (`personality_test_username`)
+- Results stored in localStorage (`personality_test_result`)
 - Compatibility test uses extensive URL params for both users' scores
 
 ### API Routes
@@ -104,13 +110,14 @@ Required for feedback system:
 - `FEEDBACK_FROM`: From address for feedback emails
 
 ### Common Tasks
-- **Add new question**: Update `src/data/questions.ts` (maintain 5 questions per axis)
+- **Add new question**: Update `src/data/questions.ts` (40 questions total)
 - **Modify personality types**: Edit `src/data/personalityTypes.ts`
 - **Update test logic**: Modify `src/utils/testLogic.ts`
 - **Add new pages**: Follow Next.js App Router conventions in `src/app/`
 - **Modify animations**: Update animation components and timing in `CompatibilityResults.tsx`
 - **Add new positions**: Update `src/data/positions48.ts`
 - **Adjust compatibility weights**: Edit `axisWeights` and `tagWeights` in `CompatibilityResults.tsx:420-436`
+- **Username input issues**: Username component is separated in `UsernameInput.tsx` to prevent re-rendering/focus loss
 - **Test compatibility**: Use `/test-match` page to test different scenarios with presets:
   - Perfect match (100%): D/S axis complementary (80/20)
   - Good match (60-80%): D/S axis complementary (70/35)
