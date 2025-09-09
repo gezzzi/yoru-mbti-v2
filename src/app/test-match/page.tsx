@@ -2,14 +2,15 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import './slider.css';
 
 const axes = ['E/I', 'D/S', 'T/S', 'R/H', 'A/N'] as const;
 const axisNames = {
-  'E/I': 'エクスタシー / インティメート',
-  'D/S': 'ドミナント / サブミッシブ',
-  'T/S': 'テンダー / ストリクト',
-  'R/H': 'リアリスト / ヘドニスト',
-  'A/N': 'アナリティカル / ナチュラル'
+  'E/I': '外向性 / 内向性',
+  'D/S': 'リード / フォロー',
+  'T/S': '冒険 / 安定',
+  'R/H': 'ラブ / フリー',
+  'A/N': '開放 / 秘密'
 };
 
 // タグのリスト（質問11-35のタグ）
@@ -263,13 +264,15 @@ export default function TestCompatibilityPage() {
                 placeholder="名前"
               />
               
-              {axes.map(axis => (
-                <div key={axis} className="mb-4">
-                  <label className="text-white text-sm mb-2 block">
-                    {axisNames[axis]} ({user1Scores[axis]}%)
-                  </label>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs text-white/70 w-8">{axis.split('/')[1]}</span>
+              {axes.map(axis => {
+                const [left, right] = axisNames[axis].split(' / ');
+                return (
+                  <div key={axis} className="mb-6">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-white text-sm">{left}</span>
+                      <span className="text-white font-bold">{user1Scores[axis]}%</span>
+                      <span className="text-white text-sm">{right}</span>
+                    </div>
                     <input
                       type="range"
                       min="0"
@@ -279,12 +282,14 @@ export default function TestCompatibilityPage() {
                         ...user1Scores,
                         [axis]: parseInt(e.target.value)
                       })}
-                      className="flex-1"
+                      className="w-full h-3 bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
+                      style={{
+                        background: `linear-gradient(to right, #ec4899 ${user1Scores[axis]}%, #4b5563 ${user1Scores[axis]}%)`
+                      }}
                     />
-                    <span className="text-xs text-white/70 w-8">{axis.split('/')[0]}</span>
                   </div>
-                </div>
-              ))}
+                );
+              })}
               
               {/* タグ選択 */}
               <div className="mt-6 border-t border-white/20 pt-4">
@@ -347,13 +352,15 @@ export default function TestCompatibilityPage() {
                 placeholder="名前"
               />
               
-              {axes.map(axis => (
-                <div key={axis} className="mb-4">
-                  <label className="text-white text-sm mb-2 block">
-                    {axisNames[axis]} ({user2Scores[axis]}%)
-                  </label>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs text-white/70 w-8">{axis.split('/')[1]}</span>
+              {axes.map(axis => {
+                const [left, right] = axisNames[axis].split(' / ');
+                return (
+                  <div key={axis} className="mb-6">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-white text-sm">{left}</span>
+                      <span className="text-white font-bold">{user2Scores[axis]}%</span>
+                      <span className="text-white text-sm">{right}</span>
+                    </div>
                     <input
                       type="range"
                       min="0"
@@ -363,12 +370,14 @@ export default function TestCompatibilityPage() {
                         ...user2Scores,
                         [axis]: parseInt(e.target.value)
                       })}
-                      className="flex-1"
+                      className="w-full h-3 bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
+                      style={{
+                        background: `linear-gradient(to right, #ec4899 ${user2Scores[axis]}%, #4b5563 ${user2Scores[axis]}%)`
+                      }}
                     />
-                    <span className="text-xs text-white/70 w-8">{axis.split('/')[0]}</span>
                   </div>
-                </div>
-              ))}
+                );
+              })}
               
               {/* タグ選択 */}
               <div className="mt-6 border-t border-white/20 pt-4">
@@ -436,7 +445,7 @@ export default function TestCompatibilityPage() {
             <h3 className="text-lg font-bold text-white mb-3">使い方</h3>
             <ul className="text-white/80 space-y-2 text-sm">
               <li>• 各軸のスライダーを調整して、テストしたいスコアを設定</li>
-              <li>• 50%以上で左側の文字（E,D,T,R,A）、50%未満で右側の文字（I,S,S,H,N）が選択される</li>
+              <li>• 50%以上で右側の特性、50%未満で左側の特性が選択される</li>
               <li>• プリセットボタンで特定のアニメーションをテスト可能</li>
               <li>• 0-39%: 雪のアニメーション</li>
               <li>• 40-59%: 桜吹雪のアニメーション</li>

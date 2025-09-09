@@ -38,11 +38,11 @@ export default function TestSoloPage() {
   
   // 5軸の値（0-100）
   const [axes, setAxes] = useState({
-    E: 50,  // エクスタシー / インティメート
-    L: 50,  // ドミナント / サブミッシブ
-    A: 50,  // テンダー / ストリクト
-    L2: 50, // リアリスト / ヘドニスト
-    O: 50   // アナリティカル / ナチュラル
+    E: 50,  // 外向性 / 内向性
+    L: 50,  // リード / フォロー
+    A: 50,  // 冒険 / 安定
+    L2: 50, // ラブ / フリー
+    O: 50   // 開放 / 秘密
   });
   
   // 選択されたタグとそのスコア
@@ -176,11 +176,11 @@ export default function TestSoloPage() {
           <h2 className="text-xl font-bold text-white mb-4">5軸の値を設定</h2>
           
           {[
-            { key: 'E', left: 'インティメート (I)', right: 'エクスタシー (E)' },
-            { key: 'L', left: 'サブミッシブ (S)', right: 'ドミナント (D)' },
-            { key: 'A', left: 'ストリクト (S)', right: 'テンダー (T)' },
-            { key: 'L2', left: 'ヘドニスト (H)', right: 'リアリスト (R)' },
-            { key: 'O', left: 'ナチュラル (N)', right: 'アナリティカル (A)' }
+            { key: 'E', left: '外向性', right: '内向性' },
+            { key: 'L', left: 'リード', right: 'フォロー' },
+            { key: 'A', left: '冒険', right: '安定' },
+            { key: 'L2', left: 'ラブ', right: 'フリー' },
+            { key: 'O', left: '開放', right: '秘密' }
           ].map(({ key, left, right }) => (
             <div key={key} className="mb-6">
               <div className="flex justify-between items-center mb-2">
@@ -194,9 +194,9 @@ export default function TestSoloPage() {
                 max="100"
                 value={axes[key as keyof typeof axes]}
                 onChange={(e) => handleAxisChange(key, parseInt(e.target.value))}
-                className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
+                className="w-full h-3 bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
                 style={{
-                  background: `linear-gradient(to right, transparent ${axes[key as keyof typeof axes]}%, rgba(255, 255, 255, 0.2) ${axes[key as keyof typeof axes]}%)`
+                  background: `linear-gradient(to right, #ec4899 ${axes[key as keyof typeof axes]}%, #4b5563 ${axes[key as keyof typeof axes]}%)`
                 }}
               />
             </div>
@@ -206,7 +206,7 @@ export default function TestSoloPage() {
         {/* タグ選択 */}
         <div className="bg-white/10 backdrop-blur-md rounded-lg p-6 mb-6">
           <h2 className="text-xl font-bold text-white mb-4">
-            タグを選択（最大2つが結果に表示されます）
+            タグを選択
           </h2>
           <div className="text-sm text-white/70 mb-4">
             選択済み: {selectedTagsCount}個
@@ -247,20 +247,22 @@ export default function TestSoloPage() {
       <style jsx>{`
         .slider::-webkit-slider-thumb {
           appearance: none;
-          width: 20px;
-          height: 20px;
+          width: 16px;
+          height: 16px;
           background: white;
           border-radius: 50%;
           cursor: pointer;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
         
         .slider::-moz-range-thumb {
-          width: 20px;
-          height: 20px;
+          width: 16px;
+          height: 16px;
           background: white;
           border-radius: 50%;
           cursor: pointer;
           border: none;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
       `}</style>
     </div>

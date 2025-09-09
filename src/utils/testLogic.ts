@@ -133,11 +133,10 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
   }
   
   // Calculate percentage scores (0-100%)
-  // 50%の場合は51%にする（仕様書より）
   const calculatePercentage = (total: number, count: number): number => {
-    if (count === 0) return 51; // デフォルト値も51%に
+    if (count === 0) return 50; // デフォルト値
     const percentage = Math.round((total / (count * 6)) * 100);
-    return percentage === 50 ? 51 : percentage;
+    return percentage;
   };
 
   const E = calculatePercentage(ETotal, ECount);
@@ -147,14 +146,14 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
   const O = calculatePercentage(OTotal, OCount);
   
   // Determine personality type code based on which side is stronger
-  // 50%の場合は51%になっているため、通常の比較で判定
+  // 50%以上の場合は前者（E, L, A, L, O）側に振り分ける
   const typeCode = 
-    (E > 50 ? 'E' : 'I') +
-    (L > 50 ? 'L' : 'F') +
-    (A > 50 ? 'A' : 'S') +
-    (L2 > 50 ? 'L' : 'F') +
+    (E >= 50 ? 'E' : 'I') +
+    (L >= 50 ? 'L' : 'F') +
+    (A >= 50 ? 'A' : 'S') +
+    (L2 >= 50 ? 'L' : 'F') +
     '-' +
-    (O > 50 ? 'O' : 'S');
+    (O >= 50 ? 'O' : 'S');
   
   // Find matching personality type using 4-character code (without 5th axis for lookup)
   const baseTypeCode = typeCode.split('-')[0];

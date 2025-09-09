@@ -28,10 +28,17 @@ The app uses a unique 5-axis system (not traditional MBTI):
 - **R/H**: リアリスト (Realist) / ヘドニスト (Hedonist) - Love/Free (L2/F2 in code)
 - **A/N**: アナリティカル (Analytical) / ナチュラル (Natural) - Open/Secret (O/S in code)
 
-This creates 32 possible combinations, mapped to 16 personality types (e.g., AURA_MYSTIC, SHADOW_EXPLORER).
+This creates 32 possible combinations, mapped to 16 personality types with production names:
+- **Dom系**: 快楽王, 支配者, 愛情家, 調教師
+- **Sub系**: 恋愛者, パーティーピーポー, 依存者, ムードメーカー
+- **Introvert系**: 情熱家, 変態分析者, 守護者, 指揮者
+- **妄想・回避系**: 妄想者, ドM者, ヒーラー, 提供者
 
 ### Core Data Flow
 1. **Questions** (`src/data/questions.ts`): 40 questions total (質問1-40) covering 5 axes
+   - Questions 1-10: Axis questions (2 per axis, with isReverse flags)
+   - Questions 11-35: Tag questions (25 tags total)
+   - Questions 36-40: Additional metric questions
 2. **Username Input**: 41st step - collects username for personality and compatibility tests
    - Separate component (`src/components/UsernameInput.tsx`) to prevent re-rendering issues
    - Required field (no default value) - must be entered to see results
@@ -59,10 +66,21 @@ This creates 32 possible combinations, mapped to 16 personality types (e.g., AUR
 - **Secret Questions**: Special intimate questions revealed after compatibility calculation
 - **48 Positions**: Recommends positions based on mood categories (romantic/wild/playful/technical/foreplay)
 
+#### Development Testing Pages
+- **`/test-solo`**: Individual personality test simulator
+  - 5-axis sliders (0-100%) for direct manipulation
+  - Tag checkboxes for selecting personality tags
+  - Generates proper answer data using `calculatePersonalityType`
+- **`/test-match`**: Compatibility test simulator with presets
+  - Perfect match (100%): D/S axis complementary (80/20)
+  - Good match (60-80%): D/S axis complementary (70/35)
+  - Poor match (0-39%): D/S axis same side (80/85)
+
 #### Visual Components
 - **Neon Text Effects**: Custom glowing text animations with usage limits
 - **Radar Charts**: Animated SVG charts for visualizing 5-axis scores
 - **QR Code Generation**: Built-in QR codes with logo for sharing results
+- **Responsive Breakpoints**: Mobile-first with custom tablet breakpoint (820px)
 
 ### Key Components Structure
 - **Quiz Flow**: `test/page.tsx` → `components/Quiz.tsx` (includes `UsernameInput.tsx`) → `results/page.tsx`
@@ -85,10 +103,9 @@ This creates 32 possible combinations, mapped to 16 personality types (e.g., AUR
 - `/api/feedback`: Handles user feedback submission using Resend email service
 
 ### Styling Approach
-- Tailwind CSS with custom tablet breakpoint (820px)
+- Tailwind CSS with custom animations defined in `tailwind.config.ts`
 - Dark theme with purple/pink gradient aesthetics
-- Responsive design with mobile-first approach
-- Custom animations defined in `tailwind.config.ts`
+- Custom viewport height handling for mobile devices (svh/lvh classes)
 
 ## Important Implementation Details
 
@@ -111,21 +128,27 @@ Required for feedback system:
 
 ### Common Tasks
 - **Add new question**: Update `src/data/questions.ts` (40 questions total)
-- **Modify personality types**: Edit `src/data/personalityTypes.ts`
+- **Modify personality types**: Edit `src/data/personalityTypes.ts` (use production names)
 - **Update test logic**: Modify `src/utils/testLogic.ts`
 - **Add new pages**: Follow Next.js App Router conventions in `src/app/`
 - **Modify animations**: Update animation components and timing in `CompatibilityResults.tsx`
 - **Add new positions**: Update `src/data/positions48.ts`
 - **Adjust compatibility weights**: Edit `axisWeights` and `tagWeights` in `CompatibilityResults.tsx:420-436`
 - **Username input issues**: Username component is separated in `UsernameInput.tsx` to prevent re-rendering/focus loss
-- **Test compatibility**: Use `/test-match` page to test different scenarios with presets:
-  - Perfect match (100%): D/S axis complementary (80/20)
-  - Good match (60-80%): D/S axis complementary (70/35)
-  - Poor match (0-39%): D/S axis same side (80/85)
+- **Test compatibility**: Use `/test-match` page to test different scenarios with presets
+
+### Critical Data Mappings
+- **Axis codes in questions.ts**: 'EI', 'LF', 'AS', 'LF2', 'OS'
+- **Question isReverse flags**: Determines how answers map to axis scores
+  - Questions 1,3,5,10: isReverse=false
+  - Questions 2,4,6,7,9: isReverse=true
+  - Question 8: isReverse=false
+- **L2/F2 axis mapping**: 
+  - L2 > 50 = 'L' (Love/リアリスト) - deep relationships
+  - L2 < 50 = 'F' (Free/ヘドニスト) - casual relationships
 
 ### Performance Considerations
 - Images are optimized and use Next.js Image component
 - Sitemap is auto-generated during build for SEO (nightpersonality.com)
 - Google Analytics tracking is implemented (ID: G-HLM13T0M2K)
 - Large components like `CompatibilityResults.tsx` (2100+ lines) may need offset/limit for reading
-- Custom viewport height handling for mobile devices (svh/lvh classes)

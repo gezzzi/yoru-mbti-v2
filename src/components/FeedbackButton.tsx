@@ -7,8 +7,11 @@ export default function FeedbackButton() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   
-  // ランディングページ（"/"）では表示しない
-  if (pathname === "/") {
+  // 結果ページと相性診断結果ページでのみ表示
+  const isResultsPage = pathname === "/results";
+  const isCompatibilityResultsPage = pathname.startsWith("/compatibility/results");
+  
+  if (!isResultsPage && !isCompatibilityResultsPage) {
     return null;
   }
 
