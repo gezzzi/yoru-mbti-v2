@@ -22,11 +22,11 @@ npm run lint         # Run ESLint
 
 ### Personality System
 The app uses a unique 5-axis system (not traditional MBTI):
-- **E/I**: エクスタシー (Ecstasy) / インティメート (Intimate) - Extroversion/Introversion equivalent
-- **D/S**: ドミナント (Dominant) / サブミッシブ (Submissive) - **Complementary axis** (L/F in code)
-- **T/S**: テンダー (Tender) / ストリクト (Strict) - Adventure/Stable (A/S in code)
-- **R/H**: リアリスト (Realist) / ヘドニスト (Hedonist) - Love/Free (L2/F2 in code)
-- **A/N**: アナリティカル (Analytical) / ナチュラル (Natural) - Open/Secret (O/S in code)
+- **E/I**: 外向性 (Extroversion) / 内向性 (Introversion)
+- **L/F**: リード (Lead) / フォロー (Follow) - mapped to L/F in code
+- **A/S**: 冒険 (Adventure) / 安定 (Stable) - mapped to A/S in code
+- **L2/F2**: ラブ (Love) / フリー (Free) - mapped to L2/F2 in code
+- **O/S**: 開放 (Open) / 秘密 (Secret) - mapped to O/S in code
 
 This creates 32 possible combinations, mapped to 16 personality types with production names:
 - **Dom系**: 快楽王, 支配者, 愛情家, 調教師
@@ -35,89 +35,90 @@ This creates 32 possible combinations, mapped to 16 personality types with produ
 - **妄想・回避系**: 妄想者, ドM者, ヒーラー, 提供者
 
 ### Core Data Flow
-1. **Questions** (`src/data/questions.ts`): 40 questions total (質問1-40) covering 5 axes
+1. **Questions** (`src/data/questions.ts`): 40 questions total covering 5 axes
    - Questions 1-10: Axis questions (2 per axis, with isReverse flags)
    - Questions 11-35: Tag questions (25 tags total)
    - Questions 36-40: Additional metric questions
 2. **Username Input**: 41st step - collects username for personality and compatibility tests
    - Separate component (`src/components/UsernameInput.tsx`) to prevent re-rendering issues
-   - Required field (no default value) - must be entered to see results
+   - Required field - must be entered to see results
 3. **Test Logic** (`src/utils/testLogic.ts`): Calculates personality type from answers
    - Processes 5 axes + additional metrics (libido, gap, tension, kiss importance)
-   - Tag scoring system (質問11-35) with top 2 tags selected based on scores
-4. **Personality Types** (`src/data/personalityTypes.ts`): 16 personality type definitions
-5. **Results Display**: Shows type with radar chart, description, and sharing options
+   - Tag scoring system with top 2 tags selected based on scores
+   - **50% threshold**: Values >= 50 map to first trait (E, L, A, L, O)
+4. **Results Display**: Shows type with percentage bars, description, and sharing options
+   - **Percentage display**: Shows stronger trait percentage (e.g., 80% for dominant trait)
+   - Radar chart visualization for all 5 axes
 
 ### Key Features
 
 #### Compatibility Test System
 - **Partner Selection**: Two-path system - QR code scan or manual type selection
-- **Compatibility Calculation**: Binary logic - (5-axis matches + tag matches) / (5 axes + tag union)
-  - D/S axis (L/F in code) is **complementary** - counts as match when different
+- **Compatibility Calculation**: (5-axis matches + tag matches) / (5 axes + tag union)
+  - L/F axis is **complementary** - counts as match when different
   - All other axes are **similar** - count as match when same
   - Tags scored 4+ (on 0-6 scale) are considered "possessed"
-  - Weight system supported (currently all weights = 1.0)
-  - Threshold: 50% determines which side of axis
 - **Results Animations**: 
-  - 0-39%: Snowfall animation (5 seconds)
-  - 40-59%: Petal/sakura animation (1 second delay, 5.5 seconds duration)
-  - 60-100%: Heart rain animation (5 seconds)
-  - 80%+: Additional fireworks animation (4 seconds after initial animation)
-- **Secret Questions**: Special intimate questions revealed after compatibility calculation
-- **48 Positions**: Recommends positions based on mood categories (romantic/wild/playful/technical/foreplay)
+  - 0-39%: Snowfall animation
+  - 40-59%: Petal/sakura animation
+  - 60-100%: Heart rain animation
+  - 80%+: Additional fireworks animation
+- **Secret Questions**: Special intimate questions revealed after compatibility
+- **48 Positions**: Recommends positions based on mood categories
 
 #### Development Testing Pages
 - **`/test-solo`**: Individual personality test simulator
   - 5-axis sliders (0-100%) for direct manipulation
+  - Slider position: left = first trait, right = second trait
   - Tag checkboxes for selecting personality tags
-  - Generates proper answer data using `calculatePersonalityType`
+  - Uses `calculatePersonalityType` for consistent results
+  - Custom CSS slider styling with pink/gray gradient
 - **`/test-match`**: Compatibility test simulator with presets
-  - Perfect match (100%): D/S axis complementary (80/20)
-  - Good match (60-80%): D/S axis complementary (70/35)
-  - Poor match (0-39%): D/S axis same side (80/85)
+  - Dual user configuration with independent sliders
+  - Preset buttons for testing different compatibility scenarios
+  - Custom slider.css for visual styling
 
 #### Visual Components
-- **Neon Text Effects**: Custom glowing text animations with usage limits
-- **Radar Charts**: Animated SVG charts for visualizing 5-axis scores
-- **QR Code Generation**: Built-in QR codes with logo for sharing results
-- **Responsive Breakpoints**: Mobile-first with custom tablet breakpoint (820px)
+- **Neon Text Effects**: Custom glowing text animations
+- **Radar Charts**: Animated SVG charts for 5-axis visualization
+- **QR Code Generation**: Built-in QR codes with logo for sharing
+- **Responsive Design**: Mobile-first with custom tablet breakpoint (820px)
 
 ### Key Components Structure
-- **Quiz Flow**: `test/page.tsx` → `components/Quiz.tsx` (includes `UsernameInput.tsx`) → `results/page.tsx`
-- **Results**: Uses `components/Results.tsx` with screenshot/QR code sharing
-  - Username displayed at top (stored in localStorage)
-  - No longer collects username on results page
+- **Quiz Flow**: `test/page.tsx` → `components/Quiz.tsx` → `results/page.tsx`
+- **Results**: `components/Results.tsx` with screenshot/QR code sharing
 - **Compatibility**: `compatibility/page.tsx` → `CompatibilityPage.tsx` → `CompatibilityResults.tsx`
-- **Navigation**: `components/NavigationWrapper.tsx` wraps the app navigation
-- **Type Details**: Individual pages under `app/types/[typeId]/`
-- **Animation Components**: `HeartRain.tsx`, `Fireworks.tsx`, `SnowfallAnimation.tsx`, `PetalAnimation.tsx`
+- **Navigation**: `components/NavigationWrapper.tsx` wraps the app
+- **Footer**: Contains dev links to `/test-solo` and `/test-match`
+- **Feedback Button**: Only shows on `/results` and `/compatibility/results` pages
 
 ### State Management
-- Uses React state hooks and URL parameters for state
+- React state hooks and URL parameters for state
 - Test answers stored in `answerHistory` state during quiz
-- Username stored in localStorage (`personality_test_username`)
-- Results stored in localStorage (`personality_test_result`)
-- Compatibility test uses extensive URL params for both users' scores
+- Username in localStorage (`personality_test_username`)
+- Results in localStorage (`personality_test_result`)
+- Compatibility test uses URL params for both users' scores
 
 ### API Routes
 - `/api/feedback`: Handles user feedback submission using Resend email service
 
 ### Styling Approach
-- Tailwind CSS with custom animations defined in `tailwind.config.ts`
+- Tailwind CSS with custom animations in `tailwind.config.ts`
 - Dark theme with purple/pink gradient aesthetics
-- Custom viewport height handling for mobile devices (svh/lvh classes)
+- Custom viewport height handling (svh/lvh classes)
+- Slider styling: 16px white thumb, pink/gray gradient track
 
 ## Important Implementation Details
 
 ### When Adding Features
 - All UI text should be in Japanese
-- Maintain the intimate/romantic theme in content
+- Maintain the intimate/romantic theme
 - Use existing color scheme (purples, pinks, dark backgrounds)
-- Follow the established component patterns
+- Follow established component patterns
 
 ### Testing Considerations
-- No test framework is currently set up
-- Manual testing required for quiz flow and results calculation
+- No test framework currently set up
+- Manual testing required for quiz flow and results
 - Check responsive design on mobile, tablet (820px), and desktop
 
 ### Environment Variables
@@ -130,12 +131,8 @@ Required for feedback system:
 - **Add new question**: Update `src/data/questions.ts` (40 questions total)
 - **Modify personality types**: Edit `src/data/personalityTypes.ts` (use production names)
 - **Update test logic**: Modify `src/utils/testLogic.ts`
-- **Add new pages**: Follow Next.js App Router conventions in `src/app/`
-- **Modify animations**: Update animation components and timing in `CompatibilityResults.tsx`
-- **Add new positions**: Update `src/data/positions48.ts`
-- **Adjust compatibility weights**: Edit `axisWeights` and `tagWeights` in `CompatibilityResults.tsx:420-436`
-- **Username input issues**: Username component is separated in `UsernameInput.tsx` to prevent re-rendering/focus loss
-- **Test compatibility**: Use `/test-match` page to test different scenarios with presets
+- **Adjust compatibility weights**: Edit weights in `CompatibilityResults.tsx:420-436`
+- **Test different scenarios**: Use `/test-solo` and `/test-match` pages
 
 ### Critical Data Mappings
 - **Axis codes in questions.ts**: 'EI', 'LF', 'AS', 'LF2', 'OS'
@@ -143,12 +140,12 @@ Required for feedback system:
   - Questions 1,3,5,10: isReverse=false
   - Questions 2,4,6,7,9: isReverse=true
   - Question 8: isReverse=false
-- **L2/F2 axis mapping**: 
-  - L2 > 50 = 'L' (Love/リアリスト) - deep relationships
-  - L2 < 50 = 'F' (Free/ヘドニスト) - casual relationships
+- **Axis percentage calculation**: 
+  - 50% threshold determines trait selection
+  - Results page shows dominant trait percentage
 
 ### Performance Considerations
-- Images are optimized and use Next.js Image component
-- Sitemap is auto-generated during build for SEO (nightpersonality.com)
-- Google Analytics tracking is implemented (ID: G-HLM13T0M2K)
+- Images optimized with Next.js Image component
+- Sitemap auto-generated during build (nightpersonality.com)
+- Google Analytics tracking (ID: G-HLM13T0M2K)
 - Large components like `CompatibilityResults.tsx` (2100+ lines) may need offset/limit for reading

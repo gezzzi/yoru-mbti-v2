@@ -335,16 +335,20 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight drop-shadow-lg select-none text-center">
               <NeonText text={["あなたの", "診断結果"]} specialCharIndex={5} className="gap-1" />
             </h1>
-            {/* Username Display */}
-            {username && (
-              <ScrollAnimation animation="fadeIn" delay={100}>
-                <div className="text-center mt-4">
-                  <p className="text-[#e0e7ff] text-sm">ユーザー名: <span className="font-bold text-lg">{username}</span></p>
-                </div>
-              </ScrollAnimation>
-            )}
           </div>
         </ScrollAnimation>
+        
+        {/* Username Display */}
+        {username && (
+          <ScrollAnimation animation="fadeInUp" delay={100}>
+            <div className="text-center mt-4 mb-8">
+              <p className="text-[#e0e7ff] text-sm">
+                <span className="font-bold text-lg text-pink-400">{username}</span>
+                <span className="font-bold text-lg">さんの分析</span>
+              </p>
+            </div>
+          </ScrollAnimation>
+        )}
         
         {/* Download container */}
         <ScrollAnimation animation="fadeInUp" delay={200}>
