@@ -1764,6 +1764,37 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     </div>
                   </div>
 
+                  {/* ⑤ 付き合う前の価値観 */}
+                  <div className="border-b border-white/20 pb-2 overflow-hidden">
+                    <button
+                      onClick={() => toggleSection('beforeRelationship')}
+                      className="w-full flex items-center justify-between rounded-lg p-2"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <span className="text-lg">💋</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">付き合う前にXできるか？</h4>
+                      </div>
+                      {openSections.beforeRelationship ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
+                    </button>
+                    {/* プログレスバー */}
+                    <div className="px-4 pb-2">
+                      <HorizontalProgressBar
+                        percentage={compatibility.axisScores.A}
+                        colorFrom="from-green-500"
+                        colorTo="to-emerald-500"
+                        isVisible={cardVisible}
+                        delay={900}
+                      />
+                    </div>
+                    <div className={`transition-all duration-300 ${
+                      openSections.beforeRelationship ? 'max-h-96' : 'max-h-0'
+                    } overflow-hidden`}>
+                      <div className="mt-2 px-2 text-center">
+                        <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.beforeRelationship}</p>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* ② おすすめ体位 */}
                   <div className="border-b border-white/20 pb-2 overflow-hidden">
                     <button
@@ -1778,12 +1809,12 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     </button>
                     {/* プログレスバー */}
                     <div className="px-4 pb-2">
-                      <HorizontalProgressBar 
+                      <HorizontalProgressBar
                         percentage={compatibility.axisScores.E}
                         colorFrom="from-blue-500"
                         colorTo="to-cyan-500"
                         isVisible={cardVisible}
-                        delay={900}
+                        delay={1100}
                       />
                     </div>
                     <div className={`transition-all duration-300 ${
@@ -1793,8 +1824,8 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                         {/* 体位カード形式で表示 */}
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                           {intimateCompatibility.recommendedPositions.map((position: any, index: number) => (
-                            <div 
-                              key={position.id} 
+                            <div
+                              key={position.id}
                               className="bg-white/10 border border-white/20 rounded-lg p-3 relative cursor-pointer hover:bg-white/20 transition-colors"
                               onClick={() => setSelectedPosition(position)}
                             >
@@ -1831,7 +1862,19 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                               </div>
                               <div className="text-center">
                                 <span className="text-xs text-[#e0e7ff]/50">
-                                  難易度: {position.difficulty === 'easy' ? '★☆☆' : position.difficulty === 'medium' ? '★★☆' : '★★★'}
+                                  難易度: {position.difficulty === 'easy' ? (
+                                    <>
+                                      <span className="text-pink-400 text-base">♥</span>
+                                      <span className="text-gray-400 text-base">♥♥</span>
+                                    </>
+                                  ) : position.difficulty === 'medium' ? (
+                                    <>
+                                      <span className="text-pink-400 text-base">♥♥</span>
+                                      <span className="text-gray-400 text-base">♥</span>
+                                    </>
+                                  ) : (
+                                    <span className="text-pink-400 text-base">♥♥♥</span>
+                                  )}
                                 </span>
                               </div>
                             </div>
@@ -1845,37 +1888,6 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                   </div>
 
 
-
-                  {/* ⑤ 付き合う前の価値観 */}
-                  <div className="border-b border-white/20 pb-2 overflow-hidden">
-                    <button
-                      onClick={() => toggleSection('beforeRelationship')}
-                      className="w-full flex items-center justify-between rounded-lg p-2"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <span className="text-lg">💋</span>
-                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">付き合う前にXできるか？</h4>
-                      </div>
-                      {openSections.beforeRelationship ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
-                    </button>
-                    {/* プログレスバー */}
-                    <div className="px-4 pb-2">
-                      <HorizontalProgressBar 
-                        percentage={compatibility.axisScores.A}
-                        colorFrom="from-green-500"
-                        colorTo="to-emerald-500"
-                        isVisible={cardVisible}
-                        delay={1100}
-                      />
-                    </div>
-                    <div className={`transition-all duration-300 ${
-                      openSections.beforeRelationship ? 'max-h-96' : 'max-h-0'
-                    } overflow-hidden`}>
-                      <div className="mt-2 px-2 text-center">
-                        <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.beforeRelationship}</p>
-                      </div>
-                    </div>
-                  </div>
 
                   {/* ⑦ 関係性予測 */}
                   <div className="border-b border-white/20 pb-2 overflow-hidden">
