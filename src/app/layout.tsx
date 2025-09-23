@@ -9,6 +9,10 @@ import FeedbackButton from '../components/FeedbackButton';
 export const metadata: Metadata = {
   title: "夜の性格診断",
   description: "あなたの隠された夜の性格を診断します",
+  applicationName: "夜の性格診断",
+  authors: [{ name: "夜の性格診断" }],
+  generator: "Next.js",
+  keywords: ["性格診断", "MBTI", "夜の性格", "personality test"],
   openGraph: {
     title: "夜の性格診断",
     description: "あなたの隠された夜の性格を診断します",
@@ -30,10 +34,13 @@ export const metadata: Metadata = {
     title: "夜の性格診断",
     description: "あなたの隠された夜の性格を診断します",
     images: ["https://nightpersonality.com/og.png"],
+    creator: "@nightpersonality",
+    site: "@nightpersonality",
   },
   alternates: {
     canonical: "https://nightpersonality.com",
   },
+  metadataBase: new URL("https://nightpersonality.com"),
 };
 
 export const viewport = {
@@ -49,6 +56,9 @@ export default function RootLayout({
     <html lang="ja">
       <head>
         <meta name="theme-color" content="#000000" />
+        <meta property="og:site_name" content="夜の性格診断" />
+        <meta name="application-name" content="夜の性格診断" />
+        <meta name="apple-mobile-web-app-title" content="夜の性格診断" />
         <Script async src="https://www.googletagmanager.com/gtag/js?id=G-HLM13T0M2K" strategy="afterInteractive" />
         <Script id="gtag-init" strategy="afterInteractive">
           {`

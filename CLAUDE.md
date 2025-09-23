@@ -25,11 +25,11 @@ npm install          # Install all dependencies
 
 ### Personality System
 The app uses a unique 5-axis system (not traditional MBTI):
-- **E/I**: 外向性 (Extroversion) / 内向性 (Introversion)
-- **L/F**: リード (Lead) / フォロー (Follow) - mapped to L/F in code
-- **A/S**: 冒険 (Adventure) / 安定 (Stable) - mapped to A/S in code
-- **L2/F2**: ラブ (Love) / フリー (Free) - mapped to L2/F2 in code
-- **O/S**: 開放 (Open) / 秘密 (Secret) - mapped to O/S in code
+- **E/I**: 社交的 (Extroversion) / マイペース (Introversion)
+- **L/F**: 主導権を握る (Lead) / 相手に合わせる (Follow) - mapped to L/F in code
+- **A/S**: 刺激好き (Adventure) / 安心重視 (Stable) - mapped to A/S in code
+- **L2/F2**: 一途 (Love) / 自由 (Free) - mapped to L2/F2 in code
+- **O/S**: オープン (Open) / 秘密主義 (Secret) - mapped to O/S in code
 
 This creates 32 possible combinations, mapped to 16 personality types with production names:
 - **Dom系**: 快楽王, 支配者, 愛情家, 調教師
@@ -40,18 +40,19 @@ This creates 32 possible combinations, mapped to 16 personality types with produ
 ### Core Data Flow
 1. **Questions** (`src/data/questions.ts`): 40 questions total covering 5 axes
    - Questions 1-10: Axis questions (2 per axis, with isReverse flags)
-   - Questions 11-35: Tag questions (25 tags total)
+   - Questions 11-35: Tag questions (25 tags total) - tags are internally calculated but NOT displayed on results page
    - Questions 36-40: Additional metric questions
 2. **Username Input**: 41st step - collects username for personality and compatibility tests
    - Separate component (`src/components/UsernameInput.tsx`) to prevent re-rendering issues
    - Required field - must be entered to see results
 3. **Test Logic** (`src/utils/testLogic.ts`): Calculates personality type from answers
    - Processes 5 axes + additional metrics (libido, gap, tension, kiss importance)
-   - Tag scoring system with top 2 tags selected based on scores
+   - Tag scoring system with top 2 tags selected based on scores (used internally for personality descriptions)
    - **50% threshold**: Values >= 50 map to first trait (E, L, A, L, O)
-4. **Results Display**: Shows type with percentage bars, description, and sharing options
+4. **Results Display** (`src/components/Results.tsx`): Shows type with percentage bars, description, and sharing options
    - **Percentage display**: Shows stronger trait percentage (e.g., 80% for dominant trait)
-   - Radar chart visualization for all 5 axes
+   - Bar graph visualization for all 5 axes with updated labels
+   - Tags are calculated but hidden from display (commented out in lines 446-471)
 
 ### Key Features
 
@@ -61,13 +62,16 @@ This creates 32 possible combinations, mapped to 16 personality types with produ
   - L/F axis is **complementary** - counts as match when different
   - All other axes are **similar** - count as match when same
   - Tags scored 4+ (on 0-6 scale) are considered "possessed"
-- **Results Animations**: 
+- **Results Animations**:
   - 0-39%: Snowfall animation
   - 40-59%: Petal/sakura animation
   - 60-100%: Heart rain animation
   - 80%+: Additional fireworks animation
 - **Secret Questions**: Special intimate questions revealed after compatibility
-- **48 Positions**: Recommends positions based on mood categories
+- **48 Positions** (`src/data/positions.ts`): Recommends positions based on mood categories
+  - Display format: 3-column grid on sm+ screens
+  - Difficulty shown with heart symbols (♥) in pink color
+  - Furigana displayed above kanji names
 
 #### Development Testing Pages
 - **`/test-solo`**: Individual personality test simulator
@@ -83,7 +87,7 @@ This creates 32 possible combinations, mapped to 16 personality types with produ
 
 #### Visual Components
 - **Neon Text Effects**: Custom glowing text animations
-- **Radar Charts**: Animated SVG charts for 5-axis visualization
+- **Bar Graphs**: Horizontal bars for 5-axis visualization in results
 - **QR Code Generation**: Built-in QR codes with logo for sharing
 - **Responsive Design**: Mobile-first with custom tablet breakpoint (820px)
 
@@ -100,6 +104,7 @@ This creates 32 possible combinations, mapped to 16 personality types with produ
 - Test answers stored in `answerHistory` state during quiz
 - Username in localStorage (`personality_test_username`)
 - Results in localStorage (`personality_test_result`)
+- Recommended positions cached in localStorage by personality type
 - Compatibility test uses URL params for both users' scores
 
 ### API Routes
@@ -112,6 +117,7 @@ This creates 32 possible combinations, mapped to 16 personality types with produ
 - Dark theme with purple/pink gradient aesthetics
 - Custom viewport height handling (svh/lvh classes)
 - Slider styling: 16px white thumb, pink/gray gradient track
+- Position cards: white/10 background with hover effects
 
 ## Important Implementation Details
 
@@ -147,9 +153,12 @@ Required for feedback system:
   - Questions 1,3,5,10: isReverse=false
   - Questions 2,4,6,7,9: isReverse=true
   - Question 8: isReverse=false
-- **Axis percentage calculation**: 
+- **Axis percentage calculation**:
   - 50% threshold determines trait selection
   - Results page shows dominant trait percentage
+- **Axis label updates in Results.tsx**:
+  - Lines 230-284: Dimension definitions with new Japanese labels
+  - Line 410-414: isReverse conditions updated for new label names
 
 ### Performance Considerations
 - Images optimized with Next.js Image component
@@ -164,3 +173,10 @@ Required for feedback system:
 - Next.js 14 with App Router
 - Static generation for most pages
 - Dynamic routes for results and compatibility pages
+
+### Recent UI Changes
+- Tag display removed from results page (lines 446-471 commented out)
+- Axis labels updated to more descriptive Japanese terms
+- Position recommendations unified between personal and compatibility results
+- Furigana positioning moved above kanji in position cards
+- Difficulty indicators changed from stars to hearts with pink color
