@@ -227,11 +227,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
   const dimensions: PersonalityDimension[] = [
     {
       id: 'extraversion',
-      leftLabel: '外向性(E)',
-      rightLabel: '内向性(I)',
+      leftLabel: '社交的(E)',
+      rightLabel: 'マイペース(I)',
       percentage: result.E >= 50 ? result.E : (100 - result.E),
       color: 'bg-blue-500',
-      resultLabel: result.E >= 50 ? '外向性(E)' : '内向性(I)',
+      resultLabel: result.E >= 50 ? '社交的(E)' : 'マイペース(I)',
       icon: <User className="w-4 h-4" />,
       description: result.E >= 50 
         ? '外向型の人は社交的で活動的、エネルギッシュな環境を好みます。'
@@ -240,11 +240,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
     },
     {
       id: 'lead',
-      leftLabel: 'リード(L)',
-      rightLabel: 'フォロー(F)',
+      leftLabel: '主導権を握る(L)',
+      rightLabel: '相手に合わせる(F)',
       percentage: result.L >= 50 ? result.L : (100 - result.L),
       color: 'bg-orange-500',
-      resultLabel: result.L >= 50 ? 'リード(L)' : 'フォロー(F)',
+      resultLabel: result.L >= 50 ? '主導権を握る(L)' : '相手に合わせる(F)',
       icon: <Shield className="w-4 h-4" />,
       description: result.L >= 50
         ? 'リード型の人は主導権を握り、相手を導くことを好みます。積極的にアプローチし、関係をコントロールする傾向があります。'
@@ -253,11 +253,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
     },
     {
       id: 'adventure',
-      leftLabel: '冒険(A)',
-      rightLabel: '安定(S)',
+      leftLabel: '刺激好き(A)',
+      rightLabel: '安心重視(S)',
       percentage: result.A >= 50 ? result.A : (100 - result.A),
       color: 'bg-green-500',
-      resultLabel: result.A >= 50 ? '冒険(A)' : '安定(S)',
+      resultLabel: result.A >= 50 ? '刺激好き(A)' : '安心重視(S)',
       icon: <Zap className="w-4 h-4" />,
       description: result.A >= 50
         ? '冒険型の人は新しい体験や未知の快楽を求める傾向があります。変化を楽しみ、刺激的な状況を好みます。'
@@ -266,11 +266,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
     },
     {
       id: 'love',
-      leftLabel: 'ラブ(L)',
-      rightLabel: 'フリー(F)',
+      leftLabel: '一途(L)',
+      rightLabel: '自由(F)',
       percentage: result.L2 >= 50 ? result.L2 : (100 - result.L2),
       color: 'bg-purple-500',
-      resultLabel: result.L2 >= 50 ? 'ラブ(L)' : 'フリー(F)',
+      resultLabel: result.L2 >= 50 ? '一途(L)' : '自由(F)',
       icon: <Heart className="w-4 h-4" />,
       description: result.L2 >= 50
         ? 'ラブ型の人は一人の相手との深い関係を重視し、恋愛感情や情熱的な結びつきを大切にします。'
@@ -279,11 +279,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
     },
     {
       id: 'openness',
-      leftLabel: '開放(O)',
-      rightLabel: '秘密(S)',
+      leftLabel: 'オープン(O)',
+      rightLabel: '秘密主義(S)',
       percentage: result.O >= 50 ? result.O : (100 - result.O),
       color: 'bg-red-500',
-      resultLabel: result.O >= 50 ? '開放(O)' : '秘密(S)',
+      resultLabel: result.O >= 50 ? 'オープン(O)' : '秘密主義(S)',
       icon: <Eye className="w-4 h-4" />,
       description: result.O >= 50
         ? '開放型の人は自分の欲望や嗜好をオープンに表現し、相手と共有することを好みます。'
@@ -407,11 +407,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                               </div>
                               {(() => {
                                 // 内向性系の軸の場合は、実際の位置を反転させる
-                                const isReverse = dimension.resultLabel.includes('内向性') || 
-                                                dimension.resultLabel.includes('フォロー') || 
-                                                dimension.resultLabel.includes('安定') ||
-                                                dimension.resultLabel.includes('フリー') || 
-                                                dimension.resultLabel.includes('秘密');
+                                const isReverse = dimension.resultLabel.includes('マイペース') ||
+                                                dimension.resultLabel.includes('相手に合わせる') ||
+                                                dimension.resultLabel.includes('安心重視') ||
+                                                dimension.resultLabel.includes('自由') ||
+                                                dimension.resultLabel.includes('秘密主義');
                                 
                                 // 円の位置：内向性系の場合は100から引いた値を使用
                                 const circlePosition = isReverse ? (100 - dimension.percentage) : dimension.percentage;
@@ -443,18 +443,18 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   </div>
                 </div>
 
-              {/* あなたに当てはまるタグ */}
-              {result.additionalResults?.tags && result.additionalResults.tags.length > 0 && (
+              {/* あなたに当てはまるタグ - 非表示化 */}
+              {/* {result.additionalResults?.tags && result.additionalResults.tags.length > 0 && (
                 <div className="rounded-xl px-4 pt-4 sm:px-6 sm:pt-6 pb-4 mt-0 mb-8 mx-4">
                   <div className="flex flex-wrap gap-2 justify-center">
                     {result.additionalResults.tags.map((tag, index) => {
                       const colors = tagColors[tag] || { bg: '#6B7280', border: '#4B5563', text: '#FFFFFF' };
                       const shape = tagShapes[tag] || 'rounded-full';
                       return (
-                        <button 
-                          key={index} 
+                        <button
+                          key={index}
                           className={`px-4 py-2 text-base font-medium flex items-center gap-1 hover:brightness-110 hover:scale-105 transition-transform cursor-pointer relative shadow-md animate-fadeIn ${shape}`}
-                          style={{ 
+                          style={{
                             backgroundColor: colors.bg,
                             border: 'none',
                             color: colors.text || '#FFFFFF',
@@ -468,7 +468,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     })}
                   </div>
                 </div>
-              )}
+              )} */}
 
               {/* 詳細情報統合カード */}
               <div className="rounded-xl shadow-lg bg-white/10 backdrop-blur-sm px-4 pt-4 sm:px-6 sm:pt-6 pb-2 sm:pb-3 mt-8 mx-4">
@@ -680,7 +680,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                       openSections.positions ? 'max-h-[500px]' : 'max-h-0'
                     } overflow-hidden`}>
                       <div className="mt-2 px-2">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                           {recommendedPositions.map((position: Position48, index: number) => (
                                   <div 
                                     key={position.id} 
@@ -689,9 +689,9 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                                   >
                                     <span className="absolute top-3 right-3 text-xs text-[#e0e7ff]/60">No.{position.id}</span>
                                     <div className="text-center mb-2">
+                                      <p className="text-xs text-[#e0e7ff]/70 mb-1">（{position.kana || position.name}）</p>
                                       <h5 className="font-semibold text-[#e0e7ff]">{position.name}</h5>
                                     </div>
-                                    <p className="text-xs text-[#e0e7ff]/70 mb-2 text-center">（{position.kana}）</p>
                                     <div className="flex flex-wrap gap-1 justify-center mb-2">
                                       {position.moods.map(mood => {
                                         const moodColors = {
@@ -712,8 +712,20 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                                       })}
                                     </div>
                                     <div className="text-center">
-                                      <span className="text-xs text-[#e0e7ff]/50">
-                                        難易度: {position.difficulty === 'easy' ? '★☆☆' : position.difficulty === 'medium' ? '★★☆' : '★★★'}
+                                      <span className="text-xs text-pink-400">
+                                        難易度: {position.difficulty === 'easy' ? (
+                                          <>
+                                            <span className="text-pink-400 text-base">♥</span>
+                                            <span className="text-gray-400 text-base">♥♥</span>
+                                          </>
+                                        ) : position.difficulty === 'medium' ? (
+                                          <>
+                                            <span className="text-pink-400 text-base">♥♥</span>
+                                            <span className="text-gray-400 text-base">♥</span>
+                                          </>
+                                        ) : (
+                                          <span className="text-pink-400 text-base">♥♥♥</span>
+                                        )}
                                       </span>
                                     </div>
                                   </div>

@@ -1831,9 +1831,9 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                             >
                               <span className="absolute top-3 right-3 text-xs text-[#e0e7ff]/60">No.{position.id}</span>
                               <div className="text-center mb-2">
+                                <p className="text-xs text-[#e0e7ff]/70 mb-1">（{position.kana || position.name}）</p>
                                 <h5 className="font-semibold text-[#e0e7ff]">{position.name}</h5>
                               </div>
-                              <p className="text-xs text-[#e0e7ff]/70 mb-2 text-center">（{position.kana || position.name}）</p>
                               <div className="flex flex-wrap gap-1 justify-center mb-2">
                                 {position.moods.map((mood: string) => {
                                   const moodColors: { [key: string]: string } = {
@@ -1861,7 +1861,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                                 })}
                               </div>
                               <div className="text-center">
-                                <span className="text-xs text-[#e0e7ff]/50">
+                                <span className="text-xs text-pink-400">
                                   難易度: {position.difficulty === 'easy' ? (
                                     <>
                                       <span className="text-pink-400 text-base">♥</span>

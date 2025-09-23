@@ -3,19 +3,22 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
-This is a Next.js 14 application called "夜の性格診断" (Night Personality Test) - an MBTI-style personality test focused on intimate/romantic personality aspects. The app is deployed at nightpersonality.com and serves Japanese-speaking users.
+This is a Next.js 14 application called "夜の性格診断" (Night Personality Test) - an MBTI-style personality test focused on intimate/romantic personality aspects. The app is deployed at https://nightpersonality.com and serves Japanese-speaking users.
 
 ## Development Commands
 ```bash
 # Development
-npm run dev          # Start development server (usually on port 3000 or 3001)
+npm run dev          # Start development server on port 3000 (or 3001 if occupied)
 
 # Production
-npm run build        # Build for production (also generates sitemap)
+npm run build        # Build for production (also generates sitemap via next-sitemap)
 npm run start        # Start production server
 
 # Code Quality
-npm run lint         # Run ESLint
+npm run lint         # Run ESLint for code quality checks
+
+# Installation
+npm install          # Install all dependencies
 ```
 
 ## Architecture & Key Concepts
@@ -86,7 +89,7 @@ This creates 32 possible combinations, mapped to 16 personality types with produ
 
 ### Key Components Structure
 - **Quiz Flow**: `test/page.tsx` → `components/Quiz.tsx` → `results/page.tsx`
-- **Results**: `components/Results.tsx` with screenshot/QR code sharing
+- **Results**: `components/Results.tsx` with screenshot/QR code sharing (html2canvas)
 - **Compatibility**: `compatibility/page.tsx` → `CompatibilityPage.tsx` → `CompatibilityResults.tsx`
 - **Navigation**: `components/NavigationWrapper.tsx` wraps the app
 - **Footer**: Contains dev links to `/test-solo` and `/test-match`
@@ -101,6 +104,8 @@ This creates 32 possible combinations, mapped to 16 personality types with produ
 
 ### API Routes
 - `/api/feedback`: Handles user feedback submission using Resend email service
+- No authentication system implemented
+- No database - all state is client-side or in URL params
 
 ### Styling Approach
 - Tailwind CSS with custom animations in `tailwind.config.ts`
@@ -128,11 +133,13 @@ Required for feedback system:
 - `FEEDBACK_FROM`: From address for feedback emails
 
 ### Common Tasks
-- **Add new question**: Update `src/data/questions.ts` (40 questions total)
+- **Add new question**: Update `src/data/questions.ts` (40 questions total, do not exceed)
 - **Modify personality types**: Edit `src/data/personalityTypes.ts` (use production names)
 - **Update test logic**: Modify `src/utils/testLogic.ts`
-- **Adjust compatibility weights**: Edit weights in `CompatibilityResults.tsx:420-436`
+- **Adjust compatibility weights**: Edit weights in `CompatibilityResults.tsx` calculateCompatibility function
 - **Test different scenarios**: Use `/test-solo` and `/test-match` pages
+- **Update 48 positions data**: Edit `src/data/positions.ts`
+- **Modify animations**: Check `tailwind.config.ts` for custom animation definitions
 
 ### Critical Data Mappings
 - **Axis codes in questions.ts**: 'EI', 'LF', 'AS', 'LF2', 'OS'
@@ -146,6 +153,14 @@ Required for feedback system:
 
 ### Performance Considerations
 - Images optimized with Next.js Image component
-- Sitemap auto-generated during build (nightpersonality.com)
+- Sitemap auto-generated during build via next-sitemap
 - Google Analytics tracking (ID: G-HLM13T0M2K)
 - Large components like `CompatibilityResults.tsx` (2100+ lines) may need offset/limit for reading
+- No server-side rendering for quiz state - all client-side
+- Screenshot generation can be memory-intensive on mobile devices
+
+### Deployment Notes
+- Production URL: https://nightpersonality.com
+- Next.js 14 with App Router
+- Static generation for most pages
+- Dynamic routes for results and compatibility pages
