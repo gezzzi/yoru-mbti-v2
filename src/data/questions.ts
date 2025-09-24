@@ -179,6 +179,17 @@ const questionVariations: { [key: number]: string[] } = {
   ]
 };
 
+// 共通の選択肢配列を定義（メモリ効率化）
+const commonOptions = [
+  { text: '非常にそう思う', value: 6 },
+  { text: 'そう思う', value: 5 },
+  { text: 'ややそう思う', value: 4 },
+  { text: 'どちらでもない', value: 3 },
+  { text: 'あまりそう思わない', value: 2 },
+  { text: 'そう思わない', value: 1 },
+  { text: '全くそう思わない', value: 0 }
+];
+
 // シードベースの疑似乱数生成器
 function seededRandom(seed: number): () => number {
   let x = seed;
@@ -210,516 +221,236 @@ const generateQuestions = (): Question[] => {
       id: 1,
       axis: 'EI',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 2,
       axis: 'EI',
       isReverse: true,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 3,
       axis: 'LF',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 4,
       axis: 'LF',
       isReverse: true,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 5,
       axis: 'AS',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 6,
       axis: 'AS',
       isReverse: true,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 7,
       axis: 'LF2',
       isReverse: true,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 8,
       axis: 'LF2',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 9,
       axis: 'OS',
       isReverse: true,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 10,
       axis: 'OS',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 11,
       axis: null,
       tag: '🔥 欲望の炎',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 12,
       axis: null,
       tag: '💬 言語プレイ派',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 13,
       axis: null,
       tag: '🎭 ロールプレイ好き',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 14,
       axis: null,
       tag: '🛁 アフターケア必須',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 15,
       axis: null,
       tag: '⛏️ 開拓派',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 16,
       axis: null,
       tag: '🧷 軽SM耐性あり',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 17,
       axis: null,
       tag: '🕯 ロマン重視',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 18,
       axis: null,
       tag: '⚡️ スピード勝負派',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 19,
       axis: null,
       tag: '🏃‍♂️ 衝動トリガー型',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 20,
       axis: null,
       tag: '🪞 鏡プレイ好き',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 21,
       axis: null,
       tag: '🚪 NG明確',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 22,
       axis: null,
       tag: '🎮 ゲーム派',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 23,
       axis: null,
       tag: '🧥 コスプレ派',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 24,
       axis: null,
       tag: '🧼 ケア＆衛生重視',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 25,
       axis: null,
       tag: '🕵️‍♀️ 覗き見興奮派',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 26,
       axis: null,
       tag: '🛡 安全第一派',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 27,
       axis: null,
       tag: '📱 デジタル前戯派',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 28,
       axis: null,
       tag: '💋 キス魔',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 29,
       axis: null,
       tag: '☀️ 朝型エロス',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 30,
       axis: null,
       tag: '🔄 リピート求め派',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 31,
       axis: null,
       tag: '🗣 下ネタOK',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 32,
       axis: null,
       tag: '📚 学習研究派',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 33,
       axis: null,
       tag: '🧭 ガイド派',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 34,
       axis: null,
       tag: '🤹‍♀️ マルチタスク派',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 35,
       axis: null,
       tag: '💤 まったり派',
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     // 36-40の質問（random-secret）は固定テキスト
     {
@@ -727,75 +458,35 @@ const generateQuestions = (): Question[] => {
       axis: null,
       tag: null,
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 37,
       axis: null,
       tag: null,
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 38,
       axis: null,
       tag: null,
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 39,
       axis: null,
       tag: null,
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     },
     {
       id: 40,
       axis: null,
       tag: null,
       isReverse: false,
-      options: [
-        { text: '非常にそう思う', value: 6 },
-        { text: 'そう思う', value: 5 },
-        { text: 'ややそう思う', value: 4 },
-        { text: 'どちらでもない', value: 3 },
-        { text: 'あまりそう思わない', value: 2 },
-        { text: 'そう思わない', value: 1 },
-        { text: '全くそう思わない', value: 0 }
-      ]
+      options: commonOptions
     }
   ];
 
@@ -837,7 +528,17 @@ function shuffleQuestions(array: Question[], rng: () => number): Question[] {
   return shuffled;
 }
 
-// エクスポート用の質問配列（シャッフル済み）
-// 固定シードを使用してサーバーとクライアントで一貫性を保つ
-const shuffleRng = seededRandom(123);
-export const questions: Question[] = shuffleQuestions(generateQuestions(), shuffleRng);
+// エクスポート用の質問配列（シャッフル前）
+// クライアントサイドでシャッフルを行うため、生成された順序のままエクスポート
+export const questions: Question[] = generateQuestions();
+
+// クライアントサイドで質問をシャッフルする関数
+export function getShuffledQuestions(seed?: number): Question[] {
+  // シードが指定されていない場合は現在時刻を使用
+  const actualSeed = seed ?? Date.now();
+  const rng = seededRandom(actualSeed);
+  return shuffleQuestions([...questions], rng);
+}
+
+// シャッフル関数をエクスポート（テスト用）
+export { shuffleQuestions };

@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Check } from 'lucide-react';
 import UsernameInput from './UsernameInput';
-import { questions } from '../data/questions';
+import { questions as originalQuestions, getShuffledQuestions } from '../data/questions';
 import { Question } from '../types/personality';
 import { getProgressPercentage } from '../utils/testLogic';
 import NeonText from './NeonText';
@@ -14,21 +14,29 @@ interface QuizProps {
   onBack: () => void;
 }
 
+// 定数をコンポーネント外で定義
+const QUESTIONS_PER_PAGE = 6;
+const SCROLL_DELAY = 150; // 自然なスクロールタイミング
+
 const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [hasTransitioned, setHasTransitioned] = useState(false);
   const [username, setUsername] = useState('');
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const questionRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
-  
-  const questionsPerPage = 6;
-  const totalQuestions = questions.length + 1; // 40問 + ユーザー名入力
-  const totalPages = Math.ceil(totalQuestions / questionsPerPage);
+
+  const totalQuestions = 41; // 40問 + ユーザー名入力
+  const totalPages = Math.ceil(totalQuestions / QUESTIONS_PER_PAGE);
   
   // 現在のページの質問を取得（最後のページには質問とユーザー名入力が混在）
-  const startIdx = currentPageIndex * questionsPerPage;
-  const endIdx = Math.min((currentPageIndex + 1) * questionsPerPage, questions.length);
-  const currentPageQuestions = questions.slice(startIdx, endIdx);
+  const startIdx = currentPageIndex * QUESTIONS_PER_PAGE;
+  const endIdx = Math.min((currentPageIndex + 1) * QUESTIONS_PER_PAGE, questions.length);
+  const currentPageQuestions = useMemo(
+    () => questions.slice(startIdx, endIdx),
+    [questions, startIdx, endIdx]
+  );
   
   // 最後のページかつ、ユーザー名入力を表示すべきか
   const isLastPage = currentPageIndex === totalPages - 1;
@@ -118,7 +126,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       setCurrentPageIndex(prev => prev + 1);
       // Scroll to first question of new page after a short delay
       setTimeout(() => {
-        const firstQuestionOfNextPage = questions[(currentPageIndex + 1) * questionsPerPage];
+        const firstQuestionOfNextPage = questions[(currentPageIndex + 1) * QUESTIONS_PER_PAGE];
         if (firstQuestionOfNextPage) {
           const firstQuestionElement = questionRefs.current[firstQuestionOfNextPage.id];
           if (firstQuestionElement) {
@@ -128,7 +136,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
             });
           }
         }
-      }, 30);
+      }, SCROLL_DELAY);
     }
   };
 
@@ -147,7 +155,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       
       // Scroll to first question of previous page after a short delay
       setTimeout(() => {
-        const firstQuestionOfPrevPage = questions[(currentPageIndex - 1) * questionsPerPage];
+        const firstQuestionOfPrevPage = questions[(currentPageIndex - 1) * QUESTIONS_PER_PAGE];
         if (firstQuestionOfPrevPage) {
           const firstQuestionElement = questionRefs.current[firstQuestionOfPrevPage.id];
           if (firstQuestionElement) {
@@ -157,16 +165,39 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
             });
           }
         }
-      }, 30);
+      }, SCROLL_DELAY);
     }
   };
 
-  // 保存されたユーザー名を取得
+  // クライアントサイドで質問をシャッフルし、ユーザー名を取得
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const savedUsername = localStorage.getItem('personality_test_username');
-      if (savedUsername) {
-        setUsername(savedUsername);
+      try {
+        // セッションストレージからシャッフル済み質問を取得または新規生成
+        const sessionKey = 'quiz_questions_shuffled';
+        const savedQuestions = sessionStorage.getItem(sessionKey);
+
+        if (savedQuestions) {
+          // セッション内では同じ順序を維持
+          setQuestions(JSON.parse(savedQuestions));
+        } else {
+          // 新しいセッションではランダム化
+          const shuffled = getShuffledQuestions();
+          setQuestions(shuffled);
+          sessionStorage.setItem(sessionKey, JSON.stringify(shuffled));
+        }
+
+        // 保存されたユーザー名を取得
+        const savedUsername = localStorage.getItem('personality_test_username');
+        if (savedUsername) {
+          setUsername(savedUsername);
+        }
+      } catch (error) {
+        console.error('Failed to initialize quiz:', error);
+        // エラー時はデフォルトの質問を使用
+        setQuestions(originalQuestions);
+      } finally {
+        setIsLoading(false);
       }
     }
   }, []);
@@ -205,48 +236,87 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
     return 'border-gray-400 bg-gray-800 text-gray-300'; // 未選択時は薄いグレー
   };
 
-  const QuestionItem: React.FC<{ question: Question }> = ({ question }) => (
-    <div 
-      ref={(el) => { questionRefs.current[question.id] = el; }}
-      className="px-0 py-8 sm:p-6 md:p-8 mb-8 border-b border-gray-100"
-    >
-      <div className="text-center mb-8 px-4">
-        <h3 className="text-lg font-bold text-gray-100 leading-relaxed max-w-2xl mx-auto">
-          {question.text}
-        </h3>
-      </div>
+  const QuestionItem: React.FC<{ question: Question }> = ({ question }) => {
+    const currentAnswer = answers[question.id];
 
-      {/* Visual Scale */}
-      <div className="flex flex-col items-center space-y-6">
-        {/* Scale Labels */}
-        <div className="flex justify-between items-center w-full max-w-2xl px-6 sm:px-12 md:px-5">
-          <span className="text-base font-bold text-cyan-300">Yes</span>
-          <span className="text-base font-bold text-pink-300">No</span>
+    // キーボード操作のハンドラ
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+      const currentValue = currentAnswer ?? 3; // デフォルトは中央
+
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const newValue = Math.min(currentValue + 1, 6);
+        handleAnswerSelect(question.id, newValue);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        const newValue = Math.max(currentValue - 1, 0);
+        handleAnswerSelect(question.id, newValue);
+      } else if (e.key >= '1' && e.key <= '7') {
+        // 数字キーで直接選択（1=非常にそう思う、 7=全くそう思わない）
+        const value = 7 - parseInt(e.key);
+        handleAnswerSelect(question.id, value);
+      }
+    };
+
+    return (
+      <div
+        ref={(el) => { questionRefs.current[question.id] = el; }}
+        className="px-0 py-8 sm:p-6 md:p-8 mb-8 border-b border-gray-100"
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
+        role="group"
+        aria-labelledby={`question-${question.id}`}
+      >
+        <div className="text-center mb-8 px-4">
+          <h3
+            id={`question-${question.id}`}
+            className="text-lg font-bold text-gray-100 leading-relaxed max-w-2xl mx-auto"
+          >
+            {question.text}
+          </h3>
         </div>
 
-        {/* Circle Scale */}
-        <div className="flex items-center justify-center space-x-2 sm:space-x-3 md:space-x-5">
-          {scaleValues.map((value, index) => {
-            const isSelected = answers[question.id] === value;
-            
-            return (
-              <button
-                key={value}
-                onClick={() => handleAnswerSelect(question.id, value)}
-                className={`${getCircleSize(index)} rounded-full border-2 transition-all duration-100 hover:scale-105 ${
-                  getCircleColor(value, isSelected)
-                } ${isSelected ? 'scale-105 shadow-lg' : 'hover:shadow-md'} flex items-center justify-center`}
-              >
-                {isSelected && (
-                  <Check className="w-4 h-4 md:w-5 md:h-5 text-white" strokeWidth={3} />
-                )}
-              </button>
-            );
-          })}
+        {/* Visual Scale */}
+        <div className="flex flex-col items-center space-y-6">
+          {/* Scale Labels */}
+          <div className="flex justify-between items-center w-full max-w-2xl px-6 sm:px-12 md:px-5">
+            <span className="text-base font-bold text-cyan-300">Yes</span>
+            <span className="text-base font-bold text-pink-300">No</span>
+          </div>
+
+          {/* Circle Scale */}
+          <div
+            className="flex items-center justify-center space-x-2 sm:space-x-3 md:space-x-5"
+            role="radiogroup"
+            aria-labelledby={`question-${question.id}`}
+          >
+            {scaleValues.map((value, index) => {
+              const isSelected = currentAnswer === value;
+              const optionText = question.options[index]?.text || '';
+
+              return (
+                <button
+                  key={value}
+                  onClick={() => handleAnswerSelect(question.id, value)}
+                  className={`${getCircleSize(index)} rounded-full border-2 transition-all duration-100 hover:scale-105 ${
+                    getCircleColor(value, isSelected)
+                  } ${isSelected ? 'scale-105 shadow-lg' : 'hover:shadow-md'} flex items-center justify-center`}
+                  role="radio"
+                  aria-checked={isSelected}
+                  aria-label={optionText}
+                  title={optionText}
+                >
+                  {isSelected && (
+                    <Check className="w-4 h-4 md:w-5 md:h-5 text-white" strokeWidth={3} />
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
 
   return (
@@ -267,9 +337,9 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium text-gray-100">
-              {isUsernameInputPage ? '質問 41 / 41' : `質問 ${currentPageIndex * questionsPerPage + 1}-${Math.min((currentPageIndex + 1) * questionsPerPage, questions.length)} / 41`}
+              {isUsernameInputPage ? 'ユーザー名入力' : `質問 ${startIdx + 1}-${Math.min(startIdx + currentPageQuestions.length, 40)} / 40`}
             </span>
-            <span className="text-sm font-medium text-gray-100">
+            <span className="text-sm font-medium text-gray-100" aria-live="polite">
               {progress}% 完了
             </span>
           </div>
@@ -283,36 +353,27 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       </ScrollAnimation>
 
       {/* Questions and Username Input */}
-      {hasTransitioned ? (
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {currentPageQuestions.map((question) => (
-            <QuestionItem key={question.id} question={question} />
-          ))}
-          {(shouldShowUsernameInput || isUsernameInputPage) && (
-            <UsernameInput 
-              username={username}
-              setUsername={setUsername}
-              onSubmit={handleUsernameSubmit}
-              isLastPage={isLastPage}
-            />
-          )}
+      {isLoading ? (
+        <div className="flex justify-center items-center min-h-[400px]">
+          <div className="text-gray-100">読み込み中...</div>
         </div>
       ) : (
-        <ScrollAnimation animation="fadeInUp" delay={400}>
+        <div className={hasTransitioned ? '' : 'animate-fadeInUp'}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {currentPageQuestions.map((question) => (
               <QuestionItem key={question.id} question={question} />
             ))}
             {(shouldShowUsernameInput || isUsernameInputPage) && (
-              <UsernameInput 
+              <UsernameInput
                 username={username}
                 setUsername={setUsername}
                 onSubmit={handleUsernameSubmit}
                 isLastPage={isLastPage}
+                data-username-input
               />
             )}
           </div>
-        </ScrollAnimation>
+        </div>
       )}
 
       {/* Navigation */}
