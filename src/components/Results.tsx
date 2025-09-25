@@ -1090,6 +1090,23 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
         isOpen={!!selectedPosition}
         onClose={() => setSelectedPosition(null)}
       />
+
+      {/* Affiliate Links */}
+      <div className="mt-8 flex flex-col items-center space-y-4">
+        <div>
+          <a href="https://px.a8.net/svt/ejp?a8mat=45E7LX+5URGXE+7ZS+2NAUSX" rel="nofollow noopener sponsored" target="_blank">
+            <img style={{ border: 0 }} width="300" height="250" alt="" src="https://www28.a8.net/svt/bgt?aid=250925829354&wid=001&eno=01&mid=s00000001036016007000&mc=1" />
+          </a>
+          <img style={{ border: 0 }} width="1" height="1" src="https://www10.a8.net/0.gif?a8mat=45E7LX+5URGXE+7ZS+2NAUSX" alt="" />
+        </div>
+        <div>
+          <a href="https://px.a8.net/svt/ejp?a8mat=45E7LX+5URGXE+7ZS+2NBPO2" rel="nofollow noopener sponsored" target="_blank" className="flex items-center gap-1 hover:text-pink-400 transition-colors">
+            <ChevronUp className="w-4 h-4" />
+            ここをクリック
+          </a>
+          <img style={{ border: 0 }} width="1" height="1" src="https://www19.a8.net/0.gif?a8mat=45E7LX+5URGXE+7ZS+2NBPO2" alt="" />
+        </div>
+      </div>
     </div>
   );
 };

@@ -42,9 +42,12 @@ This creates 32 possible combinations, mapped to 16 personality types with produ
    - Questions 1-10: Axis questions (2 per axis, with isReverse flags)
    - Questions 11-35: Tag questions (25 tags total) - tags are internally calculated but NOT displayed on results page
    - Questions 36-40: Additional metric questions
+   - **Question randomization**: Client-side shuffling with session persistence (uses `getShuffledQuestions()`)
+   - **Question variations**: Questions 1-35 have 3 text variations each (selected via seeded random)
 2. **Username Input**: 41st step - collects username for personality and compatibility tests
    - Separate component (`src/components/UsernameInput.tsx`) to prevent re-rendering issues
-   - Required field - must be entered to see results
+   - Required field with validation (1-20 characters)
+   - Shows character count and error messages
 3. **Test Logic** (`src/utils/testLogic.ts`): Calculates personality type from answers
    - Processes 5 axes + additional metrics (libido, gap, tension, kiss importance)
    - Tag scoring system with top 2 tags selected based on scores (used internally for personality descriptions)
@@ -126,6 +129,8 @@ This creates 32 possible combinations, mapped to 16 personality types with produ
 - Maintain the intimate/romantic theme
 - Use existing color scheme (purples, pinks, dark backgrounds)
 - Follow established component patterns
+- **Accessibility**: Keyboard navigation support (arrow keys for selection, 1-7 number keys)
+- **Error handling**: Always wrap localStorage/sessionStorage access in try-catch blocks
 
 ### Testing Considerations
 - No test framework currently set up
@@ -167,6 +172,8 @@ Required for feedback system:
 - Large components like `CompatibilityResults.tsx` (2100+ lines) may need offset/limit for reading
 - No server-side rendering for quiz state - all client-side
 - Screenshot generation can be memory-intensive on mobile devices
+- **Memory optimization**: Common options array shared across all 40 questions (reduces ~280 duplicates to 1)
+- **Client-side question shuffling**: Uses sessionStorage to maintain order during session
 
 ### Deployment Notes
 - Production URL: https://nightpersonality.com
@@ -180,3 +187,7 @@ Required for feedback system:
 - Position recommendations unified between personal and compatibility results
 - Furigana positioning moved above kanji in position cards
 - Difficulty indicators changed from stars to hearts with pink color
+- Question randomization implemented client-side (no longer fixed order)
+- Keyboard navigation hints removed from quiz UI
+- Username validation with character counter added
+- Natural scroll delay increased from 30ms to 150ms
