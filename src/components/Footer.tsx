@@ -5,11 +5,6 @@ import React from 'react';
 const Footer: React.FC = () => {
   return (
     <div className="py-16 px-4 sm:px-6 lg:px-8">
-      <div className="text-center mb-8">
-        <p className="text-sm text-gray-300 max-w-2xl mx-auto">
-          当サイトの外部リンクの一部はアフィリエイト広告を含みます。リンク先の商品については各販売者にお問い合わせください。
-        </p>
-      </div>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center pt-16 border-t border-gray-100">
           <div className="text-center">

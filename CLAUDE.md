@@ -117,6 +117,13 @@ This creates 32 possible combinations, mapped to 16 personality types with produ
 - No authentication system implemented
 - No database - all state is client-side or in URL params
 
+### Legal & Compliance Pages
+- `/privacy`: Privacy policy page (プライバシーポリシー)
+- `/about`: About/operator information page (運営者情報)
+- `/contact`: Contact page (お問い合わせ)
+- **Affiliate disclosure**: Displayed on results page and footer
+- **A8.net affiliate**: Integrated in results page with proper disclosure labels
+
 ### Styling Approach
 - Tailwind CSS with custom animations in `tailwind.config.ts`
 - Dark theme with purple/pink gradient aesthetics
@@ -154,7 +161,7 @@ Required for feedback system:
 - **Test different scenarios**: Use `/test-solo` and `/test-match` pages
 - **Update 48 positions data**: Edit `src/data/positions.ts`
 - **Modify animations**: Check `tailwind.config.ts` for custom animation definitions
-- **Update affiliate links**: Edit Results.tsx lines 1094-1109
+- **Update affiliate links**: Edit Results.tsx lines 1103-1117 (A8.net affiliate links with nofollow, noopener, sponsored attributes)
 
 ### Critical Data Mappings
 - **Axis codes in questions.ts**: 'EI', 'LF', 'AS', 'LF2', 'OS'
@@ -196,4 +203,6 @@ Required for feedback system:
 - Keyboard navigation hints removed from quiz UI
 - Username validation with character counter added
 - Natural scroll delay increased from 30ms to 150ms
-- Affiliate links added to results page bottom with nofollow, noopener, sponsored attributes
+- Affiliate links added to results page with proper disclosure (【広告】label)
+- Legal pages added with consistent UI styling (privacy, about, contact)
+- Footer includes affiliate disclosure statement

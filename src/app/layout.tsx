@@ -68,27 +68,19 @@ export default function RootLayout({
             gtag('config', 'G-HLM13T0M2K');
           `}
         </Script>
-        <Script id="structured-data-site-name-ja" type="application/ld+json">
+        <Script id="structured-data-website" type="application/ld+json">
           {`
             {
               "@context": "https://schema.org",
               "@type": "WebSite",
               "name": "夜の性格診断",
-              "alternateName": "夜MBTI",
+              "alternateName": ["Night Personality", "夜MBTI", "nightpersonality.com"],
               "url": "https://nightpersonality.com",
-              "inLanguage": "ja"
-            }
-          `}
-        </Script>
-        <Script id="structured-data-site-name-en" type="application/ld+json">
-          {`
-            {
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              "name": "Night Personality",
-              "alternateName": "Night Personality",
-              "url": "https://nightpersonality.com",
-              "inLanguage": "en"
+              "inLanguage": "ja",
+              "publisher": {
+                "@type": "Organization",
+                "name": "夜の性格診断"
+              }
             }
           `}
         </Script>

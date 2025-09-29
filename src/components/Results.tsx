@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { TestResult } from '../types/personality';
 import { getCategoryColor, getCategoryName, personalityTypes } from '../data/personalityTypes';
 import { copyToClipboard } from '../utils/snsShare';
-import { Heart, RefreshCw, Share2, User, Shield, Zap, Eye, ChevronDown, ChevronUp, Dices, Edit3 } from 'lucide-react';
+import { Heart, RefreshCw, Share2, User, Shield, Zap, Eye, Dices, Edit3 } from 'lucide-react';
 import Image from 'next/image';
 import SNSShareModal from './SNSShareModal';
 import NeonText from './NeonText';
@@ -92,22 +92,6 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
   const downloadRef = useRef<HTMLDivElement>(null);
   const [selectedTag, setSelectedTag] = useState<{ tag: string; description: string } | null>(null);
   const [selectedPosition, setSelectedPosition] = useState<Position48 | null>(null);
-  const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({
-    nightPersonality: false,
-    libidoLevel: false,
-    positions: false,
-    compatible: false,
-    incompatible: false,
-    relationship: false,
-    advice: false
-  });
-
-  const toggleSection = (section: string) => {
-    setOpenSections(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
-  };
 
   // おすすめの体位を一度だけ計算してメモ化
   const recommendedPositions = useMemo(() => {
@@ -358,7 +342,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
         <ScrollAnimation animation="fadeInUp" delay={200}>
           <div ref={downloadRef}>
             {/* Header Section */}
-            <div className="rounded-t-3xl shadow-xl overflow-hidden border-2 border-white/40">
+            <div className="rounded-t-3xl shadow-xl overflow-hidden">
               <div className="p-8 text-white flex justify-center">
                 <div className="w-full">
                   {/* 性格タイプ名 */}
@@ -383,13 +367,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
               </div>
             </div>
             {/* Main Content */}
-            <div className="rounded-b-3xl shadow-xl overflow-hidden border-2 border-white/30" style={{backgroundColor: 'rgba(255, 255, 255, 0)', boxShadow: '0 0 20px rgba(255, 255, 255, 0.1)'}}>
-              <div className="p-4 grid grid-cols-1">
-
+            <div className="rounded-b-3xl overflow-hidden">
                 {/* New Graph Design */}
-                <div className="mb-12">
+                <div className="mb-12" style={{backgroundColor: 'transparent'}}>
                     {/* Personality Dimensions */}
-                    <div>
+                    <div style={{backgroundColor: 'transparent'}}>
                       <h2 className="text-2xl font-bold text-[#e0e7ff] mb-6 text-center">性格診断結果</h2>
                       
                       {dimensions.map((dimension) => (
@@ -445,7 +427,6 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                       ))}
                     </div>
                   </div>
-                </div>
 
               {/* あなたに当てはまるタグ - 非表示化 */}
               {/* {result.additionalResults?.tags && result.additionalResults.tags.length > 0 && (
@@ -475,26 +456,18 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
               )} */}
 
               {/* 詳細情報統合カード */}
-              <div className="rounded-xl shadow-lg bg-white/10 backdrop-blur-sm px-4 pt-4 sm:px-6 sm:pt-6 pb-2 sm:pb-3 mt-8 mx-4">
-                <h3 className="text-lg sm:text-xl font-bold text-[#e0e7ff] mb-4 sm:mb-6 text-center">性格診断カード</h3>
+              <div className="rounded-xl shadow-lg bg-white/10 backdrop-blur-sm pt-4 sm:pt-6 pb-2 sm:pb-3 mt-8">
+                <h3 className="text-xl sm:text-2xl font-bold text-[#e0e7ff] mb-4 sm:mb-6 text-center">性格診断カード</h3>
                 <div className="space-y-2">
                   {/* 夜の性格 */}
                   <div className="border-b border-white/20 pb-2 overflow-hidden">
-                    <button
-                      onClick={() => toggleSection('nightPersonality')}
-                      className="w-full flex items-center justify-between rounded-lg p-2"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <span className="text-lg">🧠</span>
-                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">夜の性格</h4>
+                    <div className="w-full rounded-lg p-2">
+                      <div className="flex items-center space-x-3 justify-center mb-2">
+                        <span className="text-xl">🧠</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-base sm:text-lg">夜の性格</h4>
                       </div>
-                      {openSections.nightPersonality ? <ChevronUp className="w-5 h-5 text-[#e0e7ff] " /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff] " />}
-                    </button>
-                    <div className={`transition-all duration-300 ${
-                      openSections.nightPersonality ? 'max-h-[500px]' : 'max-h-0'
-                    } overflow-hidden`}>
-                      <div className="mt-2 px-2 text-center">
-                        <div className="text-[#e0e7ff]/80 text-sm space-y-1">
+                      <div className="px-2 text-center">
+                        <div className="text-[#e0e7ff]/80 text-base sm:text-lg space-y-1">
                           {(() => {
                             const tags = result.additionalResults?.tags || [];
                             let nightPersonality = '';
@@ -670,20 +643,12 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   
                   {/* おすすめの体位 */}
                   <div className="border-b border-white/20 pb-2 overflow-hidden">
-                    <button
-                      onClick={() => toggleSection('positions')}
-                      className="w-full flex items-center justify-between rounded-lg p-2"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <span className="text-lg">🍑</span>
-                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">おすすめの体位（48手）</h4>
+                    <div className="w-full rounded-lg p-2">
+                      <div className="flex items-center space-x-3 justify-center mb-2">
+                        <span className="text-xl">🍑</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-base sm:text-lg">おすすめの体位（48手）</h4>
                       </div>
-                      {openSections.positions ? <ChevronUp className="w-5 h-5 text-[#e0e7ff] " /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff] " />}
-                    </button>
-                    <div className={`transition-all duration-300 ${
-                      openSections.positions ? 'max-h-[500px]' : 'max-h-0'
-                    } overflow-hidden`}>
-                      <div className="mt-2 px-2">
+                      <div className="px-2">
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                           {recommendedPositions.map((position: Position48, index: number) => (
                                   <div 
@@ -735,7 +700,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                                   </div>
                                 ))}
                           </div>
-                          <p className="text-[#e0e7ff]/80 text-sm text-center mt-2">
+                          <p className="text-[#e0e7ff]/80 text-base sm:text-lg text-center mt-2">
                             {result.A > 70 ? '激しく情熱的に楽しむ' : 
                              result.A < 30 ? 'ゆったり優しく楽しむ' : 
                              'バランスよく焦らしながら楽しむ'}
@@ -745,23 +710,15 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   </div>
                   {/* 相性と関係性 */}
                   <div className="border-b border-white/20 pb-2 overflow-hidden">
-                    <button
-                      onClick={() => toggleSection('compatibility')}
-                      className="w-full flex items-center justify-between rounded-lg p-2"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <span className="text-lg">💘</span>
-                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">相性と関係性</h4>
+                    <div className="w-full rounded-lg p-2">
+                      <div className="flex items-center space-x-3 justify-center mb-2">
+                        <span className="text-xl">💘</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-base sm:text-lg">相性と関係性</h4>
                       </div>
-                      {openSections.compatibility ? <ChevronUp className="w-5 h-5 text-[#e0e7ff] " /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff] " />}
-                    </button>
-                    <div className={`transition-all duration-300 ${
-                      openSections.compatibility ? 'max-h-[500px]' : 'max-h-0'
-                    } overflow-hidden`}>
-                      <div className="mt-2 px-2 text-left">
-                        <div className="text-[#e0e7ff]/80 text-sm space-y-4">
+                      <div className="px-2 text-left">
+                        <div className="text-[#e0e7ff]/80 text-base sm:text-lg space-y-4">
                           <div>
-                            <h5 className="font-semibold text-[#e0e7ff] mb-2 text-center">相性のいいタイプ</h5>
+                            <h5 className="font-semibold text-[#e0e7ff] mb-2 text-center text-base sm:text-lg">相性のいいタイプ</h5>
                             {(() => {
                               const compatibleTypes = [];
                               
@@ -926,20 +883,12 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   
                   {/* あなたの短所とアドバイス */}
                   <div className="pb-2 overflow-hidden">
-                    <button
-                      onClick={() => toggleSection('advice')}
-                      className="w-full flex items-center justify-between rounded-lg p-2"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <span className="text-lg">⚠️</span>
-                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">あなたの短所とアドバイス</h4>
+                    <div className="w-full rounded-lg p-2">
+                      <div className="flex items-center space-x-3 justify-center mb-2">
+                        <span className="text-xl">⚠️</span>
+                        <h4 className="font-semibold text-[#e0e7ff] text-base sm:text-lg">あなたの短所とアドバイス</h4>
                       </div>
-                      {openSections.advice ? <ChevronUp className="w-5 h-5 text-[#e0e7ff] " /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff] " />}
-                    </button>
-                    <div className={`transition-all duration-300 ${
-                      openSections.advice ? 'max-h-[500px]' : 'max-h-0'
-                    } overflow-hidden`}>
-                      <div className="mt-2 px-2 text-center">
+                      <div className="px-2 text-center">
                         {(() => {
                           const shortcomings = [];
                           const advices = [];
@@ -1012,16 +961,16 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                           
                           return (
                             <>
-                              <h5 className="font-semibold text-[#e0e7ff] mb-2 text-sm">短所</h5>
-                              <p className="text-[#e0e7ff]/80 text-sm mb-4">
+                              <h5 className="font-semibold text-[#e0e7ff] mb-2 text-base sm:text-lg">短所</h5>
+                              <p className="text-[#e0e7ff]/80 text-base sm:text-lg mb-4">
                                 {shortcomings[0]}
                               </p>
-                              <h5 className="font-semibold text-[#e0e7ff] mb-2 text-sm">アドバイス</h5>
-                              <p className="text-[#e0e7ff]/80 text-sm mb-4">
+                              <h5 className="font-semibold text-[#e0e7ff] mb-2 text-base sm:text-lg">アドバイス</h5>
+                              <p className="text-[#e0e7ff]/80 text-base sm:text-lg mb-4">
                                 {advices[0]}
                               </p>
-                              <h5 className="font-semibold text-[#e0e7ff] mb-2 text-sm">より良い関係を築くための3つのヒント</h5>
-                              <ul className="text-[#e0e7ff]/80 text-sm space-y-1 list-none">
+                              <h5 className="font-semibold text-[#e0e7ff] mb-2 text-base sm:text-lg">より良い関係を築くための3つのヒント</h5>
+                              <ul className="text-[#e0e7ff]/80 text-base sm:text-lg space-y-1 list-none">
                                 {hints.slice(0, 3).map((hint, index) => (
                                   <li key={index} className="flex items-start">
                                     <span className="sm:ml-16 md:ml-32 lg:ml-48 mr-2 text-yellow-500">💡</span>
@@ -1107,9 +1056,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
           </div>
         </div>
         <div className="text-center">
-          <a href="https://px.a8.net/svt/ejp?a8mat=45E7LX+5URGXE+7ZS+2NBPO2" rel="nofollow noopener sponsored" target="_blank" className="flex items-center gap-1 hover:text-pink-400 transition-colors justify-center">
-            <ChevronUp className="w-4 h-4" />
-            ここをクリック
+          <a href="https://px.a8.net/svt/ejp?a8mat=45E7LX+5URGXE+7ZS+2NBPO2" rel="nofollow noopener sponsored" target="_blank" className="inline-flex items-center hover:text-pink-400 transition-colors">
+            公式サイトへ
+            <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
           </a>
           <img style={{ border: 0 }} width="1" height="1" src="https://www19.a8.net/0.gif?a8mat=45E7LX+5URGXE+7ZS+2NBPO2" alt="" />
         </div>

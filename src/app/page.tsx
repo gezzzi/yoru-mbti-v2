@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: "夜の相性診断｜性相性・セックス相性診断 無料（大人の二人用）",
     description: "カップル親密度診断とセックス満足度診断を3分で。二人の夜の相性を科学的に分析し、具体的な改善アドバイスを提供。",
     url: "https://nightpersonality.com",
-    siteName: "Night Personality",
+    siteName: "夜の性格診断",
     images: [
       {
         url: "https://nightpersonality.com/og.png",
