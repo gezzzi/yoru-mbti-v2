@@ -335,6 +335,10 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight drop-shadow-lg select-none text-center">
               <NeonText text={["あなたの", "診断結果"]} specialCharIndex={5} className="gap-1" />
             </h1>
+            {/* プロモーション表示告知 */}
+            <p className="text-sm text-white/70 mt-4">
+              ※本ページにはプロモーションが含まれます。
+            </p>
           </div>
         </ScrollAnimation>
         
@@ -1093,14 +1097,17 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
 
       {/* Affiliate Links */}
       <div className="mt-8 flex flex-col items-center space-y-4">
-        <div>
+        <div className="text-center">
+          <span className="text-xs text-white/50 mb-1 inline-block">【広告】</span>
+          <div>
           <a href="https://px.a8.net/svt/ejp?a8mat=45E7LX+5URGXE+7ZS+2NAUSX" rel="nofollow noopener sponsored" target="_blank">
             <img style={{ border: 0 }} width="300" height="250" alt="" src="https://www28.a8.net/svt/bgt?aid=250925829354&wid=001&eno=01&mid=s00000001036016007000&mc=1" />
           </a>
           <img style={{ border: 0 }} width="1" height="1" src="https://www10.a8.net/0.gif?a8mat=45E7LX+5URGXE+7ZS+2NAUSX" alt="" />
+          </div>
         </div>
-        <div>
-          <a href="https://px.a8.net/svt/ejp?a8mat=45E7LX+5URGXE+7ZS+2NBPO2" rel="nofollow noopener sponsored" target="_blank" className="flex items-center gap-1 hover:text-pink-400 transition-colors">
+        <div className="text-center">
+          <a href="https://px.a8.net/svt/ejp?a8mat=45E7LX+5URGXE+7ZS+2NBPO2" rel="nofollow noopener sponsored" target="_blank" className="flex items-center gap-1 hover:text-pink-400 transition-colors justify-center">
             <ChevronUp className="w-4 h-4" />
             ここをクリック
           </a>

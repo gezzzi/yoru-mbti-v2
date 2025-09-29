@@ -3,7 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
-This is a Next.js 14 application called "夜の性格診断" (Night Personality Test) - an MBTI-style personality test focused on intimate/romantic personality aspects. The app is deployed at https://nightpersonality.com and serves Japanese-speaking users.
+This is a Next.js 14 application called "夜の性格診断" (Night Personality Test) - a sophisticated Japanese psychological assessment application that determines intimate/romantic personality types using a unique 5-axis system (NOT traditional MBTI). The app is deployed at https://nightpersonality.com and serves Japanese-speaking users.
 
 ## Development Commands
 ```bash
@@ -89,10 +89,11 @@ This creates 32 possible combinations, mapped to 16 personality types with produ
   - Custom slider.css for visual styling
 
 #### Visual Components
-- **Neon Text Effects**: Custom glowing text animations
+- **Neon Text Effects**: Custom glowing text animations with optimized iPhone rendering
 - **Bar Graphs**: Horizontal bars for 5-axis visualization in results
-- **QR Code Generation**: Built-in QR codes with logo for sharing
+- **QR Code Generation**: Built-in QR codes with logo for sharing (html2canvas)
 - **Responsive Design**: Mobile-first with custom tablet breakpoint (820px)
+- **Background Starfield**: Fixed position with CSS animations (50 stars, 3s twinkle cycle)
 
 ### Key Components Structure
 - **Quiz Flow**: `test/page.tsx` → `components/Quiz.tsx` → `results/page.tsx`
@@ -103,11 +104,12 @@ This creates 32 possible combinations, mapped to 16 personality types with produ
 - **Feedback Button**: Only shows on `/results` and `/compatibility/results` pages
 
 ### State Management
-- React state hooks and URL parameters for state
+- **No global state library** - Pure React hooks + localStorage + URL parameters
 - Test answers stored in `answerHistory` state during quiz
 - Username in localStorage (`personality_test_username`)
 - Results in localStorage (`personality_test_result`)
 - Recommended positions cached in localStorage by personality type
+- Question order persisted in sessionStorage during session
 - Compatibility test uses URL params for both users' scores
 
 ### API Routes
@@ -131,6 +133,7 @@ This creates 32 possible combinations, mapped to 16 personality types with produ
 - Follow established component patterns
 - **Accessibility**: Keyboard navigation support (arrow keys for selection, 1-7 number keys)
 - **Error handling**: Always wrap localStorage/sessionStorage access in try-catch blocks
+- **SEO & Meta**: Comprehensive OpenGraph + Twitter cards + structured data (FAQ, Breadcrumb, WebSite schemas)
 
 ### Testing Considerations
 - No test framework currently set up
@@ -151,6 +154,7 @@ Required for feedback system:
 - **Test different scenarios**: Use `/test-solo` and `/test-match` pages
 - **Update 48 positions data**: Edit `src/data/positions.ts`
 - **Modify animations**: Check `tailwind.config.ts` for custom animation definitions
+- **Update affiliate links**: Edit Results.tsx lines 1094-1109
 
 ### Critical Data Mappings
 - **Axis codes in questions.ts**: 'EI', 'LF', 'AS', 'LF2', 'OS'
@@ -170,10 +174,11 @@ Required for feedback system:
 - Sitemap auto-generated during build via next-sitemap
 - Google Analytics tracking (ID: G-HLM13T0M2K)
 - Large components like `CompatibilityResults.tsx` (2100+ lines) may need offset/limit for reading
-- No server-side rendering for quiz state - all client-side
+- **No SSR for quiz state** - all client-side rendering (prevents hydration issues)
 - Screenshot generation can be memory-intensive on mobile devices
 - **Memory optimization**: Common options array shared across all 40 questions (reduces ~280 duplicates to 1)
 - **Client-side question shuffling**: Uses sessionStorage to maintain order during session
+- **Graceful fallbacks**: Unsupported viewport units (svh/lvh) fall back to vh
 
 ### Deployment Notes
 - Production URL: https://nightpersonality.com
@@ -191,3 +196,4 @@ Required for feedback system:
 - Keyboard navigation hints removed from quiz UI
 - Username validation with character counter added
 - Natural scroll delay increased from 30ms to 150ms
+- Affiliate links added to results page bottom with nofollow, noopener, sponsored attributes
