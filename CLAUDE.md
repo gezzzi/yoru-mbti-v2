@@ -206,3 +206,6 @@ Required for feedback system:
 - Affiliate links added to results page with proper disclosure (【広告】label)
 - Legal pages added with consistent UI styling (privacy, about, contact)
 - Footer includes affiliate disclosure statement
+- Accordion menus removed from results page - all sections now always visible
+- Results page card padding/margin adjusted for better mobile display
+- Font sizes increased across personality card sections (text-base sm:text-lg)

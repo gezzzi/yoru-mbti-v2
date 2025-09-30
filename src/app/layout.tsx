@@ -111,7 +111,7 @@ export default function RootLayout({
                 borderRadius: '50%',
                 opacity: 0.8,
                 filter: 'blur(0.5px)',
-                animation: 'twinkle 3s infinite',
+                animation: 'twinkle 3s 80',
                 animationDelay: `${Math.random() * 3}s`,
               }}
             />
