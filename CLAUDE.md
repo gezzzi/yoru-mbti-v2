@@ -41,9 +41,10 @@ This creates 32 possible combinations, mapped to 16 personality types with produ
 1. **Questions** (`src/data/questions.ts`): 40 questions total covering 5 axes
    - Questions 1-10: Axis questions (2 per axis, with isReverse flags)
    - Questions 11-35: Tag questions (25 tags total) - tags are internally calculated but NOT displayed on results page
-   - Questions 36-40: Additional metric questions
+   - Questions 36-40: Additional metric questions (secret compatibility questions)
    - **Question randomization**: Client-side shuffling with session persistence (uses `getShuffledQuestions()`)
    - **Question variations**: Questions 1-35 have 3 text variations each (selected via seeded random)
+   - **Answer scale**: 6-point scale (0-5) without neutral option - removed "どちらでもない"
 2. **Username Input**: 41st step - collects username for personality and compatibility tests
    - Separate component (`src/components/UsernameInput.tsx`) to prevent re-rendering issues
    - Required field with validation (1-20 characters)
@@ -52,6 +53,8 @@ This creates 32 possible combinations, mapped to 16 personality types with produ
    - Processes 5 axes + additional metrics (libido, gap, tension, kiss importance)
    - Tag scoring system with top 2 tags selected based on scores (used internally for personality descriptions)
    - **50% threshold**: Values >= 50 map to first trait (E, L, A, L, O)
+   - **Score calculation**: Adjusted for 6-point scale (0-5), dividing by 5 instead of 6
+   - **Tag thresholds**: Tags with score >= 3 are considered "possessed" (previously 4)
 4. **Results Display** (`src/components/Results.tsx`): Shows type with percentage bars, description, and sharing options
    - **Percentage display**: Shows stronger trait percentage (e.g., 80% for dominant trait)
    - Bar graph visualization for all 5 axes with updated labels
@@ -94,6 +97,11 @@ This creates 32 possible combinations, mapped to 16 personality types with produ
 - **QR Code Generation**: Built-in QR codes with logo for sharing (html2canvas)
 - **Responsive Design**: Mobile-first with custom tablet breakpoint (820px)
 - **Background Starfield**: Fixed position with CSS animations (50 stars, 3s twinkle cycle)
+- **Quiz UI Elements**:
+  - 6 circular buttons for answers with size variation (larger at extremes)
+  - Enhanced sizes: Mobile (w-11 to w-14), Desktop (md:w-14 to md:w-20)
+  - Spacing: space-x-3 (mobile), md:space-x-6 (desktop)
+  - Question text: text-xl (mobile), md:text-2xl (desktop)
 
 ### Key Components Structure
 - **Quiz Flow**: `test/page.tsx` → `components/Quiz.tsx` → `results/page.tsx`
@@ -123,6 +131,7 @@ This creates 32 possible combinations, mapped to 16 personality types with produ
 - `/contact`: Contact page (お問い合わせ)
 - **Affiliate disclosure**: Displayed on results page and footer
 - **A8.net affiliate**: Integrated in results page with proper disclosure labels
+  - Link text: "公式ストアで今すぐチェック" (Check now at official store)
 
 ### Styling Approach
 - Tailwind CSS with custom animations in `tailwind.config.ts`
@@ -172,6 +181,7 @@ Required for feedback system:
 - **Axis percentage calculation**:
   - 50% threshold determines trait selection
   - Results page shows dominant trait percentage
+  - Now using 6-point scale (0-5) calculations throughout
 - **Axis label updates in Results.tsx**:
   - Lines 230-284: Dimension definitions with new Japanese labels
   - Line 410-414: isReverse conditions updated for new label names
@@ -194,16 +204,21 @@ Required for feedback system:
 - Dynamic routes for results and compatibility pages
 
 ### Recent UI Changes
+- **Quiz answer system**: Changed from 7-point to 6-point scale (removed neutral option)
+- **Circle button sizes**: Enhanced for better visibility
+  - Mobile: w-11 to w-14 (based on position)
+  - Desktop: md:w-14 to md:w-20 (based on position)
+- **Question text size**: Increased to text-xl (mobile) and md:text-2xl (desktop)
 - Tag display removed from results page (lines 446-471 commented out)
 - Axis labels updated to more descriptive Japanese terms
 - Position recommendations unified between personal and compatibility results
 - Furigana positioning moved above kanji in position cards
 - Difficulty indicators changed from stars to hearts with pink color
 - Question randomization implemented client-side (no longer fixed order)
-- Keyboard navigation hints removed from quiz UI
+- Keyboard navigation updated for 6 options (keys 1-6)
 - Username validation with character counter added
 - Natural scroll delay increased from 30ms to 150ms
-- Affiliate links added to results page with proper disclosure (【広告】label)
+- Affiliate link text updated to "公式ストアで今すぐチェック"
 - Legal pages added with consistent UI styling (privacy, about, contact)
 - Footer includes affiliate disclosure statement
 - Accordion menus removed from results page - all sections now always visible
