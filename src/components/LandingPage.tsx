@@ -56,7 +56,7 @@ const LandingPage: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           <ScrollAnimation animation="fadeInUp">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-3 sm:mb-4">
-              夜の相性診断でわかること
+              夜の性格診断でわかること
             </h2>
             <p className="text-sm sm:text-base text-white/70 text-center mb-8 sm:mb-12">
               科学的なアプローチで二人の関係を分析
@@ -160,7 +160,7 @@ const LandingPage: React.FC = () => {
         <div className="max-w-6xl mx-auto">
           <ScrollAnimation animation="fadeInUp">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-8 sm:mb-12">
-              Night Personalityの特徴
+              夜の性格診断の特徴
             </h2>
           </ScrollAnimation>
 
