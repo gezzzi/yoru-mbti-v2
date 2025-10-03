@@ -1057,7 +1057,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
         </div>
         <div className="text-center">
           <a href="https://px.a8.net/svt/ejp?a8mat=45E7LX+5URGXE+7ZS+2NBPO2" rel="nofollow noopener sponsored" target="_blank" className="inline-flex items-center hover:text-pink-400 transition-colors">
-            公式サイトへ
+            公式ストアで今すぐチェック
             <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>

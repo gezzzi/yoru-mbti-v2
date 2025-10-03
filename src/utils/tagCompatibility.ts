@@ -339,11 +339,11 @@ function calculateTagInteractions(
   const partnerHighTags = new Set<string>();
   
   userTagScores.forEach(t => {
-    if (t.score >= 4) userHighTags.add(t.tag);
+    if (t.score >= 3) userHighTags.add(t.tag); // 6段階評価で3以上
   });
   
   partnerTagScores.forEach(t => {
-    if (t.score >= 4) partnerHighTags.add(t.tag);
+    if (t.score >= 3) partnerHighTags.add(t.tag); // 6段階評価で3以上
   });
   
   // 相性の悪い組み合わせをチェック（一方が4点以上持っていれば減点）

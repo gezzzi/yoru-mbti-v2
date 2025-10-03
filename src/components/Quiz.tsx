@@ -218,15 +218,14 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
     return questionsAnswered;
   })();
 
-  // Scale values from strongly agree to strongly disagree (7-point scale)
-  // 0-6 scale to match questions.ts: 6=非常にそう思う, 3=どちらでもない, 0=全くそう思わない
-  const scaleValues = [6, 5, 4, 3, 2, 1, 0];
+  // Scale values from strongly agree to strongly disagree (6-point scale)
+  // 0-5 scale to match questions.ts: 5=非常にそう思う, 0=全くそう思わない
+  const scaleValues = [5, 4, 3, 2, 1, 0];
 
   const getCircleSize = (index: number) => {
-    if (index === 0 || index === 6) return 'w-12 h-12 md:w-16 md:h-16'; // Largest circles (extreme ends)
-    if (index === 1 || index === 5) return 'w-11 h-11 md:w-14 md:h-14'; // Large circles
-    if (index === 2 || index === 4) return 'w-10 h-10 md:w-12 md:h-12'; // Medium circles
-    return 'w-9 h-9 md:w-10 md:h-10'; // Smallest circle (neutral center)
+    if (index === 0 || index === 5) return 'w-14 h-14 md:w-20 md:h-20'; // Largest circles (extreme ends)
+    if (index === 1 || index === 4) return 'w-12 h-12 md:w-16 md:h-16'; // Large circles
+    return 'w-11 h-11 md:w-14 md:h-14'; // Medium circles (middle options)
   };
 
   const getCircleColor = (value: number, isSelected: boolean) => {
@@ -241,19 +240,19 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
 
     // キーボード操作のハンドラ
     const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-      const currentValue = currentAnswer ?? 3; // デフォルトは中央
+      const currentValue = currentAnswer ?? 2; // デフォルトは中央寄り
 
       if (e.key === 'ArrowLeft') {
         e.preventDefault();
-        const newValue = Math.min(currentValue + 1, 6);
+        const newValue = Math.min(currentValue + 1, 5);
         handleAnswerSelect(question.id, newValue);
       } else if (e.key === 'ArrowRight') {
         e.preventDefault();
         const newValue = Math.max(currentValue - 1, 0);
         handleAnswerSelect(question.id, newValue);
-      } else if (e.key >= '1' && e.key <= '7') {
-        // 数字キーで直接選択（1=非常にそう思う、 7=全くそう思わない）
-        const value = 7 - parseInt(e.key);
+      } else if (e.key >= '1' && e.key <= '6') {
+        // 数字キーで直接選択（1=非常にそう思う、 6=全くそう思わない）
+        const value = 6 - parseInt(e.key);
         handleAnswerSelect(question.id, value);
       }
     };
@@ -270,7 +269,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
         <div className="text-center mb-8 px-4">
           <h3
             id={`question-${question.id}`}
-            className="text-lg font-bold text-gray-100 leading-relaxed max-w-2xl mx-auto"
+            className="text-xl md:text-2xl font-bold text-gray-100 leading-relaxed max-w-2xl mx-auto"
           >
             {question.text}
           </h3>
@@ -286,7 +285,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
 
           {/* Circle Scale */}
           <div
-            className="flex items-center justify-center space-x-2 sm:space-x-3 md:space-x-5"
+            className="flex items-center justify-center space-x-3 sm:space-x-3 md:space-x-6"
             role="radiogroup"
             aria-labelledby={`question-${question.id}`}
           >

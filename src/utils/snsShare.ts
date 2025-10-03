@@ -175,7 +175,7 @@ export const parseCompatibilityCode = (code: string): { result: TestResult | nul
               const score = Math.floor(groupValue / Math.pow(7, 4 - j)) % 7;
               tagScores.push({ tag: ALL_TAGS[tagIndex], score });
               // スコア4以上のタグをtags配列に追加
-              if (score >= 4) {
+              if (score >= 3) { // 6段階評価で3以上
                 tags.push(ALL_TAGS[tagIndex]);
               }
             }

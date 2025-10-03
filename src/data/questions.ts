@@ -180,11 +180,11 @@ const questionVariations: { [key: number]: string[] } = {
 };
 
 // 共通の選択肢配列を定義（メモリ効率化）
+// 6段階評価に変更（どちらでもない を削除）
 const commonOptions = [
-  { text: '非常にそう思う', value: 6 },
-  { text: 'そう思う', value: 5 },
-  { text: 'ややそう思う', value: 4 },
-  { text: 'どちらでもない', value: 3 },
+  { text: '非常にそう思う', value: 5 },
+  { text: 'そう思う', value: 4 },
+  { text: 'ややそう思う', value: 3 },
   { text: 'あまりそう思わない', value: 2 },
   { text: 'そう思わない', value: 1 },
   { text: '全くそう思わない', value: 0 }

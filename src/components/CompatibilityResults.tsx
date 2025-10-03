@@ -479,13 +479,13 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     
     // スコア4点以上のタグを取得
     userTagScores.forEach(tagScore => {
-      if (tagScore.score >= 4) {
+      if (tagScore.score >= 3) { // 6段階評価で3以上
         userTags.add(tagScore.tag);
       }
     });
     
     partnerTagScores.forEach(tagScore => {
-      if (tagScore.score >= 4) {
+      if (tagScore.score >= 3) { // 6段階評価で3以上
         partnerTags.add(tagScore.tag);
       }
     });
@@ -707,8 +707,8 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     const tagCompatibilityResult = calculateImprovedTagCompatibility(myTagScores, partnerTagScores);
     
     // 高得点タグ（4点以上）を抽出
-    const myHighTags = myTagScores.filter(ts => ts.score >= 4).map(ts => ts.tag);
-    const partnerHighTags = partnerTagScores.filter(ts => ts.score >= 4).map(ts => ts.tag);
+    const myHighTags = myTagScores.filter(ts => ts.score >= 3).map(ts => ts.tag);
+    const partnerHighTags = partnerTagScores.filter(ts => ts.score >= 3).map(ts => ts.tag);
     
     // 両者の高得点タグを統合
     const combinedTags = new Set([...myHighTags, ...partnerHighTags]);
@@ -1309,8 +1309,8 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       const partnerTagScores = partnerResult.additionalResults?.tagScores || [];
       
       // 高得点タグ（4点以上）を抽出
-      const myHighTags = myTagScores.filter(ts => ts.score >= 4).map(ts => ts.tag);
-      const partnerHighTags = partnerTagScores.filter(ts => ts.score >= 4).map(ts => ts.tag);
+      const myHighTags = myTagScores.filter(ts => ts.score >= 3).map(ts => ts.tag);
+      const partnerHighTags = partnerTagScores.filter(ts => ts.score >= 3).map(ts => ts.tag);
       const combinedTags = new Set([...myHighTags, ...partnerHighTags]);
       
       // 各軸のギャップを計算
@@ -1344,15 +1344,15 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
           const scoreDiff = Math.abs(myTag.score - partnerTag.score);
           
           // 特定のタグ組み合わせで致命的な違いをチェック
-          if (myTag.tag === '🕯 ロマン重視' && myTag.score >= 4) {
+          if (myTag.tag === '🕯 ロマン重視' && myTag.score >= 3) {
             const partnerSpeed = partnerTagScores.find(pt => pt.tag === '⚡️ スピード勝負派');
-            if (partnerSpeed && partnerSpeed.score >= 4) {
+            if (partnerSpeed && partnerSpeed.score >= 3) {
               tagDifferences.critical++;
             }
           }
-          if (myTag.tag === '⚡️ スピード勝負派' && myTag.score >= 4) {
+          if (myTag.tag === '⚡️ スピード勝負派' && myTag.score >= 3) {
             const partnerRomance = partnerTagScores.find(pt => pt.tag === '🕯 ロマン重視');
-            if (partnerRomance && partnerRomance.score >= 4) {
+            if (partnerRomance && partnerRomance.score >= 3) {
               tagDifferences.critical++;
             }
           }
