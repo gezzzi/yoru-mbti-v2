@@ -74,12 +74,17 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "WebSite",
               "name": "夜の性格診断",
-              "alternateName": ["Night Personality", "夜MBTI", "nightpersonality.com"],
+              "alternateName": ["NightPersonality"],
               "url": "https://nightpersonality.com",
               "inLanguage": "ja",
               "publisher": {
                 "@type": "Organization",
-                "name": "夜の性格診断"
+                "name": "夜の性格診断",
+                "url": "https://nightpersonality.com",
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": "https://nightpersonality.com/og.png"
+                }
               }
             }
           `}
