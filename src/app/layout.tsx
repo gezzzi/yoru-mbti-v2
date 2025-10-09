@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import NavigationWrapper from '@/components/NavigationWrapper';
-import Footer from '@/components/Footer';
 import Script from "next/script";
-// フィードバックボタンを全ページ右下に表示
-import FeedbackButton from '../components/FeedbackButton';
 
 export const metadata: Metadata = {
   title: "夜の性格診断",
@@ -89,7 +85,6 @@ export default function RootLayout({
             }
           `}
         </Script>
-        {/* favicon & icons */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180.png" />
@@ -98,43 +93,9 @@ export default function RootLayout({
         <meta name="msapplication-TileImage" content="/mstile-150x150.png" />
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body>
-        {/* 背景と星 */}
-        <div className="fixed inset-0 -z-10 w-full h-full overflow-hidden">
-          <div className="absolute inset-0" style={{background: '#141e30'}} />
-          {[...Array(50)].map((_, i) => (
-            <div
-              key={i}
-              className="star"
-              style={{
-                position: 'absolute',
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                width: '3px',
-                height: '3px',
-                background: 'white',
-                borderRadius: '50%',
-                opacity: 0.8,
-                filter: 'blur(0.5px)',
-                animation: 'twinkle 3s 80',
-                animationDelay: `${Math.random() * 3}s`,
-              }}
-            />
-          ))}
-        </div>
-        {/* 通常のレイアウト */}
-        <div className="flex flex-col min-h-screen">
-          <NavigationWrapper />
-          <main className="flex-1 flex flex-col items-center justify-center w-full p-0 m-0">
-            {children}
-            {/* 右下固定のフィードバックボタン */}
-            <div style={{position:'fixed',right:'2rem',bottom:'2rem',zIndex:50}}>
-              <FeedbackButton />
-            </div>
-          </main>
-          <Footer />
-        </div>
+      <body className="bg-[#0c1220] text-white antialiased">
+        {children}
       </body>
     </html>
   );
-} 
+}
