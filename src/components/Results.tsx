@@ -458,7 +458,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
               )} */}
 
               {/* 詳細情報統合カード */}
-              <div className="rounded-xl bg-transparent backdrop-blur-sm pt-4 sm:pt-6 pb-2 sm:pb-3 mt-8">
+              <div className="rounded-xl bg-transparent pt-4 sm:pt-6 pb-2 sm:pb-3 mt-8">
                 <h3 className="text-xl sm:text-2xl font-bold text-[#e0e7ff] mb-4 sm:mb-6 text-center">性格診断カード</h3>
                 <div className="space-y-2">
                   {/* 夜の性格 */}
