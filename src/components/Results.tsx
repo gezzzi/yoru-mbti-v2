@@ -321,7 +321,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
             </h1>
             {/* プロモーション表示告知 */}
             <ScrollAnimation animation="fadeInUp" delay={100}>
-              <p className="text-sm text-white/70 mt-4">
+              <p className="text-base text-white sm:text-sm mt-4">
                 ※本ページにはプロモーションが含まれます。
               </p>
             </ScrollAnimation>
@@ -332,7 +332,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
         {username && (
           <ScrollAnimation animation="fadeInUp" delay={100}>
             <div className="text-center mt-4 mb-8">
-              <p className="text-[#e0e7ff] text-sm">
+              <p className="text-white text-base sm:text-sm">
                 <span className="font-bold text-lg text-pink-400">{username}</span>
                 <span className="font-bold text-lg">さんの分析</span>
               </p>
@@ -374,7 +374,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                 <div className="mb-12" style={{backgroundColor: 'transparent'}}>
                     {/* Personality Dimensions */}
                     <div style={{backgroundColor: 'transparent'}}>
-                      <h2 className="text-2xl font-bold text-[#e0e7ff] mb-6 text-center">性格診断結果</h2>
+                      <h2 className="text-2xl font-bold text-white mb-6 text-center">性格診断結果</h2>
                       
                       {dimensions.map((dimension) => (
                         <div 
@@ -417,10 +417,10 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                             
                             {/* Labels below the graph */}
                             <div className="flex items-center justify-between mt-1">
-                              <span className="text-sm font-medium text-[#e0e7ff]">
+                              <span className="text-base font-medium text-white sm:text-sm">
                                 {dimension.leftLabel}
                               </span>
-                              <span className="text-sm font-medium text-[#e0e7ff]">
+                              <span className="text-base font-medium text-white sm:text-sm">
                                 {dimension.rightLabel}
                               </span>
                             </div>
@@ -459,16 +459,16 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
 
               {/* 詳細情報統合カード */}
               <div className="rounded-xl bg-transparent pt-4 sm:pt-6 pb-2 sm:pb-3 mt-8">
-                <h3 className="text-xl sm:text-2xl font-bold text-[#e0e7ff] mb-4 sm:mb-6 text-center">性格診断カード</h3>
+                <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 text-center">性格診断カード</h3>
                 <div className="space-y-2">
                   {/* 夜の性格 */}
                   <div className="border-b border-white/20 pb-2 overflow-hidden">
-                    <div className="w-full rounded-lg p-2">
+                    <div className="w-full rounded-lg py-2">
                       <div className="mb-2 text-center">
-                        <h4 className="font-semibold text-[#e0e7ff] text-base sm:text-lg">夜の性格</h4>
+                        <h4 className="font-semibold text-white text-lg sm:text-lg">夜の性格</h4>
                       </div>
-                      <div className="px-2 text-center">
-                        <div className="text-[#e0e7ff]/80 text-base sm:text-lg space-y-1">
+                      <div className="text-center">
+                        <div className="text-white text-lg sm:text-lg space-y-1">
                           {(() => {
                             const tags = result.additionalResults?.tags || [];
                             let nightPersonality = '';
@@ -644,11 +644,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   
                   {/* おすすめの体位 */}
                   <div className="border-b border-white/20 pb-2 overflow-hidden">
-                    <div className="w-full rounded-lg p-2">
+                    <div className="w-full rounded-lg py-2">
                       <div className="mb-2 text-center">
-                        <h4 className="font-semibold text-[#e0e7ff] text-base sm:text-lg">おすすめの体位（48手）</h4>
+                        <h4 className="font-semibold text-white text-lg sm:text-lg">おすすめの体位（48手）</h4>
                       </div>
-                      <div className="px-2">
+                      <div>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                           {recommendedPositions.map((position: Position48, index: number) => (
                                   <div 
@@ -656,10 +656,10 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                                     className="bg-white/10 border border-white/20 rounded-lg p-3 relative cursor-pointer hover:bg-white/20 transition-colors"
                                     onClick={() => setSelectedPosition(position)}
                                   >
-                                    <span className="absolute top-3 right-3 text-xs text-[#e0e7ff]/60">No.{position.id}</span>
+                                    <span className="absolute top-3 right-3 text-xs text-white">No.{position.id}</span>
                                     <div className="text-center mb-2">
-                                      <p className="text-xs text-[#e0e7ff]/70 mb-1">（{position.kana || position.name}）</p>
-                                      <h5 className="font-semibold text-[#e0e7ff]">{position.name}</h5>
+                                      <p className="text-xs text-white mb-1">（{position.kana || position.name}）</p>
+                                      <h5 className="font-semibold text-white">{position.name}</h5>
                                     </div>
                                     <div className="flex flex-wrap gap-1 justify-center mb-2">
                                       {position.moods.map(mood => {
@@ -700,7 +700,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                                   </div>
                                 ))}
                           </div>
-                          <p className="text-[#e0e7ff]/80 text-base sm:text-lg text-center mt-2">
+                          <p className="text-white text-lg sm:text-lg text-center mt-2">
                             {result.A > 70 ? '激しく情熱的に楽しむ' : 
                              result.A < 30 ? 'ゆったり優しく楽しむ' : 
                              'バランスよく焦らしながら楽しむ'}
@@ -710,14 +710,14 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   </div>
                   {/* 相性と関係性 */}
                   <div className="border-b border-white/20 pb-2 overflow-hidden">
-                    <div className="w-full rounded-lg p-2">
+                    <div className="w-full rounded-lg py-2">
                       <div className="mb-2 text-center">
-                        <h4 className="font-semibold text-[#e0e7ff] text-base sm:text-lg">相性と関係性</h4>
+                        <h4 className="font-semibold text-white text-lg sm:text-lg">相性と関係性</h4>
                       </div>
-                      <div className="px-2 text-left">
-                        <div className="text-[#e0e7ff]/80 text-base sm:text-lg space-y-4">
+                      <div className="text-left">
+                        <div className="text-white text-lg sm:text-lg space-y-4">
                           <div>
-                            <h5 className="font-semibold text-[#e0e7ff] mb-2 text-center text-base sm:text-lg">相性のいいタイプ</h5>
+                            <h5 className="font-semibold text-white mb-2 text-center text-lg sm:text-lg">相性のいいタイプ</h5>
                             {(() => {
                               const compatibleTypes = [];
                               
@@ -775,7 +775,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                             })()}
                           </div>
                           <div>
-                            <h5 className="font-semibold text-[#e0e7ff] mb-2 text-center">相性が悪いタイプ</h5>
+                            <h5 className="font-semibold text-white mb-2 text-center">相性が悪いタイプ</h5>
                             {(() => {
                               const incompatibleTypes = [];
                               
@@ -846,7 +846,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                             })()}
                           </div>
                           <div>
-                            <h5 className="font-semibold text-[#e0e7ff] mb-2 text-center">関係性の理想スタイル</h5>
+                            <h5 className="font-semibold text-white mb-2 text-center">関係性の理想スタイル</h5>
                             <p className="text-center">
                               {(() => {
                                 const styles = [];
@@ -882,11 +882,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   
                   {/* あなたの短所とアドバイス */}
                   <div className="pb-2 overflow-hidden">
-                    <div className="w-full rounded-lg p-2">
+                    <div className="w-full rounded-lg py-2">
                       <div className="mb-2 text-center">
-                        <h4 className="font-semibold text-[#e0e7ff] text-base sm:text-lg">あなたの短所とアドバイス</h4>
+                        <h4 className="font-semibold text-white text-lg sm:text-lg">あなたの短所とアドバイス</h4>
                       </div>
-                      <div className="px-2 text-center">
+                      <div className="text-center">
                         {(() => {
                           const shortcomings = [];
                           const advices = [];
@@ -959,16 +959,16 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                           
                           return (
                             <>
-                              <h5 className="font-semibold text-[#e0e7ff] mb-2 text-base sm:text-lg">短所</h5>
-                              <p className="text-[#e0e7ff]/80 text-base sm:text-lg mb-4">
+                              <h5 className="font-semibold text-white mb-2 text-lg sm:text-lg">短所</h5>
+                              <p className="text-white text-lg sm:text-lg mb-4">
                                 {shortcomings[0]}
                               </p>
-                              <h5 className="font-semibold text-[#e0e7ff] mb-2 text-base sm:text-lg">アドバイス</h5>
-                              <p className="text-[#e0e7ff]/80 text-base sm:text-lg mb-4">
+                              <h5 className="font-semibold text-white mb-2 text-lg sm:text-lg">アドバイス</h5>
+                              <p className="text-white text-lg sm:text-lg mb-4">
                                 {advices[0]}
                               </p>
-                              <h5 className="font-semibold text-[#e0e7ff] mb-2 text-base sm:text-lg">より良い関係を築くための3つのヒント</h5>
-                              <ul className="text-[#e0e7ff]/80 text-base sm:text-lg space-y-1 list-none">
+                              <h5 className="font-semibold text-white mb-2 text-lg sm:text-lg">より良い関係を築くための3つのヒント</h5>
+                              <ul className="text-white text-lg sm:text-lg space-y-1 list-none">
                                 {hints.slice(0, 3).map((hint, index) => (
                                   <li key={index} className="flex items-start">
                                     <span className="sm:ml-16 md:ml-32 lg:ml-48 mr-2 text-yellow-500">💡</span>
@@ -990,21 +990,21 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                 <div className="flex flex-wrap justify-center gap-4">
                   <button 
                     onClick={() => setShowShareModal(true)}
-                    className="bg-teal-500 text-teal-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-sm sm:text-base"
+                    className="bg-teal-500 text-teal-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-base sm:text-base"
                   >
                     <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span>シェア</span>
                   </button>
                   <Link
                     href="/test"
-                    className="bg-gray-500 text-gray-100 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-gray-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-sm sm:text-base"
+                    className="bg-gray-500 text-gray-100 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-gray-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-base sm:text-base"
                   >
                     <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span>再診断</span>
                   </Link>
                   <Link
                     href="/compatibility"
-                    className="bg-gradient-to-r from-[#ec4899] to-[#ffb8ce] text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:from-[#ffb8ce] hover:to-[#ffb8ce] transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-sm sm:text-base"
+                    className="bg-gradient-to-r from-[#ec4899] to-[#ffb8ce] text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:from-[#ffb8ce] hover:to-[#ffb8ce] transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-base sm:text-base"
                   >
                     <span>相性診断へ進む</span>
                     <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1045,7 +1045,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
       {/* Affiliate Links */}
       <div className="mt-8 flex flex-col items-center space-y-4">
         <div className="text-center">
-          <span className="text-xs text-white/50 mb-1 inline-block">【広告】</span>
+          <span className="text-xs text-white mb-1 inline-block">【広告】</span>
           <div>
           <a href="https://px.a8.net/svt/ejp?a8mat=45E7LX+5URGXE+7ZS+2NAUSX" rel="nofollow noopener sponsored" target="_blank">
             <img style={{ border: 0 }} width="300" height="250" alt="" src="https://www28.a8.net/svt/bgt?aid=250925829354&wid=001&eno=01&mid=s00000001036016007000&mc=1" />

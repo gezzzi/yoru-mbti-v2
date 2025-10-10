@@ -1,33 +1,32 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- Application code lives under `src/app`, following Next.js routing conventions (`page.tsx`, nested layouts, segments such as `results/`).
-- Reusable UI and logic sit in `src/components` and `src/utils`; keep shared hooks or helpers colocated with their domain when possible.
-- Static assets (images, icons, manifest) reside in `public/`. Generated sitemap artifacts are output during build and should be ignored in commits.
-- Legacy or exploratory code may be in `backup/`; treat it as read-only reference.
+- Next.js app source lives in `src/app`, using route groups like `(star)` and `(results)` to swap global layouts cleanly.
+- Shared UI, hooks, and logic are under `src/components`, `src/hooks`, and `src/utils`; keep feature-specific helpers colocated with their page when reasonable.
+- Domain data (questions, tags, positions) is in `src/data`; update TypeScript types in `src/types` alongside any schema changes.
+- Static assets, favicons, and generated QR images belong in `public/`; avoid importing from `node_modules` at runtime.
 
 ## Build, Test, and Development Commands
-- `npm run dev`: launch the Next.js dev server with hot reload at `http://localhost:3000`.
-- `npm run build`: create the production bundle and regenerate the sitemap via `next-sitemap`.
-- `npm run start`: serve the compiled app locally to sanity-check the production build.
-- `npm run lint`: run ESLint with the Next.js config; fix reported issues before submitting changes.
+- `npm run dev` – start the Next.js dev server with hot reload at `http://localhost:3000`.
+- `npm run build` – produce the production bundle and regenerate the sitemap.
+- `npm run start` – serve the built app locally for pre-deploy smoke tests.
+- `npm run lint` – run ESLint (Next.js preset) to enforce style and catch common errors.
 
 ## Coding Style & Naming Conventions
-- Use TypeScript and React functional components; prefer server components unless interactivity demands `"use client"`.
-- Follow 2-space indentation, descriptive camelCase for variables/functions, PascalCase for components, and kebab-case for files in `public/`.
-- Style with Tailwind CSS utility classes; extract shared patterns into components instead of long class strings when readability suffers.
-- Respect the `@/*` path alias defined in `tsconfig.json` for cross-module imports.
+- Write React components in TypeScript using functional components; prefer server components unless interactivity requires `"use client"`.
+- Use 2-space indentation, camelCase variables/functions, PascalCase components, and descriptive file names (`ResultsLayout.tsx`, `useScrollAnimation.ts`).
+- Compose styling with Tailwind CSS utilities; extract repeated patterns into components rather than long inline class lists.
+- Import cross-module code via the `@/*` alias configured in `tsconfig.json`.
 
 ## Testing Guidelines
-- No automated test suite exists yet; add targeted Jest + Testing Library coverage when introducing complex logic (see `src/utils/testLogic.ts` for candidates).
-- Co-locate tests with implementation (`component.test.tsx`, `logic.test.ts`) and ensure they run under `npm test` once the script is added.
-- Document any manual QA steps in pull requests until automated coverage is established.
+- Automated tests are not yet configured; add Jest + React Testing Library when introducing complex logic (e.g., `src/utils/testLogic.ts`).
+- Co-locate future specs (`component.test.tsx`, `logic.test.ts`) beside their source and document manual QA steps in PRs until the test runner is wired in.
 
 ## Commit & Pull Request Guidelines
-- Mirror the existing concise, action-focused commit style (often imperative Japanese, e.g., `背景の点滅時間を調整`). Keep commits scoped to a single concern.
-- Pull requests should summarize intent, list functional changes, call out UI impacts with screenshots, and reference related issues or tasks.
-- Flag breaking changes or migrations early and include rollout/backout notes when relevant.
+- Follow the existing concise, imperative commit style (often Japanese), e.g., `背景の点滅時間を調整`.
+- Keep commits focused on a single concern; avoid bundling unrelated formatting or dependency changes.
+- PRs should explain intent, enumerate functional/UI changes, attach before/after screenshots for visual tweaks, and reference related tasks or issues.
 
 ## Environment & Configuration Tips
-- Keep environment secrets out of the repo; load them via `.env.local` and document required keys in PRs.
-- Verify visual changes across key routes such as `/`, `/test`, `/results`, and `/results/detail` to catch layout regressions.
+- Store secrets in `.env.local`; never commit API keys. Document required variables in PRs or a shared vault.
+- Validate UX flows on key routes (`/`, `/test`, `/results`, `/results/detail`) after layout changes and ensure generated assets in `.next/` remain untracked.
