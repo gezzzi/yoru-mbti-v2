@@ -48,15 +48,15 @@ const Hero: React.FC = () => {
   return (
     <main className="flex-1 flex flex-col items-center justify-center w-full p-0 m-0 min-h-dvh overflow-hidden">
       {/* テキスト部分 */}
-      <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 text-center flex-1">
+      <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 text-center flex-1 gap-12 sm:gap-16 md:gap-20 pt-12 pb-12 sm:pt-16 sm:pb-14 md:pt-32 md:pb-8">
         {/* レスポンシブ対応 */}
         <ScrollAnimation animation="fadeIn" duration={800}>
-          <h1 className="mt-4 sm:mt-8 md:mt-12 text-5xl md:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight drop-shadow-lg select-none text-center">
+          <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight drop-shadow-lg select-none text-center">
             <NeonText text={["夜の", "性格診断"]} specialCharIndex={2} className="gap-1" />
           </h1>
         </ScrollAnimation>
         <ScrollAnimation animation="fadeInUp" delay={200}>
-          <p className="text-base sm:text-lg md:text-2xl text-white/90 mb-4 sm:mb-6 leading-relaxed max-w-3xl mx-auto drop-shadow px-2 sm:px-4">
+          <p className="text-base sm:text-lg md:text-2xl text-white/90 leading-relaxed max-w-3xl mx-auto drop-shadow px-2 sm:px-4">
             たった10分で、自分がどんな性癖を持っていて、なぜそのプレイや関係性に惹かれるのか、不思議なくらいしっくりくる説明が手に入ります。
           </p>
         </ScrollAnimation>
