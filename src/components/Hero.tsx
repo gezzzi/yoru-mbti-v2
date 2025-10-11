@@ -48,7 +48,7 @@ const Hero: React.FC = () => {
   return (
     <main className="flex-1 flex flex-col items-center justify-center w-full p-0 m-0 min-h-dvh overflow-hidden">
       {/* テキスト部分 */}
-      <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 text-center flex-1 gap-12 sm:gap-16 md:gap-20 pt-12 pb-12 sm:pt-16 sm:pb-14 md:pt-32 md:pb-8">
+      <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 text-center flex-1 gap-12 sm:gap-16 md:gap-20 pt-20 pb-6 sm:pt-16 sm:pb-14 md:pt-32 md:pb-8">
         {/* レスポンシブ対応 */}
         <ScrollAnimation animation="fadeIn" duration={800}>
           <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight drop-shadow-lg select-none text-center">
