@@ -47,7 +47,13 @@
       "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
       "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
       "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
-      "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)"
+      "Read(/C:\\Users\\user\\dev\\yoru-mbti-v2\\src\\components/**)",
+      "Read(//c//**)",
+      "mcp__chrome-devtools__new_page",
+      "Bash(npx lighthouse:*)",
+      "mcp__chrome-devtools__take_screenshot",
+      "mcp__chrome-devtools__performance_start_trace",
+      "mcp__chrome-devtools__performance_analyze_insight"
     ],
     "deny": []
   }

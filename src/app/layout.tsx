@@ -55,6 +55,149 @@ export default function RootLayout({
         <meta property="og:site_name" content="夜の性格診断" />
         <meta name="application-name" content="夜の性格診断" />
         <meta name="apple-mobile-web-app-title" content="夜の性格診断" />
+
+        {/* Preconnect for performance optimization */}
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.google-analytics.com" />
+
+        {/* Critical CSS - inline for faster initial paint */}
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            /* Critical CSS for above-the-fold content */
+            *, ::before, ::after {
+              box-sizing: border-box;
+              border-width: 0;
+              border-style: solid;
+              border-color: #e5e7eb;
+            }
+            html {
+              line-height: 1.5;
+              -webkit-text-size-adjust: 100%;
+              -moz-tab-size: 4;
+              tab-size: 4;
+              font-family: Arial, Helvetica, sans-serif;
+            }
+            body {
+              margin: 0;
+              line-height: inherit;
+              background: #0c1220;
+              color: #ffffff;
+              font-family: Arial, Helvetica, sans-serif;
+              -webkit-font-smoothing: antialiased;
+              -moz-osx-font-smoothing: grayscale;
+            }
+            .min-h-dvh {
+              min-height: 100vh;
+            }
+            @supports (min-height: 100dvh) {
+              .min-h-dvh {
+                min-height: 100dvh;
+              }
+            }
+            .bg-gradient-to-br {
+              background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
+            }
+            .from-purple-900 {
+              --tw-gradient-from: #581c87;
+              --tw-gradient-to: rgb(88 28 135 / 0);
+              --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+            }
+            .via-purple-800 {
+              --tw-gradient-to: rgb(107 33 168 / 0);
+              --tw-gradient-stops: var(--tw-gradient-from), #6b21a8, var(--tw-gradient-to);
+            }
+            .to-pink-900 {
+              --tw-gradient-to: #831843;
+            }
+            .text-white {
+              color: #ffffff;
+            }
+            .antialiased {
+              -webkit-font-smoothing: antialiased;
+              -moz-osx-font-smoothing: grayscale;
+            }
+            /* Starfield animation base */
+            @keyframes twinkle {
+              0%, 100% { opacity: 0; }
+              50% { opacity: 1; }
+            }
+            /* Button and interactive element base styles */
+            button {
+              font-family: inherit;
+              font-size: 100%;
+              font-weight: inherit;
+              line-height: inherit;
+              color: inherit;
+              margin: 0;
+              padding: 0;
+              background-color: transparent;
+              background-image: none;
+              text-transform: none;
+              cursor: pointer;
+            }
+            a {
+              color: inherit;
+              text-decoration: inherit;
+            }
+            /* Flexbox utilities for layout */
+            .flex {
+              display: flex;
+            }
+            .flex-col {
+              flex-direction: column;
+            }
+            .items-center {
+              align-items: center;
+            }
+            .justify-center {
+              justify-content: center;
+            }
+            /* Text utilities */
+            .text-center {
+              text-align: center;
+            }
+            .text-4xl {
+              font-size: 2.25rem;
+              line-height: 2.5rem;
+            }
+            .text-xl {
+              font-size: 1.25rem;
+              line-height: 1.75rem;
+            }
+            .font-bold {
+              font-weight: 700;
+            }
+            /* Spacing utilities */
+            .p-4 {
+              padding: 1rem;
+            }
+            .px-8 {
+              padding-left: 2rem;
+              padding-right: 2rem;
+            }
+            .py-4 {
+              padding-top: 1rem;
+              padding-bottom: 1rem;
+            }
+            .mt-8 {
+              margin-top: 2rem;
+            }
+            .mb-8 {
+              margin-bottom: 2rem;
+            }
+            /* Hide scrollbar */
+            .scrollbar-hide {
+              -ms-overflow-style: none;
+              scrollbar-width: none;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+              display: none;
+            }
+          `
+        }} />
+
         <Script async src="https://www.googletagmanager.com/gtag/js?id=G-HLM13T0M2K" strategy="afterInteractive" />
         <Script id="gtag-init" strategy="afterInteractive">
           {`
