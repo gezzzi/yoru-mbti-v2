@@ -17,7 +17,17 @@
 body {
   background: #141e30;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-kiwi), 'Kiwi Maru', 'Hiragino Mincho ProN', 'Yu Mincho', 'MS PMincho', serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-head {
+  font-family: var(--font-dela), 'Dela Gothic One', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
 }
 
 /* 静的ビューポート対応 */
