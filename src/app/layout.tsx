@@ -1,6 +1,21 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Script from "next/script";
+import { Kiwi_Maru, Dela_Gothic_One } from "next/font/google";
+
+const kiwiMaru = Kiwi_Maru({
+  weight: ["400"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-kiwi",
+});
+
+const delaGothicOne = Dela_Gothic_One({
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-dela",
+});
 
 export const metadata: Metadata = {
   title: "夜の性格診断",
@@ -49,7 +64,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
+    <html
+      lang="ja"
+      className={`${kiwiMaru.variable} ${delaGothicOne.variable}`}
+    >
       <head>
         <meta name="theme-color" content="#000000" />
         <meta property="og:site_name" content="夜の性格診断" />
@@ -77,16 +95,19 @@ export default function RootLayout({
               -webkit-text-size-adjust: 100%;
               -moz-tab-size: 4;
               tab-size: 4;
-              font-family: Arial, Helvetica, sans-serif;
+              font-family: 'Kiwi Maru', 'Hiragino Mincho ProN', 'Yu Mincho', 'MS PMincho', serif;
             }
             body {
               margin: 0;
               line-height: inherit;
               background: #0c1220;
               color: #ffffff;
-              font-family: Arial, Helvetica, sans-serif;
+              font-family: 'Kiwi Maru', 'Hiragino Mincho ProN', 'Yu Mincho', 'MS PMincho', serif;
               -webkit-font-smoothing: antialiased;
               -moz-osx-font-smoothing: grayscale;
+            }
+            h1, h2, h3, h4, h5, h6, .font-head {
+              font-family: 'Dela Gothic One', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
             }
             .min-h-dvh {
               min-height: 100vh;
@@ -236,7 +257,7 @@ export default function RootLayout({
         <meta name="msapplication-TileImage" content="/mstile-150x150.png" />
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body className="bg-[#0c1220] text-white antialiased">
+      <body className={`${kiwiMaru.className} bg-[#0c1220] text-white antialiased`}>
         {children}
       </body>
     </html>

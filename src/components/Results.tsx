@@ -333,6 +333,17 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight drop-shadow-lg select-none text-center">
               <NeonText text={["あなたの", "診断結果"]} specialCharIndex={5} className="gap-1" />
             </h1>
+            {/* Username Display */}
+            {username && (
+              <ScrollAnimation animation="fadeInUp" delay={100}>
+                <div className="text-center mt-12 sm:mt-16">
+                  <p className="text-white text-base sm:text-sm">
+                    <span className="font-bold text-lg text-pink-400">{username}</span>
+                    <span className="font-bold text-lg">さんの診断レポート</span>
+                  </p>
+                </div>
+              </ScrollAnimation>
+            )}
             {/* プロモーション表示告知 */}
             <ScrollAnimation animation="fadeInUp" delay={100}>
               <p className="text-base text-white sm:text-sm mt-4">
@@ -341,19 +352,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
             </ScrollAnimation>
           </div>
         </ScrollAnimation>
-        
-        {/* Username Display */}
-        {username && (
-          <ScrollAnimation animation="fadeInUp" delay={100}>
-            <div className="text-center mt-4 mb-8">
-              <p className="text-white text-base sm:text-sm">
-                <span className="font-bold text-lg text-pink-400">{username}</span>
-                <span className="font-bold text-lg">さんの分析</span>
-              </p>
-            </div>
-          </ScrollAnimation>
-        )}
-        
+
         {/* Download container */}
         <ScrollAnimation animation="fadeInUp" delay={200}>
           <div ref={downloadRef}>
