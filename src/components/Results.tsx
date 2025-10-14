@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { TestResult } from '../types/personality';
 import { getCategoryColor, getCategoryName, personalityTypes } from '../data/personalityTypes';
 import { copyToClipboard } from '../utils/snsShare';
-import { Heart, RefreshCw, Share2, User, Shield, Zap, Eye, Dices, Edit3 } from 'lucide-react';
+import { Heart, RefreshCw, Share2, User, Shield, Zap, Eye, Dices, Edit3, Moon } from 'lucide-react';
 import Image from 'next/image';
 import SNSShareModal from './SNSShareModal';
 import NeonText from './NeonText';
@@ -337,16 +337,16 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
             {username && (
               <ScrollAnimation animation="fadeInUp" delay={100}>
                 <div className="text-center mt-12 sm:mt-16">
-                  <p className="text-white text-base sm:text-sm">
-                    <span className="font-bold text-lg text-pink-400">{username}</span>
-                    <span className="font-bold text-lg">さんの診断レポート</span>
+                  <p className="text-white text-lg sm:text-base">
+                    <span className="font-bold text-xl text-pink-400">{username}</span>
+                    <span className="font-bold text-xl">さんの診断レポート</span>
                   </p>
                 </div>
               </ScrollAnimation>
             )}
             {/* プロモーション表示告知 */}
             <ScrollAnimation animation="fadeInUp" delay={100}>
-              <p className="text-base text-white sm:text-sm mt-4">
+              <p className="text-lg text-white sm:text-base mt-4">
                 ※本ページにはプロモーションが含まれます。
               </p>
             </ScrollAnimation>
@@ -361,15 +361,27 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
               <div className="p-8 text-white flex justify-center">
                 <div className="w-full">
                   {/* 性格タイプ名 */}
-                    <div className="font-head text-3xl md:text-4xl lg:text-5xl mb-6 mt-0 text-center text-white font-bold">
-                    {typeWithRuby && typeWithRuby.ruby ? (
-                      <ruby className="ruby-text">
-                        {typeWithRuby.name}
-                        <rt>{typeWithRuby.ruby}</rt>
-                      </ruby>
-                    ) : (
-                      typeWithRuby?.name || 'タイプ名なし'
-                    )}
+                  <div className="flex flex-col items-center gap-3 mb-6 mt-0">
+                    <span className="block h-[2px] w-56 sm:w-80 bg-pink-300/80" aria-hidden="true" />
+                    <div className="flex items-center w-full max-w-3xl mx-auto">
+                      <span className="flex-1 flex justify-end pr-6 sm:pr-10">
+                        <Moon className="w-7 h-7 sm:w-9 sm:h-9 text-pink-200 drop-shadow-[0_0_10px_rgba(244,114,182,0.4)]" aria-hidden="true" />
+                      </span>
+                      <div className="font-head text-3xl md:text-4xl lg:text-5xl text-center text-white font-bold drop-shadow-[0_0_18px_rgba(244,114,182,0.35)] px-4 sm:px-6">
+                        {typeWithRuby && typeWithRuby.ruby ? (
+                          <ruby className="ruby-text">
+                            {typeWithRuby.name}
+                            <rt>{typeWithRuby.ruby}</rt>
+                          </ruby>
+                        ) : (
+                          typeWithRuby?.name || 'タイプ名なし'
+                        )}
+                      </div>
+                      <span className="flex-1 flex justify-start pl-6 sm:pl-10">
+                        <Moon className="w-7 h-7 sm:w-9 sm:h-9 text-pink-200 drop-shadow-[0_0_10px_rgba(244,114,182,0.4)]" aria-hidden="true" />
+                      </span>
+                    </div>
+                    <span className="block h-[2px] w-56 sm:w-80 bg-pink-300/80" aria-hidden="true" />
                   </div>
                   <div className="code text-center mb-6">
                     <h1 className="font-head text-2xl md:text-3xl m-0 text-white font-bold">
@@ -387,7 +399,6 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                 <div className="mb-12" style={{backgroundColor: 'transparent'}}>
                     {/* Personality Dimensions */}
                     <div style={{backgroundColor: 'transparent'}}>
-                      <h2 className="text-2xl font-bold text-white mb-6 text-center">性格診断結果</h2>
                       
                       {dimensions.map((dimension) => (
                         <div 
@@ -472,16 +483,27 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
 
               {/* 詳細情報統合カード */}
               <div className="rounded-xl bg-transparent pt-4 sm:pt-6 pb-2 sm:pb-3 mt-8">
-                <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 text-center">性格診断カード</h3>
                 <div className="space-y-2">
                   {/* 夜の性格 */}
                   <div className="border-b border-white/20 pb-2 overflow-hidden">
                     <div className="w-full rounded-lg py-2">
-                      <div className="mb-2 text-center">
-                        <h4 className="font-semibold text-white text-lg sm:text-lg">夜の性格</h4>
+                      <div className="mb-5">
+                        <div className="flex items-center justify-center gap-2 sm:gap-3">
+                          <span
+                            aria-hidden="true"
+                            className="block h-px w-10 sm:w-24 bg-gradient-to-l from-pink-300/80 via-pink-300/40 to-transparent"
+                          />
+                          <h4 className="font-semibold text-2xl sm:text-3xl text-pink-200 drop-shadow-[0_0_10px_rgba(244,114,182,0.4)] tracking-wide">
+                            夜の性格
+                          </h4>
+                          <span
+                            aria-hidden="true"
+                            className="block h-px w-10 sm:w-24 bg-gradient-to-r from-pink-300/80 via-pink-300/40 to-transparent"
+                          />
+                        </div>
                       </div>
                       <div className="text-center">
-                        <div className="text-white text-lg sm:text-lg space-y-1">
+                        <div className="text-white text-xl sm:text-2xl space-y-3">
                           {nightPersonalityText
                             ? nightPersonalityText
                                 .split(/\n{2,}/)
@@ -506,21 +528,33 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   {/* おすすめの体位 */}
                   <div className="border-b border-white/20 pb-2 overflow-hidden">
                     <div className="w-full rounded-lg py-2">
-                      <div className="mb-2 text-center">
-                        <h4 className="font-semibold text-white text-lg sm:text-lg">おすすめの体位（48手）</h4>
+                      <div className="mb-5">
+                        <div className="flex items-center justify-center gap-2 sm:gap-3">
+                          <span
+                            aria-hidden="true"
+                            className="block h-px w-10 sm:w-24 bg-gradient-to-l from-pink-300/80 via-pink-300/40 to-transparent"
+                          />
+                          <h4 className="font-semibold text-2xl sm:text-3xl text-pink-200 drop-shadow-[0_0_10px_rgba(244,114,182,0.4)] tracking-wide">
+                            おすすめの体位（48手）
+                          </h4>
+                          <span
+                            aria-hidden="true"
+                            className="block h-px w-10 sm:w-24 bg-gradient-to-r from-pink-300/80 via-pink-300/40 to-transparent"
+                          />
+                        </div>
                       </div>
                       <div>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                           {recommendedPositions.map((position: Position48, index: number) => (
                                   <div 
                                     key={position.id} 
-                                    className="shine-card bg-white/10 border border-white/20 rounded-lg p-3 cursor-pointer hover:bg-white/20 transition-colors"
+                                    className="shine-card relative bg-white/10 border border-white/20 rounded-lg p-3 cursor-pointer hover:bg-white/20 transition-colors"
                                     onClick={() => setSelectedPosition(position)}
                                   >
                                     <span className="absolute top-3 right-3 text-xs text-white">No.{position.id}</span>
                                     <div className="text-center mb-2">
                                       <p className="text-xs text-white mb-1">{position.kana || position.name}</p>
-                                      <h5 className="font-semibold text-white text-lg">{position.name}</h5>
+                                      <h5 className="font-semibold text-white text-xl">{position.name}</h5>
                                     </div>
                                     <div className="flex flex-wrap gap-1 justify-center mb-2">
                                       {position.moods.map(mood => {
@@ -561,7 +595,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                                   </div>
                                 ))}
                           </div>
-                          <p className="text-white text-lg sm:text-lg text-center mt-2">
+                          <p className="text-white text-xl sm:text-2xl text-center mt-3">
                             {result.A > 70 ? '激しく情熱的に楽しむ' : 
                              result.A < 30 ? 'ゆったり優しく楽しむ' : 
                              'バランスよく焦らしながら楽しむ'}
@@ -572,13 +606,27 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   {/* 相性と関係性 */}
                   <div className="border-b border-white/20 pb-2 overflow-hidden">
                     <div className="w-full rounded-lg py-2">
-                      <div className="mb-2 text-center">
-                        <h4 className="font-semibold text-white text-lg sm:text-lg">相性と関係性</h4>
+                      <div className="mb-5">
+                        <div className="flex items-center justify-center gap-2 sm:gap-3">
+                          <span
+                            aria-hidden="true"
+                            className="block h-px w-10 sm:w-24 bg-gradient-to-l from-pink-300/80 via-pink-300/40 to-transparent"
+                          />
+                          <h4 className="font-semibold text-2xl sm:text-3xl text-pink-200 drop-shadow-[0_0_10px_rgba(244,114,182,0.4)] tracking-wide">
+                            相性と関係性
+                          </h4>
+                          <span
+                            aria-hidden="true"
+                            className="block h-px w-10 sm:w-24 bg-gradient-to-r from-pink-300/80 via-pink-300/40 to-transparent"
+                          />
+                        </div>
                       </div>
                       <div className="text-left">
-                        <div className="text-white text-lg sm:text-lg space-y-4">
-                          <div>
-                            <h5 className="font-semibold text-white mb-2 text-center text-lg sm:text-lg">相性のいいタイプ</h5>
+                        <div className="text-white text-xl sm:text-2xl space-y-8">
+                          <div className="space-y-4 px-2 sm:px-4">
+                            <div className="flex justify-center">
+                              <h5 className="font-semibold text-white text-2xl sm:text-3xl border-b-2 border-pink-300/70 pb-1 px-2">相性のいいタイプ</h5>
+                            </div>
                             {(() => {
                               const compatibleTypes = [];
                               
@@ -625,18 +673,17 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                                 displayItems.push(trait);
                               });
                               
-                              return displayItems.slice(0, 3).map((item, index) => {
-                                // すべての項目に同じ余白を適用
-                                return (
-                                  <div key={index} className="mb-1 sm:ml-16 md:ml-32 lg:ml-48">
-                                    {item}
-                                  </div>
-                                );
-                              });
+                              return displayItems.slice(0, 3).map((item, index) => (
+                                <div key={index} className="sm:ml-16 md:ml-32 lg:ml-48 leading-relaxed">
+                                  {item}
+                                </div>
+                              ));
                             })()}
                           </div>
-                          <div>
-                            <h5 className="font-semibold text-white mb-2 text-center">相性が悪いタイプ</h5>
+                          <div className="space-y-4 px-2 sm:px-4">
+                            <div className="flex justify-center">
+                              <h5 className="font-semibold text-white text-2xl sm:text-3xl border-b-2 border-rose-300/60 pb-1 px-2">相性が悪いタイプ</h5>
+                            </div>
                             {(() => {
                               const incompatibleTypes = [];
                               
@@ -696,19 +743,18 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                                 displayItems.push(trait);
                               });
                               
-                              return displayItems.slice(0, 3).map((item, index) => {
-                                // すべての項目に同じ余白を適用
-                                return (
-                                  <div key={index} className="mb-1 sm:ml-16 md:ml-32 lg:ml-48">
-                                    {item}
-                                  </div>
-                                );
-                              });
+                              return displayItems.slice(0, 3).map((item, index) => (
+                                <div key={index} className="sm:ml-16 md:ml-32 lg:ml-48 leading-relaxed">
+                                  {item}
+                                </div>
+                              ));
                             })()}
                           </div>
-                          <div>
-                            <h5 className="font-semibold text-white mb-2 text-center">関係性の理想スタイル</h5>
-                            <p className="text-center">
+                          <div className="space-y-4 px-2 sm:px-4">
+                            <div className="flex justify-center">
+                              <h5 className="font-semibold text-white text-2xl sm:text-3xl border-b-2 border-indigo-300/60 pb-1 px-2">関係性の理想スタイル</h5>
+                            </div>
+                            <p className="text-center text-xl sm:text-2xl leading-relaxed">
                               {(() => {
                                 const styles = [];
                                 
@@ -744,8 +790,20 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   {/* あなたの短所とアドバイス */}
                   <div className="pb-2 overflow-hidden">
                     <div className="w-full rounded-lg py-2">
-                      <div className="mb-2 text-center">
-                        <h4 className="font-semibold text-white text-lg sm:text-lg">あなたの短所とアドバイス</h4>
+                      <div className="mb-5">
+                        <div className="flex items-center justify-center gap-2 sm:gap-3">
+                          <span
+                            aria-hidden="true"
+                            className="block h-px w-10 sm:w-24 bg-gradient-to-l from-pink-300/80 via-pink-300/40 to-transparent"
+                          />
+                          <h4 className="font-semibold text-2xl sm:text-3xl text-pink-200 drop-shadow-[0_0_10px_rgba(244,114,182,0.4)] tracking-wide">
+                            あなたの短所とアドバイス
+                          </h4>
+                          <span
+                            aria-hidden="true"
+                            className="block h-px w-10 sm:w-24 bg-gradient-to-r from-pink-300/80 via-pink-300/40 to-transparent"
+                          />
+                        </div>
                       </div>
                       <div className="text-center">
                         {(() => {
@@ -819,25 +877,39 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                           }
                           
                           return (
-                            <>
-                              <h5 className="font-semibold text-white mb-2 text-lg sm:text-lg">短所</h5>
-                              <p className="text-white text-lg sm:text-lg mb-4">
-                                {shortcomings[0]}
-                              </p>
-                              <h5 className="font-semibold text-white mb-2 text-lg sm:text-lg">アドバイス</h5>
-                              <p className="text-white text-lg sm:text-lg mb-4">
-                                {advices[0]}
-                              </p>
-                              <h5 className="font-semibold text-white mb-2 text-lg sm:text-lg">より良い関係を築くための3つのヒント</h5>
-                              <ul className="text-white text-lg sm:text-lg space-y-1 list-none">
-                                {hints.slice(0, 3).map((hint, index) => (
-                                  <li key={index} className="flex items-start">
-                                    <span className="sm:ml-16 md:ml-32 lg:ml-48 mr-2 text-yellow-500">💡</span>
-                                    <span>{hint}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </>
+                            <div className="space-y-8 px-2 sm:px-4">
+                              <div className="space-y-3">
+                                <div className="flex justify-center">
+                                  <h5 className="font-semibold text-white text-2xl sm:text-3xl border-b-2 border-amber-300/70 pb-1 px-2">短所</h5>
+                                </div>
+                                <p className="text-white text-xl sm:text-2xl leading-relaxed">
+                                  {shortcomings[0]}
+                                </p>
+                              </div>
+
+                              <div className="space-y-3">
+                                <div className="flex justify-center">
+                                  <h5 className="font-semibold text-white text-2xl sm:text-3xl border-b-2 border-emerald-300/60 pb-1 px-2">アドバイス</h5>
+                                </div>
+                                <p className="text-white text-xl sm:text-2xl leading-relaxed text-center">
+                                  {advices[0]}
+                                </p>
+                              </div>
+
+                              <div className="space-y-4">
+                                <div className="flex justify-center">
+                                  <h5 className="font-semibold text-white text-2xl sm:text-3xl border-b-2 border-sky-300/60 pb-1 px-2">より良い関係を築くための3つのヒント</h5>
+                                </div>
+                                <ul className="text-white text-xl sm:text-2xl space-y-3 list-none">
+                                  {hints.slice(0, 3).map((hint, index) => (
+                                    <li key={index} className="flex items-start">
+                                      <span className="sm:ml-16 md:ml-32 lg:ml-48 mr-3 text-yellow-400">💡</span>
+                                      <span className="leading-relaxed">{hint}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
                           );
                         })()}
                       </div>
@@ -851,21 +923,21 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                 <div className="flex flex-wrap justify-center gap-4">
                   <button 
                     onClick={() => setShowShareModal(true)}
-                    className="bg-teal-500 text-teal-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-base sm:text-base"
+                    className="bg-teal-500 text-teal-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-lg sm:text-lg"
                   >
                     <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span>シェア</span>
                   </button>
                   <Link
                     href="/test"
-                    className="bg-gray-500 text-gray-100 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-gray-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-base sm:text-base"
+                    className="bg-gray-500 text-gray-100 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-gray-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-lg sm:text-lg"
                   >
                     <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span>再診断</span>
                   </Link>
                   <Link
                     href="/compatibility"
-                    className="bg-gradient-to-r from-[#ec4899] to-[#ffb8ce] text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:from-[#ffb8ce] hover:to-[#ffb8ce] transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-base sm:text-base"
+                    className="bg-gradient-to-r from-[#ec4899] to-[#ffb8ce] text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:from-[#ffb8ce] hover:to-[#ffb8ce] transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-lg sm:text-lg"
                   >
                     <span>相性診断へ進む</span>
                     <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
