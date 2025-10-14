@@ -1,3 +1,7 @@
 {
-  "/(star)/page": "app/(star)/page.js"
+  "/(star)/page": "app/(star)/page.js",
+  "/(results)/results/page": "app/(results)/results/page.js",
+  "/(star)/types/page": "app/(star)/types/page.js",
+  "/(star)/compatibility/page": "app/(star)/compatibility/page.js",
+  "/(star)/test/page": "app/(star)/test/page.js"
 }

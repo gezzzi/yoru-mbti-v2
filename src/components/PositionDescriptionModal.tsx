@@ -19,7 +19,11 @@ export const PositionDescriptionModal: React.FC<PositionDescriptionModalProps> =
     }
   };
 
-  const difficultyStars = position.difficulty === 'easy' ? '★☆☆' : position.difficulty === 'medium' ? '★★☆' : '★★★';
+  const difficultyHearts = position.difficulty === 'easy'
+    ? '♥♡♡'
+    : position.difficulty === 'medium'
+      ? '♥♥♡'
+      : '♥♥♥';
 
   return (
     <div 
@@ -35,19 +39,19 @@ export const PositionDescriptionModal: React.FC<PositionDescriptionModalProps> =
         </button>
         
         <div className="text-center">
-          <h3 className="text-2xl font-bold text-white mb-1">{position.name}</h3>
-          <p className="text-sm text-white/70 mb-4">（{position.kana}）</p>
+          <p className="text-xs text-white/70 tracking-wider mb-1">{position.kana}</p>
+          <h3 className="text-2xl font-bold text-white mb-4">{position.name}</h3>
           
           <div className="flex items-center justify-center gap-2 mb-4">
             <span className="text-xs bg-white/20 px-2 py-1 rounded-full text-white/90">
               No.{position.id}
             </span>
             <span className="text-xs bg-white/20 px-2 py-1 rounded-full text-white/90">
-              難易度: {difficultyStars}
+              難易度: {difficultyHearts}
             </span>
           </div>
 
-          <p className="text-white/90 text-sm leading-relaxed mb-4">
+          <p className="text-white/90 text-base leading-relaxed mb-4">
             {position.description || '説明が準備中です。'}
           </p>
 

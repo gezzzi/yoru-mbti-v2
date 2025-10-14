@@ -514,13 +514,13 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                           {recommendedPositions.map((position: Position48, index: number) => (
                                   <div 
                                     key={position.id} 
-                                    className="bg-white/10 border border-white/20 rounded-lg p-3 relative cursor-pointer hover:bg-white/20 transition-colors"
+                                    className="shine-card bg-white/10 border border-white/20 rounded-lg p-3 cursor-pointer hover:bg-white/20 transition-colors"
                                     onClick={() => setSelectedPosition(position)}
                                   >
                                     <span className="absolute top-3 right-3 text-xs text-white">No.{position.id}</span>
                                     <div className="text-center mb-2">
-                                      <p className="text-xs text-white mb-1">（{position.kana || position.name}）</p>
-                                      <h5 className="font-semibold text-white">{position.name}</h5>
+                                      <p className="text-xs text-white mb-1">{position.kana || position.name}</p>
+                                      <h5 className="font-semibold text-white text-lg">{position.name}</h5>
                                     </div>
                                     <div className="flex flex-wrap gap-1 justify-center mb-2">
                                       {position.moods.map(mood => {
