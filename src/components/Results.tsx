@@ -109,6 +109,21 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
 
   // おすすめの体位を一度だけ計算してメモ化
   const recommendedPositions = useMemo(() => {
+    const ensureThreePositions = (basePositions: Position48[]): Position48[] => {
+      const filled = [...basePositions];
+      const availablePool = positions48.filter((position) => !filled.some(existing => existing?.id === position.id));
+
+      while (filled.length < 3 && availablePool.length > 0) {
+        const randomIndex = Math.floor(Math.random() * availablePool.length);
+        const [next] = availablePool.splice(randomIndex, 1);
+        if (next) {
+          filled.push(next);
+        }
+      }
+
+      return filled.slice(0, 3);
+    };
+
     // localStorageから保存済みの体位を取得
     const storageKey = `recommended_positions_${type.code}`;
     if (typeof window !== 'undefined') {
@@ -117,11 +132,19 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
         try {
           const parsed = JSON.parse(savedPositions);
           // 保存されたIDから実際の体位オブジェクトを復元
-          const restoredPositions = parsed.map((id: number) => 
-            positions48.find(p => p.id === id)
-          ).filter(Boolean);
+          const restoredPositions = parsed
+            .map((id: number) => positions48.find((candidate) => candidate?.id === id) ?? null)
+            .filter((possiblePosition: Position48 | null): possiblePosition is Position48 => possiblePosition !== null);
+
           if (restoredPositions.length > 0) {
-            return restoredPositions;
+            const ensured = ensureThreePositions(restoredPositions);
+            if (ensured.length > 0) {
+              if (ensured.length === 3) {
+                const ensuredIds = ensured.map(p => p.id);
+                localStorage.setItem(storageKey, JSON.stringify(ensuredIds));
+              }
+              return ensured;
+            }
           }
         } catch (e) {
           // パースエラーの場合は新規生成に進む
@@ -169,19 +192,19 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
     
     // 3. 各ムードから体位を選択（ランダムに）
     moodPriorities.forEach((mood, index) => {
-      const moodPositions = getPositionsByMood(mood).filter(pos => !usedIds.has(pos.id));
+      const moodPositions = getPositionsByMood(mood).filter((position) => !usedIds.has(position.id));
       
       // 難易度フィルター（冒険度に応じて）
       let filtered = moodPositions;
       if (result.A < 30) {
         // 冒険度低い：簡単な体位のみ
-        filtered = moodPositions.filter(pos => pos.difficulty === 'easy');
+        filtered = moodPositions.filter((position) => position.difficulty === 'easy');
       } else if (result.A > 70) {
         // 冒険度高い：難しい体位も含める
         filtered = moodPositions;
       } else {
         // 中間：中級まで
-        filtered = moodPositions.filter(pos => pos.difficulty !== 'hard');
+        filtered = moodPositions.filter((position) => position.difficulty !== 'hard');
       }
       
       // フィルター後に体位がない場合は元のリストから選択
@@ -197,12 +220,14 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
     });
     
     // 選択した体位のIDをlocalStorageに保存
-    if (typeof window !== 'undefined' && selectedPositions.length > 0) {
-      const positionIds = selectedPositions.map(p => p.id);
+    const ensuredSelection = ensureThreePositions(selectedPositions);
+
+    if (typeof window !== 'undefined' && ensuredSelection.length > 0) {
+      const positionIds = ensuredSelection.map(p => p.id);
       localStorage.setItem(storageKey, JSON.stringify(positionIds));
     }
     
-    return selectedPositions;
+    return ensuredSelection;
   }, [result, type.code]);
 
   // 診断結果をローカルストレージに保存
@@ -674,7 +699,10 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                               });
                               
                               return displayItems.slice(0, 3).map((item, index) => (
-                                <div key={index} className="sm:ml-16 md:ml-32 lg:ml-48 leading-relaxed">
+                                <div
+                                  key={index}
+                                  className="sm:ml-12 md:ml-24 lg:ml-32 leading-relaxed"
+                                >
                                   {item}
                                 </div>
                               ));
@@ -744,7 +772,10 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                               });
                               
                               return displayItems.slice(0, 3).map((item, index) => (
-                                <div key={index} className="sm:ml-16 md:ml-32 lg:ml-48 leading-relaxed">
+                                <div
+                                  key={index}
+                                  className="sm:ml-12 md:ml-24 lg:ml-32 leading-relaxed"
+                                >
                                   {item}
                                 </div>
                               ));
@@ -903,7 +934,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                                 <ul className="text-white text-xl sm:text-2xl space-y-3 list-none">
                                   {hints.slice(0, 3).map((hint, index) => (
                                     <li key={index} className="flex items-start">
-                                      <span className="sm:ml-16 md:ml-32 lg:ml-48 mr-3 text-yellow-400">💡</span>
+                                      <span className="sm:ml-12 md:ml-24 lg:ml-32 mr-3 text-yellow-400">💡</span>
                                       <span className="leading-relaxed">{hint}</span>
                                     </li>
                                   ))}
