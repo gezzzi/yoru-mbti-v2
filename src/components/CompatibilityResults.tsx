@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { TestResult, PersonalityType } from '../types/personality';
-import { Heart, Users, ArrowRight, Share2, RefreshCw, User, ChevronUp, ChevronDown, Check } from 'lucide-react';
+import { Heart, Users, ArrowRight, Share2, RefreshCw, User, Check } from 'lucide-react';
 import { generateCompatibilityShareText } from '../utils/snsShare';
 import { personalityTypes } from '../data/personalityTypes';
 import Image from 'next/image';
@@ -367,7 +367,6 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   const [showHeartRain, setShowHeartRain] = useState(false);
   const [showSnowfall, setShowSnowfall] = useState(false);
   const [showPetals, setShowPetals] = useState(false);
-  const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({});
   const [selectedPosition, setSelectedPosition] = useState<Position48 | null>(null);
   const [partnerSecretAnswer, setPartnerSecretAnswer] = useState<{ questionId: number; answer: number } | null>(null);
   const [mySecretAnswer, setMySecretAnswer] = useState<{ questionId: number; answer: number } | null>(null);
@@ -401,14 +400,6 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     };
   }, []);
   
-  // Toggle section function
-  const toggleSection = (section: string) => {
-    setOpenSections(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
-  };
-
   const calculateCompatibility = (user: TestResult, partner: TestResult): CompatibilityResult & { 
     axisScores: { E: number, L: number, A: number, L2: number, O: number },
     tagCategoryScores: { [key: string]: number },
@@ -1655,292 +1646,236 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
 
 
   return (
-    <div className="min-h-screen pt-16">
+    <div className="relative z-10 min-h-screen pt-28 pb-12">
       {/* お祝いの花火 */}
       {showFireworks && <Fireworks />}
       
       {/* ダウンロード用のコンテナ */}
-      <div ref={downloadRef}>
-        {/* Hero Section */}
-        <div className="text-white py-16">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div ref={downloadRef}>
+          {/* Hero Section */}
+          <div className="text-white text-center mb-12">
             <ScrollAnimation animation="fadeIn" duration={800}>
-              <h1 className="text-5xl md:text-6xl font-bold mb-6 select-none text-center">
+              <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight drop-shadow-lg select-none text-center">
                 <NeonText text={["相性", "診断結果"]} specialCharIndex={1} className="gap-1" />
               </h1>
             </ScrollAnimation>
           </div>
-        </div>
 
-        {/* Main Content */}
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          
-          {/* 相性診断結果ページコンテナ */}
-          <div className="rounded-2xl shadow-2xl overflow-hidden border-2 border-white/30" style={{backgroundColor: 'rgba(255, 255, 255, 0)', boxShadow: '0 0 20px rgba(255, 255, 255, 0.1)'}}>
-            <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
-              
-              {/* 相性スコア */}
-              <ScrollAnimation animation="fadeInUp" delay={200}>
-              <div className="rounded-xl shadow-lg p-4 sm:p-6 bg-white/10 backdrop-blur-sm border border-white/5 relative">
-            {/* アニメーション（相性度に応じて切り替え） */}
-            {showSnowfall && <SnowfallAnimation />}
-            {showPetals && <PetalAnimation />}
-            {showHeartRain && <HeartRain />}
-            
-            <div className="text-center relative z-10">
-              {/* ユーザー名表示 */}
-              <div className="flex justify-center items-center gap-4 sm:gap-8 mb-6">
-                {/* あなた */}
-                <div className="text-center">
-                  {myUsername && (
-                    <p className="text-[#e0e7ff] text-2xl sm:text-3xl md:text-4xl font-bold">{myUsername}</p>
-                  )}
-                </div>
-                
-                {/* ハートアイコン */}
-                <div className="text-pink-400">
-                  <Heart className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12" />
-                </div>
-                
-                {/* 相手 */}
-                <div className="text-center">
-                  {partnerUsername && (
-                    <p className="text-[#e0e7ff] text-2xl sm:text-3xl md:text-4xl font-bold">{partnerUsername}</p>
-                  )}
+          {/* Main Content */}
+          <div className="space-y-12">
+            {/* 相性診断結果 */}
+            <ScrollAnimation animation="fadeInUp" delay={200}>
+              <div className="rounded-xl p-4 sm:p-6 relative">
+                {/* アニメーション（相性度に応じて切り替え） */}
+                {showSnowfall && <SnowfallAnimation />}
+                {showPetals && <PetalAnimation />}
+                {showHeartRain && <HeartRain />}
+
+                <div className="text-center relative z-10">
+                  {/* ユーザー名表示 */}
+                  <div className="flex justify-center items-center gap-4 sm:gap-8 mb-6">
+                    {/* あなた */}
+                    <div className="text-center">
+                      {myUsername && (
+                        <p className="text-[#e0e7ff] text-2xl sm:text-3xl md:text-4xl font-bold">{myUsername}</p>
+                      )}
+                    </div>
+
+                    {/* ハートアイコン */}
+                    <div className="text-pink-400">
+                      <Heart className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12" />
+                    </div>
+
+                    {/* 相手 */}
+                    <div className="text-center">
+                      {partnerUsername && (
+                        <p className="text-[#e0e7ff] text-2xl sm:text-3xl md:text-4xl font-bold">{partnerUsername}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col items-center mb-4 sm:mb-6">
+                    <div className="relative flex items-center justify-center">
+                      <CircularProgressBar percentage={animatedScore} size={180} />
+                      <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <span className="text-4xl sm:text-5xl md:text-6xl font-bold text-pink-400">{animatedScore}%</span>
+                        <span className="mt-1 text-base sm:text-lg text-[#e0e7ff]/80">マッチ度</span>
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-white text-xl sm:text-2xl font-medium leading-relaxed">
+                    {compatibility.description}
+                  </p>
                 </div>
               </div>
-              
-              <div className="flex flex-col items-center mb-4 sm:mb-6">
-                <div className="relative flex items-center justify-center">
-                  <CircularProgressBar percentage={animatedScore} size={180} />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-4xl sm:text-5xl md:text-6xl font-bold text-pink-400">
-                      {animatedScore}%
-                    </span>
-                    <span className="mt-1 text-base sm:text-lg text-[#e0e7ff]/80">マッチ度</span>
+            </ScrollAnimation>
+
+            {/* 夜の相性診断カード */}
+            <ScrollAnimation animation="fadeInUp" delay={600}>
+              <div ref={cardRef} className="rounded-xl p-4 sm:p-6">
+              <h3 className="text-xl sm:text-2xl font-bold text-white mb-6 text-center">相性診断カード</h3>
+              <div className="space-y-12">
+                <div>
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <span className="text-lg">🛏</span>
+                    <h4 className="font-semibold text-white text-base sm:text-lg">夜の相性</h4>
+                  </div>
+                  <div className="px-4 pb-2">
+                    <HorizontalProgressBar 
+                      percentage={compatibility.compatibility}
+                      colorFrom="from-purple-500"
+                      colorTo="to-pink-500"
+                      isVisible={cardVisible}
+                      delay={700}
+                    />
+                  </div>
+                  <div className="mt-4 px-2 text-center">
+                    <p className="text-white text-lg sm:text-xl leading-relaxed break-words">
+                      {intimateCompatibility.recommendedPlay}
+                    </p>
                   </div>
                 </div>
-              </div>
-              <p className="text-base sm:text-lg font-medium text-[#e0e7ff]/90 leading-relaxed">
-                {compatibility.description}
-              </p>
-            </div>
-          </div>
-              </ScrollAnimation>
 
-              {/* 夜の相性診断カード */}
-              <ScrollAnimation animation="fadeInUp" delay={600}>
-              <div ref={cardRef} className="rounded-xl shadow-lg p-4 sm:p-6 bg-white/10 backdrop-blur-sm border border-white/5">
-                <h3 className="text-lg sm:text-xl font-bold text-[#e0e7ff] mb-4 sm:mb-6 text-center">相性診断カード</h3>
-                <div className="space-y-2">
-                  {/* ① おすすめプレイ */}
-                  <div className="border-b border-white/20 pb-2 overflow-hidden">
-                    <button
-                      onClick={() => toggleSection('recommendedPlay')}
-                      className="w-full flex items-center justify-between rounded-lg p-2"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <span className="text-lg">🛏</span>
-                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">夜の相性</h4>
-                      </div>
-                      {openSections.recommendedPlay ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
-                    </button>
-                    {/* プログレスバー */}
-                    <div className="px-4 pb-2">
-                      <HorizontalProgressBar 
-                        percentage={compatibility.compatibility}
-                        colorFrom="from-purple-500"
-                        colorTo="to-pink-500"
-                        isVisible={cardVisible}
-                        delay={700}
-                      />
-                    </div>
-                    <div className={`transition-all duration-300 ${
-                      openSections.recommendedPlay ? 'max-h-[800px]' : 'max-h-0'
-                    } overflow-hidden`}>
-                      <div className="mt-2 px-2 text-center">
-                        <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.recommendedPlay}</p>
-                      </div>
-                    </div>
+                <div>
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <span className="text-lg">💋</span>
+                    <h4 className="font-semibold text-white text-base sm:text-lg">付き合う前にXできるか？</h4>
                   </div>
-
-                  {/* ⑤ 付き合う前の価値観 */}
-                  <div className="border-b border-white/20 pb-2 overflow-hidden">
-                    <button
-                      onClick={() => toggleSection('beforeRelationship')}
-                      className="w-full flex items-center justify-between rounded-lg p-2"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <span className="text-lg">💋</span>
-                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">付き合う前にXできるか？</h4>
-                      </div>
-                      {openSections.beforeRelationship ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
-                    </button>
-                    {/* プログレスバー */}
-                    <div className="px-4 pb-2">
-                      <HorizontalProgressBar
-                        percentage={compatibility.axisScores.A}
-                        colorFrom="from-green-500"
-                        colorTo="to-emerald-500"
-                        isVisible={cardVisible}
-                        delay={900}
-                      />
-                    </div>
-                    <div className={`transition-all duration-300 ${
-                      openSections.beforeRelationship ? 'max-h-96' : 'max-h-0'
-                    } overflow-hidden`}>
-                      <div className="mt-2 px-2 text-center">
-                        <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.beforeRelationship}</p>
-                      </div>
-                    </div>
+                  <div className="px-4 pb-2">
+                    <HorizontalProgressBar
+                      percentage={compatibility.axisScores.A}
+                      colorFrom="from-green-500"
+                      colorTo="to-emerald-500"
+                      isVisible={cardVisible}
+                      delay={900}
+                    />
                   </div>
+                  <div className="mt-4 px-2 text-center">
+                    <p className="text-white text-lg sm:text-xl leading-relaxed break-words">
+                      {intimateCompatibility.beforeRelationship}
+                    </p>
+                  </div>
+                </div>
 
-                  {/* ② おすすめ体位 */}
-                  <div className="border-b border-white/20 pb-2 overflow-hidden">
-                    <button
-                      onClick={() => toggleSection('recommendedPosition')}
-                      className="w-full flex items-center justify-between rounded-lg p-2"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <span className="text-lg">🧘‍♀️</span>
-                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">おすすめ体位（48手）</h4>
-                      </div>
-                      {openSections.recommendedPosition ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
-                    </button>
-                    {/* プログレスバー */}
-                    <div className="px-4 pb-2">
-                      <HorizontalProgressBar
-                        percentage={compatibility.axisScores.E}
-                        colorFrom="from-blue-500"
-                        colorTo="to-cyan-500"
-                        isVisible={cardVisible}
-                        delay={1100}
-                      />
-                    </div>
-                    <div className={`transition-all duration-300 ${
-                      openSections.recommendedPosition ? 'max-h-[600px]' : 'max-h-0'
-                    } overflow-hidden`}>
-                      <div className="mt-2 px-2">
-                        {/* 体位カード形式で表示 */}
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-                          {intimateCompatibility.recommendedPositions.map((position: any, index: number) => (
-                            <div
-                              key={position.id}
-                              className="bg-white/10 border border-white/20 rounded-lg p-3 relative cursor-pointer hover:bg-white/20 transition-colors"
-                              onClick={() => setSelectedPosition(position)}
-                            >
-                              <span className="absolute top-3 right-3 text-xs text-[#e0e7ff]/60">No.{position.id}</span>
-                              <div className="text-center mb-2">
-                                <p className="text-xs text-[#e0e7ff]/70 mb-1">（{position.kana || position.name}）</p>
-                                <h5 className="font-semibold text-[#e0e7ff]">{position.name}</h5>
-                              </div>
-                              <div className="flex flex-wrap gap-1 justify-center mb-2">
-                                {position.moods.map((mood: string) => {
-                                  const moodColors: { [key: string]: string } = {
-                                    'romantic': 'bg-pink-500/20 border-pink-400 text-pink-300',
-                                    'wild': 'bg-red-500/20 border-red-400 text-red-300',
-                                    'playful': 'bg-yellow-500/20 border-yellow-400 text-yellow-300',
-                                    'technical': 'bg-purple-500/20 border-purple-400 text-purple-300',
-                                    'foreplay': 'bg-blue-500/20 border-blue-400 text-blue-300'
-                                  };
-                                  const moodDescriptions: { [key: string]: string } = {
-                                    'romantic': 'ロマンチック',
-                                    'wild': 'ワイルド',
-                                    'playful': 'プレイフル',
-                                    'technical': 'テクニカル',
-                                    'foreplay': '愛撫'
-                                  };
-                                  return (
-                                    <span
-                                      key={mood}
-                                      className={`px-2 py-0.5 text-xs rounded-full border ${moodColors[mood]}`}
-                                    >
-                                      {moodDescriptions[mood]}
-                                    </span>
-                                  );
-                                })}
-                              </div>
-                              <div className="text-center">
-                                <span className="text-xs text-pink-400">
-                                  難易度: {position.difficulty === 'easy' ? (
-                                    <>
-                                      <span className="text-pink-400 text-base">♥</span>
-                                      <span className="text-gray-400 text-base">♥♥</span>
-                                    </>
-                                  ) : position.difficulty === 'medium' ? (
-                                    <>
-                                      <span className="text-pink-400 text-base">♥♥</span>
-                                      <span className="text-gray-400 text-base">♥</span>
-                                    </>
-                                  ) : (
-                                    <span className="text-pink-400 text-base">♥♥♥</span>
-                                  )}
+                <div>
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <span className="text-lg">🧘‍♀️</span>
+                    <h4 className="font-semibold text-white text-base sm:text-lg">おすすめ体位（48手）</h4>
+                  </div>
+                  <div className="px-4 pb-2">
+                    <HorizontalProgressBar
+                      percentage={compatibility.axisScores.E}
+                      colorFrom="from-blue-500"
+                      colorTo="to-cyan-500"
+                      isVisible={cardVisible}
+                      delay={1100}
+                    />
+                  </div>
+                  <div className="mt-4 px-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+                      {intimateCompatibility.recommendedPositions.map((position: Position48) => (
+                        <div
+                          key={position.id}
+                          className="bg-white/10 border border-white/20 rounded-lg p-3 relative cursor-pointer hover:bg-white/20 transition-colors"
+                          onClick={() => setSelectedPosition(position)}
+                        >
+                          <span className="absolute top-3 right-3 text-xs text-[#e0e7ff]/60">No.{position.id}</span>
+                          <div className="text-center mb-2">
+                            <p className="text-xs text-[#e0e7ff]/70 mb-1">（{position.kana || position.name}）</p>
+                            <h5 className="font-semibold text-[#e0e7ff]">{position.name}</h5>
+                          </div>
+                          <div className="flex flex-wrap gap-1 justify-center mb-2">
+                            {position.moods.map(mood => {
+                              const moodColors: { [key: string]: string } = {
+                                romantic: 'bg-pink-500/20 border-pink-400 text-pink-300',
+                                wild: 'bg-red-500/20 border-red-400 text-red-300',
+                                playful: 'bg-yellow-500/20 border-yellow-400 text-yellow-300',
+                                technical: 'bg-purple-500/20 border-purple-400 text-purple-300',
+                                foreplay: 'bg-blue-500/20 border-blue-400 text-blue-300'
+                              };
+                              const moodDescriptions: { [key: string]: string } = {
+                                romantic: 'ロマンチック',
+                                wild: 'ワイルド',
+                                playful: 'プレイフル',
+                                technical: 'テクニカル',
+                                foreplay: '愛撫'
+                              };
+                              return (
+                                <span
+                                  key={mood}
+                                  className={`px-2 py-0.5 text-xs rounded-full border ${moodColors[mood]}`}
+                                >
+                                  {moodDescriptions[mood]}
                                 </span>
-                              </div>
-                            </div>
-                          ))}
+                              );
+                            })}
+                          </div>
+                          <div className="text-center">
+                            <span className="text-xs text-pink-400">
+                              難易度: {position.difficulty === 'easy' ? (
+                                <>
+                                  <span className="text-pink-400 text-base">♥</span>
+                                  <span className="text-gray-400 text-base">♥♥</span>
+                                </>
+                              ) : position.difficulty === 'medium' ? (
+                                <>
+                                  <span className="text-pink-400 text-base">♥♥</span>
+                                  <span className="text-gray-400 text-base">♥</span>
+                                </>
+                              ) : (
+                                <span className="text-pink-400 text-base">♥♥♥</span>
+                              )}
+                            </span>
+                          </div>
                         </div>
-                        <p className="text-[#e0e7ff]/80 text-sm text-center mt-2">
-                          {intimateCompatibility.recommendedPosition}
-                        </p>
-                      </div>
+                      ))}
                     </div>
+                    <p className="text-white text-lg text-center mt-4">
+                      {intimateCompatibility.recommendedPosition}
+                    </p>
                   </div>
+                </div>
 
-
-
-                  {/* ⑦ 関係性予測 */}
-                  <div className="border-b border-white/20 pb-2 overflow-hidden">
-                    <button
-                      onClick={() => toggleSection('relationshipPrediction')}
-                      className="w-full flex items-center justify-between rounded-lg p-2"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <span className="text-lg">💞</span>
-                        <h4 className="font-semibold text-[#e0e7ff] text-sm sm:text-base">関係性の行き先予測</h4>
-                      </div>
-                      {openSections.relationshipPrediction ? <ChevronUp className="w-5 h-5 text-[#e0e7ff]" /> : <ChevronDown className="w-5 h-5 text-[#e0e7ff]" />}
-                    </button>
-                    {/* プログレスバー */}
-                    <div className="px-4 pb-2">
-                      <HorizontalProgressBar 
-                        percentage={compatibility.axisScores.O}
-                        colorFrom="from-amber-500"
-                        colorTo="to-orange-500"
-                        isVisible={cardVisible}
-                        delay={1300}
-                      />
-                    </div>
-                    <div className={`transition-all duration-300 ${
-                      openSections.relationshipPrediction ? 'max-h-96' : 'max-h-0'
-                    } overflow-hidden`}>
-                      <div className="mt-2 px-2 text-center">
-                        <p className="text-[#e0e7ff]/80 text-sm break-words">{intimateCompatibility.relationshipPrediction}</p>
-                      </div>
-                    </div>
+                <div>
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <span className="text-lg">💞</span>
+                    <h4 className="font-semibold text-white text-base sm:text-lg">関係性の行き先予測</h4>
                   </div>
-                  
+                  <div className="px-4 pb-2">
+                    <HorizontalProgressBar 
+                      percentage={compatibility.axisScores.O}
+                      colorFrom="from-amber-500"
+                      colorTo="to-orange-500"
+                      isVisible={cardVisible}
+                      delay={1300}
+                    />
+                  </div>
+                  <div className="mt-4 px-2 text-center">
+                    <p className="text-white text-lg sm:text-xl leading-relaxed break-words">
+                      {intimateCompatibility.relationshipPrediction}
+                    </p>
+                  </div>
                 </div>
               </div>
+              </div>
+            </ScrollAnimation>
+
+            {(mySecretAnswer || partnerSecretAnswer) && (
+              <ScrollAnimation animation="fadeInUp" delay={700}>
+                <div className="text-center">
+                  <button
+                    onClick={() => setShowSecretConfirm(true)}
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 inline-flex items-center gap-2 shadow-lg"
+                  >
+                    <span className="text-lg">🔐</span>
+                    <span>秘密を見る</span>
+                  </button>
+                </div>
               </ScrollAnimation>
+            )}
 
-              {/* 秘密のボタン */}
-              {(mySecretAnswer || partnerSecretAnswer) && (
-                <ScrollAnimation animation="fadeInUp" delay={700}>
-                  <div className="text-center">
-                    <button
-                      onClick={() => setShowSecretConfirm(true)}
-                      className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 inline-flex items-center gap-2 shadow-lg"
-                    >
-                      <span className="text-lg">🔐</span>
-                      <span>秘密を見る</span>
-                    </button>
-                  </div>
-                </ScrollAnimation>
-              )}
-
-              {/* アクションボタン */}
-              <ScrollAnimation animation="fadeInUp" delay={800}>
+            <ScrollAnimation animation="fadeInUp" delay={800}>
               <div className="text-center space-y-4">
                 <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-4">
                   <button
@@ -1968,9 +1903,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                   </button>
                 </div>
               </div>
-              </ScrollAnimation>
-              
-            </div>
+            </ScrollAnimation>
           </div>
         </div>
       </div>
@@ -2158,4 +2091,4 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   );
 };
 
-export default CompatibilityResults; 
+export default CompatibilityResults;
