@@ -19,6 +19,7 @@ import FeedbackModal from './FeedbackModal';
 import SNSShareModal from './SNSShareModal';
 import { calculateImprovedTagCompatibility, TagScore } from '../utils/tagCompatibility';
 import { getTagRecommendations, selectAndFormatRecommendations, stabilizeRecommendedPlayText } from './CompatibilityResultsHelper';
+import { nightCompatibilityDescriptions, NightCompatibilityKey } from '@/data/nightCompatibilityDescriptions';
 
 interface CompatibilityResult {
   compatibility: number;
@@ -359,6 +360,13 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     ...partnerResult.type,
     ruby: partnerBasePersonalityType?.ruby
   };
+
+  const nightCompatibilityKey = `${myBaseTypeCode.toLowerCase()}×${partnerBaseTypeCode.toLowerCase()}` as NightCompatibilityKey;
+  const nightCompatibilityDescription = nightCompatibilityDescriptions[nightCompatibilityKey];
+  const nightCompatibilityParagraphs = (nightCompatibilityDescription ?? '夜の相性の説明を取得できませんでした。')
+    .split(/\n+/)
+    .map(paragraph => paragraph.trim())
+    .filter(paragraph => paragraph.length > 0);
 
   const downloadRef = useRef<HTMLDivElement>(null);
   const [showShareModal, setShowShareModal] = useState(false);
@@ -1730,10 +1738,15 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                       delay={700}
                     />
                   </div>
-                  <div className="mt-4 px-2 text-center">
-                    <p className="text-white text-lg sm:text-xl leading-relaxed break-words">
-                      {intimateCompatibility.recommendedPlay}
-                    </p>
+                  <div className="mt-4 px-2 space-y-4 text-center">
+                    {nightCompatibilityParagraphs.map((paragraph, index) => (
+                      <p
+                        key={`night-compatibility-${index}`}
+                        className="text-white text-lg sm:text-xl leading-relaxed break-words"
+                      >
+                        {paragraph}
+                      </p>
+                    ))}
                   </div>
                 </div>
 
