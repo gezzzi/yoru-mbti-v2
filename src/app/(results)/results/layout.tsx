@@ -17,7 +17,7 @@ function ResultsBackground() {
       <div
         className="pointer-events-none fixed inset-0 -z-20"
         style={{
-          background: `linear-gradient(to bottom, ${topColor} 0%, ${topColor} 12%, ${baseColor} 12%, ${baseColor} 88%, ${bottomColor} 88%, ${bottomColor} 100%)`,
+          background: `linear-gradient(to bottom, ${topColor} 0%, ${topColor} 35%, ${baseColor} 35%, ${baseColor} 65%, ${bottomColor} 65%, ${bottomColor} 100%)`,
         }}
       />
       <div className="absolute inset-0 -z-10 overflow-hidden">
