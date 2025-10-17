@@ -510,9 +510,9 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
               <div className="rounded-xl bg-transparent pt-4 sm:pt-6 pb-2 sm:pb-3 mt-8">
                 <div className="space-y-2">
                   {/* 夜の性格 */}
-                  <div className="border-b border-white/20 pb-2 overflow-hidden">
+                  <div className="pb-2 overflow-hidden">
                     <div className="w-full rounded-lg py-2">
-                      <div className="mb-5">
+                      <div className="mb-8">
                         <div className="flex items-center justify-center gap-2 sm:gap-3">
                           <span
                             aria-hidden="true"
@@ -551,9 +551,9 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   </div>
                   
                   {/* おすすめの体位 */}
-                  <div className="border-b border-white/20 pb-2 overflow-hidden">
+                  <div className="!mt-16 pb-2 overflow-hidden">
                     <div className="w-full rounded-lg py-2">
-                      <div className="mb-5">
+                      <div className="mb-8">
                         <div className="flex items-center justify-center gap-2 sm:gap-3">
                           <span
                             aria-hidden="true"
@@ -629,9 +629,9 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     </div>
                   </div>
                   {/* 相性と関係性 */}
-                  <div className="border-b border-white/20 pb-2 overflow-hidden">
+                  <div className="!mt-16 pb-2 overflow-hidden">
                     <div className="w-full rounded-lg py-2">
-                      <div className="mb-5">
+                      <div className="mb-8">
                         <div className="flex items-center justify-center gap-2 sm:gap-3">
                           <span
                             aria-hidden="true"
@@ -819,9 +819,9 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   
                   
                   {/* あなたの短所とアドバイス */}
-                  <div className="pb-2 overflow-hidden">
+                  <div className="!mt-16 pb-2 overflow-hidden">
                     <div className="w-full rounded-lg py-2">
-                      <div className="mb-5">
+                      <div className="mb-8">
                         <div className="flex items-center justify-center gap-2 sm:gap-3">
                           <span
                             aria-hidden="true"
