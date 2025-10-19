@@ -1,22 +1,29 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-The Next.js source sits in `src/app`, organized with route groups such as `(star)` and `(results)` to isolate layouts. Shared building blocks live in `src/components`, `src/hooks`, and `src/utils`; co-locate feature-specific helpers beside their page when scope is narrow. Domain datasets (questions, tags, compatibility copy) are housed in `src/data`, with matching TypeScript contracts in `src/types`. Static assets and generated media belong in `public/`; anything in `.next/` is build output and must stay untracked.
+- Source routes live in `src/app`; route groups like `(star)` and `(results)` isolate layouts while sharing the root metadata in `layout.tsx`.
+- Cross-cutting components, hooks, and utilities reside in `src/components`, `src/hooks`, and `src/utils`. Keep feature-specific helpers alongside their page when scope is narrow.
+- Domain data and TypeScript contracts are paired under `src/data` and `src/types`; static media belongs in `public/`, and `.next/` must remain ignored.
 
 ## Build, Test, and Development Commands
-- `npm run dev` – launch the development server at `http://localhost:3000` with hot reload.
-- `npm run build` – create the production bundle and regenerate ancillary files like the sitemap.
-- `npm run start` – serve the compiled bundle locally for smoke testing.
-- `npm run lint` – execute ESLint using the Next.js config; run before every PR to surface regressions early.
+- `npm run dev`: start the Next.js dev server with hot reload at `http://localhost:3000`.
+- `npm run build`: output the production bundle and regenerate artifacts such as the sitemap.
+- `npm run start`: serve the built bundle locally for smoke checks.
+- `npm run lint`: execute ESLint; run before every PR to catch regressions early.
 
 ## Coding Style & Naming Conventions
-Write React components in TypeScript, defaulting to server components unless client-only features require `"use client"`. Indent with 2 spaces. Prefer camelCase for variables/functions, PascalCase for components, and descriptive filenames (e.g., `ResultsLayout.tsx`, `useScrollAnimation.ts`). Compose UI with Tailwind utility classes; when combinations grow unwieldy, extract reusable components. Import cross-module code via the `@/*` alias defined in `tsconfig.json`.
+- Write React components in TypeScript; default to server components unless client-only hooks or browser APIs require `"use client"`.
+- Indent with two spaces, prefer camelCase for variables/functions, PascalCase for components, and descriptive filenames (e.g., `ResultsLayout.tsx`, `useScrollAnimation.ts`).
+- Compose UI with Tailwind utility classes; extract reusable combinations into shared components. Import cross-module code via the `@/*` alias.
 
 ## Testing Guidelines
-Automated testing is not yet wired up. When implementing complex logic (utilities, hooks), scaffold Jest + React Testing Library suites alongside the source (`Component.test.tsx`, `logic.test.ts`). Until the harness is active, document manual QA steps in your PR descriptions so reviewers can reproduce checks.
+- Automated testing is not yet wired up. For complex logic, scaffold Jest + React Testing Library suites (`Component.test.tsx`, `logic.test.ts`) near the source.
+- Document any manual QA steps—especially flows across `/`, `/test`, `/results`, and `/compatibility/results`—in PR descriptions until automated coverage exists.
 
 ## Commit & Pull Request Guidelines
-Existing history favors concise, imperative commit messages—often Japanese phrases such as `背景の点滅時間を調整`. Keep each commit focused; avoid mixing refactors with feature work. Pull requests should summarize intent, enumerate UI or behavioral changes, reference related issues, and include before/after screenshots for visual updates. Confirm `npm run lint` passes and that key flows (`/`, `/test`, `/results`, `/compatibility/results`) were smoke-tested.
+- Follow the historical pattern of concise, imperative commit messages, often in Japanese (e.g., `背景の点滅時間を調整`). Keep commits focused; avoid mixing refactors with feature work.
+- PRs should summarize intent, list behavioral/UI changes, link related issues, attach before/after screenshots for visual tweaks, and confirm `npm run lint` plus key flow smoke tests.
 
 ## Environment & Configuration Tips
-Secrets belong in `.env.local` and must never be committed. When adding new variables, update shared documentation. If a change touches rendering or theming, validate across desktop and mobile breakpoints to ensure animations, gradients, and modal flows remain smooth.
+- Store secrets in `.env.local` only. Update shared docs when introducing new variables.
+- Validate visual changes on both desktop and mobile to preserve gradients, animations, and modal interactions.
