@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>夜の雰囲気カラーパレット</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1b3a 0%, #0f172a 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(90deg, #a78bfa, #818cf8, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        .palette-section {
+            margin-bottom: 3rem;
+        }
+
+        .palette-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #c7d2fe;
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .color-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .color-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .color-preview {
+            width: 100%;
+            height: 120px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .color-preview::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .color-card:hover .color-preview::after {
+            transform: translateX(100%);
+        }
+
+        .color-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #e0e7ff;
+        }
+
+        .color-code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            color: #a5b4fc;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .demo-section {
+            background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+            border-radius: 16px;
+            padding: 3rem;
+            margin-top: 4rem;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .demo-card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .demo-text {
+            line-height: 1.6;
+            color: #cbd5e1;
+        }
+
+        .accent-text {
+            color: #a78bfa;
+            font-weight: 600;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #818cf8);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #818cf8, #a78bfa);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(99, 102, 241, 0.1);
+            color: #a78bfa;
+            border: 1px solid rgba(167, 139, 250, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: rgba(167, 139, 250, 0.5);
+        }
+
+        .stars {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    
+    <div class="container">
+        <h1>夜の雰囲気を表現するカラーパレット</h1>
+        
+        <div class="palette-section">
+            <h2 class="palette-title">推奨メインカラー</h2>
+            <div class="color-grid">
+                <div class="color-card">
+                    <div class="color-preview" style="background: #0f172a;"></div>
+                    <div class="color-name">ミッドナイトブルー</div>
+                    <div class="color-code">#0f172a</div>
+                </div>
+                
+                <div class="color-card">
+                    <div class="color-preview" style="background: #1e293b;"></div>
+                    <div class="color-name">ダークスレート</div>
+                    <div class="color-code">#1e293b</div>
+                </div>
+                
+                <div class="color-card">
+                    <div class="color-preview" style="background: #1e1b4b;"></div>
+                    <div class="color-name">ディープインディゴ</div>
+                    <div class="color-code">#1e1b4b</div>
+                </div>
+                
+                <div class="color-card">
+                    <div class="color-preview" style="background: #312e81;"></div>
+                    <div class="color-name">ロイヤルパープル</div>
+                    <div class="color-code">#312e81</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="palette-section">
+            <h2 class="palette-title">アクセントカラー</h2>
+            <div class="color-grid">
+                <div class="color-card">
+                    <div class="color-preview" style="background: #6366f1;"></div>
+                    <div class="color-name">エレクトリックインディゴ</div>
+                    <div class="color-code">#6366f1</div>
+                </div>
+                
+                <div class="color-card">
+                    <div class="color-preview" style="background: #818cf8;"></div>
+                    <div class="color-name">ソフトバイオレット</div>
+                    <div class="color-code">#818cf8</div>
+                </div>
+                
+                <div class="color-card">
+                    <div class="color-preview" style="background: #a78bfa;"></div>
+                    <div class="color-name">ラベンダー</div>
+                    <div class="color-code">#a78bfa</div>
+                </div>
+                
+                <div class="color-card">
+                    <div class="color-preview" style="background: #06b6d4;"></div>
+                    <div class="color-name">シアンブルー</div>
+                    <div class="color-code">#06b6d4</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2 class="palette-title">使用例デモ</h2>
+            <div class="demo-card">
+                <h3 style="color: #e0e7ff; margin-bottom: 1rem;">夜空のような深い青をベースに</h3>
+                <p class="demo-text">
+                    この配色は<span class="accent-text">深い青と紫</span>を基調としており、
+                    黒よりも柔らかく、それでいて夜の神秘的な雰囲気を演出します。
+                    グラデーションやガラスモーフィズムを活用することで、
+                    モダンで洗練された印象を与えることができます。
+                </p>
+                <div class="button-group">
+                    <button class="btn btn-primary">プライマリボタン</button>
+                    <button class="btn btn-secondary">セカンダリボタン</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 星を生成
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 50; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            starsContainer.appendChild(star);
+        }
+
+        // カラーコードをクリップボードにコピー
+        document.querySelectorAll('.color-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const colorCode = this.querySelector('.color-code').textContent;
+                navigator.clipboard.writeText(colorCode).then(() => {
+                    const originalText = this.querySelector('.color-code').textContent;
+                    this.querySelector('.color-code').textContent = 'コピーしました！';
+                    setTimeout(() => {
+                        this.querySelector('.color-code').textContent = originalText;
+                    }, 1000);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
