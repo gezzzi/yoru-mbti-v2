@@ -219,9 +219,9 @@ export default function RootLayout({
           `
         }} />
 
-        <Script
+        <script
+          async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5710738744843996"
-          strategy="beforeInteractive"
           crossOrigin="anonymous"
         />
         <Script async src="https://www.googletagmanager.com/gtag/js?id=G-HLM13T0M2K" strategy="afterInteractive" />
