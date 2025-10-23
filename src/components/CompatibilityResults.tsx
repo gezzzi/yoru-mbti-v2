@@ -1674,7 +1674,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
           <div className="space-y-12">
             {/* 相性診断結果 */}
             <ScrollAnimation animation="fadeInUp" delay={200}>
-              <div className="rounded-xl p-4 sm:p-6 relative">
+              <div className="rounded-xl py-4 sm:py-6 relative">
                 {/* アニメーション（相性度に応じて切り替え） */}
                 {showSnowfall && <SnowfallAnimation />}
                 {showPetals && <PetalAnimation />}
@@ -1719,158 +1719,192 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
               </div>
             </ScrollAnimation>
 
-            {/* 夜の相性診断カード */}
             <ScrollAnimation animation="fadeInUp" delay={600}>
-              <div ref={cardRef} className="rounded-xl p-4 sm:p-6">
-              <h3 className="text-xl sm:text-2xl font-bold text-white mb-6 text-center">相性診断カード</h3>
-              <div className="space-y-12">
-                <div>
-                  <div className="flex items-center justify-center gap-3 mb-4">
-                    <span className="text-lg">🛏</span>
-                    <h4 className="font-semibold text-white text-base sm:text-lg">夜の相性</h4>
-                  </div>
-                  <div className="px-4 pb-2">
-                    <HorizontalProgressBar 
-                      percentage={compatibility.compatibility}
-                      colorFrom="from-purple-500"
-                      colorTo="to-pink-500"
-                      isVisible={cardVisible}
-                      delay={700}
-                    />
-                  </div>
-                  <div className="mt-4 px-2 space-y-4 text-center">
-                    {nightCompatibilityParagraphs.map((paragraph, index) => (
-                      <p
-                        key={`night-compatibility-${index}`}
-                        className="text-white text-lg sm:text-xl leading-relaxed break-words"
-                      >
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex items-center justify-center gap-3 mb-4">
-                    <span className="text-lg">💋</span>
-                    <h4 className="font-semibold text-white text-base sm:text-lg">付き合う前にXできるか？</h4>
-                  </div>
-                  <div className="px-4 pb-2">
-                    <HorizontalProgressBar
-                      percentage={compatibility.axisScores.A}
-                      colorFrom="from-green-500"
-                      colorTo="to-emerald-500"
-                      isVisible={cardVisible}
-                      delay={900}
-                    />
-                  </div>
-                  <div className="mt-4 px-2 text-center">
-                    <p className="text-white text-lg sm:text-xl leading-relaxed break-words">
-                      {intimateCompatibility.beforeRelationship}
-                    </p>
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex items-center justify-center gap-3 mb-4">
-                    <span className="text-lg">🧘‍♀️</span>
-                    <h4 className="font-semibold text-white text-base sm:text-lg">おすすめ体位（48手）</h4>
-                  </div>
-                  <div className="px-4 pb-2">
-                    <HorizontalProgressBar
-                      percentage={compatibility.axisScores.E}
-                      colorFrom="from-blue-500"
-                      colorTo="to-cyan-500"
-                      isVisible={cardVisible}
-                      delay={1100}
-                    />
-                  </div>
-                  <div className="mt-4 px-2">
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-                      {intimateCompatibility.recommendedPositions.map((position: Position48) => (
-                        <div
-                          key={position.id}
-                          className="bg-white/10 border border-white/20 rounded-lg p-3 relative cursor-pointer hover:bg-white/20 transition-colors"
-                          onClick={() => setSelectedPosition(position)}
+              <div ref={cardRef} className="rounded-xl py-4 sm:py-6">
+                <div className="space-y-16 sm:space-y-20">
+                  <div>
+                    <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4">
+                      <span
+                        aria-hidden="true"
+                        className="block h-px w-10 sm:w-24 bg-gradient-to-l from-pink-300/80 via-pink-300/40 to-transparent"
+                      />
+                      <h4 className="font-head font-semibold text-2xl sm:text-3xl text-pink-200 drop-shadow-[0_0_10px_rgba(244,114,182,0.4)] tracking-wide">
+                        夜の相性
+                      </h4>
+                      <span
+                        aria-hidden="true"
+                        className="block h-px w-10 sm:w-24 bg-gradient-to-r from-pink-300/80 via-pink-300/40 to-transparent"
+                      />
+                    </div>
+                    <div className="px-4">
+                      <HorizontalProgressBar 
+                        percentage={compatibility.compatibility}
+                        colorFrom="from-purple-500"
+                        colorTo="to-pink-500"
+                        isVisible={cardVisible}
+                        delay={700}
+                      />
+                    </div>
+                    <div className="mt-4 space-y-4 text-center">
+                      {nightCompatibilityParagraphs.map((paragraph, index) => (
+                        <p
+                          key={`night-compatibility-${index}`}
+                          className="text-white text-xl sm:text-2xl leading-relaxed break-words"
                         >
-                          <span className="absolute top-3 right-3 text-xs text-[#e0e7ff]/60">No.{position.id}</span>
-                          <div className="text-center mb-2">
-                            <p className="text-xs text-[#e0e7ff]/70 mb-1">（{position.kana || position.name}）</p>
-                            <h5 className="font-semibold text-[#e0e7ff]">{position.name}</h5>
-                          </div>
-                          <div className="flex flex-wrap gap-1 justify-center mb-2">
-                            {position.moods.map(mood => {
-                              const moodColors: { [key: string]: string } = {
-                                romantic: 'bg-pink-500/20 border-pink-400 text-pink-300',
-                                wild: 'bg-red-500/20 border-red-400 text-red-300',
-                                playful: 'bg-yellow-500/20 border-yellow-400 text-yellow-300',
-                                technical: 'bg-purple-500/20 border-purple-400 text-purple-300',
-                                foreplay: 'bg-blue-500/20 border-blue-400 text-blue-300'
-                              };
-                              const moodDescriptions: { [key: string]: string } = {
-                                romantic: 'ロマンチック',
-                                wild: 'ワイルド',
-                                playful: 'プレイフル',
-                                technical: 'テクニカル',
-                                foreplay: '愛撫'
-                              };
-                              return (
-                                <span
-                                  key={mood}
-                                  className={`px-2 py-0.5 text-xs rounded-full border ${moodColors[mood]}`}
-                                >
-                                  {moodDescriptions[mood]}
-                                </span>
-                              );
-                            })}
-                          </div>
-                          <div className="text-center">
-                            <span className="text-xs text-pink-400">
-                              難易度: {position.difficulty === 'easy' ? (
-                                <>
-                                  <span className="text-pink-400 text-base">♥</span>
-                                  <span className="text-gray-400 text-base">♥♥</span>
-                                </>
-                              ) : position.difficulty === 'medium' ? (
-                                <>
-                                  <span className="text-pink-400 text-base">♥♥</span>
-                                  <span className="text-gray-400 text-base">♥</span>
-                                </>
-                              ) : (
-                                <span className="text-pink-400 text-base">♥♥♥</span>
-                              )}
-                            </span>
-                          </div>
-                        </div>
+                          {paragraph}
+                        </p>
                       ))}
                     </div>
-                    <p className="text-white text-lg text-center mt-4">
-                      {intimateCompatibility.recommendedPosition}
-                    </p>
                   </div>
-                </div>
 
-                <div>
-                  <div className="flex items-center justify-center gap-3 mb-4">
-                    <span className="text-lg">💞</span>
-                    <h4 className="font-semibold text-white text-base sm:text-lg">関係性の行き先予測</h4>
+                  <div>
+                    <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4">
+                      <span
+                        aria-hidden="true"
+                        className="block h-px w-10 sm:w-24 bg-gradient-to-l from-pink-300/80 via-pink-300/40 to-transparent"
+                      />
+                      <h4 className="font-head font-semibold text-2xl sm:text-3xl text-pink-200 drop-shadow-[0_0_10px_rgba(244,114,182,0.4)] tracking-wide">
+                        付き合う前にXできるか？
+                      </h4>
+                      <span
+                        aria-hidden="true"
+                        className="block h-px w-10 sm:w-24 bg-gradient-to-r from-pink-300/80 via-pink-300/40 to-transparent"
+                      />
+                    </div>
+                    <div className="px-4">
+                      <HorizontalProgressBar
+                        percentage={compatibility.axisScores.A}
+                        colorFrom="from-green-500"
+                        colorTo="to-emerald-500"
+                        isVisible={cardVisible}
+                        delay={900}
+                      />
+                    </div>
+                    <div className="mt-4 text-center">
+                      <p className="text-white text-xl sm:text-2xl leading-relaxed break-words">
+                        {intimateCompatibility.beforeRelationship}
+                      </p>
+                    </div>
                   </div>
-                  <div className="px-4 pb-2">
-                    <HorizontalProgressBar 
-                      percentage={compatibility.axisScores.O}
-                      colorFrom="from-amber-500"
-                      colorTo="to-orange-500"
-                      isVisible={cardVisible}
-                      delay={1300}
-                    />
+
+                  <div>
+                    <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4">
+                      <span
+                        aria-hidden="true"
+                        className="block h-px w-10 sm:w-24 bg-gradient-to-l from-pink-300/80 via-pink-300/40 to-transparent"
+                      />
+                      <h4 className="font-head font-semibold text-2xl sm:text-3xl text-pink-200 drop-shadow-[0_0_10px_rgba(244,114,182,0.4)] tracking-wide">
+                        おすすめ体位（48手）
+                      </h4>
+                      <span
+                        aria-hidden="true"
+                        className="block h-px w-10 sm:w-24 bg-gradient-to-r from-pink-300/80 via-pink-300/40 to-transparent"
+                      />
+                    </div>
+                    <div className="px-4">
+                      <HorizontalProgressBar
+                        percentage={compatibility.axisScores.E}
+                        colorFrom="from-blue-500"
+                        colorTo="to-cyan-500"
+                        isVisible={cardVisible}
+                        delay={1100}
+                      />
+                    </div>
+                    <div className="mt-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+                        {intimateCompatibility.recommendedPositions.map((position: Position48) => (
+                          <div
+                            key={position.id}
+                            className="bg-white/10 border border-white/20 rounded-lg p-3 relative cursor-pointer hover:bg-white/20 transition-colors"
+                            onClick={() => setSelectedPosition(position)}
+                          >
+                            <span className="absolute top-3 right-3 text-xs text-[#e0e7ff]/60">No.{position.id}</span>
+                            <div className="text-center mb-2">
+                              <p className="text-xs text-[#e0e7ff]/70 mb-1">（{position.kana || position.name}）</p>
+                              <h5 className="font-semibold text-[#e0e7ff]">{position.name}</h5>
+                            </div>
+                            <div className="flex flex-wrap gap-1 justify-center mb-2">
+                              {position.moods.map(mood => {
+                                const moodColors: { [key: string]: string } = {
+                                  romantic: 'bg-pink-500/20 border-pink-400 text-pink-300',
+                                  wild: 'bg-red-500/20 border-red-400 text-red-300',
+                                  playful: 'bg-yellow-500/20 border-yellow-400 text-yellow-300',
+                                  technical: 'bg-purple-500/20 border-purple-400 text-purple-300',
+                                  foreplay: 'bg-blue-500/20 border-blue-400 text-blue-300'
+                                };
+                                const moodDescriptions: { [key: string]: string } = {
+                                  romantic: 'ロマンチック',
+                                  wild: 'ワイルド',
+                                  playful: 'プレイフル',
+                                  technical: 'テクニカル',
+                                  foreplay: '愛撫'
+                                };
+                                return (
+                                  <span
+                                    key={mood}
+                                    className={`px-2 py-0.5 text-xs rounded-full border ${moodColors[mood]}`}
+                                  >
+                                    {moodDescriptions[mood]}
+                                  </span>
+                                );
+                              })}
+                            </div>
+                            <div className="text-center">
+                              <span className="text-xs text-pink-400">
+                                難易度: {position.difficulty === 'easy' ? (
+                                  <>
+                                    <span className="text-pink-400 text-base">♥</span>
+                                    <span className="text-gray-400 text-base">♥♥</span>
+                                  </>
+                                ) : position.difficulty === 'medium' ? (
+                                  <>
+                                    <span className="text-pink-400 text-base">♥♥</span>
+                                    <span className="text-gray-400 text-base">♥</span>
+                                  </>
+                                ) : (
+                                  <span className="text-pink-400 text-base">♥♥♥</span>
+                                )}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="text-white text-xl sm:text-2xl text-center mt-4">
+                        {intimateCompatibility.recommendedPosition}
+                      </p>
+                    </div>
                   </div>
-                  <div className="mt-4 px-2 text-center">
-                    <p className="text-white text-lg sm:text-xl leading-relaxed break-words">
-                      {intimateCompatibility.relationshipPrediction}
-                    </p>
+
+                  <div>
+                    <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4">
+                      <span
+                        aria-hidden="true"
+                        className="block h-px w-10 sm:w-24 bg-gradient-to-l from-pink-300/80 via-pink-300/40 to-transparent"
+                      />
+                      <h4 className="font-head font-semibold text-2xl sm:text-3xl text-pink-200 drop-shadow-[0_0_10px_rgba(244,114,182,0.4)] tracking-wide">
+                        関係性の行き先予測
+                      </h4>
+                      <span
+                        aria-hidden="true"
+                        className="block h-px w-10 sm:w-24 bg-gradient-to-r from-pink-300/80 via-pink-300/40 to-transparent"
+                      />
+                    </div>
+                    <div className="px-4">
+                      <HorizontalProgressBar 
+                        percentage={compatibility.axisScores.O}
+                        colorFrom="from-amber-500"
+                        colorTo="to-orange-500"
+                        isVisible={cardVisible}
+                        delay={1300}
+                      />
+                    </div>
+                    <div className="mt-4 text-center">
+                      <p className="text-white text-xl sm:text-2xl leading-relaxed break-words">
+                        {intimateCompatibility.relationshipPrediction}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
               </div>
             </ScrollAnimation>
 
