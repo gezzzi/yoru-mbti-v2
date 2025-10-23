@@ -27,3 +27,6 @@
 ## Environment & Configuration Tips
 - Store secrets in `.env.local` only. Update shared docs when introducing new variables.
 - Validate visual changes on both desktop and mobile to preserve gradients, animations, and modal interactions.
+
+## Agent Notes
+- Codex must not perform git operations in this repository.
