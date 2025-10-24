@@ -1333,6 +1333,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     
     // ギャップ度（5軸データと公開タグから精細化）
     const generateGapAnalysis = () => {
+      const clamp = (value: number) => Math.max(0, Math.min(100, value));
       // タグスコアを取得
       const myTagScores = myResult.additionalResults?.tagScores || [];
       const partnerTagScores = partnerResult.additionalResults?.tagScores || [];
@@ -1444,13 +1445,20 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         analysis += '。情熱がぶつかり合う激しい関係に';
       }
       
-      return analysis;
+      const normalizedGap = Math.min(gapScore, 100);
+      const gapConsistencyScore = clamp(100 - normalizedGap);
+
+      return {
+        analysis,
+        score: gapConsistencyScore
+      };
     };
-    
+
     const gapAnalysis = generateGapAnalysis();
     
     // 関係性の行き先予測（5軸データと公開タグから精細化）
     const generateRelationshipPrediction = () => {
+      const clamp = (value: number) => Math.max(0, Math.min(100, value));
       // タグを取得
       const myTags = myResult.additionalResults?.tags || [];
       const partnerTags = partnerResult.additionalResults?.tags || [];
@@ -1508,8 +1516,10 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                          stabilityScore * 0.3 + passionScore * 0.2);
       
       let prediction = '';
+      let predictionTier: 'high' | 'medium' | 'low';
       
       if (totalScore >= 75) {
+        predictionTier = 'high';
         if (emotionalDepth >= 60 && stabilityScore >= 70) {
           prediction = '夜から始まっても、深い愛情に発展する可能性大。';
           prediction += '二人の間には肉体的な繋がりだけでなく、精神的な絆も強く感じられます。';
@@ -1554,6 +1564,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
           }
         }
       } else if (totalScore >= 50) {
+        predictionTier = 'medium';
         if (emotionalDepth < 30) {
           prediction = '体の相性は最高。でも恋愛には発展しにくい関係性です。';
           prediction += '肉体的な繋がりは強く、夜を共にするたびに激しい快楽を味わえるでしょう。';
@@ -1603,6 +1614,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
           }
         }
       } else {
+        predictionTier = 'low';
         if (physicalIntensity >= 60 && emotionalDepth < 20) {
           prediction = 'セフレ向き。感情移入は危険です。';
           prediction += '肉体的には強く惹かれ合いますが、それ以上の関係を求めるのは避けた方が良いでしょう。';
@@ -1652,9 +1664,31 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         prediction += '性に対してオープンな二人は、恥ずかしがることなく欲望を伝え合える理想的な関係を築けるでしょう。';
       }
       
-      return prediction;
+      const gapConsistency = gapAnalysis.score;
+      const l2Closeness = clamp(100 - Math.abs(myResult.L2 - partnerResult.L2));
+      const stabilityClamped = clamp(stabilityScore);
+
+      let minRange = 0;
+      let maxRange = 54;
+
+      if (predictionTier === 'high') {
+        minRange = 80;
+        maxRange = 100;
+      } else if (predictionTier === 'medium') {
+        minRange = 55;
+        maxRange = 79;
+      }
+
+      const adjustmentSource = (gapConsistency * 0.4) + (l2Closeness * 0.3) + (stabilityClamped * 0.3);
+      const adjusted = minRange + ((maxRange - minRange) * (adjustmentSource / 100));
+      const relationshipScore = clamp(adjusted);
+
+      return {
+        prediction,
+        score: relationshipScore
+      };
     };
-    
+
     const relationshipPrediction = generateRelationshipPrediction();
     
     return {
@@ -1665,8 +1699,10 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       libidoBalance,
       beforeRelationship: beforeRelationship.analysis,
       beforeRelationshipScore: beforeRelationship.score,
-      gapAnalysis,
-      relationshipPrediction
+      gapAnalysis: gapAnalysis.analysis,
+      gapConsistencyScore: gapAnalysis.score,
+      relationshipPrediction: relationshipPrediction.prediction,
+      relationshipPredictionScore: relationshipPrediction.score
     };
   };
 
@@ -1923,7 +1959,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     </div>
                     <div className="px-4">
                       <HorizontalProgressBar 
-                        percentage={compatibility.axisScores.O}
+                        percentage={intimateCompatibility.relationshipPredictionScore}
                         colorFrom="from-amber-500"
                         colorTo="to-orange-500"
                         isVisible={cardVisible}
