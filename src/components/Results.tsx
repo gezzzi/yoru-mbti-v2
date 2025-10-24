@@ -950,7 +950,29 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
               </div>{/* Close 詳細情報統合カード */}
 
               {/* アクションボタン */}
-              <div className="text-center mt-8 px-4 pb-4">
+              <div className="text-center mt-8 px-4 pb-4 space-y-6">
+                <div className="inline-flex flex-col items-center gap-4 bg-white/10 border border-white/20 rounded-2xl px-6 py-6 shadow-[0_0_30px_rgba(236,72,153,0.35)]">
+                  <div className="flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left">
+                    <div>
+                      <p className="text-sm sm:text-base uppercase tracking-[0.3em] text-pink-200/80">Match Check</p>
+                      <p className="text-xl sm:text-2xl font-semibold text-white">この結果を持って、二人の「その先」を覗きに行こう</p>
+                    </div>
+                  </div>
+                  <p className="text-base sm:text-lg text-white/80 max-w-xl leading-relaxed">
+                    性格診断で判明したあなたのタイプを使って、二人の相性や関係性をさらに深堀り。
+                    専用のヒントやおすすめプランが待っています。
+                  </p>
+                  <Link
+                    href="/compatibility"
+                    className="bg-gradient-to-r from-[#ec4899] to-[#ffb8ce] text-white px-7 sm:px-8 py-3 sm:py-3.5 rounded-full font-semibold tracking-wide hover:from-[#ffb8ce] hover:to-[#ffb8ce] transition-all transform hover:scale-110 shadow-[0_10px_30px_rgba(236,72,153,0.45)] inline-flex items-center gap-2"
+                  >
+                    <span>相性診断へ進む</span>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                </div>
+
                 <div className="flex flex-wrap justify-center gap-4">
                   <button 
                     onClick={() => setShowShareModal(true)}
@@ -965,15 +987,6 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   >
                     <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span>再診断</span>
-                  </Link>
-                  <Link
-                    href="/compatibility"
-                    className="bg-gradient-to-r from-[#ec4899] to-[#ffb8ce] text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:from-[#ffb8ce] hover:to-[#ffb8ce] transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-lg sm:text-lg"
-                  >
-                    <span>相性診断へ進む</span>
-                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
                   </Link>
                 </div>
               </div>

@@ -1646,7 +1646,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
             prediction += 'お互いにとってより良い相手が他にいる可能性が高いです。';
           }
         } else {
-          prediction = '相性が合わない。無理して続けない方が良いでしょう。';
+          prediction = '無理して続けない方が良いでしょう。';
           prediction += '残念ながら、この組み合わせは基本的な相性が良くありません。';
           prediction += '一時的な関係ならまだしも、長期的な関係を築くのは非常に困難です。';
           prediction += 'お互いの幸せのためにも、早めに関係を見直すことをお勧めします。';
@@ -2006,14 +2006,14 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                 <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-4">
                   <button
                     onClick={() => setShowShareModal(true)}
-                    className="bg-teal-500 text-teal-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-sm sm:text-base"
+                    className="bg-teal-500 text-teal-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-lg sm:text-lg"
                   >
                     <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span>シェア</span>
                   </button>
                   <button
                     onClick={onNewTest}
-                    className="bg-gray-500 text-gray-100 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-gray-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-sm sm:text-base"
+                    className="bg-gray-500 text-gray-100 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-gray-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-lg sm:text-lg"
                   >
                     <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span>再診断</span>
