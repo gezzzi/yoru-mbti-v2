@@ -1979,13 +1979,24 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
             {(mySecretAnswer || partnerSecretAnswer) && (
               <ScrollAnimation animation="fadeInUp" delay={700}>
                 <div className="text-center">
-                  <button
-                    onClick={() => setShowSecretConfirm(true)}
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 inline-flex items-center gap-2 shadow-lg"
-                  >
-                    <span className="text-lg">🔐</span>
-                    <span>秘密を見る</span>
-                  </button>
+                  <div className="inline-flex flex-col items-center gap-4 bg-white/10 border border-white/20 rounded-2xl px-6 py-6 shadow-[0_0_30px_rgba(236,72,153,0.35)]">
+                    <div className="flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left">
+                      <div>
+                        <p className="text-sm sm:text-base uppercase tracking-[0.3em] text-pink-200/80">Secret Zone</p>
+                        <p className="text-xl sm:text-2xl font-semibold text-white">お互いの「本音」が丸見えになる禁断ゾーン</p>
+                      </div>
+                    </div>
+                    <p className="text-base sm:text-lg text-white/80 max-w-xl leading-relaxed">
+                      あの質問、相手はどう答えてた？恥ずかしくて聞けない本音を、ここだけでこっそり覗けます。
+                      互いに保存した秘密回答が揃っているからこそ開放される、診断のハイライトです。
+                    </p>
+                    <button
+                      onClick={() => setShowSecretConfirm(true)}
+                      className="bg-gradient-to-r from-purple-600 via-fuchsia-500 to-pink-500 text-white px-7 py-3 rounded-full font-semibold tracking-wide hover:from-purple-700 hover:to-pink-600 transition-all transform hover:scale-110 shadow-[0_10px_30px_rgba(236,72,153,0.45)]"
+                    >
+                      🔓 秘密を見る
+                    </button>
+                  </div>
                 </div>
               </ScrollAnimation>
             )}
@@ -2006,15 +2017,6 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                   >
                     <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span>再診断</span>
-                  </button>
-                  <button
-                    onClick={() => setShowFeedbackModal(true)}
-                    className="bg-blue-400 text-blue-800 px-6 py-3 rounded-lg font-semibold hover:bg-blue-300 transition-all transform hover:scale-105 inline-flex items-center shadow-lg"
-                  >
-                    フィードバックへ
-                    <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
                   </button>
                 </div>
               </div>
