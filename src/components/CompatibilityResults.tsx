@@ -1259,94 +1259,74 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       const partnerTags = partnerResult.additionalResults?.tags || [];
       const combinedTags = new Set([...myTags, ...partnerTags]);
       
-      // 付き合う前の関係に対する開放度を計算
-      const calculateOpennessScore = (result: any, tags: string[]) => {
-        let score = 0;
-        
-        // L2軸（Love/Free）が基本（Freeが高いほど開放的）
-        if (result.L2 < 50) {
-          score += (50 - result.L2) * 0.8; // Free傾向
-        }
-        
-        // E軸（外向性）も影響
-        if (result.E > 60) {
-          score += 15; // 外向的な人は積極的
-        }
-        
-        // O軸（開放性）も大きく影響
-        if (result.O > 60) {
-          score += 20; // 開放的な人はYES傾向
-        } else if (result.O < 40) {
-          score -= 20; // 秘密主義はNO傾向
-        }
-        
-        // タグによる調整
-        if (tags.includes('🏃‍♂️ 衝動トリガー型')) score += 25;
-        if (tags.includes('⚡️ スピード勝負派')) score += 20;
-        if (tags.includes('🔥 欲望の炎')) score += 15;
-        if (tags.includes('🗣 下ネタOK')) score += 10;
-        if (tags.includes('🕯 ロマン重視')) score -= 20;
-        if (tags.includes('🛁 アフターケア必須')) score -= 10;
-        
-        return Math.min(100, Math.max(0, score));
-      };
-      
-      const myScore = calculateOpennessScore(myResult, myTags);
-      const partnerScore = calculateOpennessScore(partnerResult, partnerTags);
-      
-      // YES/NO判定
-      const myAnswer = myScore >= 40 ? 'YES' : 'NO';
-      const partnerAnswer = partnerScore >= 40 ? 'YES' : 'NO';
-      
-      // 詳細な分析
+      const clamp = (value: number) => Math.max(0, Math.min(100, value));
+
+      const averageA = (myResult.A + partnerResult.A) / 2;
+      const aCloseness = clamp(100 - Math.abs(myResult.A - partnerResult.A));
+      const l2FreeAlignment = clamp(100 - ((myResult.L2 + partnerResult.L2) / 2));
+      const opennessAlignment = clamp((myResult.O + partnerResult.O) / 2);
+
+      const compositeScore = clamp(
+        (aCloseness * 0.5) +
+        (l2FreeAlignment * 0.3) +
+        (opennessAlignment * 0.2)
+      );
+
+      const myReadiness = clamp(
+        (clamp(100 - Math.abs(myResult.A - averageA)) * 0.5) +
+        ((50 - Math.min(50, myResult.L2)) * 0.6) +
+        (myResult.O * 0.4)
+      );
+
+      const partnerReadiness = clamp(
+        (clamp(100 - Math.abs(partnerResult.A - averageA)) * 0.5) +
+        ((50 - Math.min(50, partnerResult.L2)) * 0.6) +
+        (partnerResult.O * 0.4)
+      );
+
+      const myAnswer = myReadiness >= 55 ? 'YES' : 'NO';
+      const partnerAnswer = partnerReadiness >= 55 ? 'YES' : 'NO';
+
       let analysis = '';
-      
+
       if (myAnswer === 'YES' && partnerAnswer === 'YES') {
-        if (myScore >= 70 && partnerScore >= 70) {
-          analysis = '始まりはカラダから。お互い積極的で話が早い';
-        } else {
-          analysis = '始まりはカラダから。タイミングが合えばすぐに';
+        analysis = '始まりはカラダから。お互い積極的で話が早い';
+        if (compositeScore >= 80) {
+          analysis += '。出会った夜から一気に盛り上がる可能性大';
         }
-        
-        // タグによる追加情報
         if (combinedTags.has('🏃‍♂️ 衝動トリガー型') && combinedTags.has('⚡️ スピード勝負派')) {
-          analysis += '。出会ったその日も十分あり得る';
-        } else if (combinedTags.has('🔥 欲望の炎')) {
-          analysis += '。欲望が抑えきれなくなりそう';
+          analysis += '。衝動のまま進んでも後悔はなさそう';
         }
       } else if (myAnswer === 'YES' && partnerAnswer === 'NO') {
         analysis = '感情とタイミングが鍵。あなたの気持ちと相手の準備次第';
-        
-        if (myScore >= 70) {
-          analysis += '。焦らずじっくり関係を築いて';
+        if (partnerReadiness < 40) {
+          analysis += '。焦らず、安心できる雰囲気を整えて';
         }
       } else if (myAnswer === 'NO' && partnerAnswer === 'YES') {
         analysis = '価値観の違いに注意。相手の積極性に戸惑うかも';
-        
         if (combinedTags.has('🚪 NG明確')) {
           analysis += '。境界線をしっかり伝えることが大切';
         }
-      } else { // NO × NO
-        if (myScore < 20 && partnerScore < 20) {
-          analysis = '恋愛から始まる正統派。しっかり関係を築いてから';
-        } else {
-          analysis = '恋愛から始まる正統派。お互いの気持ちが深まってから';
-        }
-        
+      } else {
+        analysis = '恋愛から始まる正統派。お互いの気持ちが深まってから';
         if (combinedTags.has('🕯 ロマン重視')) {
           analysis += '。ロマンチックな展開を大切に';
-        } else if (combinedTags.has('🛁 アフターケア必須')) {
-          analysis += '。信頼関係があってこそ';
         }
       }
-      
-      // 相性による追加アドバイス
-      const scoreDiff = Math.abs(myScore - partnerScore);
-      if (scoreDiff > 40) {
-        analysis += '。価値観の差が大きいので話し合いが重要';
+
+      const readinessGap = Math.abs(myReadiness - partnerReadiness);
+      if (readinessGap > 35) {
+        analysis += '。温度差があるので丁寧なすり合わせが必要';
       }
-      
-      return analysis;
+
+      if (combinedTags.has('🔥 欲望の炎')) {
+        analysis += '。どちらかが抑えきれなくなる前に合図を決めて';
+      }
+
+      return {
+        score: compositeScore,
+        analysis
+      };
     };
     
     const beforeRelationship = generateBeforeRelationship();
@@ -1683,7 +1663,8 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       recommendedPositions, // 体位オブジェクトの配列も返す
       recommendedPositionScore,
       libidoBalance,
-      beforeRelationship,
+      beforeRelationship: beforeRelationship.analysis,
+      beforeRelationshipScore: beforeRelationship.score,
       gapAnalysis,
       relationshipPrediction
     };
@@ -1824,7 +1805,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     </div>
                     <div className="px-4">
                       <HorizontalProgressBar
-                        percentage={compatibility.axisScores.A}
+                        percentage={intimateCompatibility.beforeRelationshipScore}
                         colorFrom="from-green-500"
                         colorTo="to-emerald-500"
                         isVisible={cardVisible}
