@@ -13,7 +13,7 @@ import HeartRain from './HeartRain';
 import SnowfallAnimation from './SnowfallAnimation';
 import PetalAnimation from './PetalAnimation';
 import { PositionDescriptionModal } from './PositionDescriptionModal';
-import { Position48, positions48 } from '../data/positions48';
+import { Position48, positions48, PositionMood } from '../data/positions48';
 import { questions } from '../data/questions';
 import FeedbackModal from './FeedbackModal';
 import SNSShareModal from './SNSShareModal';
@@ -1003,6 +1003,8 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     const seed = myResult.E + partnerResult.E + myResult.L + partnerResult.L;
     recommendedPlay = stabilizeRecommendedPlayText(recommendedPlay, 800, 900, seed);
     
+    let topPositionMood: PositionMood | null = null;
+
     // おすすめ体位（5軸データと公開タグから決定）
     const recommendedPositions = (() => {
       // positions48データを使用（importされている）
@@ -1013,7 +1015,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       const combinedTags = new Set([...myTags, ...partnerTags]);
       
       // ムードの優先順位を決定
-      const moodPriorities = [];
+      const moodPriorities: PositionMood[] = [];
       
       // 1. L/F軸でベースムードを決定
       if ((myResult.L > 70 && partnerResult.L < 30) || (myResult.L < 30 && partnerResult.L > 70)) {
@@ -1041,6 +1043,8 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       if (combinedTags.has('💬 言語プレイ派')) {
         moodPriorities.push('playful'); // 言葉責めは遊び心
       }
+
+      topPositionMood = moodPriorities[0] ?? null;
       
       // 4. 難易度フィルター
       const maxDifficulty = (myResult.A > 70 && partnerResult.A > 70) ? 'hard' :
@@ -1053,7 +1057,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       // 各ムードから1つずつ選択（最大3つ）
       for (const mood of moodPriorities) {
         const candidates = positions48.filter(pos => 
-          pos.moods.includes(mood as any) && 
+          pos.moods.includes(mood) && 
           !usedIds.has(pos.id) &&
           (maxDifficulty === 'hard' || 
            (maxDifficulty === 'medium' && pos.difficulty !== 'hard') ||
@@ -1102,6 +1106,52 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       
       return selectedPositions;
     })();
+
+    const calculateRecommendedPositionScore = (primaryMood: PositionMood | null) => {
+      const clampScore = (value: number) => Math.max(0, Math.min(100, value));
+
+      const averageA = (myResult.A + partnerResult.A) / 2;
+      const eAlignment = clampScore(100 - Math.abs(myResult.E - partnerResult.E));
+      const lComplement = clampScore(Math.abs(myResult.L - partnerResult.L));
+
+      const scoreCentered = (value: number, center: number, tolerance: number) => {
+        const distance = Math.abs(value - center);
+        const normalized = Math.min(distance / tolerance, 1);
+        return clampScore((1 - normalized) * 100);
+      };
+
+      const scoreHighPreference = (value: number, threshold: number) => {
+        if (value <= threshold) return 0;
+        const normalized = (value - threshold) / (100 - threshold);
+        return clampScore(normalized * 100);
+      };
+
+      const mood = primaryMood ?? 'playful';
+
+      let aAlignment: number;
+      switch (mood) {
+        case 'romantic':
+          aAlignment = scoreCentered(averageA, 35, 35);
+          break;
+        case 'technical':
+          aAlignment = scoreHighPreference(averageA, 55);
+          break;
+        case 'wild':
+          aAlignment = scoreHighPreference(averageA, 60);
+          break;
+        case 'foreplay':
+          aAlignment = scoreCentered(averageA, 40, 30);
+          break;
+        default: // playful など
+          aAlignment = scoreCentered(averageA, 50, 35);
+          break;
+      }
+
+      const weightedScore = (aAlignment * 0.4) + (lComplement * 0.3) + (eAlignment * 0.3);
+      return Math.round(clampScore(weightedScore));
+    };
+
+    const recommendedPositionScore = calculateRecommendedPositionScore(topPositionMood);
     
     // 体位の分析文を生成
     const positionAnalysis = (() => {
@@ -1631,6 +1681,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
       recommendedPlay,
       recommendedPosition: positionAnalysis,
       recommendedPositions, // 体位オブジェクトの配列も返す
+      recommendedPositionScore,
       libidoBalance,
       beforeRelationship,
       gapAnalysis,
@@ -1803,7 +1854,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     </div>
                     <div className="px-4">
                       <HorizontalProgressBar
-                        percentage={compatibility.axisScores.E}
+                        percentage={intimateCompatibility.recommendedPositionScore}
                         colorFrom="from-blue-500"
                         colorTo="to-cyan-500"
                         isVisible={cardVisible}
