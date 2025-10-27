@@ -463,7 +463,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
       </div>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-4xl py-12">
         
 
 
@@ -474,7 +474,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
             <div className="rounded-xl p-6 mb-8 border-2 border-white/30" style={{backgroundColor: 'rgba(255, 255, 255, 0)', boxShadow: '0 0 20px rgba(255, 255, 255, 0.1)'}}>
             <h2 className="text-2xl font-bold text-[#e0e7ff] mb-6 text-center">QRコード診断</h2>
             
-            <div className="grid lg:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-8">
                              {/* 左側：あなたのQRコード */}
                <div className="space-y-4">
                  <h3 className="text-lg font-semibold text-[#e0e7ff] text-center">あなたのQRコード</h3>
