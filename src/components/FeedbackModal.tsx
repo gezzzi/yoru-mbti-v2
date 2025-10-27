@@ -180,7 +180,7 @@ export default function FeedbackModal({ onClose }: { onClose: () => void }) {
 
             <p className="text-gray-700 font-medium mb-3">詳細や感想を自由にお書きください</p>
             <textarea
-              className="w-full border-2 border-gray-300 rounded-lg p-3 min-h-[100px] text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:shadow-lg transition-all duration-300 resize-none"
+              className="w-full border-2 border-gray-300 rounded-lg p-3 min-h-[100px] text-base text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-blue-400 focus:shadow-lg transition-all duration-300 resize-none"
               placeholder="使いやすさ、改善点、ご感想など"
               value={message}
               onChange={e => {
