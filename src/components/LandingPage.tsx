@@ -27,8 +27,12 @@ const LandingPage: React.FC = () => {
             ].map((item, index) => (
               <ScrollAnimation key={index} animation="fadeInUp" delay={index * 100}>
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-white/10 hover:bg-white/10 transition-all duration-300">
-                  <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">{item.icon}</div>
-                  <p className="text-sm sm:text-base text-white/90">{item.text}</p>
+                  <div className="flex items-center gap-3 sm:gap-4 text-left">
+                    <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white/5">
+                      <span className="text-2xl sm:text-3xl md:text-4xl leading-none">{item.icon}</span>
+                    </div>
+                    <p className="text-base sm:text-lg text-white/90 leading-relaxed">{item.text}</p>
+                  </div>
                 </div>
               </ScrollAnimation>
             ))}
@@ -58,7 +62,7 @@ const LandingPage: React.FC = () => {
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-3 sm:mb-4">
               夜の性格診断でわかること
             </h2>
-            <p className="text-sm sm:text-base text-white/70 text-center mb-8 sm:mb-12">
+            <p className="text-base sm:text-lg text-white/70 text-center mb-8 sm:mb-12">
               科学的なアプローチで二人の関係を分析
             </p>
           </ScrollAnimation>
@@ -88,9 +92,13 @@ const LandingPage: React.FC = () => {
             ].map((item, index) => (
               <ScrollAnimation key={index} animation="fadeInUp" delay={index * 150}>
                 <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 rounded-2xl p-6 sm:p-8 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300">
-                  <div className="text-3xl sm:text-4xl mb-3 sm:mb-4">{item.icon}</div>
-                  <h3 className="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-3">{item.title}</h3>
-                  <p className="text-sm sm:text-base text-white/80 leading-relaxed">{item.description}</p>
+                  <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4 text-left">
+                    <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-white/10">
+                      <span className="text-2xl sm:text-3xl md:text-4xl leading-none">{item.icon}</span>
+                    </div>
+                    <h3 className="text-lg sm:text-xl font-bold text-white">{item.title}</h3>
+                  </div>
+                  <p className="text-base sm:text-lg text-white/80 leading-relaxed">{item.description}</p>
                 </div>
               </ScrollAnimation>
             ))}
@@ -132,7 +140,7 @@ const LandingPage: React.FC = () => {
                   </div>
                   <div className="flex-1">
                     <h3 className="text-lg sm:text-xl font-bold text-white mb-1 sm:mb-2">{item.title}</h3>
-                    <p className="text-sm sm:text-base text-white/80 leading-relaxed">{item.description}</p>
+                    <p className="text-base sm:text-lg text-white/80 leading-relaxed">{item.description}</p>
                   </div>
                 </div>
               </ScrollAnimation>
@@ -201,7 +209,7 @@ const LandingPage: React.FC = () => {
                 <div className="text-center">
                   <div className="text-4xl sm:text-5xl mb-3 sm:mb-4">{item.icon}</div>
                   <h3 className="text-lg sm:text-xl font-bold text-white mb-1 sm:mb-2">{item.title}</h3>
-                  <p className="text-sm sm:text-base text-white/70">{item.description}</p>
+                  <p className="text-base sm:text-lg text-white/70">{item.description}</p>
                 </div>
               </ScrollAnimation>
             ))}
@@ -235,7 +243,7 @@ const LandingPage: React.FC = () => {
             ].map((review, index) => (
               <ScrollAnimation key={index} animation="fadeInUp" delay={index * 150}>
                 <div className="bg-white/5 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-white/10">
-                  <p className="text-sm sm:text-base text-white/90 mb-2 sm:mb-3">&quot;{review.text}&quot;</p>
+                  <p className="text-base sm:text-lg text-white/90 mb-2 sm:mb-3">&quot;{review.text}&quot;</p>
                   <p className="text-xs sm:text-sm text-white/60">— {review.author}</p>
                 </div>
               </ScrollAnimation>
@@ -279,7 +287,7 @@ const LandingPage: React.FC = () => {
               <ScrollAnimation key={index} animation="fadeInUp" delay={index * 100}>
                 <div className="bg-gradient-to-r from-purple-900/20 to-pink-900/20 rounded-xl p-4 sm:p-6 border border-purple-500/20">
                   <h3 className="text-base sm:text-lg font-bold text-white mb-2 sm:mb-3">{item.q}</h3>
-                  <p className="text-sm sm:text-base text-white/80 leading-relaxed">{item.a}</p>
+                  <p className="text-base sm:text-lg text-white/80 leading-relaxed">{item.a}</p>
                 </div>
               </ScrollAnimation>
             ))}
@@ -294,7 +302,7 @@ const LandingPage: React.FC = () => {
             <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-4 sm:mb-6">
               二人の&quot;夜&quot;は、もっと良くなる。
             </h2>
-            <p className="text-base sm:text-lg md:text-xl text-white/80 mb-6 sm:mb-10">
+            <p className="text-lg sm:text-xl md:text-2xl text-white/80 mb-6 sm:mb-10">
               今すぐ無料で夜の相性を診断して、より深い関係を築きましょう
             </p>
           </ScrollAnimation>
