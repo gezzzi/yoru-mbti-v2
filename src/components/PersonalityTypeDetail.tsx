@@ -46,6 +46,9 @@ const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = (
   );
 };
 
+const actionButtonBase =
+  'inline-flex items-center px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-semibold rounded-2xl transform hover:scale-105 transition-all duration-200 shadow-lg';
+
 const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) => {
   return (
     <div className="min-h-screen pt-28 pb-12">
@@ -105,7 +108,7 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
                   <div className="space-y-4 sm:space-y-0 sm:space-x-4 sm:flex sm:justify-center">
                     <Link
                       href="/test"
-                      className="inline-flex items-center px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-[#6366f1] to-[#a78bfa] text-white font-semibold rounded-2xl hover:from-[#818cf8] hover:to-[#a78bfa] transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl text-base md:text-lg"
+                      className={`${actionButtonBase} bg-gradient-to-r from-[#6366f1] to-[#a78bfa] text-white hover:from-[#818cf8] hover:to-[#a78bfa] hover:shadow-xl`}
                     >
                       性格診断をする
                       <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,7 +117,7 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
                     </Link>
                     <Link
                       href="/compatibility"
-                      className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#ec4899] to-[#ffb8ce] text-white font-semibold text-lg rounded-2xl hover:from-[#ffb8ce] hover:to-[#ffb8ce] transform hover:scale-105 transition-all duration-200 shadow-xl"
+                      className={`${actionButtonBase} bg-gradient-to-r from-[#ec4899] to-[#ffb8ce] text-white hover:from-[#ffb8ce] hover:to-[#ffb8ce] hover:shadow-xl`}
                     >
                       相性診断をする
                       <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
