@@ -113,10 +113,10 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose, 
             <div className="bg-white p-3 rounded-lg shadow-sm" ref={qrRef}>
               <QRCodeWithLogo
                 value={compatibilityCode}
-                size={150}
+                size={400}
                 logoSrc="/icon-512.png"
                 logoSizeRatio={0.18}
-                className="w-full h-auto max-w-[150px]"
+                className="w-full h-auto max-w-[400px]"
               />
             </div>
           </div>
