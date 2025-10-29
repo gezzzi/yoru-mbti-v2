@@ -4,23 +4,24 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import CompatibilityPage from '@/components/CompatibilityPage';
 import { TestResult } from '@/types/personality';
+import TestFlowReminder from '@/components/TestFlowReminder';
 
 export default function CompatibilityPageWrapper() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
+  const [status, setStatus] = useState<'loading' | 'ready' | 'missing'>('loading');
 
   useEffect(() => {
     // 診断結果があるかチェック
     if (typeof window !== 'undefined') {
       const savedResult = localStorage.getItem('personality_test_result');
       if (!savedResult) {
-        // 診断結果がない場合はトップページにリダイレクト
-        router.push('/');
-      } else {
-        setIsLoading(false);
+        setStatus('missing');
+        return;
       }
+
+      setStatus('ready');
     }
-  }, [router]);
+  }, []);
 
   const handleStartTest = () => {
     router.push('/test');
@@ -37,9 +38,22 @@ export default function CompatibilityPageWrapper() {
     router.push('/compatibility/results');
   };
 
-  // ローディング中は何も表示しない
-  if (isLoading) {
-    return null;
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-lg text-gray-600">読み込み中...</div>
+      </div>
+    );
+  }
+
+  if (status === 'missing') {
+    return (
+      <TestFlowReminder
+        title="おっと！まだ性格診断を受けていないようです"
+        description=""
+        highlightStep={1}
+      />
+    );
   }
 
   return (
