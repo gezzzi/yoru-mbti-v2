@@ -30,9 +30,9 @@ const ContactPage: React.FC = () => {
                     <div className="bg-white/5 rounded-lg p-4 mt-4">
                       <div className="flex flex-col sm:flex-row sm:items-center">
                         <span className="font-medium sm:w-32">メールアドレス：</span>
-                        <a href="mailto:sakumonbot7@gmail.com"
+                        <a href="mailto:info@nightpersonality.com"
                            className="text-pink-300 hover:text-pink-200 underline break-all">
-                          sakumonbot7@gmail.com
+                          info@nightpersonality.com
                         </a>
                       </div>
                     </div>
