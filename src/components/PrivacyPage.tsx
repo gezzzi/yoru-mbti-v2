@@ -41,7 +41,6 @@ const PrivacyPage: React.FC = () => {
                       <ul className="list-disc list-inside text-[#e0e7ff]/80 space-y-1 ml-4 text-sm">
                         <li>診断で入力されるユーザー名（ローカルストレージに保存）</li>
                         <li>診断の回答内容（ローカルストレージに保存）</li>
-                        <li>フィードバック内容（メールアドレスは収集しません）</li>
                       </ul>
                     </div>
                     <div>

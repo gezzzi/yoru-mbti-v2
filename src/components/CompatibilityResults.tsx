@@ -15,7 +15,6 @@ import PetalAnimation from './PetalAnimation';
 import { PositionDescriptionModal } from './PositionDescriptionModal';
 import { Position48, positions48, PositionMood } from '../data/positions48';
 import { questions } from '../data/questions';
-import FeedbackModal from './FeedbackModal';
 import SNSShareModal from './SNSShareModal';
 import { calculateImprovedTagCompatibility, TagScore } from '../utils/tagCompatibility';
 import { getTagRecommendations, selectAndFormatRecommendations, stabilizeRecommendedPlayText } from './CompatibilityResultsHelper';
@@ -378,7 +377,6 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   const [selectedPosition, setSelectedPosition] = useState<Position48 | null>(null);
   const [partnerSecretAnswer, setPartnerSecretAnswer] = useState<{ questionId: number; answer: number } | null>(null);
   const [mySecretAnswer, setMySecretAnswer] = useState<{ questionId: number; answer: number } | null>(null);
-  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [showSecretModal, setShowSecretModal] = useState(false);
   const [showSecretConfirm, setShowSecretConfirm] = useState(false);
   const [cardVisible, setCardVisible] = useState(false);
@@ -2040,11 +2038,6 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         onClose={() => setSelectedPosition(null)}
       />
       
-      {/* Feedback Modal */}
-      {showFeedbackModal && (
-        <FeedbackModal onClose={() => setShowFeedbackModal(false)} />
-      )}
-
       {/* 秘密確認モーダル */}
       {showSecretConfirm && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">

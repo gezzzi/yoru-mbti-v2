@@ -1,6 +1,5 @@
 import NavigationWrapper from '@/components/NavigationWrapper';
 import Footer from '@/components/Footer';
-import FeedbackButton from '@/components/FeedbackButton';
 
 export default function StarLayout({
   children,
@@ -36,9 +35,6 @@ export default function StarLayout({
 
       <main className="relative flex flex-1 flex-col items-center justify-center">
         {children}
-        <div style={{ position: 'fixed', right: '2rem', bottom: '2rem', zIndex: 50 }}>
-          <FeedbackButton />
-        </div>
       </main>
 
       <Footer />
