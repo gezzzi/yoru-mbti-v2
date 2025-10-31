@@ -102,24 +102,24 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
                 </div>
                 
                 {/* タイプ説明文 */}
-                <div className="mb-8 bg-transparent rounded-xl p-6">
+                <div className="mb-8 bg-transparent rounded-xl py-6">
                   <p className="text-lg text-[#e0e7ff] leading-relaxed font-medium">{type.fullDescription || type.description}</p>
                 </div>
 
                 {insight && (
                   <div className="space-y-10">
                     <ScrollAnimation animation="fadeInUp" delay={700}>
-                      <section className="rounded-2xl border border-white/10 bg-white/5 p-6 md:p-8 space-y-4 shadow-inner shadow-white/10">
-                        <header className="space-y-2">
+                      <section className="rounded-2xl py-6 md:py-8 space-y-4">
+                        <header className="space-y-2 text-center">
                           <p className="text-xs uppercase tracking-[0.35em] text-white/50">Axis Profile</p>
-                          <h2 className="text-2xl font-semibold text-white">
+                          <h2 className="text-2xl font-semibold text-[#c4b5fd]">
                             {type.name}の5軸プロファイル
                           </h2>
-                          <p className="text-sm md:text-base text-white/75 leading-relaxed">
+                          <p className="text-lg text-[#e0e7ff] leading-relaxed text-left">
                             {type.name}が持つ心理軸の傾向をまとめました。どのような場面で持ち味が発揮され、どこに緊張が生まれやすいのかを把握しておきましょう。
                           </p>
                         </header>
-                        <ul className="space-y-3 text-sm md:text-base text-white/85 leading-relaxed">
+                        <ul className="space-y-3 text-lg text-[#e0e7ff] leading-relaxed px-0">
                           {insight.axisHighlights.map((item) => (
                             <li key={item} className="flex items-start gap-3">
                               <span className="mt-1 h-2 w-2 flex-shrink-0 rounded-full bg-green-300" />
@@ -131,15 +131,15 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
                     </ScrollAnimation>
 
                     <ScrollAnimation animation="fadeInUp" delay={770}>
-                      <section className="rounded-2xl border border-white/10 bg-gradient-to-r from-white/10 to-white/5 p-6 md:p-8 space-y-4">
-                        <header className="space-y-2">
+                      <section className="rounded-2xl py-6 md:py-8 space-y-4">
+                        <header className="space-y-2 text-center">
                           <p className="text-xs uppercase tracking-[0.35em] text-white/50">Action Plan</p>
-                          <h2 className="text-2xl font-semibold text-white">おすすめの過ごし方</h2>
-                          <p className="text-sm md:text-base text-white/75 leading-relaxed">
+                          <h2 className="text-2xl font-semibold text-[#f9a8d4]">おすすめの過ごし方</h2>
+                          <p className="text-lg text-[#e0e7ff] leading-relaxed text-left">
                             日常の中で{type.name}らしさを発揮するための行動ヒントです。1つずつ取り入れて、相手とのリズムを整えてみましょう。
                           </p>
                         </header>
-                        <ul className="space-y-3 text-sm md:text-base text-white/85 leading-relaxed">
+                        <ul className="space-y-3 text-lg text-[#e0e7ff] leading-relaxed">
                           {insight.recommendedActions.map((item) => (
                             <li key={item} className="flex items-start gap-3">
                               <span className="mt-1 h-2 w-2 flex-shrink-0 rounded-full bg-blue-300" />
@@ -151,15 +151,15 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
                     </ScrollAnimation>
 
                     <ScrollAnimation animation="fadeInUp" delay={840}>
-                      <section className="rounded-2xl border border-white/10 bg-black/30 p-6 md:p-8 space-y-4">
-                        <header className="space-y-2">
+                      <section className="rounded-2xl py-6 md:py-8 space-y-4">
+                        <header className="space-y-2 text-center">
                           <p className="text-xs uppercase tracking-[0.35em] text-white/50">Growth Tips</p>
-                          <h2 className="text-2xl font-semibold text-white">改善のヒント</h2>
-                          <p className="text-sm md:text-base text-white/75 leading-relaxed">
+                          <h2 className="text-2xl font-semibold text-[#fbbf24]">改善のヒント</h2>
+                          <p className="text-lg text-[#e0e7ff] leading-relaxed text-left">
                             行き違いや疲れが溜まりやすいポイントを事前にケアすることで、長期的な安定や信頼に繋がります。
                           </p>
                         </header>
-                        <ul className="space-y-3 text-sm md:text-base text-white/85 leading-relaxed">
+                        <ul className="space-y-3 text-lg text-[#e0e7ff] leading-relaxed">
                           {insight.improvementTips.map((item) => (
                             <li key={item} className="flex items-start gap-3">
                               <span className="mt-1 h-2 w-2 flex-shrink-0 rounded-full bg-pink-300" />
@@ -171,12 +171,12 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
                     </ScrollAnimation>
 
                     <ScrollAnimation animation="fadeInUp" delay={900}>
-                      <section className="rounded-2xl border border-white/10 bg-white/10 p-6 md:p-8 space-y-4">
-                        <header className="space-y-2">
+                      <section className="rounded-2xl py-6 md:py-8 space-y-4">
+                        <header className="space-y-2 text-center">
                           <p className="text-xs uppercase tracking-[0.35em] text-white/50">Expert Note</p>
-                          <h2 className="text-2xl font-semibold text-white">専門的な補足メモ</h2>
+                          <h2 className="text-2xl font-semibold text-[#7dd3fc]">専門的な補足メモ</h2>
                         </header>
-                        <div className="space-y-4 text-sm md:text-base text-white/80 leading-relaxed">
+                        <div className="space-y-4 text-lg text-[#e0e7ff] leading-relaxed">
                           {insight.expertCommentary.map((paragraph) => (
                             <p key={paragraph}>{paragraph}</p>
                           ))}
