@@ -91,7 +91,7 @@ const Hero: React.FC = () => {
       {/* 画像部分 */}
       <ScrollAnimation animation="fadeInUp" delay={600} className="w-full flex-shrink-0 max-w-6xl mx-auto">
         <Image
-          src="/images/page/landing-page.svg"
+          src="/images/page/lp.png"
           alt="ランディングページイラスト"
           width={1152}
           height={360}
