@@ -481,7 +481,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                                                   dimension.resultLabel.includes('自由') ||
                                                   dimension.resultLabel.includes('秘密主義');
                                 const circlePosition = isReverse ? (100 - dimension.percentage) : dimension.percentage;
-                                const clampedPosition = Math.min(Math.max(circlePosition, 0), 100);
+                                const clampedPosition = Math.min(Math.max(circlePosition, 5), 95);
                                 return (
                                   <div 
                                     className="absolute w-5 h-5 bg-white rounded-full shadow-lg border-2 border-white flex items-center justify-center"
