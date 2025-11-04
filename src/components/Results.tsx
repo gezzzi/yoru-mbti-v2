@@ -78,7 +78,7 @@ const TypeImage: React.FC<{ typeCode: string; fiveAxisCode: string; emoji: strin
   }
 
   return (
-    <div className="w-72 h-72 mx-auto rounded-2xl overflow-hidden bg-transparent flex items-center justify-center">
+    <div className="w-full max-w-xs sm:max-w-[18rem] aspect-square mx-auto rounded-2xl overflow-hidden bg-transparent flex items-center justify-center">
       <Image
         src={sources[sourceIndex]}
         alt={name}
@@ -383,7 +383,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
 
 
   return (
-    <div className="relative z-10 min-h-screen pt-28 pb-12">
+    <div className="relative z-10 min-h-screen pt-28 pb-12 overflow-x-hidden">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Title */}
         <ScrollAnimation animation="fadeIn" duration={800}>
