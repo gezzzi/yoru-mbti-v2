@@ -475,19 +475,17 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                                 <div className="absolute inset-0 bg-white/20 rounded-full"></div>
                               </div>
                               {(() => {
-                                // 内向性系の軸の場合は、実際の位置を反転させる
                                 const isReverse = dimension.resultLabel.includes('マイペース') ||
-                                                dimension.resultLabel.includes('相手に合わせる') ||
-                                                dimension.resultLabel.includes('安心重視') ||
-                                                dimension.resultLabel.includes('自由') ||
-                                                dimension.resultLabel.includes('秘密主義');
-                                
-                                // 円の位置：内向性系の場合は100から引いた値を使用
+                                                  dimension.resultLabel.includes('相手に合わせる') ||
+                                                  dimension.resultLabel.includes('安心重視') ||
+                                                  dimension.resultLabel.includes('自由') ||
+                                                  dimension.resultLabel.includes('秘密主義');
                                 const circlePosition = isReverse ? (100 - dimension.percentage) : dimension.percentage;
+                                const clampedPosition = Math.min(Math.max(circlePosition, 0), 100);
                                 return (
                                   <div 
-                                    className="absolute top-1/2 transform -translate-y-1/2 w-5 h-5 bg-white rounded-full shadow-lg border-2 border-white flex items-center justify-center"
-                                    style={{ left: `calc(${circlePosition}% - 10px)`, top: '50%', transform: 'translateY(-50%)' }}
+                                    className="absolute w-5 h-5 bg-white rounded-full shadow-lg border-2 border-white flex items-center justify-center"
+                                    style={{ left: `${clampedPosition}%`, top: '50%', transform: 'translate(-50%, -50%)' }}
                                   >
                                     <div className={`w-3 h-3 ${getIndicatorCenterColor(dimension.color)} rounded-full`}></div>
                                   </div>
