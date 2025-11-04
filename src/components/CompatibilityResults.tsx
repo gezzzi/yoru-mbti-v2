@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { TestResult, PersonalityType } from '../types/personality';
 import { Heart, Users, ArrowRight, Share2, RefreshCw, User, Check } from 'lucide-react';
 import { generateCompatibilityShareText } from '../utils/snsShare';
@@ -19,6 +19,7 @@ import SNSShareModal from './SNSShareModal';
 import { calculateImprovedTagCompatibility, TagScore } from '../utils/tagCompatibility';
 import { getTagRecommendations, selectAndFormatRecommendations, stabilizeRecommendedPlayText } from './CompatibilityResultsHelper';
 import { nightCompatibilityDescriptions, NightCompatibilityKey } from '@/data/nightCompatibilityDescriptions';
+import { buildPersonalityImageSources } from '@/utils/personalityImage';
 
 interface CompatibilityResult {
   compatibility: number;
@@ -314,20 +315,32 @@ const useCountUp = (end: number, duration: number = 1500, start: boolean = true)
 
 const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = ({ typeCode, emoji, name }) => {
   const [imageError, setImageError] = useState(false);
-  const getBaseTypeCode = (code: string): string => {
-    return code.split('-')[0].toUpperCase();
-  };
+  const [sourceIndex, setSourceIndex] = useState(0);
+
+  const sources = useMemo(() => buildPersonalityImageSources([typeCode]), [typeCode]);
+  const sourceKey = sources.join('|');
+
+  useEffect(() => {
+    setSourceIndex(0);
+    setImageError(false);
+  }, [sourceKey]);
+
   const handleImageError = () => {
-    setImageError(true);
+    if (sourceIndex < sources.length - 1) {
+      setSourceIndex((prev) => prev + 1);
+    } else {
+      setImageError(true);
+    }
   };
-  const baseTypeCode = getBaseTypeCode(typeCode);
-  if (imageError) {
+
+  if (imageError || sources.length === 0) {
     return <span className="text-6xl md:text-8xl">{emoji}</span>;
   }
+
   return (
     <div className="w-32 h-32 md:w-48 md:h-48 relative mx-auto mb-4">
       <Image
-        src={`/images/personality-types/${baseTypeCode}.svg`}
+        src={sources[sourceIndex]}
         alt={name}
         width={192}
         height={192}

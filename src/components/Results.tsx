@@ -17,6 +17,7 @@ import { tagShapes } from '../data/tagShapes';
 import { positions48, getPositionsByMood, moodDescriptions, PositionMood, Position48 } from '../data/positions48';
 import { PositionDescriptionModal } from './PositionDescriptionModal';
 import { nightPersonalityDescriptions } from '@/data/nightPersonalityDescriptions';
+import { buildPersonalityImageSources } from '@/utils/personalityImage';
 
 // Category color settings
 const categoryColorSchemes = {
@@ -43,28 +44,43 @@ interface ResultsProps {
 }
 
 // Component to display image or emoji
-const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = ({ typeCode, emoji, name }) => {
+const TypeImage: React.FC<{ typeCode: string; fiveAxisCode: string; emoji: string; name: string }> = ({
+  typeCode,
+  fiveAxisCode,
+  emoji,
+  name,
+}) => {
   const [imageError, setImageError] = useState(false);
-  
-  // タイプコードから基本の4文字を抽出（例：ELAL-O → ELAL）
-  const getBaseTypeCode = (code: string): string => {
-    return code.split('-')[0].toUpperCase();
-  };
-  
+  const [sourceIndex, setSourceIndex] = useState(0);
+
+  const sources = useMemo(
+    () => buildPersonalityImageSources([fiveAxisCode, typeCode]),
+    [fiveAxisCode, typeCode]
+  );
+
+  const sourceKey = sources.join('|');
+
+  useEffect(() => {
+    setSourceIndex(0);
+    setImageError(false);
+  }, [sourceKey]);
+
   const handleImageError = () => {
-    setImageError(true);
+    if (sourceIndex < sources.length - 1) {
+      setSourceIndex((prev) => prev + 1);
+    } else {
+      setImageError(true);
+    }
   };
 
-  const baseTypeCode = getBaseTypeCode(typeCode);
-
-  if (imageError) {
+  if (imageError || sources.length === 0) {
     return <span className="text-5xl">{emoji}</span>;
   }
 
   return (
     <div className="w-72 h-72 mx-auto rounded-2xl overflow-hidden bg-transparent flex items-center justify-center">
       <Image
-        src={`/images/personality-types/${baseTypeCode}.svg`}
+        src={sources[sourceIndex]}
         alt={name}
         width={288}
         height={288}
@@ -414,7 +430,12 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     </h1>
                   </div>
                   {/* SVG画像 */}
-                  <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
+                  <TypeImage
+                    typeCode={type.code}
+                    fiveAxisCode={fiveAxisCode}
+                    emoji={type.emoji}
+                    name={type.name}
+                  />
                 </div>
               </div>
             </div>

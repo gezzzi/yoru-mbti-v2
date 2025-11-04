@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { TestResult, PersonalityType } from '../types/personality';
 import { parseCompatibilityCode, generateCompatibilityCode, copyToClipboard } from '../utils/snsShare';
 import { personalityTypes } from '../data/personalityTypes';
@@ -11,6 +11,7 @@ import QRCodeWithLogo from './QRCodeWithLogo';
 import QrScanner from 'qr-scanner';
 import NeonText from './NeonText';
 import { ScrollAnimation } from './ScrollAnimation';
+import { buildPersonalityImageSources } from '@/utils/personalityImage';
 
 interface CompatibilityResult {
   compatibility: number;
@@ -25,20 +26,32 @@ interface CompatibilityPageProps {
 
 const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = ({ typeCode, emoji, name }) => {
   const [imageError, setImageError] = useState(false);
-  const getBaseTypeCode = (code: string): string => {
-    return code.split('-')[0].toUpperCase();
-  };
+  const [sourceIndex, setSourceIndex] = useState(0);
+
+  const sources = useMemo(() => buildPersonalityImageSources([typeCode]), [typeCode]);
+  const sourceKey = sources.join('|');
+
+  useEffect(() => {
+    setSourceIndex(0);
+    setImageError(false);
+  }, [sourceKey]);
+
   const handleImageError = () => {
-    setImageError(true);
+    if (sourceIndex < sources.length - 1) {
+      setSourceIndex((prev) => prev + 1);
+    } else {
+      setImageError(true);
+    }
   };
-  const baseTypeCode = getBaseTypeCode(typeCode);
-  if (imageError) {
+
+  if (imageError || sources.length === 0) {
     return <span className="text-6xl md:text-8xl">{emoji}</span>;
   }
+
   return (
     <div className="w-32 h-32 md:w-48 md:h-48 relative mx-auto mb-4">
       <Image
-        src={`/images/personality-types/${baseTypeCode}.svg`}
+        src={sources[sourceIndex]}
         alt={name}
         width={192}
         height={192}

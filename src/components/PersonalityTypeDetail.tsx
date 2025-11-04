@@ -3,9 +3,10 @@
 import { PersonalityType } from '@/types/personality';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ScrollAnimation } from '@/components/ScrollAnimation';
 import { personalityInsights } from '@/data/personalityInsights';
+import { buildPersonalityImageSources } from '@/utils/personalityImage';
 
 // カテゴリごとの色設定をインポート
 const categoryColorSchemes = {
@@ -21,12 +22,25 @@ interface PersonalityTypeDetailProps {
 
 const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = ({ typeCode, emoji, name }) => {
   const [imageError, setImageError] = useState(false);
-  
+  const [sourceIndex, setSourceIndex] = useState(0);
+
+  const sources = useMemo(() => buildPersonalityImageSources([typeCode]), [typeCode]);
+  const sourceKey = sources.join('|');
+
+  useEffect(() => {
+    setSourceIndex(0);
+    setImageError(false);
+  }, [sourceKey]);
+
   const handleImageError = () => {
-    setImageError(true);
+    if (sourceIndex < sources.length - 1) {
+      setSourceIndex((prev) => prev + 1);
+    } else {
+      setImageError(true);
+    }
   };
 
-  if (imageError) {
+  if (imageError || sources.length === 0) {
     return (
       <div className="w-64 h-64 flex items-center justify-center">
         <span className="text-8xl">{emoji}</span>
@@ -35,14 +49,14 @@ const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = (
   }
 
   return (
-      <Image
-      src={`/images/personality-types/${typeCode.toUpperCase()}.svg`}
-        alt={name}
+    <Image
+      src={sources[sourceIndex]}
+      alt={name}
       width={256}
       height={256}
       className="w-64 h-64 object-contain"
-        onError={handleImageError}
-      />
+      onError={handleImageError}
+    />
   );
 };
 
