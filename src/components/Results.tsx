@@ -78,7 +78,7 @@ const TypeImage: React.FC<{ typeCode: string; fiveAxisCode: string; emoji: strin
   }
 
   return (
-    <div className="w-full max-w-xs sm:max-w-[18rem] aspect-square mx-auto rounded-2xl overflow-hidden bg-transparent flex items-center justify-center">
+    <div className="w-full max-w-[16rem] sm:max-w-[18rem] aspect-square mx-auto rounded-2xl overflow-hidden bg-transparent flex items-center justify-center">
       <Image
         src={sources[sourceIndex]}
         alt={name}
