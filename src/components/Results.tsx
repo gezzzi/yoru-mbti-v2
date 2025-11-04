@@ -121,7 +121,17 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
     type: typeWithRuby,
   }), [result, typeWithRuby]);
 
-  const fiveAxisCode = buildFiveAxisCode(result);
+  const fiveAxisCode = useMemo(() => buildFiveAxisCode(result), [result]);
+
+  const displayCode = useMemo(() => {
+    const base = typeWithRuby.code?.toUpperCase?.() ?? '';
+    const axisFirst = fiveAxisCode?.[0]?.toUpperCase?.() ?? '';
+    const axisFifth = fiveAxisCode?.[4]?.toUpperCase?.() ?? '';
+    if (!base) return '';
+    if (!axisFirst || !axisFifth) return base;
+    return `${base}-${axisFirst}${axisFifth}`;
+  }, [typeWithRuby.code, fiveAxisCode]);
+
   const nightPersonalityText = nightPersonalityDescriptions[fiveAxisCode];
   
   const [showShareModal, setShowShareModal] = useState(false);
@@ -272,24 +282,11 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
 
   const dimensions: PersonalityDimension[] = [
     {
-      id: 'extraversion',
-      leftLabel: '社交的(E)',
-      rightLabel: 'マイペース(I)',
-      percentage: result.E >= 50 ? result.E : (100 - result.E),
-      color: 'bg-blue-500',
-      resultLabel: result.E >= 50 ? '社交的(E)' : 'マイペース(I)',
-      icon: <User className="w-4 h-4" />,
-      description: result.E >= 50 
-        ? '外向型の人は社交的で活動的、エネルギッシュな環境を好みます。'
-        : '内向型の人は深く有意義で、かつ刺激でない交流を好みます。また、落ち着いた環境に惹かれる傾向にあります。',
-      category: 'エネルギー'
-    },
-    {
       id: 'lead',
       leftLabel: '主導権を握る(L)',
       rightLabel: '相手に合わせる(F)',
       percentage: result.L >= 50 ? result.L : (100 - result.L),
-      color: 'bg-orange-500',
+      color: 'bg-blue-500',
       resultLabel: result.L >= 50 ? '主導権を握る(L)' : '相手に合わせる(F)',
       icon: <Shield className="w-4 h-4" />,
       description: result.L >= 50
@@ -302,7 +299,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
       leftLabel: '刺激好き(A)',
       rightLabel: '安心重視(S)',
       percentage: result.A >= 50 ? result.A : (100 - result.A),
-      color: 'bg-green-500',
+      color: 'bg-orange-500',
       resultLabel: result.A >= 50 ? '刺激好き(A)' : '安心重視(S)',
       icon: <Zap className="w-4 h-4" />,
       description: result.A >= 50
@@ -315,13 +312,26 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
       leftLabel: '一途(L)',
       rightLabel: '自由(F)',
       percentage: result.L2 >= 50 ? result.L2 : (100 - result.L2),
-      color: 'bg-purple-500',
+      color: 'bg-green-500',
       resultLabel: result.L2 >= 50 ? '一途(L)' : '自由(F)',
       icon: <Heart className="w-4 h-4" />,
       description: result.L2 >= 50
         ? 'ラブ型の人は一人の相手との深い関係を重視し、恋愛感情や情熱的な結びつきを大切にします。'
         : 'フリー型の人は複数の相手との関係や、感情に縛られない自由な関係を好みます。',
       category: '関係性'
+    },
+    {
+      id: 'extraversion',
+      leftLabel: '社交的(E)',
+      rightLabel: 'マイペース(I)',
+      percentage: result.E >= 50 ? result.E : (100 - result.E),
+      color: 'bg-purple-500',
+      resultLabel: result.E >= 50 ? '社交的(E)' : 'マイペース(I)',
+      icon: <User className="w-4 h-4" />,
+      description: result.E >= 50 
+        ? '外向型の人は社交的で活動的、エネルギッシュな環境を好みます。'
+        : '内向型の人は深く有意義で、かつ刺激でない交流を好みます。また、落ち着いた環境に惹かれる傾向にあります。',
+      category: 'エネルギー'
     },
     {
       id: 'openness',
@@ -392,12 +402,6 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                 </div>
               </ScrollAnimation>
             )}
-            {/* プロモーション表示告知 */}
-            <ScrollAnimation animation="fadeInUp" delay={100}>
-              <p className="text-lg text-white sm:text-base mt-4">
-                ※本ページにはプロモーションが含まれます。
-              </p>
-            </ScrollAnimation>
           </div>
         </ScrollAnimation>
 
@@ -433,7 +437,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   </div>
                   <div className="code text-center mb-6">
                     <h1 className="font-head text-2xl md:text-3xl m-0 text-white font-bold">
-                      {typeWithRuby.code}
+                      {displayCode}
                     </h1>
                   </div>
                   {/* SVG画像 */}
