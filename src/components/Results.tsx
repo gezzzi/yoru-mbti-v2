@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { TestResult } from '../types/personality';
 import { getCategoryColor, getCategoryName, personalityTypes } from '../data/personalityTypes';
@@ -78,7 +78,7 @@ const TypeImage: React.FC<{ typeCode: string; fiveAxisCode: string; emoji: strin
   }
 
   return (
-    <div className="w-full max-w-[16rem] sm:max-w-[18rem] aspect-square mx-auto rounded-2xl overflow-hidden bg-transparent flex items-center justify-center">
+    <div className="w-64 max-w-full h-64 mx-auto rounded-2xl overflow-hidden bg-transparent flex items-center justify-center">
       <Image
         src={sources[sourceIndex]}
         alt={name}
@@ -136,7 +136,6 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
   
   const [showShareModal, setShowShareModal] = useState(false);
   const [username, setUsername] = useState('');
-  const downloadRef = useRef<HTMLDivElement>(null);
   const [selectedTag, setSelectedTag] = useState<{ tag: string; description: string } | null>(null);
   const [selectedPosition, setSelectedPosition] = useState<Position48 | null>(null);
 
@@ -405,9 +404,9 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
           </div>
         </ScrollAnimation>
 
-        {/* Download container */}
+        {/* Results Content */}
         <ScrollAnimation animation="fadeInUp" delay={200}>
-          <div ref={downloadRef}>
+          <div>
             {/* Header Section */}
             <div className="rounded-t-3xl overflow-hidden">
               <div className="p-8 text-white flex justify-center">
