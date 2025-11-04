@@ -309,20 +309,31 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
           let readSuccess = false;
           
           try {
-            const result = await QrScanner.scanImage(file);
-            qrText = result;
-            readSuccess = true;
+            const result: unknown = await QrScanner.scanImage(file);
+            if (typeof result === 'string') {
+              qrText = result.trim();
+            } else {
+              qrText = result != null ? String(result).trim() : '';
+            }
+            readSuccess = qrText.length > 0;
           } catch (firstError) {
             // 通常の読み取りに失敗した場合、高度な設定で再試行
             try {
               // QrScannerの高度な設定で再試行
-              const result = await QrScanner.scanImage(file, {
+              const result: unknown = await QrScanner.scanImage(file, {
                 returnDetailedScanResult: true,
                 alsoTryWithoutScanRegion: true
               });
               
-              qrText = typeof result === 'string' ? result : result.data;
-              readSuccess = true;
+              if (typeof result === 'string') {
+                qrText = result.trim();
+              } else if (result && typeof result === 'object' && 'data' in result) {
+                const data = (result as { data: unknown }).data;
+                qrText = typeof data === 'string' ? data.trim() : data != null ? String(data).trim() : '';
+              } else {
+                qrText = result != null ? String(result).trim() : '';
+              }
+              readSuccess = qrText.length > 0;
             } catch (secondError) {
               // それでも失敗した場合
               readSuccess = false;
@@ -366,7 +377,8 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
 
     try {
       // QRコードを読み取る
-      const result = await QrScanner.scanImage(file);
+      const rawResult: unknown = await QrScanner.scanImage(file);
+      const result = typeof rawResult === 'string' ? rawResult.trim() : String(rawResult ?? '').trim();
       
       // 読み取った結果がコードの形式かチェック（旧形式と新形式の両方に対応）
       if (result && result.match(/^[A-Za-z0-9]+(-[A-Za-z0-9]+)?(_[A-Za-z0-9+/=]+)?$/)) {
