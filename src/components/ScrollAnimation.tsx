@@ -48,9 +48,9 @@ export const ScrollAnimation = ({
       case 'scaleIn':
         return 'opacity-0 scale-95';
       case 'slideInLeft':
-        return 'opacity-0 translate-x-full';
+        return 'opacity-0 -translate-x-12';
       case 'slideInRight':
-        return 'opacity-0 -translate-x-full';
+        return 'opacity-0 translate-x-12';
       default:
         return 'opacity-0';
     }
@@ -68,6 +68,7 @@ export const ScrollAnimation = ({
         transition: isVisible 
           ? `all ${duration}ms ease-out ${delay}ms` 
           : 'none',
+        willChange: 'opacity, transform',
       }}
     >
       {children}
