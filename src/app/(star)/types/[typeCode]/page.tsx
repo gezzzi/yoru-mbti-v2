@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { personalityTypes } from '@/data/personalityTypes';
 import PersonalityTypeDetail from '@/components/PersonalityTypeDetail';
+import { getModernPersonalityCode } from '@/utils/personalityImage';
 
 interface TypePageProps {
   params: {
@@ -10,10 +11,11 @@ interface TypePageProps {
 
 export default function TypePage({ params }: TypePageProps) {
   const { typeCode } = params;
+  const normalizedCode = getModernPersonalityCode(typeCode);
   
   // 該当する性格タイプを検索
   const personalityType = personalityTypes.find(
-    type => type.code.toLowerCase() === typeCode.toLowerCase()
+    type => type.code.toLowerCase() === normalizedCode.toLowerCase()
   );
   
   // 該当するタイプが見つからない場合は404
@@ -34,8 +36,9 @@ export async function generateStaticParams() {
 // SEO用のメタデータ生成
 export async function generateMetadata({ params }: TypePageProps) {
   const { typeCode } = params;
+  const normalizedCode = getModernPersonalityCode(typeCode);
   const personalityType = personalityTypes.find(
-    type => type.code.toLowerCase() === typeCode.toLowerCase()
+    type => type.code.toLowerCase() === normalizedCode.toLowerCase()
   );
   
   if (!personalityType) {

@@ -75,7 +75,7 @@ const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = (
 };
 
 export default function PersonalityTypesPage() {
-  const categories = ['dom', 'sub', 'introvert', 'fantasy'] as const;
+  const categories: Array<keyof typeof categoryColorSchemes> = ['dom', 'fantasy'];
 
   const renderPersonalityType = (type: PersonalityType, categoryColor: keyof typeof categoryColorSchemes, delay: number) => {
     const scheme = categoryColorSchemes[categoryColor];

@@ -1,6 +1,7 @@
 import { PersonalityType, TestResult, Question } from '../types/personality';
 import { personalityTypes } from '../data/personalityTypes';
 import { questions } from '../data/questions';
+import { getModernPersonalityCode } from './personalityImage';
 
 export const calculatePersonalityType = (answers: Record<string, number>): TestResult => {
   // Initialize score totals for each axis
@@ -157,12 +158,13 @@ export const calculatePersonalityType = (answers: Record<string, number>): TestR
   
   // Find matching personality type using 4-character code (without 5th axis for lookup)
   const baseTypeCode = typeCode.split('-')[0];
-  const personalityType = personalityTypes.find(type => type.code === baseTypeCode) || personalityTypes[0];
+  const modernCode = getModernPersonalityCode(baseTypeCode);
+  const personalityType = personalityTypes.find(type => type.code === modernCode) || personalityTypes[0];
   
-  // Add the full 5-character code to the personality type
+  // Add the aggregated code to the personality type
   const personalityTypeWithFullCode = {
     ...personalityType,
-    code: typeCode
+    code: personalityType.code
   };
   
   // S/M傾向の計算
@@ -263,15 +265,11 @@ export const getProgressPercentage = (currentQuestion: number, totalQuestions: n
 export const getPersonalityTypeByCode = (code: string): PersonalityType | undefined => {
   // Handle both 4-character and 5-character codes
   const baseCode = code.split('-')[0];
-  const personalityType = personalityTypes.find(type => type.code === baseCode);
-  
-  if (personalityType && code.includes('-')) {
-    // Return with full 5-character code
-    return {
-      ...personalityType,
-      code: code
-    };
-  }
-  
-  return personalityType;
-}; 
+  const modernCode = getModernPersonalityCode(baseCode);
+  const personalityType = personalityTypes.find(type => type.code === modernCode) || personalityTypes[0];
+
+  return {
+    ...personalityType,
+    code: personalityType.code
+  };
+};

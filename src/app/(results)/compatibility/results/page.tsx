@@ -6,6 +6,7 @@ import CompatibilityResultsContainer, {
 import { personalityTypes } from '@/data/personalityTypes';
 import type { TestResult } from '@/types/personality';
 import { nightCompatibilityDescriptions } from '@/data/nightCompatibilityDescriptions';
+import { getLegacyPersonalityCode } from '@/utils/personalityImage';
 
 const ensurePersonalityType = (code: string) => {
   const base = personalityTypes.find((type) => type.code === code);
@@ -19,8 +20,8 @@ const sampleMyResult: TestResult = {
   L2: 66,
   O: 62,
   type: {
-    ...ensurePersonalityType('ELAL'),
-    code: 'ELAL-O',
+    ...ensurePersonalityType('LAL'),
+    code: 'LAL',
   },
 };
 
@@ -31,8 +32,8 @@ const samplePartnerResult: TestResult = {
   L2: 58,
   O: 42,
   type: {
-    ...ensurePersonalityType('IFSL'),
-    code: 'IFSL-S',
+    ...ensurePersonalityType('FSL'),
+    code: 'FSL',
   },
 };
 
@@ -167,9 +168,7 @@ const sampleAxisInsights: SampleAxisInsight[] = [
   describeSimilarityAxis('オープン度 / 秘密度', 'オープン', '秘密主義', sampleMyResult.O, samplePartnerResult.O),
 ];
 
-const sampleNightCompatibilityKey = `${sampleMyResult.type.code.split('-')[0].toLowerCase()}×${samplePartnerResult.type.code
-  .split('-')[0]
-  .toLowerCase()}` as keyof typeof nightCompatibilityDescriptions;
+const sampleNightCompatibilityKey = `${(getLegacyPersonalityCode(sampleMyResult.type.code).toLowerCase() || 'elal')}×${(getLegacyPersonalityCode(samplePartnerResult.type.code).toLowerCase() || 'elal')}` as keyof typeof nightCompatibilityDescriptions;
 const sampleNightCompatibility = nightCompatibilityDescriptions[sampleNightCompatibilityKey];
 const sampleNightParagraphs = (sampleNightCompatibility ?? '')
   .split(/\n+/)

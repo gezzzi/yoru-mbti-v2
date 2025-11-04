@@ -19,7 +19,7 @@ import SNSShareModal from './SNSShareModal';
 import { calculateImprovedTagCompatibility, TagScore } from '../utils/tagCompatibility';
 import { getTagRecommendations, selectAndFormatRecommendations, stabilizeRecommendedPlayText } from './CompatibilityResultsHelper';
 import { nightCompatibilityDescriptions, NightCompatibilityKey } from '@/data/nightCompatibilityDescriptions';
-import { buildPersonalityImageSources } from '@/utils/personalityImage';
+import { buildPersonalityImageSources, getLegacyPersonalityCode } from '@/utils/personalityImage';
 
 interface CompatibilityResult {
   compatibility: number;
@@ -358,22 +358,26 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   onNewTest 
 }) => {
   // あなたのタイプのrubyプロパティを取得
-  const myBaseTypeCode = myResult.type.code.split('-')[0];
-  const myBasePersonalityType = personalityTypes.find(pt => pt.code === myBaseTypeCode);
-  const myTypeWithRuby = {
+  const myBaseTypeCode = myResult.type.code;
+  const myBasePersonalityType = personalityTypes.find(pt => pt.code === myBaseTypeCode) || personalityTypes[0];
+  const myTypeWithRuby = useMemo(() => ({
+    ...myBasePersonalityType,
     ...myResult.type,
-    ruby: myBasePersonalityType?.ruby
-  };
+    code: myBaseTypeCode,
+    ruby: myBasePersonalityType?.ruby,
+  }), [myResult.type, myBasePersonalityType, myBaseTypeCode]);
 
   // 相手のタイプのrubyプロパティを取得
-  const partnerBaseTypeCode = partnerResult.type.code.split('-')[0];
-  const partnerBasePersonalityType = personalityTypes.find(pt => pt.code === partnerBaseTypeCode);
-  const partnerTypeWithRuby = {
+  const partnerBaseTypeCode = partnerResult.type.code;
+  const partnerBasePersonalityType = personalityTypes.find(pt => pt.code === partnerBaseTypeCode) || personalityTypes[0];
+  const partnerTypeWithRuby = useMemo(() => ({
+    ...partnerBasePersonalityType,
     ...partnerResult.type,
-    ruby: partnerBasePersonalityType?.ruby
-  };
+    code: partnerBaseTypeCode,
+    ruby: partnerBasePersonalityType?.ruby,
+  }), [partnerResult.type, partnerBasePersonalityType, partnerBaseTypeCode]);
 
-  const nightCompatibilityKey = `${myBaseTypeCode.toLowerCase()}×${partnerBaseTypeCode.toLowerCase()}` as NightCompatibilityKey;
+  const nightCompatibilityKey = `${(getLegacyPersonalityCode(myBaseTypeCode).toLowerCase() || 'elal')}×${(getLegacyPersonalityCode(partnerBaseTypeCode).toLowerCase() || 'elal')}` as NightCompatibilityKey;
   const nightCompatibilityDescription = nightCompatibilityDescriptions[nightCompatibilityKey];
   const nightCompatibilityParagraphs = (nightCompatibilityDescription ?? '夜の相性の説明を取得できませんでした。')
     .split(/\n+/)

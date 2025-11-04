@@ -64,7 +64,7 @@ const actionButtonBase =
   'inline-flex items-center px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-semibold rounded-2xl transform hover:scale-105 transition-all duration-200 shadow-lg';
 
 const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) => {
-  const baseCode = type.code.split('-')[0] as keyof typeof personalityInsights;
+  const baseCode = type.code as keyof typeof personalityInsights;
   const insight = personalityInsights[baseCode];
 
   return (

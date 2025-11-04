@@ -38,3 +38,9 @@ export const getModernPersonalityCode = (code: string): string => {
   const baseCode = toBaseCode(code);
   return toModernCode(baseCode);
 };
+
+export const getLegacyPersonalityCode = (code: string): string => {
+  const baseCode = toBaseCode(code);
+  const modernCode = toModernCode(baseCode);
+  return modernCode ? `E${modernCode}` : '';
+};

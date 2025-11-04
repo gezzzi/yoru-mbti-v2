@@ -17,7 +17,7 @@ import { tagShapes } from '../data/tagShapes';
 import { positions48, getPositionsByMood, moodDescriptions, PositionMood, Position48 } from '../data/positions48';
 import { PositionDescriptionModal } from './PositionDescriptionModal';
 import { nightPersonalityDescriptions } from '@/data/nightPersonalityDescriptions';
-import { buildPersonalityImageSources } from '@/utils/personalityImage';
+import { buildPersonalityImageSources, getModernPersonalityCode } from '@/utils/personalityImage';
 
 // Category color settings
 const categoryColorSchemes = {
@@ -104,15 +104,22 @@ const buildFiveAxisCode = (result: TestResult): string => {
 const Results: React.FC<ResultsProps> = ({ result }) => {
   const { type } = result;
   
-  // コードから基本の4文字を抽出（例：ILSL-O → ILSL）
-  const baseTypeCode = type.code.split('-')[0];
+  // コードは3文字の集約タイプ（例：LAL, FSL）
+  const baseTypeCode = getModernPersonalityCode(type.code) || personalityTypes[0].code;
   
-  // personalityTypesから直接rubyプロパティを取得
-  const basePersonalityType = personalityTypes.find(pt => pt.code === baseTypeCode);
-  const typeWithRuby = {
+  // personalityTypesから最新の情報を取得
+  const basePersonalityType = personalityTypes.find(pt => pt.code === baseTypeCode) || personalityTypes[0];
+  const typeWithRuby = useMemo(() => ({
+    ...basePersonalityType,
     ...type,
-    ruby: basePersonalityType?.ruby
-  };
+    code: baseTypeCode,
+    ruby: basePersonalityType?.ruby,
+  }), [basePersonalityType, type, baseTypeCode]);
+
+  const normalizedResult = useMemo(() => ({
+    ...result,
+    type: typeWithRuby,
+  }), [result, typeWithRuby]);
 
   const fiveAxisCode = buildFiveAxisCode(result);
   const nightPersonalityText = nightPersonalityDescriptions[fiveAxisCode];
@@ -141,7 +148,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
     };
 
     // localStorageから保存済みの体位を取得
-    const storageKey = `recommended_positions_${type.code}`;
+    const storageKey = `recommended_positions_${typeWithRuby.code}`;
     if (typeof window !== 'undefined') {
       const savedPositions = localStorage.getItem(storageKey);
       if (savedPositions) {
@@ -244,14 +251,14 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
     }
     
     return ensuredSelection;
-  }, [result, type.code]);
+  }, [result, typeWithRuby.code]);
 
   // 診断結果をローカルストレージに保存
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('personality_test_result', JSON.stringify(result));
+      localStorage.setItem('personality_test_result', JSON.stringify(normalizedResult));
     }
-  }, [result]);
+  }, [normalizedResult]);
 
   // 保存されたユーザー名を取得
   React.useEffect(() => {
@@ -426,15 +433,15 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   </div>
                   <div className="code text-center mb-6">
                     <h1 className="font-head text-2xl md:text-3xl m-0 text-white font-bold">
-                      {type.code}
+                      {typeWithRuby.code}
                     </h1>
                   </div>
                   {/* SVG画像 */}
                   <TypeImage
-                    typeCode={type.code}
+                    typeCode={typeWithRuby.code}
                     fiveAxisCode={fiveAxisCode}
-                    emoji={type.emoji}
-                    name={type.name}
+                    emoji={typeWithRuby.emoji}
+                    name={typeWithRuby.name}
                   />
                 </div>
               </div>
@@ -674,10 +681,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                               <h5 className="font-semibold text-white text-2xl sm:text-3xl border-b-2 border-pink-300/70 pb-1 px-2">相性のいいタイプ</h5>
                             </div>
                             {(() => {
-                              const compatibleTypes = [];
-                              
-                              // 現在のタイプのコードを分解
-                              const currentCode = type.code.split('-')[0];
+                              const compatibleTypes: { code: string; name: string; reason: string }[] = [];
                               
                               // 性格タイプから相性の良いタイプを取得
                               const getTypeNameByCode = (code: string) => {
@@ -688,20 +692,20 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                               // E/I軸とL/F軸での判定
                               if (result.E > 50 && result.L > 50) {
                                 // 外向的リード型 → 内向的フォロー型が相性良い
-                                compatibleTypes.push({ code: 'IFSL', name: getTypeNameByCode('IFSL'), reason: '落ち着いて話を聞き、あなたのリードを受け入れてくれる' });
-                                compatibleTypes.push({ code: 'IFAL', name: getTypeNameByCode('IFAL'), reason: '冒険心を共有しながら、あなたを支えてくれる' });
+                                compatibleTypes.push({ code: 'FSL', name: getTypeNameByCode('FSL'), reason: '落ち着いて話を聞き、あなたのリードを受け入れてくれる' });
+                                compatibleTypes.push({ code: 'FAL', name: getTypeNameByCode('FAL'), reason: '冒険心を共有しながら、あなたを支えてくれる' });
                               } else if (result.E > 50 && result.L <= 50) {
                                 // 外向的フォロー型 → 外向的リード型が相性良い
-                                compatibleTypes.push({ code: 'ELAL', name: getTypeNameByCode('ELAL'), reason: '情熱的にリードし、あなたを楽しませてくれる' });
-                                compatibleTypes.push({ code: 'ELSL', name: getTypeNameByCode('ELSL'), reason: '安定感のあるリードで安心させてくれる' });
+                                compatibleTypes.push({ code: 'LAL', name: getTypeNameByCode('LAL'), reason: '情熱的にリードし、あなたを楽しませてくれる' });
+                                compatibleTypes.push({ code: 'LSL', name: getTypeNameByCode('LSL'), reason: '安定感のあるリードで安心させてくれる' });
                               } else if (result.E <= 50 && result.L > 50) {
                                 // 内向的リード型 → 外向的フォロー型が相性良い
-                                compatibleTypes.push({ code: 'EFSL', name: getTypeNameByCode('EFSL'), reason: '明るく素直に、あなたのペースに合わせてくれる' });
-                                compatibleTypes.push({ code: 'EFAL', name: getTypeNameByCode('EFAL'), reason: '冒険心を持ちながら、あなたに委ねてくれる' });
+                                compatibleTypes.push({ code: 'FSL', name: getTypeNameByCode('FSL'), reason: '明るく素直に、あなたのペースに合わせてくれる' });
+                                compatibleTypes.push({ code: 'FAL', name: getTypeNameByCode('FAL'), reason: '冒険心を持ちながら、あなたに委ねてくれる' });
                               } else {
                                 // 内向的フォロー型 → 内向的リード型が相性良い
-                                compatibleTypes.push({ code: 'ILAL', name: getTypeNameByCode('ILAL'), reason: '静かに情熱的で、優しくリードしてくれる' });
-                                compatibleTypes.push({ code: 'ILSL', name: getTypeNameByCode('ILSL'), reason: '安心感のある関係を築いてくれる' });
+                                compatibleTypes.push({ code: 'LAL', name: getTypeNameByCode('LAL'), reason: '静かに情熱的で、優しくリードしてくれる' });
+                                compatibleTypes.push({ code: 'LSL', name: getTypeNameByCode('LSL'), reason: '安心感のある関係を築いてくれる' });
                               }
                               
                               // タグによる追加判定
@@ -734,7 +738,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                               <h5 className="font-semibold text-white text-2xl sm:text-3xl border-b-2 border-rose-300/60 pb-1 px-2">相性が悪いタイプ</h5>
                             </div>
                             {(() => {
-                              const incompatibleTypes = [];
+                              const incompatibleTypes: { code: string; name: string; reason: string }[] = [];
                               
                               // 性格タイプから相性の悪いタイプを取得
                               const getTypeNameByCode = (code: string) => {
@@ -745,20 +749,20 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                               // E/I軸とL/F軸での判定
                               if (result.E > 50 && result.L > 50) {
                                 // 外向的リード型 → 同じ外向的リード型は衝突
-                                incompatibleTypes.push({ code: 'ELAL', name: getTypeNameByCode('ELAL'), reason: '主導権争いで衝突しやすい' });
-                                incompatibleTypes.push({ code: 'ELAF', name: getTypeNameByCode('ELAF'), reason: '自由すぎて統制が取れない' });
+                                incompatibleTypes.push({ code: 'LAL', name: getTypeNameByCode('LAL'), reason: '主導権争いで衝突しやすい' });
+                                incompatibleTypes.push({ code: 'LAF', name: getTypeNameByCode('LAF'), reason: '自由すぎて統制が取れない' });
                               } else if (result.E > 50 && result.L <= 50) {
                                 // 外向的フォロー型 → 内向的フォロー型は相性悪い
-                                incompatibleTypes.push({ code: 'IFSL', name: getTypeNameByCode('IFSL'), reason: 'お互いに受け身で進展しない' });
-                                incompatibleTypes.push({ code: 'IFSF', name: getTypeNameByCode('IFSF'), reason: '刺激が足りず物足りない' });
+                                incompatibleTypes.push({ code: 'FSL', name: getTypeNameByCode('FSL'), reason: 'お互いに受け身で進展しない' });
+                                incompatibleTypes.push({ code: 'FSF', name: getTypeNameByCode('FSF'), reason: '刺激が足りず物足りない' });
                               } else if (result.E <= 50 && result.L > 50) {
                                 // 内向的リード型 → 同じ内向的リード型は衝突
-                                incompatibleTypes.push({ code: 'ILAL', name: getTypeNameByCode('ILAL'), reason: '静かな主導権争いになりやすい' });
-                                incompatibleTypes.push({ code: 'ILSL', name: getTypeNameByCode('ILSL'), reason: 'お互いに譲らず硬直しやすい' });
+                                incompatibleTypes.push({ code: 'LAL', name: getTypeNameByCode('LAL'), reason: '静かな主導権争いになりやすい' });
+                                incompatibleTypes.push({ code: 'LSL', name: getTypeNameByCode('LSL'), reason: 'お互いに譲らず硬直しやすい' });
                               } else {
                                 // 内向的フォロー型 → 外向的リード型の過激タイプ
-                                incompatibleTypes.push({ code: 'ELAF', name: getTypeNameByCode('ELAF'), reason: '自由奔放すぎてついていけない' });
-                                incompatibleTypes.push({ code: 'ELAL', name: getTypeNameByCode('ELAL'), reason: '強引すぎて圧倒される' });
+                                incompatibleTypes.push({ code: 'LAF', name: getTypeNameByCode('LAF'), reason: '自由奔放すぎてついていけない' });
+                                incompatibleTypes.push({ code: 'LAL', name: getTypeNameByCode('LAL'), reason: '強引すぎて圧倒される' });
                               }
                               
                               // タグによる追加判定
@@ -1018,7 +1022,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
 
       {/* SNS Share Modal */}
       <SNSShareModal 
-        result={result}
+        result={normalizedResult}
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
       />

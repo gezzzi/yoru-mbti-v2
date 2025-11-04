@@ -11,7 +11,7 @@ import QRCodeWithLogo from './QRCodeWithLogo';
 import QrScanner from 'qr-scanner';
 import NeonText from './NeonText';
 import { ScrollAnimation } from './ScrollAnimation';
-import { buildPersonalityImageSources } from '@/utils/personalityImage';
+import { buildPersonalityImageSources, getModernPersonalityCode } from '@/utils/personalityImage';
 
 interface CompatibilityResult {
   compatibility: number;
@@ -86,7 +86,17 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
       if (savedResult) {
         try {
           const parsedResult: TestResult = JSON.parse(savedResult);
-          setMyResult(parsedResult);
+          const normalizedCode = getModernPersonalityCode(parsedResult.type?.code ?? '');
+          const baseType = personalityTypes.find(type => type.code === (normalizedCode || personalityTypes[0].code)) || personalityTypes[0];
+          const normalizedResult: TestResult = {
+            ...parsedResult,
+            type: {
+              ...baseType,
+              ...parsedResult.type,
+              code: baseType.code,
+            },
+          };
+          setMyResult(normalizedResult);
           
           // ユーザー名を取得
           const username = localStorage.getItem('personality_test_username') || undefined;
@@ -104,14 +114,14 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
             if (answers[randomQuestion] !== undefined) {
               const answer = { questionId: randomQuestion, answer: answers[randomQuestion] };
               setSecretAnswer(answer);
-              const code = generateCompatibilityCode(parsedResult, answer, username);
+              const code = generateCompatibilityCode(normalizedResult, answer, username);
               setMyCode(code);
             } else {
-              const code = generateCompatibilityCode(parsedResult, undefined, username);
+              const code = generateCompatibilityCode(normalizedResult, undefined, username);
               setMyCode(code);
             }
           } else {
-            const code = generateCompatibilityCode(parsedResult, undefined, username);
+            const code = generateCompatibilityCode(normalizedResult, undefined, username);
             setMyCode(code);
           }
         } catch (error) {
@@ -198,14 +208,15 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
     
     // 4文字のコードで基本タイプを検索
     const baseTypeCode = typeCode.split('-')[0];
+    const modernCode = getModernPersonalityCode(baseTypeCode);
     const personalityType = personalityTypes.find(type => 
-      type.code === baseTypeCode
+      type.code === modernCode
     ) || personalityTypes[0];
     
     // 完全な5文字コードを含むタイプを返す
     const personalityTypeWithFullCode = {
       ...personalityType,
-      code: typeCode
+      code: modernCode
     };
     
     return {
