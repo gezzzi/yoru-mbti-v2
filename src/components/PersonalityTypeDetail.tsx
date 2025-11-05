@@ -102,15 +102,8 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
               <div className="p-8">
                 {/* 性格タイプ名とコード */}
                 <div className="text-center mb-8">
-                  <h1 className="text-4xl md:text-5xl font-bold text-[#e0e7ff] mb-4">
-                    {type.ruby ? (
-                      <ruby>
-                        {type.name}
-                        <rt className="text-lg font-normal">{type.ruby}</rt>
-                      </ruby>
-                    ) : (
-                      type.name
-                    )}
+                  <h1 className="text-4xl md:text-5xl font-bold text-[#e0e7ff] mb-4 break-words">
+                    {type.name}
                   </h1>
                   <p className="text-2xl font-mono text-green-400 font-bold">{type.code}</p>
                 </div>

@@ -235,23 +235,6 @@ h6,
   }
 }
 
-/* Ruby text (furigana) styling */
-.ruby-text {
-  ruby-position: over;
-  line-height: 1.8;
-}
-
-.ruby-text rt {
-  font-size: 0.6em;
-  color: #f3f4f6;
-  font-weight: 600;
-  opacity: 0.8;
-  line-height: 1.2;
-  text-align: center;
-  letter-spacing: 0.05em;
-  margin-top: 0.1em;
-}
-
 /* Enhanced Neon Text Styling */
 .neon-text {
   display: inline-block;

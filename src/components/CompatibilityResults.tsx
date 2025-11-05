@@ -357,24 +357,22 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   onBack, 
   onNewTest 
 }) => {
-  // あなたのタイプのrubyプロパティを取得
+  // あなたのタイプの基本情報を整形
   const myBaseTypeCode = myResult.type.code;
   const myBasePersonalityType = personalityTypes.find(pt => pt.code === myBaseTypeCode) || personalityTypes[0];
   const myTypeWithRuby = useMemo(() => ({
     ...myBasePersonalityType,
     ...myResult.type,
     code: myBaseTypeCode,
-    ruby: myBasePersonalityType?.ruby,
   }), [myResult.type, myBasePersonalityType, myBaseTypeCode]);
 
-  // 相手のタイプのrubyプロパティを取得
+  // 相手のタイプの基本情報を整形
   const partnerBaseTypeCode = partnerResult.type.code;
   const partnerBasePersonalityType = personalityTypes.find(pt => pt.code === partnerBaseTypeCode) || personalityTypes[0];
   const partnerTypeWithRuby = useMemo(() => ({
     ...partnerBasePersonalityType,
     ...partnerResult.type,
     code: partnerBaseTypeCode,
-    ruby: partnerBasePersonalityType?.ruby,
   }), [partnerResult.type, partnerBasePersonalityType, partnerBaseTypeCode]);
 
   const nightCompatibilityKey = `${(getLegacyPersonalityCode(myBaseTypeCode).toLowerCase() || 'elal')}×${(getLegacyPersonalityCode(partnerBaseTypeCode).toLowerCase() || 'elal')}` as NightCompatibilityKey;

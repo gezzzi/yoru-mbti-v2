@@ -113,7 +113,6 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
     ...basePersonalityType,
     ...type,
     code: baseTypeCode,
-    ruby: basePersonalityType?.ruby,
   }), [basePersonalityType, type, baseTypeCode]);
 
   const normalizedResult = useMemo(() => ({
@@ -426,14 +425,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                       </span>
                       <div className="min-w-0 flex-1 px-2 sm:px-4 text-center">
                         <div className={`font-head ${typeTitleSizeClass} leading-tight text-white font-bold drop-shadow-[0_0_18px_rgba(244,114,182,0.35)] break-words whitespace-normal`}>
-                          {typeWithRuby && typeWithRuby.ruby ? (
-                            <ruby className="ruby-text">
-                              {typeWithRuby.name}
-                              <rt>{typeWithRuby.ruby}</rt>
-                            </ruby>
-                          ) : (
-                            typeWithRuby?.name || 'タイプ名なし'
-                          )}
+                          {typeWithRuby?.name || 'タイプ名なし'}
                         </div>
                       </div>
                       <span className="shrink-0 text-pink-200 drop-shadow-[0_0_10px_rgba(244,114,182,0.4)]" aria-hidden="true">

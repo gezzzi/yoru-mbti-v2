@@ -91,15 +91,8 @@ export default function PersonalityTypesPage() {
             <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
           </div>
           <div className={`${scheme.textBg} rounded-xl p-4 mx-auto`}>
-            <h3 className="text-xl font-bold text-[#e0e7ff] mb-1">
-              {type.ruby ? (
-                <ruby className="ruby-text">
-                  {type.name}
-                  <rt>{type.ruby}</rt>
-                </ruby>
-              ) : (
-                type.name
-              )}
+            <h3 className="text-xl font-bold text-[#e0e7ff] mb-1 break-words">
+              {type.name}
             </h3>
             <p className="text-sm font-medium text-[#e0e7ff]/80 mb-1">
               {type.code}
