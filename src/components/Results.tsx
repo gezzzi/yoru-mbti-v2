@@ -121,6 +121,12 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
     type: typeWithRuby,
   }), [result, typeWithRuby]);
 
+  const normalizedTypeName = (typeWithRuby?.name ?? '').replace(/\s+/g, '');
+  const isLongTypeName = normalizedTypeName.length >= 6;
+  const typeTitleSizeClass = isLongTypeName
+    ? 'text-xl sm:text-2xl md:text-3xl lg:text-4xl'
+    : 'text-2xl sm:text-3xl md:text-4xl lg:text-5xl';
+
   const fiveAxisCode = useMemo(() => buildFiveAxisCode(result), [result]);
 
   const displayCode = useMemo(() => {
@@ -414,22 +420,24 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   {/* 性格タイプ名 */}
                   <div className="flex flex-col items-center gap-3 mb-6 mt-0">
                     <span className="block h-[2px] w-56 sm:w-80 bg-pink-300/80" aria-hidden="true" />
-                    <div className="flex items-center w-full max-w-3xl mx-auto">
-                      <span className="flex-1 flex justify-end pr-6 sm:pr-10">
-                        <Moon className="w-7 h-7 sm:w-9 sm:h-9 text-pink-200 drop-shadow-[0_0_10px_rgba(244,114,182,0.4)]" aria-hidden="true" />
+                    <div className="flex w-full max-w-3xl flex-wrap items-center justify-center gap-2 sm:gap-4 mx-auto">
+                      <span className="shrink-0 text-pink-200 drop-shadow-[0_0_10px_rgba(244,114,182,0.4)]" aria-hidden="true">
+                        <Moon className="w-6 h-6 sm:w-8 sm:h-8" />
                       </span>
-                      <div className="font-head text-3xl md:text-4xl lg:text-5xl text-center text-white font-bold drop-shadow-[0_0_18px_rgba(244,114,182,0.35)] px-4 sm:px-6">
-                        {typeWithRuby && typeWithRuby.ruby ? (
-                          <ruby className="ruby-text">
-                            {typeWithRuby.name}
-                            <rt>{typeWithRuby.ruby}</rt>
-                          </ruby>
-                        ) : (
-                          typeWithRuby?.name || 'タイプ名なし'
-                        )}
+                      <div className="min-w-0 flex-1 px-2 sm:px-4 text-center">
+                        <div className={`font-head ${typeTitleSizeClass} leading-tight text-white font-bold drop-shadow-[0_0_18px_rgba(244,114,182,0.35)] break-words whitespace-normal`}>
+                          {typeWithRuby && typeWithRuby.ruby ? (
+                            <ruby className="ruby-text">
+                              {typeWithRuby.name}
+                              <rt>{typeWithRuby.ruby}</rt>
+                            </ruby>
+                          ) : (
+                            typeWithRuby?.name || 'タイプ名なし'
+                          )}
+                        </div>
                       </div>
-                      <span className="flex-1 flex justify-start pl-6 sm:pl-10">
-                        <Moon className="w-7 h-7 sm:w-9 sm:h-9 text-pink-200 drop-shadow-[0_0_10px_rgba(244,114,182,0.4)]" aria-hidden="true" />
+                      <span className="shrink-0 text-pink-200 drop-shadow-[0_0_10px_rgba(244,114,182,0.4)]" aria-hidden="true">
+                        <Moon className="w-6 h-6 sm:w-8 sm:h-8" />
                       </span>
                     </div>
                     <span className="block h-[2px] w-56 sm:w-80 bg-pink-300/80" aria-hidden="true" />
