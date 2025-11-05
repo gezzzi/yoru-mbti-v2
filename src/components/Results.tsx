@@ -120,11 +120,6 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
     type: typeWithRuby,
   }), [result, typeWithRuby]);
 
-  const normalizedTypeName = (typeWithRuby?.name ?? '').replace(/\s+/g, '');
-  const isLongTypeName = normalizedTypeName.length >= 6;
-  const typeTitleSizeClass = isLongTypeName
-    ? 'text-xl sm:text-2xl md:text-3xl lg:text-4xl'
-    : 'text-2xl sm:text-3xl md:text-4xl lg:text-5xl';
 
   const fiveAxisCode = useMemo(() => buildFiveAxisCode(result), [result]);
 
@@ -424,7 +419,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                         <Moon className="w-6 h-6 sm:w-8 sm:h-8" />
                       </span>
                       <div className="min-w-0 flex-1 px-2 sm:px-4 text-center">
-                        <div className={`font-head ${typeTitleSizeClass} leading-tight text-white font-bold drop-shadow-[0_0_18px_rgba(244,114,182,0.35)] break-words whitespace-normal`}>
+                        <div className="font-head text-[clamp(1.25rem,3vw,2.5rem)] leading-tight text-white font-bold drop-shadow-[0_0_18px_rgba(244,114,182,0.35)] break-words whitespace-normal">
                           {typeWithRuby?.name || 'タイプ名なし'}
                         </div>
                       </div>
