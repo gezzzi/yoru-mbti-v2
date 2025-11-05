@@ -42,8 +42,8 @@ const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = (
 
   if (imageError || sources.length === 0) {
     return (
-      <div className="w-64 h-64 flex items-center justify-center">
-        <span className="text-8xl">{emoji}</span>
+      <div className="w-full max-w-[24rem] h-[24rem] flex items-center justify-center">
+        <span className="text-[clamp(3.5rem,10vw,7rem)]">{emoji}</span>
       </div>
     );
   }
@@ -52,9 +52,9 @@ const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = (
     <Image
       src={sources[sourceIndex]}
       alt={name}
-      width={256}
-      height={256}
-      className="w-64 h-64 object-contain"
+      width={384}
+      height={384}
+      className="w-full h-full object-contain"
       onError={handleImageError}
     />
   );
@@ -91,7 +91,7 @@ const PersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type }) =
             {/* 画像をカテゴリごとの背景色でグラデーションdivに配置 */}
             <ScrollAnimation animation="fadeIn" delay={400}>
               <div className={`p-8 text-white flex justify-center ${categoryColorSchemes[type.category]} backdrop-blur-md`}>
-                <div className={`w-72 h-72 mx-auto rounded-2xl overflow-hidden bg-transparent flex items-center justify-center`}>
+                <div className={`w-full max-w-[24rem] h-[24rem] mx-auto rounded-2xl overflow-hidden bg-transparent flex items-center justify-center`}>
                   <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
                 </div>
               </div>

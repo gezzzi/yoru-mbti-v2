@@ -74,16 +74,20 @@ const TypeImage: React.FC<{ typeCode: string; fiveAxisCode: string; emoji: strin
   };
 
   if (imageError || sources.length === 0) {
-    return <span className="text-5xl">{emoji}</span>;
+    return (
+      <div className="w-full max-w-[24rem] h-[24rem] mx-auto flex items-center justify-center">
+        <span className="text-[clamp(3rem,10vw,6rem)]">{emoji}</span>
+      </div>
+    );
   }
 
   return (
-    <div className="w-64 max-w-full h-64 mx-auto rounded-2xl overflow-hidden bg-transparent flex items-center justify-center">
+    <div className="w-full max-w-[24rem] h-[24rem] mx-auto rounded-2xl overflow-hidden bg-transparent flex items-center justify-center">
       <Image
         src={sources[sourceIndex]}
         alt={name}
-        width={288}
-        height={288}
+        width={384}
+        height={384}
         className="w-full h-full object-contain"
         onError={handleImageError}
       />
@@ -431,7 +435,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   </div>
                   <div className="code text-center mb-6">
                     <h1 className="font-head text-2xl md:text-3xl m-0 text-white font-bold">
-                      {displayCode}
+                      {displayCode ? `${displayCode}【型】` : ''}
                     </h1>
                   </div>
                   {/* SVG画像 */}

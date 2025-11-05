@@ -56,8 +56,8 @@ const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = (
 
   if (imageError || sources.length === 0) {
     return (
-      <div className="w-64 h-64 flex items-center justify-center">
-        <span className="text-8xl">{emoji}</span>
+      <div className="w-full max-w-[24rem] h-[24rem] flex items-center justify-center">
+        <span className="text-[clamp(3.5rem,10vw,7rem)]">{emoji}</span>
       </div>
     );
   }
@@ -66,9 +66,9 @@ const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = (
     <Image
       src={sources[sourceIndex]}
       alt={name}
-      width={256}
-      height={256}
-      className="w-64 h-64 object-contain"
+      width={384}
+      height={384}
+      className="w-full h-full object-contain"
       onError={handleImageError}
     />
   );
@@ -87,7 +87,7 @@ export default function PersonalityTypesPage() {
           className="block rounded-2xl p-6 transition-all duration-300 hover:-translate-y-2 cursor-pointer group"
         >
         <div className="text-center mb-6 relative z-20">
-          <div className={`w-72 h-72 mx-auto mb-4 rounded-2xl overflow-hidden ${scheme.imageBg} flex items-center justify-center`}>
+          <div className={`w-full max-w-[24rem] h-[24rem] mx-auto mb-4 rounded-2xl overflow-hidden ${scheme.imageBg} flex items-center justify-center`}>
             <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
           </div>
           <div className={`${scheme.textBg} rounded-xl p-4 mx-auto`}>
