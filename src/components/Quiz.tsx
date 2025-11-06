@@ -9,6 +9,74 @@ import { getProgressPercentage } from '../utils/testLogic';
 import NeonText from './NeonText';
 import { ScrollAnimation } from './ScrollAnimation';
 
+type AdInjectionStatus = 'success' | 'error';
+
+const injectAdIntoContainer = (
+  container: HTMLElement,
+  scriptUrl: string,
+  onFinish?: (status: AdInjectionStatus) => void
+) => {
+  container.innerHTML = '';
+
+  const originalWrite = document.write.bind(document);
+  const originalWriteln = document.writeln.bind(document);
+  const originalOpen = document.open.bind(document);
+  const originalClose = document.close.bind(document);
+
+  const appendHtml = (html: string) => {
+    if (!html) return;
+
+    const template = document.createElement('template');
+    template.innerHTML = html;
+
+    for (const node of Array.from(template.content.childNodes)) {
+      if (node.nodeName === 'SCRIPT') {
+        const scriptNode = node as HTMLScriptElement;
+        const scriptEl = document.createElement('script');
+        for (const attr of Array.from(scriptNode.attributes)) {
+          scriptEl.setAttribute(attr.name, attr.value);
+        }
+        scriptEl.text = scriptNode.text;
+        container.appendChild(scriptEl);
+      } else {
+        container.appendChild(node);
+      }
+    }
+  };
+
+  document.write = (...html: string[]) => appendHtml(html.join(''));
+  document.writeln = (...html: string[]) => appendHtml(`${html.join('')}\n`);
+  document.open = ((..._args: Parameters<typeof document.open>) => {
+    container.innerHTML = '';
+    return document;
+  }) as typeof document.open;
+  document.close = () => {
+    /* noop */
+  };
+
+  const restore = () => {
+    document.write = originalWrite;
+    document.writeln = originalWriteln;
+    document.open = originalOpen;
+    document.close = originalClose;
+  };
+
+  const handleFinish = (status: AdInjectionStatus) => {
+    restore();
+    onFinish?.(status);
+  };
+
+  const script = document.createElement('script');
+  script.src = scriptUrl;
+  script.async = false;
+  script.onload = () => handleFinish('success');
+  script.onerror = () => handleFinish('error');
+
+  container.appendChild(script);
+
+  return restore;
+};
+
 interface QuizProps {
   onComplete: (answers: Record<string, number>, username?: string) => void;
   onBack: () => void;
@@ -25,7 +93,10 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   const [username, setUsername] = useState('');
   const [questions, setQuestions] = useState<Question[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [topAdInjected, setTopAdInjected] = useState(false);
   const questionRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
+  const topAdContainerRef = useRef<HTMLDivElement | null>(null);
+  const resultsLinkRef = useRef<HTMLAnchorElement | null>(null);
 
   const totalQuestions = 41; // 40問 + ユーザー名入力
   const totalPages = Math.ceil(totalQuestions / QUESTIONS_PER_PAGE);
@@ -107,43 +178,74 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   };
 
   const handleNext = () => {
+    if (isLastPage) {
+      return;
+    }
+
     // 現在のページの質問がすべて回答されているかチェック
     const currentPageAnswered = currentPageQuestions.every(q => answers[q.id] !== undefined);
-    
-    // 最後のページでユーザー名入力が表示されている場合
-    if (isLastPage && (shouldShowUsernameInput || isUsernameInputPage)) {
-      // 質問がある場合は質問をチェック
-      if (currentPageQuestions.length > 0 && !currentPageAnswered) return;
-      // ユーザー名が入力されていない場合は終了
-      if (!username.trim()) return;
-      // すべてOKなら結果へ
-      handleUsernameSubmit();
-    } else if (!currentPageAnswered) {
-      // 通常の質問ページで回答が完了していない場合
+    if (!currentPageAnswered) {
       return;
-    } else {
-      setHasTransitioned(true);
-      setCurrentPageIndex(prev => prev + 1);
-      // Scroll to first question of new page after a short delay
-      setTimeout(() => {
-        const firstQuestionOfNextPage = questions[(currentPageIndex + 1) * QUESTIONS_PER_PAGE];
-        if (firstQuestionOfNextPage) {
-          const firstQuestionElement = questionRefs.current[firstQuestionOfNextPage.id];
-          if (firstQuestionElement) {
-            firstQuestionElement.scrollIntoView({
-              behavior: 'smooth',
-              block: 'center'
-            });
-          }
+    }
+
+    setHasTransitioned(true);
+    setCurrentPageIndex(prev => prev + 1);
+    // Scroll to first question of new page after a short delay
+    setTimeout(() => {
+      const firstQuestionOfNextPage = questions[(currentPageIndex + 1) * QUESTIONS_PER_PAGE];
+      if (firstQuestionOfNextPage) {
+        const firstQuestionElement = questionRefs.current[firstQuestionOfNextPage.id];
+        if (firstQuestionElement) {
+          firstQuestionElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          });
         }
-      }, SCROLL_DELAY);
+      }
+    }, SCROLL_DELAY);
+  };
+
+  const completeQuiz = () => {
+    if (!username.trim()) {
+      return false;
+    }
+
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('personality_test_username', username);
+    }
+
+    onComplete(answers, username);
+    return true;
+  };
+
+  const handleUsernameSubmit = (options?: { triggerNavigation?: boolean }) => {
+    if (!isCurrentPageComplete) {
+      return;
+    }
+
+    const completed = completeQuiz();
+    if (!completed) {
+      return;
+    }
+
+    if (options?.triggerNavigation) {
+      if (resultsLinkRef.current) {
+        resultsLinkRef.current.click();
+      } else if (typeof window !== 'undefined') {
+        window.location.href = '/results';
+      }
     }
   };
 
-  const handleUsernameSubmit = () => {
-    if (username.trim()) {
-      localStorage.setItem('personality_test_username', username);
-      onComplete(answers, username);
+  const handleResultsClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!isCurrentPageComplete) {
+      event.preventDefault();
+      return;
+    }
+
+    const completed = completeQuiz();
+    if (!completed) {
+      event.preventDefault();
     }
   };
 
@@ -207,16 +309,35 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   const isCurrentPageComplete = (() => {
     // 通常の質問ページ
     const questionsAnswered = currentPageQuestions.every(q => answers[q.id] !== undefined);
-    
+
     // 最後のページでユーザー名入力がある場合
     if (isLastPage && (shouldShowUsernameInput || isUsernameInputPage)) {
       // 質問とユーザー名の両方をチェック
       return questionsAnswered && username.trim() !== '';
     }
-    
+
     // 通常のページ
     return questionsAnswered;
   })();
+
+  useEffect(() => {
+    if (isLoading || topAdInjected) return;
+
+    const container = topAdContainerRef.current;
+    if (!container) return;
+
+    const restore = injectAdIntoContainer(
+      container,
+      'https://adm.shinobi.jp/s/978e28ae3e1fa17cc059c9a5a3a5c942',
+      () => {
+        setTopAdInjected(true);
+      }
+    );
+
+    return () => {
+      restore();
+    };
+  }, [isLoading, topAdInjected]);
 
   // Scale values from strongly agree to strongly disagree (6-point scale)
   // 0-5 scale to match questions.ts: 5=非常にそう思う, 0=全くそう思わない
@@ -359,6 +480,12 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       ) : (
         <div className={hasTransitioned ? '' : 'animate-fadeInUp'}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div
+              ref={topAdContainerRef}
+              className="w-full flex justify-center mb-10"
+              data-admax-container="top"
+              aria-label="広告"
+            />
             {currentPageQuestions.map((question) => (
               <QuestionItem key={question.id} question={question} />
             ))}
@@ -366,7 +493,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
               <UsernameInput
                 username={username}
                 setUsername={setUsername}
-                onSubmit={handleUsernameSubmit}
+                onSubmit={() => handleUsernameSubmit({ triggerNavigation: true })}
                 isLastPage={isLastPage}
                 data-username-input
               />
@@ -383,20 +510,37 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
             <div className="flex items-center gap-4">
               
               {/* 次へ/結果を見るボタン */}
-              <button
-                onClick={handleNext}
-                disabled={!isCurrentPageComplete}
-                className={`flex items-center justify-center px-16 py-4 rounded-full text-lg font-medium transition-all duration-200 transform hover:scale-105 min-w-[200px] ${
-                  isCurrentPageComplete
-                    ? 'bg-[#818cf8] text-white hover:bg-[#6366f1] shadow-lg hover:shadow-xl'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                }`}
-                data-next-button={!isLastPage}
-                data-results-button={isLastPage}
-              >
-                {isLastPage ? '結果を見る' : '次へ'}
-                <span className="ml-2">→</span>
-              </button>
+              {isLastPage ? (
+                <a
+                  ref={resultsLinkRef}
+                  href="/results"
+                  onClick={handleResultsClick}
+                  className={`flex items-center justify-center px-16 py-4 rounded-full text-lg font-medium transition-all duration-200 transform hover:scale-105 min-w-[200px] ${
+                    isCurrentPageComplete
+                      ? 'bg-[#818cf8] text-white hover:bg-[#6366f1] shadow-lg hover:shadow-xl'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none'
+                  }`}
+                  aria-disabled={!isCurrentPageComplete}
+                  data-results-button
+                >
+                  結果を見る
+                  <span className="ml-2">→</span>
+                </a>
+              ) : (
+                <button
+                  onClick={handleNext}
+                  disabled={!isCurrentPageComplete}
+                  className={`flex items-center justify-center px-16 py-4 rounded-full text-lg font-medium transition-all duration-200 transform hover:scale-105 min-w-[200px] ${
+                    isCurrentPageComplete
+                      ? 'bg-[#818cf8] text-white hover:bg-[#6366f1] shadow-lg hover:shadow-xl'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                  data-next-button
+                >
+                  次へ
+                  <span className="ml-2">→</span>
+                </button>
+              )}
             </div>
 
             <div className="text-sm text-gray-200">
@@ -409,4 +553,4 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   );
 };
 
-export default Quiz; 
+export default Quiz;

@@ -19,9 +19,6 @@ export default function TestPage() {
         localStorage.setItem('personality_test_username', username);
       }
     }
-    
-    // 結果ページにリダイレクト
-    router.push('/results');
   };
 
   const handleBack = () => {
@@ -34,4 +31,4 @@ export default function TestPage() {
       onBack={handleBack}
     />
   );
-} 
+}
