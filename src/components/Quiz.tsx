@@ -77,6 +77,9 @@ const injectAdIntoContainer = (
   return restore;
 };
 
+const DESKTOP_TOP_AD_SRC = 'https://adm.shinobi.jp/s/978e28ae3e1fa17cc059c9a5a3a5c942';
+const MOBILE_TOP_AD_SRC = 'https://adm.shinobi.jp/s/5958b91b21977d7681652a94ee062cf7';
+
 interface QuizProps {
   onComplete: (answers: Record<string, number>, username?: string) => void;
   onBack: () => void;
@@ -326,9 +329,23 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
     const container = topAdContainerRef.current;
     if (!container) return;
 
+    const scriptUrl = (() => {
+      if (typeof window === 'undefined') {
+        return DESKTOP_TOP_AD_SRC;
+      }
+
+      const ua = window.navigator.userAgent;
+      const isMobileUA = /iPhone|iPad|Android.+Mobile|Windows Phone|iPod/i.test(ua);
+      const isSmallViewport = typeof window.matchMedia === 'function'
+        ? window.matchMedia('(max-width: 768px)').matches
+        : false;
+
+      return isMobileUA || isSmallViewport ? MOBILE_TOP_AD_SRC : DESKTOP_TOP_AD_SRC;
+    })();
+
     const restore = injectAdIntoContainer(
       container,
-      'https://adm.shinobi.jp/s/978e28ae3e1fa17cc059c9a5a3a5c942',
+      scriptUrl,
       () => {
         setTopAdInjected(true);
       }
