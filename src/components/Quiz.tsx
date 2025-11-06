@@ -8,74 +8,7 @@ import { Question } from '../types/personality';
 import { getProgressPercentage } from '../utils/testLogic';
 import NeonText from './NeonText';
 import { ScrollAnimation } from './ScrollAnimation';
-
-type AdInjectionStatus = 'success' | 'error';
-
-const injectAdIntoContainer = (
-  container: HTMLElement,
-  scriptUrl: string,
-  onFinish?: (status: AdInjectionStatus) => void
-) => {
-  container.innerHTML = '';
-
-  const originalWrite = document.write.bind(document);
-  const originalWriteln = document.writeln.bind(document);
-  const originalOpen = document.open.bind(document);
-  const originalClose = document.close.bind(document);
-
-  const appendHtml = (html: string) => {
-    if (!html) return;
-
-    const template = document.createElement('template');
-    template.innerHTML = html;
-
-    for (const node of Array.from(template.content.childNodes)) {
-      if (node.nodeName === 'SCRIPT') {
-        const scriptNode = node as HTMLScriptElement;
-        const scriptEl = document.createElement('script');
-        for (const attr of Array.from(scriptNode.attributes)) {
-          scriptEl.setAttribute(attr.name, attr.value);
-        }
-        scriptEl.text = scriptNode.text;
-        container.appendChild(scriptEl);
-      } else {
-        container.appendChild(node);
-      }
-    }
-  };
-
-  document.write = (...html: string[]) => appendHtml(html.join(''));
-  document.writeln = (...html: string[]) => appendHtml(`${html.join('')}\n`);
-  document.open = ((..._args: Parameters<typeof document.open>) => {
-    container.innerHTML = '';
-    return document;
-  }) as typeof document.open;
-  document.close = () => {
-    /* noop */
-  };
-
-  const restore = () => {
-    document.write = originalWrite;
-    document.writeln = originalWriteln;
-    document.open = originalOpen;
-    document.close = originalClose;
-  };
-
-  const handleFinish = (status: AdInjectionStatus) => {
-    restore();
-    onFinish?.(status);
-  };
-
-  const script = document.createElement('script');
-  script.src = scriptUrl;
-  script.async = false;
-  script.onload = () => handleFinish('success');
-  script.onerror = () => handleFinish('error');
-
-  container.appendChild(script);
-
-  return restore;
-};
+import { injectAdIntoContainer } from '@/utils/admax';
 
 const DESKTOP_TOP_AD_SRC = 'https://adm.shinobi.jp/s/978e28ae3e1fa17cc059c9a5a3a5c942';
 const MOBILE_TOP_AD_SRC = 'https://adm.shinobi.jp/s/5958b91b21977d7681652a94ee062cf7';
@@ -97,6 +30,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [topAdInjected, setTopAdInjected] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false);
   const questionRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const topAdContainerRef = useRef<HTMLDivElement | null>(null);
   const resultsLinkRef = useRef<HTMLAnchorElement | null>(null);
@@ -297,6 +231,13 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
         if (savedUsername) {
           setUsername(savedUsername);
         }
+
+        const ua = window.navigator.userAgent;
+        const isMobileUA = /iPhone|iPad|Android.+Mobile|Windows Phone|iPod/i.test(ua);
+        const isSmallViewport = typeof window.matchMedia === 'function'
+          ? window.matchMedia('(max-width: 768px)').matches
+          : false;
+        setIsMobileView(isMobileUA || isSmallViewport);
       } catch (error) {
         console.error('Failed to initialize quiz:', error);
         // エラー時はデフォルトの質問を使用
@@ -355,6 +296,13 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       restore();
     };
   }, [isLoading, topAdInjected]);
+
+  useEffect(() => {
+    if (isLoading) return;
+    if (!isMobileView) return;
+
+    return;
+  }, [isLoading, isMobileView]);
 
   // Scale values from strongly agree to strongly disagree (6-point scale)
   // 0-5 scale to match questions.ts: 5=非常にそう思う, 0=全くそう思わない
