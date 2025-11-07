@@ -11,7 +11,6 @@ import { ScrollAnimation } from './ScrollAnimation';
 import { injectAdIntoContainer } from '@/utils/admax';
 
 const DESKTOP_TOP_AD_SRC = 'https://adm.shinobi.jp/s/978e28ae3e1fa17cc059c9a5a3a5c942';
-const MOBILE_TOP_AD_SRC = 'https://adm.shinobi.jp/s/5958b91b21977d7681652a94ee062cf7';
 
 interface QuizProps {
   onComplete: (answers: Record<string, number>, username?: string) => void;
@@ -265,28 +264,14 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   })();
 
   useEffect(() => {
-    if (isLoading || topAdInjected) return;
+    if (isLoading || topAdInjected || isMobileView) return;
 
     const container = topAdContainerRef.current;
     if (!container) return;
 
-    const scriptUrl = (() => {
-      if (typeof window === 'undefined') {
-        return DESKTOP_TOP_AD_SRC;
-      }
-
-      const ua = window.navigator.userAgent;
-      const isMobileUA = /iPhone|iPad|Android.+Mobile|Windows Phone|iPod/i.test(ua);
-      const isSmallViewport = typeof window.matchMedia === 'function'
-        ? window.matchMedia('(max-width: 768px)').matches
-        : false;
-
-      return isMobileUA || isSmallViewport ? MOBILE_TOP_AD_SRC : DESKTOP_TOP_AD_SRC;
-    })();
-
     const restore = injectAdIntoContainer(
       container,
-      scriptUrl,
+      DESKTOP_TOP_AD_SRC,
       () => {
         setTopAdInjected(true);
       }
@@ -295,7 +280,7 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
     return () => {
       restore();
     };
-  }, [isLoading, topAdInjected]);
+  }, [isLoading, topAdInjected, isMobileView]);
 
   useEffect(() => {
     if (isLoading) return;
@@ -445,12 +430,14 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       ) : (
         <div className={hasTransitioned ? '' : 'animate-fadeInUp'}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div
-              ref={topAdContainerRef}
-              className="w-full flex justify-center mb-10"
-              data-admax-container="top"
-              aria-label="広告"
-            />
+            {!isMobileView && (
+              <div
+                ref={topAdContainerRef}
+                className="w-full flex justify-center mb-10"
+                data-admax-container="top"
+                aria-label="広告"
+              />
+            )}
             {currentPageQuestions.map((question) => (
               <QuestionItem key={question.id} question={question} />
             ))}
