@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { TestResult } from '@/types/personality';
 import CompatibilityResults from '@/components/CompatibilityResults';
+import MobileAdSlot from './MobileAdSlot';
 
 export interface SampleCompatibilitySummary {
   score: number;
@@ -91,6 +92,8 @@ const CompatibilityResultsContainer = ({
             このページでは、夜の性格診断で生成されるカップルレポートのダイジェストを掲載しています。実際の診断ではお二人の回答データに基づき、以下のような詳細なレポートを即時にお届けします。
           </p>
         </header>
+
+        <MobileAdSlot className="w-full flex justify-center my-6" slotId="compat-results-sample-mobile-top" />
 
         <section className="rounded-3xl border border-white/15 bg-white/10 px-6 py-8 md:px-10 md:py-12 backdrop-blur-xl shadow-xl shadow-purple-900/20">
           <div className="space-y-6">

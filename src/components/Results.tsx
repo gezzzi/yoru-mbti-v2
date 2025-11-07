@@ -18,6 +18,7 @@ import { positions48, getPositionsByMood, moodDescriptions, PositionMood, Positi
 import { PositionDescriptionModal } from './PositionDescriptionModal';
 import { nightPersonalityDescriptions } from '@/data/nightPersonalityDescriptions';
 import { buildPersonalityImageSources, getModernPersonalityCode } from '@/utils/personalityImage';
+import MobileAdSlot from './MobileAdSlot';
 
 // Category color settings
 const categoryColorSchemes = {
@@ -407,6 +408,8 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
             )}
           </div>
         </ScrollAnimation>
+
+        <MobileAdSlot className="w-full flex justify-center my-6" slotId="results-mobile-top" />
 
         {/* Results Content */}
         <ScrollAnimation animation="fadeInUp" delay={200}>

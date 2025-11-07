@@ -20,6 +20,7 @@ import { calculateImprovedTagCompatibility, TagScore } from '../utils/tagCompati
 import { getTagRecommendations, selectAndFormatRecommendations, stabilizeRecommendedPlayText } from './CompatibilityResultsHelper';
 import { nightCompatibilityDescriptions, NightCompatibilityKey } from '@/data/nightCompatibilityDescriptions';
 import { buildPersonalityImageSources, getLegacyPersonalityCode } from '@/utils/personalityImage';
+import MobileAdSlot from './MobileAdSlot';
 
 interface CompatibilityResult {
   compatibility: number;
@@ -1750,6 +1751,8 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
               </h1>
             </ScrollAnimation>
           </div>
+
+          <MobileAdSlot className="w-full flex justify-center mb-10" slotId="compat-results-mobile-top" />
 
           {/* Main Content */}
           <div className="space-y-12">
