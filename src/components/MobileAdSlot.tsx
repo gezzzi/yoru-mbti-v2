@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { injectAdIntoContainer } from '@/utils/admax';
+import { isMobileEnvironment } from '@/utils/device';
 
 const MOBILE_AD_SCRIPT_SRC = 'https://adm.shinobi.jp/s/8b5525003a4d77c811584b5c2e75fefd';
 
@@ -9,20 +10,6 @@ interface MobileAdSlotProps {
   className?: string;
   slotId?: string;
 }
-
-const isMobileEnvironment = () => {
-  if (typeof window === 'undefined') {
-    return false;
-  }
-
-  const ua = window.navigator.userAgent;
-  const isMobileUA = /iPhone|iPad|Android.+Mobile|Windows Phone|iPod/i.test(ua);
-  const isSmallViewport = typeof window.matchMedia === 'function'
-    ? window.matchMedia('(max-width: 768px)').matches
-    : window.innerWidth <= 768;
-
-  return isMobileUA || isSmallViewport;
-};
 
 const MobileAdSlot = ({ className, slotId = 'mobile-ad-slot' }: MobileAdSlotProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);

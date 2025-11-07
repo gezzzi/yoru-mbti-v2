@@ -33,9 +33,6 @@ export default function CompatibilityPageWrapper() {
       localStorage.setItem('compatibility_my_result', JSON.stringify(myResult));
       localStorage.setItem('compatibility_partner_result', JSON.stringify(partnerResult));
     }
-    
-    // 相性診断結果ページにリダイレクト
-    router.push('/compatibility/results');
   };
 
   if (status === 'loading') {
@@ -59,7 +56,7 @@ export default function CompatibilityPageWrapper() {
   return (
     <CompatibilityPage 
       onStartTest={handleStartTest} 
-      onShowResults={handleShowResults} 
+      onShowResults={handleShowResults}
     />
   );
 } 

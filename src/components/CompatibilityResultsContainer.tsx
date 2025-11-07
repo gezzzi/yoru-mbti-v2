@@ -37,9 +37,11 @@ const CompatibilityResultsContainer = ({
   const router = useRouter();
   const [myResult, setMyResult] = useState<TestResult | null>(null);
   const [partnerResult, setPartnerResult] = useState<TestResult | null>(null);
+  const [isCheckingResults, setIsCheckingResults] = useState(true);
 
   useLayoutEffect(() => {
     if (typeof window === 'undefined') {
+      setIsCheckingResults(false);
       return;
     }
 
@@ -56,6 +58,8 @@ const CompatibilityResultsContainer = ({
       }
     } catch (error) {
       console.error('相性診断結果の読み込みに失敗しました:', error);
+    } finally {
+      setIsCheckingResults(false);
     }
   }, []);
 
@@ -79,6 +83,14 @@ const CompatibilityResultsContainer = ({
         onBack={handleBack}
         onNewTest={handleNewTest}
       />
+    );
+  }
+
+  if (isCheckingResults) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-white">
+        <div className="text-base text-white/80">読み込み中...</div>
+      </div>
     );
   }
 

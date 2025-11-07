@@ -234,52 +234,69 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
     };
   };
 
-  const handleCheckCompatibility = async () => {
-    setIsLoading(true);
-    setError('');
-
+  const prepareCompatibilityResults = () => {
     try {
-      // 自分の診断結果の確認
+      if (typeof window === 'undefined') {
+        return false;
+      }
+
       if (!myResult) {
         throw new Error('あなたの診断結果が見つかりません。まず性格診断テストを受けてください。');
       }
 
-                    // 相手のコードの検証
       if (partnerCode.length === 0) {
         throw new Error('相手のQRコードを読み取ってください');
       }
 
-      // 相手のコードを解析
       const parsed = parseCode(partnerCode);
-      
+
       if (!parsed.result) {
         throw new Error('QRコードが無効です');
       }
-      
-      // 自分の秘密の回答をlocalStorageに保存
+
       if (secretAnswer) {
         localStorage.setItem('my_secret_answer', JSON.stringify(secretAnswer));
       }
-      
-      // 相手の秘密の回答をlocalStorageに保存
+
       if (parsed.secretAnswer) {
         localStorage.setItem('partner_secret_answer', JSON.stringify(parsed.secretAnswer));
       }
-      
-      // 相手のユーザー名を保存
+
       if (parsed.username) {
         localStorage.setItem('partner_username', parsed.username);
         setPartnerUsername(parsed.username);
       }
 
-      // 結果ページに遷移
       if (onShowResults && myResult) {
         onShowResults(myResult, parsed.result);
       }
+
+      return true;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'QRコードの解析に失敗しました');
-    } finally {
-      setIsLoading(false);
+      return false;
+    }
+  };
+
+  const handleStartLinkClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (partnerCode.length === 0) {
+      event.preventDefault();
+      setError('相手のQRコードを読み取ってください');
+      return;
+    }
+
+    if (isLoading) {
+      event.preventDefault();
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
+    const prepared = prepareCompatibilityResults();
+    setIsLoading(false);
+
+    if (!prepared) {
+      event.preventDefault();
     }
   };
 
@@ -631,10 +648,15 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
             
             {/* ボタン */}
             <div className="flex justify-center mt-6">
-              <button
-                onClick={handleCheckCompatibility}
-                disabled={partnerCode.length === 0 || isLoading}
-                className="bg-gradient-to-r from-[#ec4899] to-[#ffb8ce] text-white py-3 px-8 rounded-lg font-semibold hover:from-[#ffb8ce] hover:to-[#ffb8ce] transform hover:scale-105 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all flex items-center justify-center space-x-2 shadow-lg"
+              <a
+                href="/compatibility/results"
+                onClick={handleStartLinkClick}
+                aria-disabled={partnerCode.length === 0 || isLoading}
+                className={`bg-gradient-to-r from-[#ec4899] to-[#ffb8ce] text-white py-3 px-8 rounded-lg font-semibold transition-all flex items-center justify-center space-x-2 shadow-lg ${
+                  partnerCode.length === 0 || isLoading
+                    ? 'opacity-60 cursor-not-allowed'
+                    : 'hover:from-[#ffb8ce] hover:to-[#ffb8ce] transform hover:scale-105'
+                }`}
               >
                 {isLoading ? (
                   <>
@@ -647,7 +669,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                     <span>相性診断開始</span>
                   </>
                 )}
-              </button>
+              </a>
             </div>
           </div>
           </ScrollAnimation>

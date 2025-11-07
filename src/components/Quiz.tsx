@@ -9,6 +9,7 @@ import { getProgressPercentage } from '../utils/testLogic';
 import NeonText from './NeonText';
 import { ScrollAnimation } from './ScrollAnimation';
 import { injectAdIntoContainer } from '@/utils/admax';
+import { ADMAX_INTERSTITIAL_ID, ADMAX_INTERSTITIAL_SCRIPT_SRC } from './MobileInterstitialScript';
 
 const DESKTOP_TOP_AD_SRC = 'https://adm.shinobi.jp/s/978e28ae3e1fa17cc059c9a5a3a5c942';
 
@@ -50,9 +51,29 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   const shouldShowUsernameInput = isLastPage && startIdx < totalQuestions;
   const isUsernameInputPage = startIdx === questions.length; // 41問目のみのページ
   
+
   const answeredQuestions = Object.keys(answers).length;
   const totalProgress = username ? answeredQuestions + 1 : answeredQuestions;
   const progress = Math.round((totalProgress / totalQuestions) * 100);
+
+  useEffect(() => {
+    if (!isLastPage) return;
+    if (typeof window === 'undefined') return;
+    window.admaxads = window.admaxads || [];
+    window.admaxads.push({ admax_id: ADMAX_INTERSTITIAL_ID, type: 'action' });
+
+    const script = document.createElement('script');
+    script.src = ADMAX_INTERSTITIAL_SCRIPT_SRC;
+    script.async = true;
+    script.type = 'text/javascript';
+    script.charset = 'utf-8';
+    script.dataset.admaxReinject = 'true';
+    document.body.appendChild(script);
+
+    return () => {
+      script.remove();
+    };
+  }, [isLastPage]);
 
   const handleAnswerSelect = (questionId: number, value: number) => {
     setAnswers(prev => ({
@@ -182,7 +203,9 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
     const completed = completeQuiz();
     if (!completed) {
       event.preventDefault();
+      return;
     }
+
   };
 
 
@@ -460,25 +483,8 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
           <div className="flex flex-col items-center space-y-4">
             {/* ボタンコンテナ */}
             <div className="flex items-center gap-4">
-              
-              {/* 次へ/結果を見るボタン */}
-              {isLastPage ? (
-                <a
-                  ref={resultsLinkRef}
-                  href="/results"
-                  onClick={handleResultsClick}
-                  className={`flex items-center justify-center px-16 py-4 rounded-full text-lg font-medium transition-all duration-200 transform hover:scale-105 min-w-[200px] ${
-                    isCurrentPageComplete
-                      ? 'bg-[#818cf8] text-white hover:bg-[#6366f1] shadow-lg hover:shadow-xl'
-                      : 'bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none'
-                  }`}
-                  aria-disabled={!isCurrentPageComplete}
-                  data-results-button
-                >
-                  結果を見る
-                  <span className="ml-2">→</span>
-                </a>
-              ) : (
+              {/* 次へボタン */}
+              {!isLastPage && (
                 <button
                   onClick={handleNext}
                   disabled={!isCurrentPageComplete}
@@ -493,6 +499,30 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
                   <span className="ml-2">→</span>
                 </button>
               )}
+
+              {/* 結果を見るリンク（常時DOMに存在） */}
+              <a
+                ref={resultsLinkRef}
+                href="/results"
+                onClick={(event) => {
+                  if (!isLastPage || !isCurrentPageComplete) {
+                    event.preventDefault();
+                    return;
+                  }
+                  handleResultsClick(event);
+                }}
+                className={`flex items-center justify-center px-16 py-4 rounded-full text-lg font-medium transition-all duration-200 transform min-w-[200px] ${
+                  isLastPage && isCurrentPageComplete
+                    ? 'bg-[#818cf8] text-white hover:bg-[#6366f1] shadow-lg hover:shadow-xl hover:scale-105'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none'
+                } ${isLastPage ? '' : 'sr-only absolute opacity-0'} `}
+                aria-disabled={!isLastPage || !isCurrentPageComplete}
+                tabIndex={isLastPage && isCurrentPageComplete ? 0 : -1}
+                data-results-button
+              >
+                結果を見る
+                <span className="ml-2">→</span>
+              </a>
             </div>
 
             <div className="text-sm text-gray-200">
