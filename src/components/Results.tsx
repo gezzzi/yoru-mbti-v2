@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { TestResult } from '../types/personality';
 import { getCategoryColor, getCategoryName, personalityTypes } from '../data/personalityTypes';
@@ -19,6 +19,62 @@ import { PositionDescriptionModal } from './PositionDescriptionModal';
 import { nightPersonalityDescriptions } from '@/data/nightPersonalityDescriptions';
 import { buildPersonalityImageSources, getModernPersonalityCode } from '@/utils/personalityImage';
 import MobileAdSlot from './MobileAdSlot';
+
+type AxisLetter = 'E' | 'I';
+type OpennessLetter = 'O' | 'S';
+
+type AxisVariant = {
+  first: AxisLetter;
+  fifth: OpennessLetter;
+};
+
+type AxisPreference = Partial<AxisVariant>;
+
+const typeAxisVariantMap: Record<string, AxisVariant[]> = Object.keys(nightPersonalityDescriptions).reduce(
+  (acc, rawCode) => {
+    if (rawCode.length !== 5) return acc;
+
+    const first = rawCode[0];
+    const base = rawCode.slice(1, 4);
+    const fifth = rawCode[4];
+
+    if ((first === 'E' || first === 'I') && (fifth === 'O' || fifth === 'S')) {
+      acc[base] = acc[base] || [];
+      acc[base].push({ first, fifth } as AxisVariant);
+    }
+
+    return acc;
+  },
+  {} as Record<string, AxisVariant[]>
+);
+
+const selectAxisVariant = (baseCode: string, preference?: AxisPreference): AxisVariant | null => {
+  const variants = typeAxisVariantMap[baseCode];
+  if (!variants || variants.length === 0) return null;
+
+  if (!preference) {
+    return variants[0];
+  }
+
+  const { first, fifth } = preference;
+
+  if (first && fifth) {
+    const matchBoth = variants.find(variant => variant.first === first && variant.fifth === fifth);
+    if (matchBoth) return matchBoth;
+  }
+
+  if (first) {
+    const matchFirst = variants.find(variant => variant.first === first);
+    if (matchFirst) return matchFirst;
+  }
+
+  if (fifth) {
+    const matchFifth = variants.find(variant => variant.fifth === fifth);
+    if (matchFifth) return matchFifth;
+  }
+
+  return variants[0];
+};
 
 // Category color settings
 const categoryColorSchemes = {
@@ -128,14 +184,72 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
 
   const fiveAxisCode = useMemo(() => buildFiveAxisCode(result), [result]);
 
-  const displayCode = useMemo(() => {
-    const base = typeWithRuby.code?.toUpperCase?.() ?? '';
-    const axisFirst = fiveAxisCode?.[0]?.toUpperCase?.() ?? '';
-    const axisFifth = fiveAxisCode?.[4]?.toUpperCase?.() ?? '';
-    if (!base) return '';
-    if (!axisFirst || !axisFifth) return base;
-    return `${base}-${axisFirst}${axisFifth}`;
-  }, [typeWithRuby.code, fiveAxisCode]);
+  const axisSignature = useMemo(() => {
+    const first = fiveAxisCode?.[0]?.toUpperCase?.() ?? '';
+    const fifth = fiveAxisCode?.[4]?.toUpperCase?.() ?? '';
+    if (!first || !fifth) return '';
+    return `${first}${fifth}`;
+  }, [fiveAxisCode]);
+
+  type FormatCodeOptions = {
+    preference?: AxisPreference;
+    fallbackSignature?: string;
+  };
+
+  const formatCodeWithAxes = useCallback((baseCode?: string, options?: FormatCodeOptions) => {
+    if (!baseCode) return '';
+    const normalizedBase = baseCode.toUpperCase();
+    const preferredVariant = selectAxisVariant(normalizedBase, options?.preference);
+
+    if (preferredVariant) {
+      return `${normalizedBase}-${preferredVariant.first}${preferredVariant.fifth}`;
+    }
+
+    if (options?.fallbackSignature) {
+      return `${normalizedBase}-${options.fallbackSignature}`;
+    }
+
+    return normalizedBase;
+  }, []);
+
+  const displayCode = useMemo(
+    () => formatCodeWithAxes(typeWithRuby.code, { fallbackSignature: axisSignature }),
+    [formatCodeWithAxes, typeWithRuby.code, axisSignature]
+  );
+
+  const userFifthAxis: OpennessLetter = result.O >= 50 ? 'O' : 'S';
+
+  const { compatibleFirstAxis, incompatibleFirstAxis } = useMemo(() => {
+    if (result.E > 50 && result.L > 50) {
+      return { compatibleFirstAxis: 'I' as AxisLetter, incompatibleFirstAxis: 'E' as AxisLetter };
+    }
+
+    if (result.E > 50 && result.L <= 50) {
+      return { compatibleFirstAxis: 'E' as AxisLetter, incompatibleFirstAxis: 'I' as AxisLetter };
+    }
+
+    if (result.E <= 50 && result.L > 50) {
+      return { compatibleFirstAxis: 'E' as AxisLetter, incompatibleFirstAxis: 'I' as AxisLetter };
+    }
+
+    return { compatibleFirstAxis: 'I' as AxisLetter, incompatibleFirstAxis: 'E' as AxisLetter };
+  }, [result.E, result.L]);
+
+  const compatibilityAxisPreference = useMemo<AxisPreference>(
+    () => ({
+      first: compatibleFirstAxis,
+      fifth: userFifthAxis === 'O' ? 'S' : 'O',
+    }),
+    [compatibleFirstAxis, userFifthAxis]
+  );
+
+  const incompatibilityAxisPreference = useMemo<AxisPreference>(
+    () => ({
+      first: incompatibleFirstAxis,
+      fifth: userFifthAxis,
+    }),
+    [incompatibleFirstAxis, userFifthAxis]
+  );
 
   const nightPersonalityText = nightPersonalityDescriptions[fiveAxisCode];
   
@@ -720,7 +834,8 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                               // 性格タイプと一般的な特徴を組み合わせて表示
                               const displayItems: string[] = [];
                               compatibleTypes.slice(0, 2).forEach(type => {
-                                displayItems.push(`${type.name}(${type.code})：${type.reason}`);
+                                const formattedCode = formatCodeWithAxes(type.code, { preference: compatibilityAxisPreference });
+                                displayItems.push(`${type.name}(${formattedCode || type.code})：${type.reason}`);
                               });
                               tagTraits.forEach(trait => {
                                 displayItems.push(trait);
@@ -793,7 +908,8 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                               // 性格タイプと一般的な特徴を組み合わせて表示
                               const displayItems: string[] = [];
                               incompatibleTypes.slice(0, 2).forEach(type => {
-                                displayItems.push(`${type.name}(${type.code})：${type.reason}`);
+                                const formattedCode = formatCodeWithAxes(type.code, { preference: incompatibilityAxisPreference });
+                                displayItems.push(`${type.name}(${formattedCode || type.code})：${type.reason}`);
                               });
                               tagTraits.forEach(trait => {
                                 displayItems.push(trait);
