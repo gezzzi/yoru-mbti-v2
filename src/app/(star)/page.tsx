@@ -4,11 +4,11 @@ import LandingPage from '@/components/LandingPage';
 import Script from 'next/script';
 
 export const metadata: Metadata = {
-  title: "夜の性格診断｜性相性・MBTI・セックス相性診断 無料 (大人の二人用)",
+  title: "夜の性格診断｜性相性・MBTI・セックス相性診断",
   description: "カップル親密度診断とセックス満足度診断を3分で。夜の相性良い兆候と合わない兆候を可視化し、夫婦・恋人のための相性合わない乗り越え方とセックスコミュニケーションコツを提案。匿名・無料。",
   keywords: "夜の相性診断,性相性診断,セックス相性診断,無料,二人用相性診断,大人,カップル親密度診断,セックス満足度診断,夜の相性良い兆候,夜の相性合わない兆候,相性合わない乗り越え方,セックスコミュニケーションコツ,夫婦夜の溝改善方法,倦怠期解消診断",
   openGraph: {
-    title: "夜の性格診断｜性相性・MBTI・セックス相性診断 無料 (大人の二人用)",
+    title: "夜の性格診断｜性相性・MBTI・セックス相性診断",
     description: "カップル親密度診断とセックス満足度診断を3分で。二人の夜の相性を科学的に分析し、具体的な改善アドバイスを提供。",
     url: "https://nightpersonality.com",
     siteName: "夜の性格診断",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "夜の性格診断｜性相性・MBTI・セックス相性診断 無料 (大人の二人用)",
+    title: "夜の性格診断｜性相性・MBTI・セックス相性診断",
     description: "3分で完了する夜の相性診断。匿名・無料で利用可能。",
     images: ["https://nightpersonality.com/og.png"],
   },
