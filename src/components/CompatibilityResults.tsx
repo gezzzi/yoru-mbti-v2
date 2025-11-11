@@ -236,8 +236,8 @@ const RadarChart: React.FC<{ axisScores: { E: number, L: number, A: number, L2: 
         {angles.map((angle, index) => {
           const labelPoint = getPoint(angle, radius + 35);
           // 位置に応じてテキストアンカーを調整
-          let textAnchor = "middle";
-          let dominantBaseline = "middle";
+          let textAnchor: React.SVGProps<SVGTextElement>["textAnchor"] = "middle";
+          let dominantBaseline: React.SVGProps<SVGTextElement>["dominantBaseline"] = "middle";
           
           if (index === 1) { // 主導性（右上）
             textAnchor = "start";
