@@ -37,6 +37,20 @@ npm run dev
 
 3. ブラウザで http://localhost:3000 を開く
 
+## ブログ / Sanity 連携
+
+Sanity を使ってブログ記事を管理し、Next.js 側の `/blog` で公開できます。
+
+1. Sanity プロジェクト作成: `npm create sanity@latest` を実行し、プロジェクト ID と Dataset(`production` 推奨)を発行。
+2. `.env.local` に以下を追加して値をコピー。
+   - `NEXT_PUBLIC_SANITY_PROJECT_ID`
+   - `NEXT_PUBLIC_SANITY_DATASET`
+   - `SANITY_API_READ_TOKEN` (読み取り専用トークン / 必要に応じて)
+3. `npm run dev` 後に `http://localhost:3000/admin` を開くと Sanity Studio が表示されます。外注ライターにはここへのアクセスを共有してください。
+4. Studio の「ブログ記事」「著者」「タグ」から必要なドキュメントを作成・公開すると、`/blog` 一覧と `/blog/[slug]` 詳細ページに反映されます。
+
+> Sanity 環境をまだ用意していない場合は、`/blog` と `/admin` で設定手順のガイドカードが表示されます。
+
 ## ビルドとデプロイ
 
 ```bash

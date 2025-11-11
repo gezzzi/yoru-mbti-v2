@@ -9,17 +9,27 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@portabletext/react": "^3.2.4",
+    "@portabletext/types": "^2.0.15",
+    "@sanity/client": "^6.29.1",
+    "@sanity/icons": "^3.7.4",
+    "@sanity/image-url": "^1.2.0",
+    "@sanity/vision": "^4.15.0",
     "@types/qrcode": "^1.5.5",
+    "groq": "^3.99.0",
     "html2canvas": "^1.4.1",
     "lucide-react": "^0.344.0",
     "next": "14.2.5",
+    "next-sanity": "^11.6.5",
     "next-sitemap": "^4.2.3",
     "qr-scanner": "^1.4.2",
     "qrcode": "^1.5.4",
     "react": "^18",
     "react-dom": "^18",
     "react-qr-code": "^2.0.18",
-    "resend": "^4.6.0"
+    "resend": "^4.6.0",
+    "sanity": "^4.15.0",
+    "styled-components": "^6.1.19"
   },
   "devDependencies": {
     "@types/html2canvas": "^0.5.35",
