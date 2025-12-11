@@ -256,6 +256,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
   const [username, setUsername] = useState('');
   const [selectedTag, setSelectedTag] = useState<{ tag: string; description: string } | null>(null);
   const [selectedPosition, setSelectedPosition] = useState<Position48 | null>(null);
+  const [showAiModal, setShowAiModal] = useState(false);
 
   // おすすめの体位を一度だけ計算してメモ化
   const recommendedPositions = useMemo(() => {
@@ -1114,7 +1115,30 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   </Link>
                 </div>
 
-                <div className="flex flex-wrap justify-center gap-4">
+                <div className="inline-flex flex-col items-center gap-4 bg-white/10 border border-white/20 rounded-2xl px-6 py-6 shadow-[0_0_30px_rgba(236,72,153,0.35)]">
+                  <div className="flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left">
+                    <div>
+                      <p className="text-sm sm:text-base uppercase tracking-[0.3em] text-pink-200/80">AI Deep Report</p>
+                      <p className="text-xl sm:text-2xl font-semibold text-white">まだ気づいていない自分がいる</p>
+                    </div>
+                  </div>
+                  <p className="text-base sm:text-lg text-white/80 max-w-xl leading-relaxed">
+                    AIが診断結果の奥にある、あなたの本当の姿を浮かび上がらせます。あなただけの強みや課題、より深い自己理解へと導きます。
+                  </p>
+                  <button
+                    onClick={() => setShowAiModal(true)}
+                    className="relative bg-gradient-to-r from-amber-500 to-orange-500 text-white px-7 sm:px-8 py-3 sm:py-3.5 rounded-full font-semibold tracking-wide hover:brightness-110 transition-all transform hover:scale-110 shadow-[0_10px_30px_rgba(245,158,11,0.45)] inline-flex items-center gap-2 animate-pulse"
+                  >
+                    <span className="absolute -top-2 -left-2 bg-white text-orange-600 text-xs font-extrabold px-2 py-0.5 rounded-full">
+                      👑 PRO
+                    </span>
+                    <span>AI詳細分析</span>
+                    <span className="flex items-center gap-1 bg-white/15 px-2 py-1 rounded-full text-sm sm:text-base font-bold">
+                      ¥300
+                    </span>
+                  </button>
+                </div>
+                <div className="mt-6 flex flex-wrap justify-center gap-3">
                   <button 
                     onClick={() => setShowShareModal(true)}
                     className="bg-teal-500 text-teal-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-lg sm:text-lg"
@@ -1142,6 +1166,27 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
       />
+
+      {/* AI詳細分析 フェイクドア */}
+      {showAiModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm px-4">
+          <div className="bg-gradient-to-br from-purple-900/90 to-pink-900/90 rounded-2xl p-6 max-w-md w-full border border-white/20 shadow-2xl">
+            <div className="text-center space-y-4">
+              <div className="text-3xl">🛠️</div>
+              <h3 className="text-xl font-bold text-white">AI詳細分析</h3>
+              <p className="text-sm text-white/80">
+                現在準備中です。リリースまで少々お待ちください。
+              </p>
+              <button
+                onClick={() => setShowAiModal(false)}
+                className="px-6 py-2 bg-white/90 text-purple-900 rounded-lg font-semibold hover:bg-white transition-colors"
+              >
+                閉じる
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Tag Description Modal */}
       {selectedTag && (

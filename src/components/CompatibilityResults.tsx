@@ -384,6 +384,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
 
   const downloadRef = useRef<HTMLDivElement>(null);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showAiModal, setShowAiModal] = useState(false);
   const [animationStarted, setAnimationStarted] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
   const [showHeartRain, setShowHeartRain] = useState(false);
@@ -2015,23 +2016,51 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
             )}
 
             <ScrollAnimation animation="fadeInUp" delay={800}>
-              <div className="text-center space-y-4">
-                <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-4">
-                  <button
-                    onClick={() => setShowShareModal(true)}
-                    className="bg-teal-500 text-teal-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-lg sm:text-lg"
-                  >
-                    <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span>シェア</span>
-                  </button>
-                  <button
-                    onClick={onNewTest}
-                    className="bg-gray-500 text-gray-100 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-gray-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-lg sm:text-lg"
-                  >
-                    <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span>再診断</span>
-                  </button>
+              <div className="mt-6 w-full max-w-3xl mx-auto">
+                <div className="relative overflow-hidden rounded-2xl border border-white/20 bg-white/10 px-6 py-7 shadow-[0_12px_35px_rgba(236,72,153,0.35)]">
+                  <div className="absolute inset-0 opacity-60 bg-gradient-to-br from-pink-500/10 via-purple-500/5 to-amber-400/10" aria-hidden="true" />
+                  <div className="relative flex flex-col gap-4 items-center text-center">
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="flex flex-col gap-2">
+                        <p className="text-sm sm:text-base uppercase tracking-[0.3em] text-pink-200/80">AI Deep Report</p>
+                        <p className="text-xl sm:text-2xl font-semibold text-white">まだ気づいていない自分がいる</p>
+                        <p className="text-base sm:text-lg text-white/80 max-w-2xl leading-relaxed">
+                          AIが診断結果の奥にある、あなたの本当の姿を浮かび上がらせます。
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex w-full sm:w-auto justify-center">
+                      <button
+                        onClick={() => setShowAiModal(true)}
+                        className="relative inline-flex items-center justify-center gap-3 min-w-[200px] sm:min-w-[220px] max-w-xs bg-gradient-to-r from-amber-500 to-orange-500 text-white px-5 sm:px-6 py-3 rounded-full font-semibold transition-all duration-200 hover:brightness-110 hover:scale-105 animate-pulse"
+                      >
+                        <span className="absolute -top-2 -left-2 bg-white text-orange-600 text-xs font-extrabold px-2 py-0.5 rounded-full">
+                          👑 PRO
+                        </span>
+                        <span className="text-base sm:text-lg">AI詳細分析</span>
+                        <span className="flex items-center gap-1 bg-white/15 px-2 py-1 rounded-full text-sm sm:text-base font-bold">
+                          <span>¥300</span>
+                        </span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
+              </div>
+              <div className="mt-6 flex flex-wrap justify-center sm:justify-end gap-3">
+                <button
+                  onClick={() => setShowShareModal(true)}
+                  className="bg-teal-500 text-teal-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-lg sm:text-lg"
+                >
+                  <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span>シェア</span>
+                </button>
+                <button
+                  onClick={onNewTest}
+                  className="bg-gray-500 text-gray-100 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-gray-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-lg sm:text-lg"
+                >
+                  <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span>再診断</span>
+                </button>
               </div>
             </ScrollAnimation>
           </div>
@@ -2045,6 +2074,27 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
         onClose={() => setShowShareModal(false)}
         initialShareText={shareText}
       />
+
+      {/* AI詳細分析 フェイクドア */}
+      {showAiModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-gradient-to-br from-purple-900/90 to-pink-900/90 rounded-2xl p-6 max-w-md w-full border border-white/20 shadow-2xl">
+            <div className="text-center space-y-4">
+              <div className="text-3xl">🛠️</div>
+              <h3 className="text-xl font-bold text-white">AI詳細分析</h3>
+              <p className="text-sm text-white/80">
+                現在準備中です。リリースまで少々お待ちください。
+              </p>
+              <button
+                onClick={() => setShowAiModal(false)}
+                className="px-6 py-2 bg-white/90 text-purple-900 rounded-lg font-semibold hover:bg-white transition-colors"
+              >
+                閉じる
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* Position Description Modal */}
       <PositionDescriptionModal
