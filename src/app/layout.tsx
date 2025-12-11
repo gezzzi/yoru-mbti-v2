@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Script from "next/script";
 import { Kiwi_Maru, Dela_Gothic_One } from "next/font/google";
+import MobileOverlayAd from "@/components/MobileOverlayAd";
 
 const kiwiMaru = Kiwi_Maru({
   weight: ["400"],
@@ -268,6 +269,7 @@ export default function RootLayout({
       </head>
       <body className={`${kiwiMaru.className} bg-[#0c1220] text-white antialiased`}>
         {children}
+        <MobileOverlayAd />
       </body>
     </html>
   );

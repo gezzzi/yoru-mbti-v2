@@ -8,10 +8,7 @@ import { Question } from '../types/personality';
 import { getProgressPercentage } from '../utils/testLogic';
 import NeonText from './NeonText';
 import { ScrollAnimation } from './ScrollAnimation';
-import { injectAdIntoContainer } from '@/utils/admax';
 import { ADMAX_INTERSTITIAL_ID, ADMAX_INTERSTITIAL_SCRIPT_SRC } from './MobileInterstitialScript';
-
-const DESKTOP_TOP_AD_SRC = 'https://adm.shinobi.jp/s/978e28ae3e1fa17cc059c9a5a3a5c942';
 
 interface QuizProps {
   onComplete: (answers: Record<string, number>, username?: string) => void;
@@ -29,10 +26,8 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   const [username, setUsername] = useState('');
   const [questions, setQuestions] = useState<Question[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [topAdInjected, setTopAdInjected] = useState(false);
   const [isMobileView, setIsMobileView] = useState(false);
   const questionRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
-  const topAdContainerRef = useRef<HTMLDivElement | null>(null);
   const resultsLinkRef = useRef<HTMLAnchorElement | null>(null);
 
   const totalQuestions = 41; // 40問 + ユーザー名入力
@@ -286,32 +281,6 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
     return questionsAnswered;
   })();
 
-  useEffect(() => {
-    if (isLoading || topAdInjected || isMobileView) return;
-
-    const container = topAdContainerRef.current;
-    if (!container) return;
-
-    const restore = injectAdIntoContainer(
-      container,
-      DESKTOP_TOP_AD_SRC,
-      () => {
-        setTopAdInjected(true);
-      }
-    );
-
-    return () => {
-      restore();
-    };
-  }, [isLoading, topAdInjected, isMobileView]);
-
-  useEffect(() => {
-    if (isLoading) return;
-    if (!isMobileView) return;
-
-    return;
-  }, [isLoading, isMobileView]);
-
   // Scale values from strongly agree to strongly disagree (6-point scale)
   // 0-5 scale to match questions.ts: 5=非常にそう思う, 0=全くそう思わない
   const scaleValues = [5, 4, 3, 2, 1, 0];
@@ -453,14 +422,6 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
       ) : (
         <div className={hasTransitioned ? '' : 'animate-fadeInUp'}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {!isMobileView && (
-              <div
-                ref={topAdContainerRef}
-                className="w-full flex justify-center mb-10"
-                data-admax-container="top"
-                aria-label="広告"
-              />
-            )}
             {currentPageQuestions.map((question) => (
               <QuestionItem key={question.id} question={question} />
             ))}
