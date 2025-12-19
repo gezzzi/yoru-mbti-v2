@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import MobileInterstitialScript from '@/components/MobileInterstitialScript';
 
 export const metadata: Metadata = {
   title: "夜の性格診断｜質問に答えて性格・セックス相性をチェック",
@@ -24,10 +23,5 @@ export default function TestLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <>
-      {children}
-      <MobileInterstitialScript />
-    </>
-  );
+  return <>{children}</>;
 }

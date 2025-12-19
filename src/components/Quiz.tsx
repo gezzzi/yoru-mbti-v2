@@ -8,7 +8,6 @@ import { Question } from '../types/personality';
 import { getProgressPercentage } from '../utils/testLogic';
 import NeonText from './NeonText';
 import { ScrollAnimation } from './ScrollAnimation';
-import { ADMAX_INTERSTITIAL_ID, ADMAX_INTERSTITIAL_SCRIPT_SRC } from './MobileInterstitialScript';
 
 interface QuizProps {
   onComplete: (answers: Record<string, number>, username?: string) => void;
@@ -50,25 +49,6 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   const answeredQuestions = Object.keys(answers).length;
   const totalProgress = username ? answeredQuestions + 1 : answeredQuestions;
   const progress = Math.round((totalProgress / totalQuestions) * 100);
-
-  useEffect(() => {
-    if (!isLastPage) return;
-    if (typeof window === 'undefined') return;
-    window.admaxads = window.admaxads || [];
-    window.admaxads.push({ admax_id: ADMAX_INTERSTITIAL_ID, type: 'action' });
-
-    const script = document.createElement('script');
-    script.src = ADMAX_INTERSTITIAL_SCRIPT_SRC;
-    script.async = true;
-    script.type = 'text/javascript';
-    script.charset = 'utf-8';
-    script.dataset.admaxReinject = 'true';
-    document.body.appendChild(script);
-
-    return () => {
-      script.remove();
-    };
-  }, [isLastPage]);
 
   const handleAnswerSelect = (questionId: number, value: number) => {
     setAnswers(prev => ({
