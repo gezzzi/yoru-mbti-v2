@@ -398,7 +398,18 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
   const [cardVisible, setCardVisible] = useState(false);
   const [myUsername, setMyUsername] = useState<string>('');
   const [partnerUsername, setPartnerUsername] = useState<string>('');
+  const [isMobile, setIsMobile] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+
+  // モバイル/タブレット判定
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, []);
 
   // Intersection observer for card visibility
   useEffect(() => {
@@ -2047,13 +2058,16 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                 </div>
               </div>
               <div className="mt-6 flex flex-wrap justify-center sm:justify-end gap-3">
-                <button
-                  onClick={() => setShowShareModal(true)}
-                  className="bg-teal-500 text-teal-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-lg sm:text-lg"
-                >
-                  <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span>シェア</span>
-                </button>
+                {/* モバイル/タブレットのみ: シェアボタンを表示 */}
+                {isMobile && (
+                  <button
+                    onClick={() => setShowShareModal(true)}
+                    className="bg-teal-500 text-teal-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-lg sm:text-lg"
+                  >
+                    <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span>シェア</span>
+                  </button>
+                )}
                 <button
                   onClick={onNewTest}
                   className="bg-gray-500 text-gray-100 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-gray-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-lg sm:text-lg"

@@ -608,13 +608,16 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                         </button>
                       )}
                       
-                      <button
-                        onClick={() => setShowShareModal(true)}
-                        className="flex items-center space-x-2 bg-teal-500 text-teal-900 px-4 py-2 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 whitespace-nowrap"
-                      >
-                        <Share2 className="w-4 h-4" />
-                        <span>シェア</span>
-                      </button>
+                      {/* モバイル/タブレットのみ: シェアボタンを表示 */}
+                      {isMobile && (
+                        <button
+                          onClick={() => setShowShareModal(true)}
+                          className="flex items-center space-x-2 bg-teal-500 text-teal-900 px-4 py-2 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 whitespace-nowrap"
+                        >
+                          <Share2 className="w-4 h-4" />
+                          <span>シェア</span>
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
