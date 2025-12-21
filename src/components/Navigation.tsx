@@ -6,7 +6,7 @@ import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
 
 interface NavigationProps {
-  currentPage: 'home' | 'types' | 'quiz' | 'results' | 'compatibility' | 'compatibility-results' | 'privacy';
+  currentPage: 'home' | 'types' | 'quiz' | 'results' | 'compatibility' | 'compatibility-results' | 'privacy' | 'blog';
   hasTestResult?: boolean;
 }
 
@@ -93,6 +93,17 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
             >
               相性診断
             </Link>
+            <Link 
+              href="/blog"
+              onClick={closeMenu}
+              className={`text-sm font-medium transition-colors ${
+                currentPage === 'blog' 
+                  ? 'text-teal-300' 
+                  : 'text-white'
+              }`}
+            >
+              夜ブログ
+            </Link>
           </div>
 
           {/* ハンバーガーメニューボタン - 右端固定 */}
@@ -154,6 +165,17 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
                 }`}
               >
                 相性診断
+              </Link>
+              <Link 
+                href="/blog"
+                onClick={closeMenu}
+                className={`block w-full text-left py-2 text-sm font-medium transition-colors ${
+                  currentPage === 'blog' 
+                    ? 'text-teal-300' 
+                    : 'text-white'
+                }`}
+              >
+                夜ブログ
               </Link>
             </div>
           </div>

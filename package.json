@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/qrcode": "^1.5.5",
+    "gray-matter": "^4.0.3",
     "html2canvas": "^1.4.1",
     "lucide-react": "^0.344.0",
     "next": "^14.2.33",
@@ -18,7 +19,9 @@
     "qrcode": "^1.5.4",
     "react": "^18",
     "react-dom": "^18",
-    "react-qr-code": "^2.0.18"
+    "react-markdown": "^10.1.0",
+    "react-qr-code": "^2.0.18",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@types/html2canvas": "^0.5.35",
