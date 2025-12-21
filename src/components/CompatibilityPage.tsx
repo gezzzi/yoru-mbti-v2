@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { TestResult, PersonalityType } from '../types/personality';
 import { parseCompatibilityCode, generateCompatibilityCode, copyToClipboard } from '../utils/snsShare';
 import { personalityTypes } from '../data/personalityTypes';
-import { Heart, AlertCircle, TestTube, User, Share2, Copy, Check, Upload, Camera, Download, RefreshCw } from 'lucide-react';
+import { Heart, AlertCircle, TestTube, User, Share2, Copy, Check, Upload, Camera, Download, RefreshCw, X } from 'lucide-react';
 import SNSShareModal from './SNSShareModal';
 import Image from 'next/image';
 import QRCodeWithLogo from './QRCodeWithLogo';
@@ -74,10 +74,23 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
   const [isQRDownloading, setIsQRDownloading] = useState(false);
   const [isMyQRUploading, setIsMyQRUploading] = useState(false);
   const [uploadedQRImage, setUploadedQRImage] = useState<string | null>(null);
+  const [showQRFullscreen, setShowQRFullscreen] = useState(false);
+  const [qrImageDataUrl, setQrImageDataUrl] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   const [selectedSecretQuestion, setSelectedSecretQuestion] = useState<number | null>(null);
   const [secretAnswer, setSecretAnswer] = useState<{ questionId: number; answer: number } | undefined>();
   const [partnerUsername, setPartnerUsername] = useState<string | undefined>();
   const qrRef = useRef<HTMLDivElement>(null);
+
+  // モバイル/タブレット判定
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, []);
 
   // ローカルストレージから自分の診断結果を読み込む
   useEffect(() => {
@@ -443,11 +456,22 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
     try {
       // まずCanvas要素を探す
       const canvas = qrRef.current.querySelector('canvas');
+      
       if (canvas) {
-        // Canvas要素の場合
+        const dataUrl = canvas.toDataURL('image/png');
+        
+        // モバイル/タブレットの場合はフルスクリーン表示
+        if (isMobile) {
+          setQrImageDataUrl(dataUrl);
+          setShowQRFullscreen(true);
+          setIsQRDownloading(false);
+          return;
+        }
+        
+        // PC版：従来のダウンロード
         const link = document.createElement('a');
         link.download = `QRコード診断_${myResult?.type.code}.png`;
-        link.href = canvas.toDataURL('image/png');
+        link.href = dataUrl;
         link.click();
         setIsQRDownloading(false);
         return;
@@ -471,10 +495,21 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
         canvasElement.height = 400;
         ctx?.drawImage(img, 0, 0, 400, 400);
         
-        // 画像をダウンロード
+        const dataUrl = canvasElement.toDataURL('image/png');
+        
+        // モバイル/タブレットの場合はフルスクリーン表示
+        if (isMobile) {
+          setQrImageDataUrl(dataUrl);
+          setShowQRFullscreen(true);
+          URL.revokeObjectURL(svgUrl);
+          setIsQRDownloading(false);
+          return;
+        }
+        
+        // PC版：従来のダウンロード
         const link = document.createElement('a');
         link.download = `QRコード診断_${myResult?.type.code}.png`;
-        link.href = canvasElement.toDataURL('image/png');
+        link.href = dataUrl;
         link.click();
         
         URL.revokeObjectURL(svgUrl);
@@ -688,6 +723,52 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
           isOpen={showShareModal}
           onClose={() => setShowShareModal(false)}
         />
+      )}
+
+      {/* QRコード フルスクリーンモーダル（モバイル/タブレット用） */}
+      {showQRFullscreen && qrImageDataUrl && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-4"
+          onClick={() => setShowQRFullscreen(false)}
+        >
+          {/* 閉じるボタン */}
+          <button 
+            className="absolute top-4 right-4 text-white/70 hover:text-white p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+            onClick={() => setShowQRFullscreen(false)}
+          >
+            <X size={28} />
+          </button>
+          
+          {/* 説明テキスト */}
+          <p className="text-white/90 text-center mb-6 text-lg font-medium">
+            📷 画像を長押しして保存
+          </p>
+          
+          {/* QRコード画像（大きく表示） */}
+          <div 
+            className="bg-white p-6 rounded-2xl shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={qrImageDataUrl}
+              alt="QRコード"
+              className="w-[280px] h-[280px] object-contain"
+              style={{ touchAction: 'none' }}
+            />
+          </div>
+          
+          {/* タイプ情報 */}
+          {myResult && (
+            <p className="text-white/70 text-center mt-4 text-sm">
+              {myResult.type.name}（{myResult.type.code}）
+            </p>
+          )}
+          
+          {/* タップして閉じる */}
+          <p className="text-white/50 text-sm mt-8">
+            画面をタップして閉じる
+          </p>
+        </div>
       )}
     </div>
   );
