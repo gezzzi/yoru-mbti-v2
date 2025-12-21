@@ -30,3 +30,5 @@ out/
 
 # Old Vite app backup
 backup/
+
+refs/
