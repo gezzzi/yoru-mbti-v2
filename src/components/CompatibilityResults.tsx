@@ -2039,7 +2039,14 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     AIが診断結果の奥にある、あなたの本当の姿を浮かび上がらせます。
                   </p>
                   <button
-                    onClick={() => setShowAiModal(true)}
+                    onClick={() => {
+                      if (typeof window !== 'undefined') {
+                        (window as unknown as { dataLayer: Record<string, unknown>[] }).dataLayer?.push({
+                          event: 'ai_analysis_click_compatibility'
+                        });
+                      }
+                      setShowAiModal(true);
+                    }}
                     className="relative bg-gradient-to-r from-amber-500 to-orange-500 text-white px-7 sm:px-8 py-3 sm:py-3.5 rounded-full font-semibold tracking-wide hover:brightness-110 transition-all transform hover:scale-110 shadow-[0_10px_30px_rgba(245,158,11,0.45)] inline-flex items-center gap-2 animate-pulse"
                   >
                     <span className="absolute -top-2 -left-2 bg-white text-orange-600 text-xs font-extrabold px-2 py-0.5 rounded-full">

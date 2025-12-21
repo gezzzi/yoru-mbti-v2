@@ -1129,7 +1129,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     onClick={() => {
                       if (typeof window !== 'undefined') {
                         (window as unknown as { dataLayer: Record<string, unknown>[] }).dataLayer?.push({
-                          event: 'ai_analysis_click'
+                          event: 'ai_analysis_click_results'
                         });
                       }
                       setShowAiModal(true);
