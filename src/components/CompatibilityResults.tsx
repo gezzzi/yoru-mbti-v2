@@ -364,6 +364,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     ...myBasePersonalityType,
     ...myResult.type,
     code: myBaseTypeCode,
+    name: myBasePersonalityType.name, // 常に最新のnameを使用
   }), [myResult.type, myBasePersonalityType, myBaseTypeCode]);
 
   // 相手のタイプの基本情報を整形
@@ -373,6 +374,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
     ...partnerBasePersonalityType,
     ...partnerResult.type,
     code: partnerBaseTypeCode,
+    name: partnerBasePersonalityType.name, // 常に最新のnameを使用
   }), [partnerResult.type, partnerBasePersonalityType, partnerBaseTypeCode]);
 
   const nightCompatibilityKey = `${(getLegacyPersonalityCode(myBaseTypeCode).toLowerCase() || 'elal')}×${(getLegacyPersonalityCode(partnerBaseTypeCode).toLowerCase() || 'elal')}` as NightCompatibilityKey;
@@ -1887,7 +1889,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                         className="block h-px w-10 sm:w-24 bg-gradient-to-l from-pink-300/80 via-pink-300/40 to-transparent"
                       />
                       <h4 className="font-head font-semibold text-2xl sm:text-3xl text-pink-200 drop-shadow-[0_0_10px_rgba(244,114,182,0.4)] tracking-wide">
-                        おすすめ体位（48手）
+                        おすすめのポジション
                       </h4>
                       <span
                         aria-hidden="true"

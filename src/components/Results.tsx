@@ -173,6 +173,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
     ...basePersonalityType,
     ...type,
     code: baseTypeCode,
+    name: basePersonalityType.name, // 常に最新のnameを使用
   }), [basePersonalityType, type, baseTypeCode]);
 
   const normalizedResult = useMemo(() => ({
@@ -703,7 +704,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                             className="block h-px w-10 sm:w-24 bg-gradient-to-l from-pink-300/80 via-pink-300/40 to-transparent"
                           />
                           <h4 className="font-semibold text-2xl sm:text-3xl text-pink-200 drop-shadow-[0_0_10px_rgba(244,114,182,0.4)] tracking-wide">
-                            おすすめの体位（48手）
+                            おすすめのポジション
                           </h4>
                           <span
                             aria-hidden="true"
