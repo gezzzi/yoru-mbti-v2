@@ -9,6 +9,7 @@ interface QRCodeWithLogoProps {
   logoSrc?: string;
   logoSizeRatio?: number;
   className?: string;
+  onGenerated?: (dataUrl: string) => void; // QRコード生成完了時のコールバック
 }
 
 const QRCodeWithLogo: React.FC<QRCodeWithLogoProps> = ({
@@ -17,6 +18,7 @@ const QRCodeWithLogo: React.FC<QRCodeWithLogoProps> = ({
   logoSrc = '/icon-512.png',
   logoSizeRatio = 0.18, // QRコードサイズの18%
   className = '',
+  onGenerated,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -99,10 +101,21 @@ const QRCodeWithLogo: React.FC<QRCodeWithLogoProps> = ({
           ctx.clip();
           ctx.drawImage(logo, logoPosition, logoPosition, logoSize, logoSize);
           ctx.restore();
+
+          // 生成完了時にData URLをコールバックで渡す
+          if (onGenerated && canvasRef.current) {
+            const dataUrl = canvasRef.current.toDataURL('image/png');
+            onGenerated(dataUrl);
+          }
         };
 
         logo.onerror = () => {
           console.error('ロゴの読み込みに失敗しました:', logoSrc);
+          // ロゴなしでもQRコードは生成されているのでコールバックを呼ぶ
+          if (onGenerated && canvasRef.current) {
+            const dataUrl = canvasRef.current.toDataURL('image/png');
+            onGenerated(dataUrl);
+          }
         };
       } catch (error) {
         console.error('QRコードの生成に失敗しました:', error);
@@ -110,7 +123,7 @@ const QRCodeWithLogo: React.FC<QRCodeWithLogoProps> = ({
     };
 
     generateQR();
-  }, [value, size, logoSrc, logoSizeRatio]);
+  }, [value, size, logoSrc, logoSizeRatio, onGenerated]);
 
   return (
     <canvas 

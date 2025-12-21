@@ -568,14 +568,46 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                  <h3 className="text-lg font-semibold text-[#e0e7ff] text-center">あなたのQRコード</h3>
                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 flex flex-col items-center gap-4 border border-white/5">
                   <div className="bg-white/90 backdrop-blur-xs p-4 rounded-lg shadow-sm border border-white/40" ref={qrRef}>
-                    <QRCodeWithLogo
-                      value={myCode}
-                      size={200}
-                      logoSrc="/icon-512.png"
-                      logoSizeRatio={0.18}
-                      className="w-full h-auto max-w-[200px]"
-                    />
+                    {/* モバイル/タブレット: img要素で表示（長押し保存可能） */}
+                    {isMobile && qrImageDataUrl ? (
+                      <img
+                        src={qrImageDataUrl}
+                        alt="QRコード"
+                        className="w-[200px] h-[200px] object-contain"
+                        style={{ touchAction: 'none' }}
+                      />
+                    ) : (
+                      /* PC: canvas要素で表示 */
+                      <QRCodeWithLogo
+                        value={myCode}
+                        size={200}
+                        logoSrc="/icon-512.png"
+                        logoSizeRatio={0.18}
+                        className="w-full h-auto max-w-[200px]"
+                        onGenerated={(dataUrl) => setQrImageDataUrl(dataUrl)}
+                      />
+                    )}
+                    {/* 非表示のcanvas（Data URL生成用、モバイルでも必要） */}
+                    {isMobile && (
+                      <div className="hidden">
+                        <QRCodeWithLogo
+                          value={myCode}
+                          size={200}
+                          logoSrc="/icon-512.png"
+                          logoSizeRatio={0.18}
+                          onGenerated={(dataUrl) => setQrImageDataUrl(dataUrl)}
+                        />
+                      </div>
+                    )}
                   </div>
+                  
+                  {/* モバイル/タブレット用: 長押し保存の説明 */}
+                  {isMobile && (
+                    <p className="text-xs text-[#e0e7ff]/70 text-center">
+                      📷 画像を長押しして保存できます
+                    </p>
+                  )}
+                  
                   <div className="flex flex-wrap gap-2 justify-center">
                     <div className="flex gap-2">
                       <button
@@ -591,7 +623,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                         ) : (
                           <>
                             <Download className="w-4 h-4" />
-                            <span>保存</span>
+                            <span>{isMobile ? '拡大表示' : '保存'}</span>
                           </>
                         )}
                       </button>
