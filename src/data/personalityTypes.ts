@@ -4,7 +4,7 @@ export const personalityTypes: PersonalityType[] = [
   // Dom系タイプ
   {
     code: 'LAL',
-    name: 'カリスマチンボウ',
+    name: 'カリスマ珍坊',
     summary: '夜を制するカリスマ',
     fullDescription: '夜を仕切る天性のカリスマ。愛にも刺激にも全力投球。一度ハマると抜け出せない、危険な魅力。',
     category: 'dom',
@@ -34,7 +34,7 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'LAF',
-    name: 'ワイルドチンボウ',
+    name: 'ワイルド珍坊',
     summary: '自由奔放な遊び上手',
     fullDescription: '自由を愛する奔放なリーダー気質。恋も快楽も自分流に楽しむ達人。だけど、なぜか本命には本気になれない。',
     category: 'dom',
@@ -48,7 +48,7 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'LSL',
-    name: '頼れるチンボウ',
+    name: '頼れる珍坊',
     summary: '面倒見のいい愛情家',
     fullDescription: '面倒見がよく、人懐っこいあったかキャラ。尽くすのが好きで、自然と周りに人が集まる。でも実は、甘えたい欲も密かに抱えている。',
     category: 'dom',
@@ -62,7 +62,7 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'LSF',
-    name: 'クールなチンボウ',
+    name: 'クールな珍坊',
     summary: '頼れるけど情が薄い',
     fullDescription: '冷静沈着で頼れる存在。情には流されず、効率重視の関係を好む。だけど夜の顔は…想像にお任せ。',
     category: 'dom',
@@ -78,7 +78,7 @@ export const personalityTypes: PersonalityType[] = [
   // Fantasy系タイプ
   {
     code: 'FAL',
-    name: '寄り添いチンボウ',
+    name: '寄り添い珍坊',
     summary: '場を盛り上げる恋愛派',
     fullDescription: '盛り上げ上手で恋にも全力なムードメーカー。恋愛の駆け引きが得意で相手の心を揺さぶる。でも実は、めっちゃ寂しがり屋だったりする。',
     category: 'fantasy',
@@ -92,7 +92,7 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'FAF',
-    name: '自由なチンボウ',
+    name: '自由な珍坊',
     summary: 'パーティ好きの自由人',
     fullDescription: 'その場のノリと刺激を求めて動く自由人。恋も遊びも「今が楽しい」が最優先。でも、夜だけはちょっと真剣って噂も…？',
     category: 'fantasy',
@@ -106,7 +106,7 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'FSL',
-    name: '癒しのチンボウ',
+    name: '癒しの珍坊',
     summary: '和ませ系の愛情家',
     fullDescription: '誰かと一緒じゃないと落ち着かない甘えん坊。恋人にはとことん尽くす優しい性格。だけど、独占欲はかなり強めかも。',
     category: 'fantasy',
@@ -120,7 +120,7 @@ export const personalityTypes: PersonalityType[] = [
   },
   {
     code: 'FSF',
-    name: 'マイペースチンボウ',
+    name: 'マイペース珍坊',
     summary: '緩く楽しむムードメーカー',
     fullDescription: '穏やかで、誰とでも自然体で接する癍し系。恋にもガツガツせず、流れに身を任せるタイプ。実はちょっとした一言にグラっときやすい。',
     category: 'fantasy',

@@ -2027,34 +2027,29 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
             )}
 
             <ScrollAnimation animation="fadeInUp" delay={800}>
-              <div className="mt-6 w-full max-w-3xl mx-auto">
-                <div className="relative overflow-hidden rounded-2xl border border-white/20 bg-white/10 px-6 py-7 shadow-[0_12px_35px_rgba(236,72,153,0.35)]">
-                  <div className="absolute inset-0 opacity-60 bg-gradient-to-br from-pink-500/10 via-purple-500/5 to-amber-400/10" aria-hidden="true" />
-                  <div className="relative flex flex-col gap-4 items-center text-center">
-                    <div className="flex flex-col items-center gap-3">
-                      <div className="flex flex-col gap-2">
-                        <p className="text-sm sm:text-base uppercase tracking-[0.3em] text-pink-200/80">AI Deep Report</p>
-                        <p className="text-xl sm:text-2xl font-semibold text-white">まだ気づいていない自分がいる</p>
-                        <p className="text-base sm:text-lg text-white/80 max-w-2xl leading-relaxed">
-                          AIが診断結果の奥にある、あなたの本当の姿を浮かび上がらせます。
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex w-full sm:w-auto justify-center">
-                      <button
-                        onClick={() => setShowAiModal(true)}
-                        className="relative inline-flex items-center justify-center gap-3 min-w-[200px] sm:min-w-[220px] max-w-xs bg-gradient-to-r from-amber-500 to-orange-500 text-white px-5 sm:px-6 py-3 rounded-full font-semibold transition-all duration-200 hover:brightness-110 hover:scale-105 animate-pulse"
-                      >
-                        <span className="absolute -top-2 -left-2 bg-white text-orange-600 text-xs font-extrabold px-2 py-0.5 rounded-full">
-                          👑 PRO
-                        </span>
-                        <span className="text-base sm:text-lg">AI詳細分析</span>
-                        <span className="flex items-center gap-1 bg-white/15 px-2 py-1 rounded-full text-sm sm:text-base font-bold">
-                          <span>¥300</span>
-                        </span>
-                      </button>
+              <div className="text-center">
+                <div className="inline-flex flex-col items-center gap-4 bg-white/10 border border-white/20 rounded-2xl px-6 py-6 shadow-[0_0_30px_rgba(236,72,153,0.35)]">
+                  <div className="flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left">
+                    <div>
+                      <p className="text-sm sm:text-base uppercase tracking-[0.3em] text-pink-200/80">AI Deep Report</p>
+                      <p className="text-xl sm:text-2xl font-semibold text-white">まだ気づいていない自分がいる</p>
                     </div>
                   </div>
+                  <p className="text-base sm:text-lg text-white/80 max-w-xl leading-relaxed">
+                    AIが診断結果の奥にある、あなたの本当の姿を浮かび上がらせます。
+                  </p>
+                  <button
+                    onClick={() => setShowAiModal(true)}
+                    className="relative bg-gradient-to-r from-amber-500 to-orange-500 text-white px-7 sm:px-8 py-3 sm:py-3.5 rounded-full font-semibold tracking-wide hover:brightness-110 transition-all transform hover:scale-110 shadow-[0_10px_30px_rgba(245,158,11,0.45)] inline-flex items-center gap-2 animate-pulse"
+                  >
+                    <span className="absolute -top-2 -left-2 bg-white text-orange-600 text-xs font-extrabold px-2 py-0.5 rounded-full">
+                      👑 PRO
+                    </span>
+                    <span>AI詳細分析</span>
+                    <span className="flex items-center gap-1 bg-white/15 px-2 py-1 rounded-full text-sm sm:text-base font-bold">
+                      ¥300
+                    </span>
+                  </button>
                 </div>
               </div>
               <div className="mt-6 flex flex-wrap justify-center sm:justify-end gap-3">
