@@ -37,19 +37,61 @@ npm run dev
 
 3. ブラウザで http://localhost:3000 を開く
 
-## ブログ / Sanity 連携
+## ブログ記事の追加方法
 
-Sanity を使ってブログ記事を管理し、Next.js 側の `/blog` で公開できます。
+`content/blog/` フォルダにMarkdownファイルを追加することでブログ記事を作成できます。
 
-1. Sanity プロジェクト作成: `npm create sanity@latest` を実行し、プロジェクト ID と Dataset(`production` 推奨)を発行。
-2. `.env.local` に以下を追加して値をコピー。
-   - `NEXT_PUBLIC_SANITY_PROJECT_ID`
-   - `NEXT_PUBLIC_SANITY_DATASET`
-   - `SANITY_API_READ_TOKEN` (読み取り専用トークン / 必要に応じて)
-3. `npm run dev` 後に `http://localhost:3000/admin` を開くと Sanity Studio が表示されます。外注ライターにはここへのアクセスを共有してください。
-4. Studio の「ブログ記事」「著者」「タグ」から必要なドキュメントを作成・公開すると、`/blog` 一覧と `/blog/[slug]` 詳細ページに反映されます。
+### 新しい記事の作成手順
 
-> Sanity 環境をまだ用意していない場合は、`/blog` と `/admin` で設定手順のガイドカードが表示されます。
+1. `content/blog/` フォルダに新しい `.md` ファイルを作成
+2. ファイル名はスラッグ（URL）になります（例: `my-new-article.md` → `/blog/my-new-article`）
+
+### 記事のフォーマット
+
+各記事は**フロントマター**（メタデータ）と**本文**で構成されます。
+
+```markdown
+---
+title: "記事のタイトル"
+excerpt: "記事の概要・説明文（一覧ページに表示されます）"
+author: "著者名"
+date: "2025-12-22"
+readTime: "3分で読了"
+tags: ["タグ1", "タグ2"]
+imageUrl: "https://example.com/image.jpg"
+---
+
+# 記事の見出し
+
+ここに本文を書きます。Markdown形式で記述できます。
+
+## 小見出し
+
+- リスト項目1
+- リスト項目2
+
+> 引用文
+
+**太字** や *斜体* も使えます。
+
+[リンクテキスト](/test)
+```
+
+### フロントマターの各項目
+
+| 項目 | 必須 | 説明 |
+|------|------|------|
+| `title` | ✅ | 記事のタイトル |
+| `excerpt` | ✅ | 記事の概要（一覧ページに表示） |
+| `author` | ✅ | 著者名 |
+| `date` | ✅ | 公開日（YYYY-MM-DD形式） |
+| `readTime` | - | 読了時間の目安 |
+| `tags` | - | タグの配列 |
+| `imageUrl` | - | サムネイル画像のURL |
+
+### 記事の例
+
+`content/blog/welcome.md` や `content/blog/personality-types-overview.md` を参考にしてください。
 
 ## ビルドとデプロイ
 

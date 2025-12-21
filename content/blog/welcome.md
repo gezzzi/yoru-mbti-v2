@@ -2,7 +2,7 @@
 title: "夜の性格診断ブログへようこそ"
 excerpt: "夜の性格診断の世界へようこそ。あなたの内なる本質を探る旅が始まります。"
 author: "夜の性格診断"
-date: "2024-12-21"
+date: "2025-12-22"
 readTime: "3分で読了"
 tags: ["お知らせ", "はじめに"]
 imageUrl: "https://images.unsplash.com/photo-1507400492013-162706c8c05e?w=800"

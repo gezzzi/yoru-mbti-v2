@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Moon } from 'lucide-react';
 import { getAllPosts } from '@/utils/blogUtils';
+import NeonText from '@/components/NeonText';
 
 export const metadata: Metadata = {
   title: 'ブログ | 夜の性格診断',
@@ -14,26 +14,12 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen text-indigo-100 font-serif relative overflow-hidden w-full">
-      {/* Ambient Glows */}
-      <div className="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-purple-600/20 rounded-full blur-[120px]"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-indigo-600/20 rounded-full blur-[120px]"></div>
-      </div>
-
       <div className="relative z-10 max-w-6xl mx-auto px-6 py-20">
         {/* Header */}
-        <header className="text-center mb-24">
-          <div className="inline-flex items-center gap-2 text-purple-300 border border-purple-500/30 rounded-full px-4 py-1.5 text-xs tracking-[0.2em] uppercase mb-6 bg-purple-900/20 backdrop-blur-sm">
-            <Moon size={12} />
-            <span>Mystic Journal</span>
-            <Moon size={12} />
-          </div>
-          <h1 className="text-5xl md:text-7xl font-serif text-transparent bg-clip-text bg-gradient-to-r from-purple-100 via-white to-purple-200 drop-shadow-[0_0_15px_rgba(216,180,254,0.3)]">
-            魂の反響
+        <header className="text-center mb-16">
+          <h1 className="text-5xl md:text-7xl font-bold text-white mb-4 pt-24 select-none">
+            <NeonText text="夜ブログ" />
           </h1>
-          <p className="mt-6 text-purple-300/70 font-sans tracking-wide">
-            内なる声に耳を傾け、静寂の中で答えを見つける。
-          </p>
         </header>
 
         {/* Posts Grid */}

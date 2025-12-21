@@ -39,9 +39,6 @@ export default function BlogPostPage({ params }: Props) {
 
   return (
     <article className="min-h-screen text-purple-50 font-serif relative w-full">
-      {/* Background gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#2d1b4e]/50 to-transparent opacity-50 z-0 pointer-events-none"></div>
-
       <div className="relative z-10">
         {/* Hero Section */}
         <div className="h-[60vh] relative overflow-hidden">
