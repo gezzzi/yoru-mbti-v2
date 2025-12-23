@@ -20,6 +20,7 @@ import { calculateImprovedTagCompatibility, TagScore } from '../utils/tagCompati
 import { getTagRecommendations, selectAndFormatRecommendations, stabilizeRecommendedPlayText } from './CompatibilityResultsHelper';
 import { nightCompatibilityDescriptions, NightCompatibilityKey } from '@/data/nightCompatibilityDescriptions';
 import { buildPersonalityImageSources, getLegacyPersonalityCode } from '@/utils/personalityImage';
+import { trackAiAnalysisClickCompatibility } from '@/utils/analytics';
 
 interface CompatibilityResult {
   compatibility: number;
@@ -2042,11 +2043,7 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                   </p>
                   <button
                     onClick={() => {
-                      if (typeof window !== 'undefined') {
-                        (window as unknown as { dataLayer: Record<string, unknown>[] }).dataLayer?.push({
-                          event: 'ai_analysis_click_compatibility'
-                        });
-                      }
+                      trackAiAnalysisClickCompatibility();
                       setShowAiModal(true);
                     }}
                     className="relative bg-gradient-to-r from-amber-500 to-orange-500 text-white px-7 sm:px-8 py-3 sm:py-3.5 rounded-full font-semibold tracking-wide hover:brightness-110 transition-all transform hover:scale-110 shadow-[0_10px_30px_rgba(245,158,11,0.45)] inline-flex items-center gap-2 animate-pulse"

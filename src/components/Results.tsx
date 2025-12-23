@@ -18,6 +18,7 @@ import { positions48, getPositionsByMood, moodDescriptions, PositionMood, Positi
 import { PositionDescriptionModal } from './PositionDescriptionModal';
 import { nightPersonalityDescriptions } from '@/data/nightPersonalityDescriptions';
 import { buildPersonalityImageSources, getModernPersonalityCode } from '@/utils/personalityImage';
+import { trackTestComplete, trackAiAnalysisClickResults } from '@/utils/analytics';
 
 type AxisLetter = 'E' | 'I';
 type OpennessLetter = 'O' | 'S';
@@ -387,24 +388,20 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('personality_test_result', JSON.stringify(normalizedResult));
       
-      // GA4イベント送信: 診断結果タイプを計測
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
-        event: 'test_complete',
-        result_type: baseTypeCode,                    // 'FAL', 'LAL' など
-        result_type_full: displayCode,                // 'FAL-EO' など
-        result_name: typeWithRuby.name,               // '情熱的リーダー' など
-        five_axis_code: fiveAxisCode,                 // 'ELALO' など
-        // 各軸のスコア
-        score_e: result.E,
-        score_l: result.L,
-        score_a: result.A,
-        score_l2: result.L2,
-        score_o: result.O,
-        // 追加情報
-        sm_tendency: result.additionalResults?.smTendency || 'unknown',
-        tags: result.additionalResults?.tags?.join(',') || '',
-        username_provided: !!username
+      // GA4イベント送信: 診断結果タイプを計測（gtag.js直接）
+      trackTestComplete({
+        resultType: baseTypeCode,                     // 'FAL', 'LAL' など
+        resultTypeFull: displayCode,                  // 'FAL-EO' など
+        resultName: typeWithRuby.name,                // '情熱的リーダー' など
+        fiveAxisCode: fiveAxisCode,                   // 'ELALO' など
+        scoreE: result.E,
+        scoreL: result.L,
+        scoreA: result.A,
+        scoreL2: result.L2,
+        scoreO: result.O,
+        smTendency: result.additionalResults?.smTendency || 'unknown',
+        tags: result.additionalResults?.tags || [],
+        usernameProvided: !!username,
       });
     }
   }, [normalizedResult, baseTypeCode, displayCode, typeWithRuby.name, fiveAxisCode, result, username]);
@@ -1148,11 +1145,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                   </p>
                   <button
                     onClick={() => {
-                      if (typeof window !== 'undefined') {
-                        (window as unknown as { dataLayer: Record<string, unknown>[] }).dataLayer?.push({
-                          event: 'ai_analysis_click_results'
-                        });
-                      }
+                      trackAiAnalysisClickResults();
                       setShowAiModal(true);
                     }}
                     className="relative bg-gradient-to-r from-amber-500 to-orange-500 text-white px-7 sm:px-8 py-3 sm:py-3.5 rounded-full font-semibold tracking-wide hover:brightness-110 transition-all transform hover:scale-110 shadow-[0_10px_30px_rgba(245,158,11,0.45)] inline-flex items-center gap-2 animate-pulse"
