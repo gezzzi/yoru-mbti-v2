@@ -382,12 +382,32 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
     return ensuredSelection;
   }, [result, typeWithRuby.code]);
 
-  // 診断結果をローカルストレージに保存
+  // 診断結果をローカルストレージに保存 & GA4イベント送信
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('personality_test_result', JSON.stringify(normalizedResult));
+      
+      // GA4イベント送信: 診断結果タイプを計測
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'test_complete',
+        result_type: baseTypeCode,                    // 'FAL', 'LAL' など
+        result_type_full: displayCode,                // 'FAL-EO' など
+        result_name: typeWithRuby.name,               // '情熱的リーダー' など
+        five_axis_code: fiveAxisCode,                 // 'ELALO' など
+        // 各軸のスコア
+        score_e: result.E,
+        score_l: result.L,
+        score_a: result.A,
+        score_l2: result.L2,
+        score_o: result.O,
+        // 追加情報
+        sm_tendency: result.additionalResults?.smTendency || 'unknown',
+        tags: result.additionalResults?.tags?.join(',') || '',
+        username_provided: !!username
+      });
     }
-  }, [normalizedResult]);
+  }, [normalizedResult, baseTypeCode, displayCode, typeWithRuby.name, fiveAxisCode, result, username]);
 
   // 保存されたユーザー名を取得
   React.useEffect(() => {
