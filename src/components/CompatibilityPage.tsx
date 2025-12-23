@@ -62,8 +62,15 @@ const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = (
   );
 };
 
+// テスト用のデフォルトコード
+// 5軸: E=50, L=50, A=50, L2=50, O=50（すべて中間値）
+// タグ: 25個すべてスコア3（どちらでもない）
+// 秘密の回答: 質問37「もしバレないなら、ワンナイトしてみたいと思う」→ 回答3（どちらでもない）
+// ユーザー名: 夜の性格診断（Base64エンコード済み）
+const DEFAULT_TEST_CODE = '2EWPYQ2-6HF6HF6HF6HF6HF-113_JUU1JUE0JTlDJUUzJTgxJUFFJUU2JTgwJUE3JUU2JUEwJUJDJUU4JUE4JUJBJUU2JTk2JUFE';
+
 const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onShowResults }) => {
-  const [partnerCode, setPartnerCode] = useState('');
+  const [partnerCode, setPartnerCode] = useState(DEFAULT_TEST_CODE);
   const [myResult, setMyResult] = useState<TestResult | null>(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -73,13 +80,14 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
   const [isQRUploading, setIsQRUploading] = useState(false);
   const [isQRDownloading, setIsQRDownloading] = useState(false);
   const [isMyQRUploading, setIsMyQRUploading] = useState(false);
-  const [uploadedQRImage, setUploadedQRImage] = useState<string | null>(null);
+  const [uploadedQRImage, setUploadedQRImage] = useState<string | null>('default');
   const [qrImageDataUrl, setQrImageDataUrl] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [selectedSecretQuestion, setSelectedSecretQuestion] = useState<number | null>(null);
   const [secretAnswer, setSecretAnswer] = useState<{ questionId: number; answer: number } | undefined>();
   const [partnerUsername, setPartnerUsername] = useState<string | undefined>();
   const qrRef = useRef<HTMLDivElement>(null);
+  const partnerQrRef = useRef<HTMLDivElement>(null);
 
   // モバイル/タブレット判定
   useEffect(() => {
@@ -316,6 +324,7 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
     setPartnerCode('');
     setError('');
     setUploadedQRImage(null);
+    setPartnerUsername(undefined);
   };
 
   const handleQRUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -631,12 +640,25 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                   {/* QRコードアップロード */}
                   {uploadedQRImage ? (
                     <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/5 flex flex-col items-center gap-4">
-                              <div className="bg-white/90 backdrop-blur-xs p-4 rounded-lg shadow-sm border border-white/40">
-                                <img
-                                  src={uploadedQRImage}
-                                  alt="アップロードされたQRコード"
-                                  className="w-full h-auto max-w-[200px]"
-                                />
+                              <div className="bg-white/90 backdrop-blur-xs p-4 rounded-lg shadow-sm border border-white/40" ref={partnerQrRef}>
+                                {uploadedQRImage === 'default' ? (
+                                  <>
+                                    <QRCodeWithLogo
+                                      value={DEFAULT_TEST_CODE}
+                                      size={200}
+                                      logoSrc="/icon-512.png"
+                                      logoSizeRatio={0.18}
+                                      className="w-full h-auto max-w-[200px]"
+                                    />
+                                    <p className="text-xs text-gray-500 text-center mt-2">テスト用QRコード</p>
+                                  </>
+                                ) : (
+                                  <img
+                                    src={uploadedQRImage}
+                                    alt="アップロードされたQRコード"
+                                    className="w-full h-auto max-w-[200px]"
+                                  />
+                                )}
                               </div>
                       <div className="flex flex-wrap gap-2 justify-center">
                         <button
