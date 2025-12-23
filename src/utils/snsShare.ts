@@ -340,10 +340,10 @@ export const generateSNSShareText = (result: TestResult): string => {
   
   const shareText = `【夜の性格診断】
 🌙 性格診断結果 🌙
-タイプ: ${result.type.name}（${result.type.code}）
-相性診断してみて！
+あなたの夜のタイプは『${result.type.code}』です！
+相性抜群の相手はどんな人？
 ${siteUrl}
-#夜の性格診断 #相性チェック`;
+#夜の性格診断`;
 
   return shareText;
 };
@@ -420,13 +420,9 @@ export const copyToClipboard = async (text: string): Promise<boolean> => {
 // 相性診断結果用のSNS投稿テキストを生成
 export const generateCompatibilityShareText = (myResult: TestResult, partnerResult: TestResult, compatibilityPercent: number): string => {
   const siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://your-site.com';
-  const comment = 'あなたと相性抜群の相手はどんな人？'; // 興味を引く一言
   return `【夜の性格診断】\n` +
     `❤️ 相性診断結果 ❤️\n` +
-    `私: ${myResult.type.name}（${myResult.type.code}）\n` +
-    `相手: ${partnerResult.type.name}（${partnerResult.type.code}）\n` +
-    `相性スコア: ${compatibilityPercent}%\n` +
-    `${comment}\n` +
+    `あなたとパートナーとの相性スコアは 『${compatibilityPercent}%』 です！\n` +
     `${siteUrl}\n` +
-    `#夜の性格診断 #相性チェック`;
+    `#夜の性格診断`;
 }; 
