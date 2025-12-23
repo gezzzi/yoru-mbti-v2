@@ -5,15 +5,12 @@ import { TestResult } from '../types/personality';
 import { 
   generateSNSShareText, 
   generateTwitterShareURL, 
-  generateLineShareURL,
-  generateFacebookShareURL,
   shareToInstagram,
-  shareToDiscord,
   generateCompatibilityCode,
   shareWithWebAPI,
   isWebShareAPILevel2Supported
 } from '../utils/snsShare';
-import { X, Twitter, MessageCircle, Share, Facebook, Instagram, Hash } from 'lucide-react';
+import { X, Twitter, Share, Instagram } from 'lucide-react';
 import QRCodeWithLogo from './QRCodeWithLogo';
 
 interface SNSShareModalProps {
@@ -42,22 +39,8 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose, 
     window.open(url, '_blank', 'width=550,height=420');
   };
 
-  const handleLineShare = () => {
-    const url = generateLineShareURL(result);
-    window.open(url, '_blank', 'width=550,height=420');
-  };
-
-  const handleFacebookShare = () => {
-    const url = generateFacebookShareURL(result);
-    window.open(url, '_blank', 'width=550,height=420');
-  };
-
   const handleInstagramShare = () => {
     shareToInstagram(shareText);
-  };
-
-  const handleDiscordShare = () => {
-    shareToDiscord(shareText);
   };
 
   const handleWebShare = async () => {
@@ -152,7 +135,7 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose, 
                   ) : (
                     <>
                       <Share className="w-6 h-6" />
-                      <span>QRコードを含めてシェア（推奨）</span>
+                      <span>相性診断QRコードを含めてシェア</span>
                     </>
                   )}
                 </button>
@@ -164,21 +147,12 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose, 
                   onClick={() => setShowOtherShares(!showOtherShares)}
                   className="flex items-center justify-center space-x-2 w-full bg-white/10 text-[#e0e7ff] py-2 px-4 rounded-lg hover:bg-white/20 transition-colors text-sm"
                 >
-                  <span>その他のシェア方法</span>
+                  <span>相性診断QRコードを含めずにシェア</span>
                   <span className={`transition-transform ${showOtherShares ? 'rotate-180' : ''}`}>▼</span>
                 </button>
                 
                 {showOtherShares && (
                   <div className="mt-3 grid grid-cols-2 gap-2">
-                    {/* LINE */}
-                    <button
-                      onClick={handleLineShare}
-                      className="flex items-center justify-center space-x-2 bg-green-500 text-white py-2 px-3 rounded-lg hover:bg-green-600 transition-colors text-sm"
-                    >
-                      <MessageCircle className="w-4 h-4" />
-                      <span>LINE</span>
-                    </button>
-
                     {/* X(Twitter) */}
                     <button
                       onClick={handleTwitterShare}
@@ -195,24 +169,6 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose, 
                     >
                       <Instagram className="w-4 h-4" />
                       <span>Instagram</span>
-                    </button>
-
-                    {/* Facebook */}
-                    <button
-                      onClick={handleFacebookShare}
-                      className="flex items-center justify-center space-x-2 bg-blue-600 text-white py-2 px-3 rounded-lg hover:bg-blue-700 transition-colors text-sm"
-                    >
-                      <Facebook className="w-4 h-4" />
-                      <span>Facebook</span>
-                    </button>
-
-                    {/* Discord */}
-                    <button
-                      onClick={handleDiscordShare}
-                      className="flex items-center justify-center space-x-2 bg-indigo-500 text-white py-2 px-3 rounded-lg hover:bg-indigo-600 transition-colors text-sm col-span-2"
-                    >
-                      <Hash className="w-4 h-4" />
-                      <span>Discord</span>
                     </button>
                   </div>
                 )}
