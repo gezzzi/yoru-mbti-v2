@@ -91,14 +91,14 @@ export default function PersonalityTypesPage() {
             <TypeImage typeCode={type.code} emoji={type.emoji} name={type.name} />
           </div>
           <div className={`${scheme.textBg} rounded-xl p-4 mx-auto`}>
-            <h3 className="text-xl font-bold text-[#e0e7ff] mb-1 break-words">
+            <h3 className="text-2xl sm:text-xl font-bold text-[#e0e7ff] mb-1 break-words">
               {type.name}
             </h3>
-            <p className="text-sm font-medium text-[#e0e7ff]/80 mb-1">
+            <p className="text-base sm:text-sm font-medium text-[#e0e7ff]/80 mb-1">
               {type.code}
             </p>
             {type.summary && (
-              <p className="text-sm font-semibold text-[#e0e7ff]/90 mt-2">
+              <p className="text-base sm:text-sm font-semibold text-[#e0e7ff]/90 mt-2">
                 {type.summary}
               </p>
             )}

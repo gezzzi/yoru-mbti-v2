@@ -50,7 +50,7 @@ const AboutPage: React.FC = () => {
                   <div className="text-[#e0e7ff]/80 space-y-2 text-sm">
                     <div className="flex flex-col sm:flex-row sm:items-center">
                       <span className="font-medium sm:w-32">運営者名：</span>
-                      <span>sakumonbot</span>
+                      <span>夜の性格診断</span>
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center">
                       <span className="font-medium sm:w-32">連絡先：</span>
