@@ -227,10 +227,8 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
                   key={post.slug}
                   ref={setCardRef(post.slug)}
                   href={`/blog/${post.slug}`}
-                  className={`group relative bg-gradient-to-br from-white/10 to-white/5 border rounded-xl overflow-hidden backdrop-blur-md transition-all duration-300 block flex-shrink-0 w-[85vw] snap-center ${
-                    isCentered
-                      ? 'border-pink-300/50 scale-[1.02] shadow-[0_0_30px_rgba(236,72,153,0.4),0_0_60px_rgba(236,72,153,0.2),inset_0_1px_0_rgba(255,255,255,0.2)]'
-                      : 'border-pink-300/30 scale-100 shadow-[0_0_15px_rgba(236,72,153,0.15),inset_0_1px_0_rgba(255,255,255,0.1)]'
+                  className={`group relative bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-xl overflow-hidden backdrop-blur-md transition-all duration-300 block flex-shrink-0 w-[85vw] snap-center ${
+                    isCentered ? 'scale-105' : 'scale-95 opacity-70'
                   }`}
                 >
                   {/* Image */}
@@ -241,9 +239,7 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
                         src={post.imageUrl}
                         alt={post.title}
                         fill
-                        className={`object-cover transition-all duration-500 ${
-                          isCentered ? 'scale-110 opacity-100' : 'opacity-80'
-                        }`}
+                        className="object-cover"
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-pink-900/50 to-indigo-900/50" />
@@ -270,9 +266,7 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
                     </div>
 
                     {/* Title */}
-                    <h2 className={`text-lg font-semibold mb-2 transition-colors leading-tight drop-shadow-md ${
-                      isCentered ? 'text-pink-200' : 'text-white'
-                    }`}>
+                    <h2 className="text-lg font-semibold mb-2 text-white leading-tight drop-shadow-md">
                       {post.title}
                     </h2>
 
@@ -315,7 +309,7 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
             <Link
               key={post.slug}
               href={`/blog/${post.slug}`}
-              className="group relative bg-gradient-to-br from-white/10 to-white/5 border border-pink-300/30 rounded-xl overflow-hidden backdrop-blur-md transition-all duration-500 block hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(236,72,153,0.4),0_0_60px_rgba(236,72,153,0.2),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-pink-300/50 shadow-[0_0_15px_rgba(236,72,153,0.15),inset_0_1px_0_rgba(255,255,255,0.1)]"
+              className="group relative bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-xl overflow-hidden backdrop-blur-md transition-all duration-300 block hover:-translate-y-1 hover:bg-white/15 hover:border-white/30"
             >
               {/* Image */}
               <div className="h-48 relative overflow-hidden">
