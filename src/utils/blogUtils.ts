@@ -83,3 +83,26 @@ export function getAllPostSlugs(): string[] {
     .map((fileName) => fileName.replace(/\.md$/, ''));
 }
 
+/**
+ * 前後の記事を取得
+ */
+export function getAdjacentPosts(currentSlug: string): {
+  prev: BlogPostMeta | null;
+  next: BlogPostMeta | null;
+} {
+  const allPosts = getAllPosts();
+  const currentIndex = allPosts.findIndex((post) => post.slug === currentSlug);
+
+  if (currentIndex === -1) {
+    return { prev: null, next: null };
+  }
+
+  // allPostsは新しい順にソートされているので、
+  // prev = より新しい記事（currentIndex - 1）
+  // next = より古い記事（currentIndex + 1）
+  const prev = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
+  const next = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
+
+  return { prev, next };
+}
+
