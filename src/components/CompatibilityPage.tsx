@@ -640,26 +640,39 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                   {/* QRコードアップロード */}
                   {uploadedQRImage ? (
                     <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/5 flex flex-col items-center gap-4">
-                              <div className="bg-white/90 backdrop-blur-xs p-4 rounded-lg shadow-sm border border-white/40" ref={partnerQrRef}>
-                                {uploadedQRImage === 'default' ? (
-                                  <>
-                                    <QRCodeWithLogo
-                                      value={DEFAULT_TEST_CODE}
-                                      size={200}
-                                      logoSrc="/icon-512.png"
-                                      logoSizeRatio={0.18}
-                                      className="w-full h-auto max-w-[200px]"
-                                    />
-                                    <p className="text-xs text-gray-500 text-center mt-2">テスト用QRコード</p>
-                                  </>
-                                ) : (
+                              {uploadedQRImage === 'default' ? (
+                                // テスト用QRコード - クリックでアップロード可能
+                                <label className="cursor-pointer hover:opacity-80 transition-opacity">
+                                  <div className="bg-white/90 backdrop-blur-xs p-4 rounded-lg shadow-sm border border-white/40" ref={partnerQrRef}>
+                                    <div className="opacity-50">
+                                      <QRCodeWithLogo
+                                        value={DEFAULT_TEST_CODE}
+                                        size={200}
+                                        logoSrc="/icon-512.png"
+                                        logoSizeRatio={0.18}
+                                        className="w-full h-auto max-w-[200px]"
+                                      />
+                                    </div>
+                                    <p className="text-xs text-gray-700 text-center mt-2">これはテスト用です</p>
+                                  </div>
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleQRUpload}
+                                    className="hidden"
+                                    disabled={isQRUploading}
+                                  />
+                                </label>
+                              ) : (
+                                // アップロードされたQRコード
+                                <div className="bg-white/90 backdrop-blur-xs p-4 rounded-lg shadow-sm border border-white/40" ref={partnerQrRef}>
                                   <img
                                     src={uploadedQRImage}
                                     alt="アップロードされたQRコード"
                                     className="w-full h-auto max-w-[200px]"
                                   />
-                                )}
-                              </div>
+                                </div>
+                              )}
                       <div className="flex flex-wrap gap-2 justify-center">
                         <button
                           onClick={handleReset}
