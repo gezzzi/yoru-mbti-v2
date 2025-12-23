@@ -48,7 +48,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
           <div className="flex justify-center items-center h-16 relative">
           
           {/* デスクトップメニュー - 中央配置 */}
-          <div className="hidden tablet:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-8">
             <Link 
               href="/results"
               onClick={closeMenu}
@@ -107,7 +107,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
           </div>
 
           {/* ハンバーガーメニューボタン - 右端固定 */}
-          <div className="absolute right-0 tablet:hidden">
+          <div className="absolute right-0 lg:hidden">
             <button
               onClick={toggleMenu}
               className="text-gray-100 hover:text-gray-100 focus:outline-none focus:text-gray-100"
@@ -120,7 +120,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
         
         {/* モバイルメニュー */}
         {isMenuOpen && (
-          <div className="tablet:hidden bg-slate-600">
+          <div className="lg:hidden bg-slate-600">
             <div className="px-4 pt-2 pb-4 space-y-2">
               <Link 
                 href="/results"
