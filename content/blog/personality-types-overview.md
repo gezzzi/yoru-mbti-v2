@@ -5,7 +5,7 @@ author: "夜の性格診断"
 date: "2025-12-22"
 readTime: "8分で読了"
 tags: ["性格タイプ", "解説", "ガイド"]
-imageUrl: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800"
+imageUrl: "/images/blog/personality-types-overview.jpg"
 ---
 
 # 8つの夜の性格タイプ完全ガイド

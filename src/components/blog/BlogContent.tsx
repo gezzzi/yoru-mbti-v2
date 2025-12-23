@@ -12,18 +12,14 @@ export default function BlogContent({ content }: BlogContentProps) {
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
       components={{
-        h1: ({ children }) => (
-          <h1 className="text-4xl font-serif text-purple-100 mb-6 mt-12 first:mt-0">
-            {children}
-          </h1>
-        ),
+        h1: () => null, // タイトルはヒーローセクションで表示済み
         h2: ({ children }) => (
-          <h2 className="text-3xl font-serif text-purple-100 mb-4 mt-10">
+          <h2 className="text-3xl sm:text-4xl font-semibold text-purple-100 mb-6 mt-20">
             {children}
           </h2>
         ),
         h3: ({ children }) => (
-          <h3 className="text-2xl font-serif text-purple-100 mb-3 mt-8">
+          <h3 className="text-2xl sm:text-3xl font-semibold text-purple-100 mb-4 mt-10">
             {children}
           </h3>
         ),

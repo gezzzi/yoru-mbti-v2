@@ -87,7 +87,7 @@ export default function BlogPostPage({ params }: Props) {
           </Link>
 
           {/* Article Content */}
-          <div className="text-white text-xl sm:text-2xl leading-relaxed space-y-6 [&_h1]:text-2xl [&_h1]:sm:text-3xl [&_h1]:font-semibold [&_h1]:text-pink-200 [&_h1]:mt-12 [&_h1]:mb-6 [&_h2]:text-2xl [&_h2]:sm:text-3xl [&_h2]:font-semibold [&_h2]:text-pink-200 [&_h2]:mt-10 [&_h2]:mb-4 [&_h3]:text-xl [&_h3]:sm:text-2xl [&_h3]:font-semibold [&_h3]:text-pink-200 [&_h3]:mt-8 [&_h3]:mb-3 [&_a]:text-pink-300 [&_a]:underline [&_strong]:text-white [&_ul]:space-y-2 [&_ul]:pl-6 [&_ul]:list-disc [&_ol]:space-y-2 [&_ol]:pl-6 [&_ol]:list-decimal [&_li]:text-white [&_p]:text-white [&_p]:mb-4">
+          <div className="text-white text-xl sm:text-2xl leading-relaxed [&_h1]:text-4xl [&_h1]:sm:text-5xl [&_h1]:font-semibold [&_h1]:text-pink-200 [&_h1]:mt-16 [&_h1]:mb-8 [&_h2]:text-3xl [&_h2]:sm:text-4xl [&_h2]:font-semibold [&_h2]:text-pink-200 [&_h2]:mt-20 [&_h2]:mb-6 [&_h3]:text-2xl [&_h3]:sm:text-3xl [&_h3]:font-semibold [&_h3]:text-pink-200 [&_h3]:mt-10 [&_h3]:mb-4 [&_a]:text-pink-300 [&_a]:underline [&_strong]:text-white [&_ul]:space-y-2 [&_ul]:pl-6 [&_ul]:list-disc [&_ol]:space-y-2 [&_ol]:pl-6 [&_ol]:list-decimal [&_li]:text-white [&_p]:text-white [&_p]:mb-6">
             <BlogContent content={post.content} />
           </div>
 

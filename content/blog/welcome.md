@@ -5,7 +5,7 @@ author: "夜の性格診断"
 date: "2025-12-22"
 readTime: "3分で読了"
 tags: ["お知らせ", "はじめに"]
-imageUrl: "https://images.unsplash.com/photo-1507400492013-162706c8c05e?w=800"
+imageUrl: "/images/blog/welcome-thumbnail.jpg"
 ---
 
 # 夜の性格診断ブログへようこそ

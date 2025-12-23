@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -21,11 +21,71 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
   const [selectedTag, setSelectedTag] = useState<string | null>(tagFromUrl);
   const [sortOrder, setSortOrder] = useState<SortOrder>('newest');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [centeredSlug, setCenteredSlug] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const cardRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // モバイル判定
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // 中央のカードを検出（横スクロール用）
+  useEffect(() => {
+    if (!isMobile) {
+      setCenteredSlug(null);
+      return;
+    }
+
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const containerRect = container.getBoundingClientRect();
+      const viewportCenter = containerRect.left + containerRect.width / 2;
+      let closestSlug: string | null = null;
+      let closestDistance = Infinity;
+
+      cardRefs.current.forEach((element, slug) => {
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          const cardCenter = rect.left + rect.width / 2;
+          const distance = Math.abs(cardCenter - viewportCenter);
+          
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestSlug = slug;
+          }
+        }
+      });
+
+      setCenteredSlug(closestSlug);
+    };
+
+    handleScroll();
+    container.addEventListener('scroll', handleScroll, { passive: true });
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [isMobile]);
 
   // URLパラメータが変更されたら状態を更新
   useEffect(() => {
     setSelectedTag(tagFromUrl);
   }, [tagFromUrl]);
+
+  // カードの参照を設定するコールバック
+  const setCardRef = useCallback((slug: string) => (el: HTMLAnchorElement | null) => {
+    if (el) {
+      cardRefs.current.set(slug, el);
+    } else {
+      cardRefs.current.delete(slug);
+    }
+  }, []);
 
   // タグ選択時にURLも更新
   const handleTagSelect = (tag: string | null) => {
@@ -152,22 +212,120 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
             フィルターをクリア
           </button>
         </div>
+      ) : isMobile ? (
+        <>
+          {/* Mobile: Horizontal Scroll */}
+          <div
+            ref={scrollContainerRef}
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-6 px-6 scrollbar-hide"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {filteredPosts.map((post) => {
+              const isCentered = centeredSlug === post.slug;
+              return (
+                <Link
+                  key={post.slug}
+                  ref={setCardRef(post.slug)}
+                  href={`/blog/${post.slug}`}
+                  className={`group relative bg-gradient-to-br from-white/10 to-white/5 border rounded-xl overflow-hidden backdrop-blur-md transition-all duration-300 block flex-shrink-0 w-[85vw] snap-center ${
+                    isCentered
+                      ? 'border-pink-300/50 scale-[1.02] shadow-[0_0_30px_rgba(236,72,153,0.4),0_0_60px_rgba(236,72,153,0.2),inset_0_1px_0_rgba(255,255,255,0.2)]'
+                      : 'border-pink-300/30 scale-100 shadow-[0_0_15px_rgba(236,72,153,0.15),inset_0_1px_0_rgba(255,255,255,0.1)]'
+                  }`}
+                >
+                  {/* Image */}
+                  <div className="h-48 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#141e30] to-transparent z-10 opacity-80"></div>
+                    {post.imageUrl ? (
+                      <Image
+                        src={post.imageUrl}
+                        alt={post.title}
+                        fill
+                        className={`object-cover transition-all duration-500 ${
+                          isCentered ? 'scale-110 opacity-100' : 'opacity-80'
+                        }`}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-pink-900/50 to-indigo-900/50" />
+                    )}
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-6 relative z-20 -mt-10">
+                    {/* Tags */}
+                    <div className="flex gap-2 mb-3 flex-wrap relative z-30">
+                      {post.tags.slice(0, 2).map((tag) => (
+                        <button
+                          key={tag}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleTagSelect(tag);
+                          }}
+                          className="text-[10px] uppercase tracking-widest text-pink-200 border border-pink-300/30 px-2 py-1 rounded-sm bg-[#141e30]/50 hover:bg-pink-500/20 transition-colors cursor-pointer"
+                        >
+                          {tag}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Title */}
+                    <h2 className={`text-lg font-semibold mb-2 transition-colors leading-tight drop-shadow-md ${
+                      isCentered ? 'text-pink-200' : 'text-white'
+                    }`}>
+                      {post.title}
+                    </h2>
+
+                    {/* Excerpt */}
+                    <p className="text-white/70 text-sm leading-relaxed line-clamp-2 mb-4">
+                      {post.excerpt}
+                    </p>
+
+                    {/* Footer */}
+                    <div className="flex items-center justify-between text-xs text-white/60 border-t border-white/10 pt-3">
+                      <span>{post.date}</span>
+                      <span className="text-pink-200">
+                        続きを読む →
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Mobile: Scroll Indicator */}
+          <div className="flex justify-center gap-1.5 mt-4">
+            {filteredPosts.map((post) => (
+              <div
+                key={post.slug}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  centeredSlug === post.slug
+                    ? 'w-6 bg-pink-400'
+                    : 'w-1.5 bg-white/30'
+                }`}
+              />
+            ))}
+          </div>
+        </>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        /* Desktop: Single Column Layout */
+        <div className="flex flex-col gap-6">
           {filteredPosts.map((post) => (
-            <article
+            <Link
               key={post.slug}
-              className="group relative bg-gradient-to-br from-white/10 to-white/5 border border-pink-300/30 rounded-xl overflow-hidden backdrop-blur-md transition-all duration-500 hover:-translate-y-1 shadow-[0_0_15px_rgba(236,72,153,0.15),inset_0_1px_0_rgba(255,255,255,0.1)] hover:shadow-[0_0_30px_rgba(236,72,153,0.4),0_0_60px_rgba(236,72,153,0.2),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-pink-300/50"
+              href={`/blog/${post.slug}`}
+              className="group relative bg-gradient-to-br from-white/10 to-white/5 border border-pink-300/30 rounded-xl overflow-hidden backdrop-blur-md transition-all duration-500 block hover:-translate-y-1 hover:shadow-[0_0_30px_rgba(236,72,153,0.4),0_0_60px_rgba(236,72,153,0.2),inset_0_1px_0_rgba(255,255,255,0.2)] hover:border-pink-300/50 shadow-[0_0_15px_rgba(236,72,153,0.15),inset_0_1px_0_rgba(255,255,255,0.1)]"
             >
               {/* Image */}
-              <div className="h-56 relative overflow-hidden">
+              <div className="h-48 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-t from-[#141e30] to-transparent z-10 opacity-80"></div>
                 {post.imageUrl ? (
                   <Image
                     src={post.imageUrl}
                     alt={post.title}
                     fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
+                    className="object-cover transition-all duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
                   />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-pink-900/50 to-indigo-900/50" />
@@ -175,14 +333,15 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
               </div>
 
               {/* Content */}
-              <div className="p-8 relative z-20 -mt-12">
+              <div className="p-6 relative z-20 -mt-8">
                 {/* Tags */}
-                <div className="flex gap-2 mb-4 flex-wrap">
+                <div className="flex gap-2 mb-3 flex-wrap relative z-30">
                   {post.tags.slice(0, 3).map((tag) => (
                     <button
                       key={tag}
                       onClick={(e) => {
                         e.preventDefault();
+                        e.stopPropagation();
                         handleTagSelect(tag);
                       }}
                       className="text-[10px] uppercase tracking-widest text-pink-200 border border-pink-300/30 px-2 py-1 rounded-sm bg-[#141e30]/50 hover:bg-pink-500/20 transition-colors cursor-pointer"
@@ -193,29 +352,24 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
                 </div>
 
                 {/* Title */}
-                <Link href={`/blog/${post.slug}`}>
-                  <h2 className="text-xl sm:text-2xl font-semibold text-white mb-3 group-hover:text-pink-200 transition-colors leading-tight drop-shadow-md">
-                    {post.title}
-                  </h2>
-                </Link>
+                <h2 className="text-xl font-semibold text-white mb-2 group-hover:text-pink-200 transition-colors leading-tight drop-shadow-md">
+                  {post.title}
+                </h2>
 
                 {/* Excerpt */}
-                <p className="text-white/70 text-base sm:text-lg leading-relaxed line-clamp-3 mb-6">
+                <p className="text-white/70 text-base leading-relaxed line-clamp-2 mb-4">
                   {post.excerpt}
                 </p>
 
                 {/* Footer */}
-                <div className="flex items-center justify-between text-sm text-white/60 border-t border-white/10 pt-4">
+                <div className="flex items-center justify-between text-sm text-white/60 border-t border-white/10 pt-3">
                   <span>{post.date}</span>
-                  <Link 
-                    href={`/blog/${post.slug}`}
-                    className="group-hover:translate-x-1 transition-transform text-pink-200"
-                  >
+                  <span className="group-hover:translate-x-1 transition-transform text-pink-200">
                     続きを読む →
-                  </Link>
+                  </span>
                 </div>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       )}
