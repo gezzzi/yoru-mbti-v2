@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { TestResult, PersonalityType } from '../types/personality';
-import { Heart, Users, ArrowRight, Share2, RefreshCw, User, Check } from 'lucide-react';
+import { Heart, Share2, Check } from 'lucide-react';
 import { generateCompatibilityShareText } from '../utils/snsShare';
 import { personalityTypes } from '../data/personalityTypes';
 import Image from 'next/image';
@@ -1811,6 +1811,18 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                   <p className="text-white text-xl sm:text-2xl font-medium leading-relaxed">
                     {compatibility.description}
                   </p>
+                  {/* シェアボタン */}
+                  {isMobile && (
+                    <div className="mt-6 flex justify-center">
+                      <button
+                        onClick={() => setShowShareModal(true)}
+                        className="bg-teal-500 text-teal-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-lg sm:text-lg"
+                      >
+                        <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <span>シェア</span>
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </ScrollAnimation>
@@ -2057,25 +2069,6 @@ const CompatibilityResults: React.FC<CompatibilityResultsProps> = ({
                     </span>
                   </button>
                 </div>
-              </div>
-              <div className="mt-6 flex flex-wrap justify-center sm:justify-end gap-3">
-                {/* モバイル/タブレットのみ: シェアボタンを表示 */}
-                {isMobile && (
-                  <button
-                    onClick={() => setShowShareModal(true)}
-                    className="bg-teal-500 text-teal-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-lg sm:text-lg"
-                  >
-                    <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span>シェア</span>
-                  </button>
-                )}
-                <button
-                  onClick={onNewTest}
-                  className="bg-gray-500 text-gray-100 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-gray-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-lg sm:text-lg"
-                >
-                  <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span>再診断</span>
-                </button>
               </div>
             </ScrollAnimation>
           </div>

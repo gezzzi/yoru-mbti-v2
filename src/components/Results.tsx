@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { TestResult } from '../types/personality';
 import { getCategoryColor, getCategoryName, personalityTypes } from '../data/personalityTypes';
 import { copyToClipboard } from '../utils/snsShare';
-import { Heart, RefreshCw, Share2, User, Shield, Zap, Eye, Dices, Edit3, Moon } from 'lucide-react';
+import { Heart, Share2, User, Shield, Zap, Eye, Moon } from 'lucide-react';
 import Image from 'next/image';
 import SNSShareModal from './SNSShareModal';
 import NeonText from './NeonText';
@@ -578,6 +578,16 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     emoji={typeWithRuby.emoji}
                     name={typeWithRuby.name}
                   />
+                  {/* シェアボタン */}
+                  <div className="mt-6 flex justify-center">
+                    <button 
+                      onClick={() => setShowShareModal(true)}
+                      className="bg-teal-500 text-teal-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-lg sm:text-lg"
+                    >
+                      <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <span>シェア</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1158,22 +1168,6 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                       ¥300
                     </span>
                   </button>
-                </div>
-                <div className="mt-6 flex flex-wrap justify-center gap-3">
-                  <button 
-                    onClick={() => setShowShareModal(true)}
-                    className="bg-teal-500 text-teal-900 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-teal-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-lg sm:text-lg"
-                  >
-                    <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span>シェア</span>
-                  </button>
-                  <Link
-                    href="/test"
-                    className="bg-gray-500 text-gray-100 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-gray-400 transition-all transform hover:scale-105 inline-flex items-center space-x-2 shadow-lg text-lg sm:text-lg"
-                  >
-                    <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span>再診断</span>
-                  </Link>
                 </div>
               </div>
             </div>
