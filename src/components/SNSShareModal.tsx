@@ -5,12 +5,12 @@ import { TestResult } from '../types/personality';
 import { 
   generateSNSShareText, 
   generateTwitterShareURL, 
-  shareToInstagram,
   generateCompatibilityCode,
   shareWithWebAPI,
-  isWebShareAPILevel2Supported
+  isWebShareAPILevel2Supported,
+  copyToClipboard
 } from '../utils/snsShare';
-import { X, Twitter, Share, Instagram } from 'lucide-react';
+import { X, Upload, Share, Copy, Check } from 'lucide-react';
 import QRCodeWithLogo from './QRCodeWithLogo';
 
 interface SNSShareModalProps {
@@ -24,7 +24,7 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose, 
   const [shareText, setShareText] = useState(initialShareText || generateSNSShareText(result));
   const [isWebSharing, setIsWebSharing] = useState(false);
   const [webShareSupported, setWebShareSupported] = useState(false);
-  const [showOtherShares, setShowOtherShares] = useState(false);
+  const [copied, setCopied] = useState(false);
   const qrRef = useRef<HTMLDivElement>(null);
   
   // Web Share API Level 2のサポート状況をチェック
@@ -39,8 +39,12 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose, 
     window.open(url, '_blank', 'width=550,height=420');
   };
 
-  const handleInstagramShare = () => {
-    shareToInstagram(shareText);
+  const handleCopyText = async () => {
+    const success = await copyToClipboard(shareText);
+    if (success) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   const handleWebShare = async () => {
@@ -112,68 +116,60 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose, 
               className="w-full p-3 border border-white/20 bg-white/10 text-[#e0e7ff] rounded-lg resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               rows={8}
             />
-            <p className="text-xs text-[#e0e7ff] mt-1">
-              文字数: {shareText.length}
-            </p>
+            <div className="flex items-center justify-between mt-1">
+              <p className="text-xs text-[#e0e7ff]">
+                文字数: {shareText.length}
+              </p>
+              <button
+                onClick={handleCopyText}
+                className="flex items-center space-x-1 text-xs text-[#e0e7ff] hover:text-white transition-colors px-2 py-1 rounded hover:bg-white/10"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-4 h-4 text-green-400" />
+                    <span className="text-green-400">コピーしました</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4" />
+                    <span>テキストをコピー</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
 
           {/* SNSシェアボタン */}
-          <div className="space-y-4">
-            <div className="space-y-3">
-              {/* Web Share API Level 2 - ワンタップシェア */}
-              {webShareSupported && (
-                <button
-                  onClick={handleWebShare}
-                  disabled={isWebSharing}
-                  className="flex items-center justify-center space-x-3 w-full bg-gradient-to-r from-pink-400 via-blue-400 to-green-400 text-white py-4 px-4 rounded-lg hover:-translate-y-1 hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform font-semibold"
-                >
-                  {isWebSharing ? (
-                    <>
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>シェア中...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Share className="w-6 h-6" />
-                      <span>相性診断QRコードを含めてシェア</span>
-                    </>
-                  )}
-                </button>
-              )}
+          <div className="space-y-3">
+            {/* X(Twitter) - QRコードを含めずにシェア */}
+            <button
+              onClick={handleTwitterShare}
+              className="flex items-center justify-center space-x-3 w-full bg-[#000000] text-[#ffffff] py-4 px-4 rounded-lg hover:bg-[#1f2937] hover:-translate-y-1 hover:shadow-xl hover:scale-105 transition-all transform font-semibold"
+            >
+              <Upload className="w-6 h-6" />
+              <span>X(Twitter)でシェア</span>
+            </button>
 
-              {/* その他のシェアオプション */}
-              <div className="pt-3">
-                <button
-                  onClick={() => setShowOtherShares(!showOtherShares)}
-                  className="flex items-center justify-center space-x-2 w-full bg-white/10 text-[#e0e7ff] py-2 px-4 rounded-lg hover:bg-white/20 transition-colors text-sm"
-                >
-                  <span>相性診断QRコードを含めずにシェア</span>
-                  <span className={`transition-transform ${showOtherShares ? 'rotate-180' : ''}`}>▼</span>
-                </button>
-                
-                {showOtherShares && (
-                  <div className="mt-3 grid grid-cols-2 gap-2">
-                    {/* X(Twitter) */}
-                    <button
-                      onClick={handleTwitterShare}
-                      className="flex items-center justify-center space-x-2 bg-[#000000] text-[#ffffff] py-2 px-3 rounded-lg hover:bg-[#1f2937] transition-colors text-sm"
-                    >
-                      <Twitter className="w-4 h-4" />
-                      <span>X</span>
-                    </button>
-
-                    {/* Instagram */}
-                    <button
-                      onClick={handleInstagramShare}
-                      className="flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-3 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-colors text-sm"
-                    >
-                      <Instagram className="w-4 h-4" />
-                      <span>Instagram</span>
-                    </button>
-                  </div>
+            {/* Web Share API Level 2 - QRコードを含めてシェア */}
+            {webShareSupported && (
+              <button
+                onClick={handleWebShare}
+                disabled={isWebSharing}
+                className="flex items-center justify-center space-x-3 w-full bg-gradient-to-r from-pink-400 via-blue-400 to-green-400 text-white py-4 px-4 rounded-lg hover:-translate-y-1 hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed transition-all transform font-semibold"
+              >
+                {isWebSharing ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>シェア中...</span>
+                  </>
+                ) : (
+                  <>
+                    <Share className="w-6 h-6" />
+                    <span>相性診断QRコードを含めてシェア</span>
+                  </>
                 )}
-              </div>
-            </div>
+              </button>
+            )}
           </div>
 
         </div>
