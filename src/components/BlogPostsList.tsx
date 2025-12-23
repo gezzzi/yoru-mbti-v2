@@ -217,7 +217,7 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
           {/* Mobile: Horizontal Scroll */}
           <div
             ref={scrollContainerRef}
-            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-6 px-6 scrollbar-hide"
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory py-4 -mx-6 px-6 scrollbar-hide"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {filteredPosts.map((post) => {
