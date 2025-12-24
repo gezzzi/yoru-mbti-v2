@@ -57,7 +57,7 @@ const Hero: React.FC = () => {
         </ScrollAnimation>
         <ScrollAnimation animation="fadeInUp" delay={200}>
           <p className="text-lg sm:text-xl md:text-2xl text-white/90 leading-relaxed max-w-3xl mx-auto drop-shadow px-2 sm:px-4">
-            たった10分で、自分がどんな性癖を持っていて、なぜそのプレイや関係性に惹かれるのか、不思議なくらいしっくりくる説明が手に入ります。
+            たった5分で、自分がどんな性癖を持っていて、なぜそのプレイや関係性に惹かれるのか、不思議なくらいしっくりくる説明が手に入ります。
           </p>
         </ScrollAnimation>
         <ScrollAnimation animation="fadeInUp" delay={400}>

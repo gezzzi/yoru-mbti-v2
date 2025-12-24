@@ -40,7 +40,7 @@ const LandingPage: React.FC = () => {
 
           <ScrollAnimation animation="fadeInUp" delay={600}>
             <div className="text-center mt-8 sm:mt-10">
-              <p className="text-white/80 text-base sm:text-lg mb-4 sm:mb-6">10分で現状を可視化</p>
+              <p className="text-white/80 text-base sm:text-lg mb-4 sm:mb-6">5分で現状を可視化</p>
               <Link
                 href="/compatibility"
                 className="inline-flex items-center px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold rounded-full hover:from-pink-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg text-sm sm:text-base"
@@ -185,7 +185,7 @@ const LandingPage: React.FC = () => {
                 icon: "🔒"
               },
               {
-                title: "10分で完了",
+                title: "5分で完了",
                 description: "短時間で診断可能。すぐに結果を確認できます。",
                 icon: "⚡"
               },
@@ -273,7 +273,7 @@ const LandingPage: React.FC = () => {
               },
               {
                 q: "診断にはどのくらい時間がかかりますか？",
-                a: "約10分で完了します。40問の質問に答えるだけで、詳細な分析結果が得られます。"
+                a: "約5分で完了します。40問の質問に答えるだけで、詳細な分析結果が得られます。"
               },
               {
                 q: "結果は保存・共有できますか？",
@@ -322,7 +322,7 @@ const LandingPage: React.FC = () => {
                 href="/types"
                 className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-full hover:bg-white/20 transition-all duration-200 border border-white/20 text-sm sm:text-base md:text-lg"
               >
-                まずは16タイプを確認する
+                まずは8タイプを確認する
               </Link>
             </div>
           </ScrollAnimation>
@@ -339,7 +339,7 @@ const LandingPage: React.FC = () => {
                 <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                 </svg>
-                10分で完了
+                5分で完了
               </span>
               <span className="flex items-center">
                 <svg className="w-3 h-3 sm:w-4 sm:h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
