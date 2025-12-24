@@ -10,24 +10,49 @@ const ContactPage: React.FC = () => {
     category: '',
     message: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const subject = encodeURIComponent(`【夜の性格診断】${formData.category || 'お問い合わせ'}`);
-    const body = encodeURIComponent(
-      `お名前: ${formData.name}\n` +
-      `メールアドレス: ${formData.email}\n` +
-      `カテゴリ: ${formData.category}\n\n` +
-      `お問い合わせ内容:\n${formData.message}`
-    );
-    
-    window.location.href = `mailto:info@nightpersonality.com?subject=${subject}&body=${body}`;
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: 'fa2bd7b0-75fd-43aa-83b1-bc2f0e49d0bd',
+          subject: `【夜の性格診断】${formData.category || 'お問い合わせ'}`,
+          from_name: '夜の性格診断 お問い合わせフォーム',
+          name: formData.name,
+          email: formData.email,
+          category: formData.category,
+          message: formData.message,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSubmitStatus('success');
+        setFormData({ name: '', email: '', category: '', message: '' });
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch {
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -122,14 +147,36 @@ const ContactPage: React.FC = () => {
                     <div className="pt-2">
                       <button
                         type="submit"
-                        className="w-full py-3 px-6 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-medium rounded-lg shadow-lg shadow-pink-500/25 transition-all duration-300 hover:shadow-pink-500/40 hover:scale-[1.02]"
+                        disabled={isSubmitting}
+                        className="w-full py-3 px-6 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-medium rounded-lg shadow-lg shadow-pink-500/25 transition-all duration-300 hover:shadow-pink-500/40 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                       >
-                        メールアプリで送信
+                        {isSubmitting ? (
+                          <span className="flex items-center justify-center gap-2">
+                            <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                            </svg>
+                            送信中...
+                          </span>
+                        ) : '送信する'}
                       </button>
-                      <p className="text-xs text-[#e0e7ff]/60 mt-2 text-center">
-                        ※ 送信ボタンを押すと、お使いのメールアプリが起動します
-                      </p>
                     </div>
+
+                    {submitStatus === 'success' && (
+                      <div className="mt-4 p-4 bg-green-500/20 border border-green-500/50 rounded-lg">
+                        <p className="text-green-300 text-sm text-center">
+                          ✓ お問い合わせを送信しました。ありがとうございます！
+                        </p>
+                      </div>
+                    )}
+
+                    {submitStatus === 'error' && (
+                      <div className="mt-4 p-4 bg-red-500/20 border border-red-500/50 rounded-lg">
+                        <p className="text-red-300 text-sm text-center">
+                          送信に失敗しました。時間をおいて再度お試しいただくか、直接メールでお問い合わせください。
+                        </p>
+                      </div>
+                    )}
                   </form>
                 </section>
               </ScrollAnimation>
