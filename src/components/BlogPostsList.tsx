@@ -250,7 +250,7 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
                   <div className="p-6 relative z-20 -mt-10">
                     {/* Tags */}
                     <div className="flex gap-2 mb-3 flex-wrap relative z-30">
-                      {post.tags.slice(0, 2).map((tag) => (
+                      {post.tags.map((tag) => (
                         <button
                           key={tag}
                           onClick={(e) => {
@@ -330,7 +330,7 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
               <div className="p-6 relative z-20 -mt-8">
                 {/* Tags */}
                 <div className="flex gap-2 mb-3 flex-wrap relative z-30">
-                  {post.tags.slice(0, 3).map((tag) => (
+                  {post.tags.map((tag) => (
                     <button
                       key={tag}
                       onClick={(e) => {
