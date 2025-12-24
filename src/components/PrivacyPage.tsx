@@ -84,21 +84,56 @@ const PrivacyPage: React.FC = () => {
               <ScrollAnimation animation="fadeInUp" delay={500}>
                 <section className="border-b border-white/20 pb-6">
                   <h2 className="text-xl font-semibold text-[#e0e7ff] mb-3">4. 広告について</h2>
-                  <div className="text-[#e0e7ff]/80 space-y-2 text-sm">
+                  <div className="text-[#e0e7ff]/80 space-y-4 text-sm">
                     <p>
-                      当サイトでは、第三者配信の広告サービス（A8.net）を利用しています。
+                      当サイトでは、第三者配信の広告サービスを利用しています。
                     </p>
-                    <p>
-                      広告配信事業者は、ユーザーの興味に応じた広告を表示するためにCookie（クッキー）を使用することがあります。
-                      Cookieを無効にする方法やA8.netのプライバシーポリシーについては、
-                      <a href="https://www.a8.net/privacy.html"
-                         className="text-pink-300 hover:text-pink-200 underline mx-1"
-                         target="_blank"
-                         rel="noopener noreferrer">
-                        A8.netのプライバシーポリシー
-                      </a>
-                      をご覧ください。
-                    </p>
+
+                    <div className="space-y-2">
+                      <h4 className="font-medium text-[#e0e7ff]">4.1 Google AdSense</h4>
+                      <p>
+                        当サイトでは、Google及びそのパートナーの提供する広告配信サービス「Google AdSense」を利用しています。
+                        Google AdSenseは、ユーザーの興味に応じた広告を表示するためにCookie（クッキー）を使用することがあります。
+                      </p>
+                      <p>
+                        Googleがお客様のデータを使用する方法については、
+                        <a href="https://policies.google.com/technologies/partner-sites?hl=ja"
+                           className="text-pink-300 hover:text-pink-200 underline mx-1"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                          Googleのポリシーと規約
+                        </a>
+                        をご覧ください。
+                      </p>
+                      <p>
+                        パーソナライズ広告を無効にしたい場合は、
+                        <a href="https://www.google.com/settings/ads"
+                           className="text-pink-300 hover:text-pink-200 underline mx-1"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                          Googleの広告設定
+                        </a>
+                        から設定を変更することができます。
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <h4 className="font-medium text-[#e0e7ff]">4.2 忍者AdMax</h4>
+                      <p>
+                        当サイトでは、株式会社サムライファクトリーが提供する広告配信サービス「忍者AdMax」を利用しています。
+                        忍者AdMaxは、ユーザーの興味に応じた広告を表示するためにCookie（クッキー）を使用することがあります。
+                      </p>
+                      <p>
+                        Cookieを無効にする方法や忍者AdMaxのプライバシーポリシーについては、
+                        <a href="https://www.ninja.co.jp/privacy/"
+                           className="text-pink-300 hover:text-pink-200 underline mx-1"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                          忍者AdMaxのプライバシーポリシー
+                        </a>
+                        をご覧ください。
+                      </p>
+                    </div>
                   </div>
                 </section>
               </ScrollAnimation>
@@ -182,7 +217,7 @@ const PrivacyPage: React.FC = () => {
               <ScrollAnimation animation="fadeIn" delay={1100}>
                 <section className="pt-4">
                   <p className="text-sm text-[#e0e7ff]/60">制定日: 2025年9月</p>
-                  <p className="text-sm text-[#e0e7ff]/60">最終更新日: 2025年9月</p>
+                  <p className="text-sm text-[#e0e7ff]/60">最終更新日: 2025年12月</p>
                 </section>
               </ScrollAnimation>
             </div>

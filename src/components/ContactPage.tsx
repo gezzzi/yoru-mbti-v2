@@ -1,9 +1,35 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollAnimation } from './ScrollAnimation';
 
 const ContactPage: React.FC = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    category: '',
+    message: '',
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const subject = encodeURIComponent(`【夜の性格診断】${formData.category || 'お問い合わせ'}`);
+    const body = encodeURIComponent(
+      `お名前: ${formData.name}\n` +
+      `メールアドレス: ${formData.email}\n` +
+      `カテゴリ: ${formData.category}\n\n` +
+      `お問い合わせ内容:\n${formData.message}`
+    );
+    
+    window.location.href = `mailto:info@nightpersonality.com?subject=${subject}&body=${body}`;
+  };
+
   return (
     <div className="min-h-screen bg-transparent">
       <div className="pt-28 pb-12">
@@ -21,11 +47,99 @@ const ContactPage: React.FC = () => {
 
               <ScrollAnimation animation="fadeInUp" delay={200}>
                 <section className="border-b border-white/20 pb-6">
-                  <h2 className="text-xl font-semibold text-[#e0e7ff] mb-4">お問い合わせ先</h2>
+                  <h2 className="text-xl font-semibold text-[#e0e7ff] mb-4">お問い合わせフォーム</h2>
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                      <label htmlFor="name" className="block text-sm font-medium text-[#e0e7ff] mb-1">
+                        お名前 <span className="text-pink-400">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        required
+                        value={formData.name}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg text-[#e0e7ff] placeholder-[#e0e7ff]/40 focus:outline-none focus:ring-2 focus:ring-pink-400/50 focus:border-transparent transition-all"
+                        placeholder="山田 太郎"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-[#e0e7ff] mb-1">
+                        メールアドレス <span className="text-pink-400">*</span>
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        required
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg text-[#e0e7ff] placeholder-[#e0e7ff]/40 focus:outline-none focus:ring-2 focus:ring-pink-400/50 focus:border-transparent transition-all"
+                        placeholder="example@email.com"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="category" className="block text-sm font-medium text-[#e0e7ff] mb-1">
+                        お問い合わせカテゴリ <span className="text-pink-400">*</span>
+                      </label>
+                      <select
+                        id="category"
+                        name="category"
+                        required
+                        value={formData.category}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg text-[#e0e7ff] focus:outline-none focus:ring-2 focus:ring-pink-400/50 focus:border-transparent transition-all"
+                      >
+                        <option value="" className="bg-[#1a1a2e]">選択してください</option>
+                        <option value="診断結果について" className="bg-[#1a1a2e]">診断結果について</option>
+                        <option value="サービスの使い方" className="bg-[#1a1a2e]">サービスの使い方</option>
+                        <option value="技術的な問題" className="bg-[#1a1a2e]">技術的な問題</option>
+                        <option value="新機能のご提案" className="bg-[#1a1a2e]">新機能のご提案</option>
+                        <option value="プライバシーについて" className="bg-[#1a1a2e]">プライバシーについて</option>
+                        <option value="その他" className="bg-[#1a1a2e]">その他</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label htmlFor="message" className="block text-sm font-medium text-[#e0e7ff] mb-1">
+                        お問い合わせ内容 <span className="text-pink-400">*</span>
+                      </label>
+                      <textarea
+                        id="message"
+                        name="message"
+                        required
+                        rows={5}
+                        value={formData.message}
+                        onChange={handleChange}
+                        className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg text-[#e0e7ff] placeholder-[#e0e7ff]/40 focus:outline-none focus:ring-2 focus:ring-pink-400/50 focus:border-transparent transition-all resize-none"
+                        placeholder="お問い合わせ内容をご記入ください"
+                      />
+                    </div>
+
+                    <div className="pt-2">
+                      <button
+                        type="submit"
+                        className="w-full py-3 px-6 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-medium rounded-lg shadow-lg shadow-pink-500/25 transition-all duration-300 hover:shadow-pink-500/40 hover:scale-[1.02]"
+                      >
+                        メールアプリで送信
+                      </button>
+                      <p className="text-xs text-[#e0e7ff]/60 mt-2 text-center">
+                        ※ 送信ボタンを押すと、お使いのメールアプリが起動します
+                      </p>
+                    </div>
+                  </form>
+                </section>
+              </ScrollAnimation>
+
+              <ScrollAnimation animation="fadeInUp" delay={300}>
+                <section className="border-b border-white/20 pb-6">
+                  <h2 className="text-xl font-semibold text-[#e0e7ff] mb-4">直接メールを送る</h2>
                   <div className="text-[#e0e7ff]/80 space-y-3 text-sm">
                     <p>
-                      サービスに関するご質問、ご意見、ご要望などがございましたら、
-                      下記のメールアドレスまでお気軽にお問い合わせください。
+                      フォームを使わず直接メールを送信する場合は、下記のメールアドレスまでお送りください。
                     </p>
                     <div className="bg-white/5 rounded-lg p-4 mt-4">
                       <div className="flex flex-col sm:flex-row sm:items-center">
@@ -36,22 +150,6 @@ const ContactPage: React.FC = () => {
                         </a>
                       </div>
                     </div>
-                  </div>
-                </section>
-              </ScrollAnimation>
-
-              <ScrollAnimation animation="fadeInUp" delay={300}>
-                <section className="border-b border-white/20 pb-6">
-                  <h2 className="text-xl font-semibold text-[#e0e7ff] mb-4">お問い合わせ内容の例</h2>
-                  <div className="text-[#e0e7ff]/80 text-sm">
-                    <ul className="list-disc list-inside space-y-2 ml-4">
-                      <li>診断結果に関するご質問</li>
-                      <li>サービスの使い方についてのお問い合わせ</li>
-                      <li>技術的な問題のご報告</li>
-                      <li>新機能のご提案</li>
-                      <li>プライバシーに関するご質問</li>
-                      <li>その他のご意見・ご要望</li>
-                    </ul>
                   </div>
                 </section>
               </ScrollAnimation>
