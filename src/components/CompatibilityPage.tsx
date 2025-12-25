@@ -653,7 +653,12 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                                         className="w-full h-auto max-w-[200px]"
                                       />
                                     </div>
-                                    <p className="text-xs text-gray-700 text-center mt-2">これはテスト用です</p>
+                                    <p className="text-xs text-gray-700 text-center mt-2 flex items-center justify-center gap-1">
+                                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                                      </svg>
+                                      QRコードをアップロード
+                                    </p>
                                   </div>
                                   <input
                                     type="file"
@@ -676,9 +681,12 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                       <div className="flex flex-wrap gap-2 justify-center">
                         <button
                           onClick={handleReset}
-                          className="text-sm text-[#e0e7ff] hover:text-white underline px-4 py-2"
+                          className="text-sm text-[#e0e7ff] hover:text-white underline px-4 py-2 flex items-center gap-1"
                         >
-                          別のQRコードを選択
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                          </svg>
+                          QRコードをクリア
                         </button>
                       </div>
                     </div>
