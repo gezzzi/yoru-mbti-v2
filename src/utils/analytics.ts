@@ -124,6 +124,15 @@ export const trackAiAnalysisClickCompatibility = () => {
 };
 
 /**
+ * LINEスタンプクリックを計測
+ */
+export const trackLineStampClick = () => {
+  gtag('event', 'line_stamp_click', {
+    event_category: 'engagement',
+  });
+};
+
+/**
  * SNSシェアを計測
  */
 export const trackShare = (platform: string, contentType: string) => {
