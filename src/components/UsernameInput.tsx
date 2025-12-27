@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { trackGenderSelect, trackAgeSelect } from '@/utils/analytics';
 
 type Gender = 'male' | 'female' | 'other' | '';
 
@@ -83,7 +84,11 @@ const UsernameInput: React.FC<UsernameInputProps> = ({
           {genderOptions.map((option) => (
             <button
               key={option.value}
-              onClick={() => setGender(option.value)}
+              onClick={() => {
+                setGender(option.value);
+                trackGenderSelect(option.value);
+              }}
+              data-gender={option.value}
               className={`px-6 py-3 rounded-full border-2 transition-all duration-200 flex items-center gap-2 ${
                 gender === option.value
                   ? `${option.selectedClass} scale-105 shadow-lg`
@@ -108,7 +113,11 @@ const UsernameInput: React.FC<UsernameInputProps> = ({
           {ageOptions.map((option) => (
             <button
               key={option.value}
-              onClick={() => setAge(option.value)}
+              onClick={() => {
+                setAge(option.value);
+                trackAgeSelect(option.value);
+              }}
+              data-age={option.value}
               className={`px-6 py-3 rounded-full border-2 transition-all duration-200 ${
                 age === option.value
                   ? 'bg-indigo-500 border-indigo-400 text-white scale-105 shadow-lg'

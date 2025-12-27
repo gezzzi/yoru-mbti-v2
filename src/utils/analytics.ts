@@ -153,6 +153,30 @@ export const trackOutboundLink = (url: string) => {
 };
 
 // ============================================
+// デモグラフィック情報
+// ============================================
+
+/**
+ * 性別選択を計測
+ */
+export const trackGenderSelect = (gender: string) => {
+  gtag('event', 'select_gender', {
+    event_category: 'demographics',
+    gender: gender,
+  });
+};
+
+/**
+ * 年齢選択を計測
+ */
+export const trackAgeSelect = (ageGroup: string) => {
+  gtag('event', 'select_age', {
+    event_category: 'demographics',
+    age_group: ageGroup,
+  });
+};
+
+// ============================================
 // カスタムイベント（汎用）
 // ============================================
 
