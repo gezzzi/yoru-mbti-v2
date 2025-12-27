@@ -18,11 +18,15 @@ interface QuizProps {
 const QUESTIONS_PER_PAGE = 6;
 const SCROLL_DELAY = 150; // 自然なスクロールタイミング
 
+type Gender = 'male' | 'female' | 'other' | '';
+
 const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [hasTransitioned, setHasTransitioned] = useState(false);
   const [username, setUsername] = useState('');
+  const [gender, setGender] = useState<Gender>('');
+  const [age, setAge] = useState('');
   const [questions, setQuestions] = useState<Question[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isMobileView, setIsMobileView] = useState(false);
@@ -144,6 +148,8 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
 
     if (typeof window !== 'undefined') {
       localStorage.setItem('personality_test_username', username);
+      localStorage.setItem('personality_test_gender', gender);
+      localStorage.setItem('personality_test_age', age);
     }
 
     onComplete(answers, username);
@@ -253,8 +259,8 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
 
     // 最後のページでユーザー名入力がある場合
     if (isLastPage && (shouldShowUsernameInput || isUsernameInputPage)) {
-      // 質問とユーザー名の両方をチェック
-      return questionsAnswered && username.trim() !== '';
+      // 質問、性別、年齢、ユーザー名の全てをチェック
+      return questionsAnswered && gender !== '' && age.trim() !== '' && username.trim() !== '';
     }
 
     // 通常のページ
@@ -409,6 +415,10 @@ const Quiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
               <UsernameInput
                 username={username}
                 setUsername={setUsername}
+                gender={gender}
+                setGender={setGender}
+                age={age}
+                setAge={setAge}
                 onSubmit={() => handleUsernameSubmit({ triggerNavigation: true })}
                 isLastPage={isLastPage}
                 data-username-input

@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 
+type Gender = 'male' | 'female' | 'other' | '';
+
 interface UsernameInputProps {
   username: string;
   setUsername: (value: string) => void;
+  gender: Gender;
+  setGender: (value: Gender) => void;
+  age: string;
+  setAge: (value: string) => void;
   onSubmit: () => void;
   isLastPage: boolean;
   'data-username-input'?: boolean;
@@ -11,6 +17,10 @@ interface UsernameInputProps {
 const UsernameInput: React.FC<UsernameInputProps> = ({
   username,
   setUsername,
+  gender,
+  setGender,
+  age,
+  setAge,
   onSubmit,
   isLastPage,
   'data-username-input': dataUsernameInput
@@ -31,6 +41,14 @@ const UsernameInput: React.FC<UsernameInputProps> = ({
     }
   };
 
+  const ageOptions = [
+    { value: '10代', label: '10代' },
+    { value: '20代', label: '20代' },
+    { value: '30代', label: '30代' },
+    { value: '40代', label: '40代' },
+    { value: '50代~', label: '50代〜' },
+  ];
+
   const validateUsername = (): boolean => {
     if (!username.trim()) {
       setError('ユーザー名を入力してください');
@@ -43,11 +61,67 @@ const UsernameInput: React.FC<UsernameInputProps> = ({
     return true;
   };
 
+  const genderOptions = [
+    { value: 'male' as Gender, label: '男性', icon: '♂', selectedClass: 'bg-cyan-500 border-cyan-400 text-white' },
+    { value: 'female' as Gender, label: '女性', icon: '♀', selectedClass: 'bg-pink-500 border-pink-400 text-white' },
+    { value: 'other' as Gender, label: 'その他', icon: '⚧', selectedClass: 'bg-purple-500 border-purple-400 text-white' },
+  ];
+
   return (
     <div
       className="px-0 py-8 sm:p-6 md:p-8 mb-8 border-b border-gray-100"
       {...(dataUsernameInput && { 'data-username-input': true })}
     >
+      {/* 性別選択 */}
+      <div className="mb-12">
+        <div className="text-center mb-6 px-4">
+          <h3 className="text-lg font-bold text-gray-100 leading-relaxed max-w-2xl mx-auto mb-2">
+            あなたの性別を教えてください
+          </h3>
+        </div>
+        <div className="flex justify-center gap-4">
+          {genderOptions.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => setGender(option.value)}
+              className={`px-6 py-3 rounded-full border-2 transition-all duration-200 flex items-center gap-2 ${
+                gender === option.value
+                  ? `${option.selectedClass} scale-105 shadow-lg`
+                  : 'border-gray-400 bg-gray-800 text-gray-300 hover:border-gray-300 hover:scale-105'
+              }`}
+            >
+              <span className="text-lg">{option.icon}</span>
+              <span className="font-medium">{option.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 年齢選択 */}
+      <div className="mb-12">
+        <div className="text-center mb-6 px-4">
+          <h3 className="text-lg font-bold text-gray-100 leading-relaxed max-w-2xl mx-auto mb-2">
+            あなたの年齢を教えてください
+          </h3>
+        </div>
+        <div className="flex justify-center gap-3 flex-wrap">
+          {ageOptions.map((option) => (
+            <button
+              key={option.value}
+              onClick={() => setAge(option.value)}
+              className={`px-6 py-3 rounded-full border-2 transition-all duration-200 ${
+                age === option.value
+                  ? 'bg-indigo-500 border-indigo-400 text-white scale-105 shadow-lg'
+                  : 'border-gray-400 bg-gray-800 text-gray-300 hover:border-gray-300 hover:scale-105'
+              }`}
+            >
+              <span className="font-medium">{option.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* ユーザー名入力 */}
       <div className="text-center mb-8 px-4">
         <h3 className="text-lg font-bold text-gray-100 leading-relaxed max-w-2xl mx-auto mb-4">
           最後に、性格診断と相性診断で使用するユーザー名を入力してください
