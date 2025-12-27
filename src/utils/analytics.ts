@@ -65,6 +65,8 @@ export const trackTestComplete = (params: {
   smTendency: string;
   tags: string[];
   usernameProvided: boolean;
+  gender?: string;              // 性別
+  ageGroup?: string;            // 年齢層
 }) => {
   gtag('event', 'test_complete', {
     result_type: params.resultType,
@@ -79,6 +81,8 @@ export const trackTestComplete = (params: {
     sm_tendency: params.smTendency,
     tags: params.tags.join(','),
     username_provided: params.usernameProvided,
+    gender: params.gender,
+    age_group: params.ageGroup,
   });
 };
 

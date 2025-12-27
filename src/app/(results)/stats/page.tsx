@@ -7,14 +7,14 @@ import { ScrollAnimation } from '@/components/ScrollAnimation';
 
 // 仮データ - 8タイプの割合（%）
 const typeDistribution = [
-  { code: 'LAL', percentage: 18.5, color: '#ff6b6b' },
-  { code: 'LAF', percentage: 10.2, color: '#ff8e72' },
-  { code: 'LSL', percentage: 14.8, color: '#ffa94d' },
-  { code: 'LSF', percentage: 8.3, color: '#ffd43b' },
-  { code: 'FAL', percentage: 16.2, color: '#69db7c' },
-  { code: 'FAF', percentage: 9.7, color: '#4ecdc4' },
-  { code: 'FSL', percentage: 13.5, color: '#74c0fc' },
-  { code: 'FSF', percentage: 8.8, color: '#b197fc' },
+  { code: 'FAL', percentage: 35.4, color: '#69db7c' },
+  { code: 'FSL', percentage: 17.0, color: '#74c0fc' },
+  { code: 'LAL', percentage: 16.5, color: '#ff6b6b' },
+  { code: 'FAF', percentage: 10.1, color: '#4ecdc4' },
+  { code: 'LAF', percentage: 8.8, color: '#ff8e72' },
+  { code: 'LSL', percentage: 7.7, color: '#ffa94d' },
+  { code: 'FSF', percentage: 3.0, color: '#b197fc' },
+  { code: 'LSF', percentage: 1.6, color: '#ffd43b' },
 ];
 
 // 仮データ - 男女比率
@@ -52,23 +52,19 @@ const BarChart = ({ data }: { data: typeof typeDistribution }) => {
                 </span>
               </div>
               <span className="font-mono text-white/80">
-                {item.percentage}%
+                {item.percentage.toFixed(1)}%
               </span>
             </div>
             <div className="h-8 w-full overflow-hidden rounded-lg bg-white/10">
               <div
-                className="flex h-full items-center rounded-lg transition-all duration-1000 ease-out"
+                className="h-full rounded-lg transition-all duration-1000 ease-out"
                 style={{
                   width: animated ? `${(item.percentage / maxPercentage) * 100}%` : '0%',
                   background: `linear-gradient(90deg, ${item.color}cc, ${item.color}99)`,
                   transitionDelay: `${index * 80}ms`,
                   boxShadow: `0 0 20px ${item.color}40`,
                 }}
-              >
-                <span className="ml-3 text-xs font-bold text-white/90 drop-shadow-md">
-                  {type?.summary}
-                </span>
-              </div>
+              />
             </div>
           </div>
         );
@@ -260,8 +256,8 @@ export default function StatsPage() {
         />
         <StatCard 
           title="最多タイプ" 
-          value="LAL" 
-          subtitle="カリスマ珍坊"
+          value="FAL" 
+          subtitle="寄り添い珍坊"
           delay={200}
         />
         <StatCard 

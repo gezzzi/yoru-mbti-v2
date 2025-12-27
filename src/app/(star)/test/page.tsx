@@ -33,6 +33,10 @@ export default function TestPage() {
       const typeInfo = personalityTypes.find(t => t.code === baseTypeCode);
       const typeName = typeInfo?.name || baseTypeCode;
 
+      // 性別と年齢を取得
+      const gender = localStorage.getItem('personality_test_gender') || '';
+      const ageGroup = localStorage.getItem('personality_test_age') || '';
+
       trackTestComplete({
         resultType: baseTypeCode,
         resultTypeFull: displayCode,
@@ -46,6 +50,8 @@ export default function TestPage() {
         smTendency: result.additionalResults?.smTendency || 'unknown',
         tags: result.additionalResults?.tags || [],
         usernameProvided: !!username,
+        gender: gender,
+        ageGroup: ageGroup,
       });
     }
   };
