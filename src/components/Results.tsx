@@ -18,7 +18,7 @@ import { positions48, getPositionsByMood, moodDescriptions, PositionMood, Positi
 import { PositionDescriptionModal } from './PositionDescriptionModal';
 import { nightPersonalityDescriptions } from '@/data/nightPersonalityDescriptions';
 import { buildPersonalityImageSources, getModernPersonalityCode } from '@/utils/personalityImage';
-import { trackTestComplete, trackAiAnalysisClickResults, trackLineStampClick } from '@/utils/analytics';
+import { trackAiAnalysisClickResults, trackLineStampClick } from '@/utils/analytics';
 
 type AxisLetter = 'E' | 'I';
 type OpennessLetter = 'O' | 'S';
@@ -384,28 +384,12 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
     return ensuredSelection;
   }, [result, typeWithRuby.code]);
 
-  // 診断結果をローカルストレージに保存 & GA4イベント送信
+  // 診断結果をローカルストレージに保存
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('personality_test_result', JSON.stringify(normalizedResult));
-      
-      // GA4イベント送信: 診断結果タイプを計測（gtag.js直接）
-      trackTestComplete({
-        resultType: baseTypeCode,                     // 'FAL', 'LAL' など
-        resultTypeFull: displayCode,                  // 'FAL-EO' など
-        resultName: typeWithRuby.name,                // '情熱的リーダー' など
-        fiveAxisCode: fiveAxisCode,                   // 'ELALO' など
-        scoreE: result.E,
-        scoreL: result.L,
-        scoreA: result.A,
-        scoreL2: result.L2,
-        scoreO: result.O,
-        smTendency: result.additionalResults?.smTendency || 'unknown',
-        tags: result.additionalResults?.tags || [],
-        usernameProvided: !!username,
-      });
     }
-  }, [normalizedResult, baseTypeCode, displayCode, typeWithRuby.name, fiveAxisCode, result, username]);
+  }, [normalizedResult]);
 
   // 保存されたユーザー名を取得
   React.useEffect(() => {
