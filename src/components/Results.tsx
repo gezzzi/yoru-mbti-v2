@@ -843,13 +843,23 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                               }
                               
                               // 性格タイプと一般的な特徴を組み合わせて表示
-                              const displayItems: string[] = [];
-                              compatibleTypes.slice(0, 2).forEach(type => {
+                              const displayItems: React.ReactNode[] = [];
+                              compatibleTypes.slice(0, 2).forEach((type, idx) => {
                                 const formattedCode = formatCodeWithAxes(type.code, { preference: compatibilityAxisPreference });
-                                displayItems.push(`${type.name}(${formattedCode || type.code})：${type.reason}`);
+                                displayItems.push(
+                                  <React.Fragment key={`compatible-${type.code}-${idx}`}>
+                                    <Link 
+                                      href={`/types/${type.code.toLowerCase()}`}
+                                      className="text-cyan-300 hover:text-cyan-200 underline decoration-cyan-300/50 hover:decoration-cyan-200 transition-colors"
+                                    >
+                                      {type.name}
+                                    </Link>
+                                    ({formattedCode || type.code})：{type.reason}
+                                  </React.Fragment>
+                                );
                               });
-                              tagTraits.forEach(trait => {
-                                displayItems.push(trait);
+                              tagTraits.forEach((trait, idx) => {
+                                displayItems.push(<React.Fragment key={`trait-${idx}`}>{trait}</React.Fragment>);
                               });
                               
                               return displayItems.slice(0, 3).map((item, index) => (
@@ -917,13 +927,23 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                               }
                               
                               // 性格タイプと一般的な特徴を組み合わせて表示
-                              const displayItems: string[] = [];
-                              incompatibleTypes.slice(0, 2).forEach(type => {
+                              const displayItems: React.ReactNode[] = [];
+                              incompatibleTypes.slice(0, 2).forEach((type, idx) => {
                                 const formattedCode = formatCodeWithAxes(type.code, { preference: incompatibilityAxisPreference });
-                                displayItems.push(`${type.name}(${formattedCode || type.code})：${type.reason}`);
+                                displayItems.push(
+                                  <React.Fragment key={`incompatible-${type.code}-${idx}`}>
+                                    <Link 
+                                      href={`/types/${type.code.toLowerCase()}`}
+                                      className="text-rose-300 hover:text-rose-200 underline decoration-rose-300/50 hover:decoration-rose-200 transition-colors"
+                                    >
+                                      {type.name}
+                                    </Link>
+                                    ({formattedCode || type.code})：{type.reason}
+                                  </React.Fragment>
+                                );
                               });
-                              tagTraits.forEach(trait => {
-                                displayItems.push(trait);
+                              tagTraits.forEach((trait, idx) => {
+                                displayItems.push(<React.Fragment key={`trait-incompat-${idx}`}>{trait}</React.Fragment>);
                               });
                               
                               return displayItems.slice(0, 3).map((item, index) => (
