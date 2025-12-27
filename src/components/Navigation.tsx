@@ -6,7 +6,7 @@ import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
 
 interface NavigationProps {
-  currentPage: 'home' | 'types' | 'quiz' | 'results' | 'compatibility' | 'compatibility-results' | 'privacy' | 'blog';
+  currentPage: 'home' | 'types' | 'quiz' | 'results' | 'compatibility' | 'compatibility-results' | 'privacy' | 'blog' | 'stats';
   hasTestResult?: boolean;
 }
 
@@ -94,6 +94,17 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
               相性診断
             </Link>
             <Link 
+              href="/stats"
+              onClick={closeMenu}
+              className={`text-sm font-medium transition-colors ${
+                currentPage === 'stats' 
+                  ? 'text-teal-300' 
+                  : 'text-white'
+              }`}
+            >
+              統計
+            </Link>
+            <Link 
               href="/blog"
               onClick={closeMenu}
               className={`text-sm font-medium transition-colors ${
@@ -165,6 +176,17 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
                 }`}
               >
                 相性診断
+              </Link>
+              <Link 
+                href="/stats"
+                onClick={closeMenu}
+                className={`block w-full text-left py-2 text-sm font-medium transition-colors ${
+                  currentPage === 'stats' 
+                    ? 'text-teal-300' 
+                    : 'text-white'
+                }`}
+              >
+                統計
               </Link>
               <Link 
                 href="/blog"

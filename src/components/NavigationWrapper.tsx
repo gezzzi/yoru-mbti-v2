@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Navigation from './Navigation';
 
-type PageType = 'home' | 'types' | 'quiz' | 'results' | 'compatibility' | 'compatibility-results' | 'privacy' | 'blog';
+type PageType = 'home' | 'types' | 'quiz' | 'results' | 'compatibility' | 'compatibility-results' | 'privacy' | 'blog' | 'stats';
 
 const NavigationWrapper: React.FC = () => {
   const pathname = usePathname();
@@ -20,6 +20,7 @@ const NavigationWrapper: React.FC = () => {
     if (pathname.startsWith('/compatibility/')) return 'compatibility-results';
     if (pathname === '/privacy') return 'privacy';
     if (pathname.startsWith('/blog')) return 'blog';
+    if (pathname === '/stats') return 'stats';
     return 'home';
   };
 

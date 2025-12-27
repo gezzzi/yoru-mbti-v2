@@ -13,6 +13,7 @@ const Footer: React.FC = () => {
               <li><a href="/test" className="hover:text-teal-300">性格診断テスト</a></li>
               <li><a href="/types" className="hover:text-teal-300">性格タイプ</a></li>
               <li><a href="/compatibility" className="hover:text-teal-300">相性診断</a></li>
+              <li><a href="/stats" className="hover:text-teal-300">統計</a></li>
               <li><a href="/blog" className="hover:text-teal-300">夜ブログ</a></li>
             </ul>
           </div>
