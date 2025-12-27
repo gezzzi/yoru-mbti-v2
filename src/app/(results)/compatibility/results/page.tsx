@@ -176,9 +176,9 @@ const sampleNightParagraphs = (sampleNightCompatibility ?? '')
   .filter(Boolean);
 
 export const metadata: Metadata = {
-  title: '相性診断結果サンプル | 夜の性格診断8',
+  title: '相性診断結果 | 夜の性格診断8',
   description:
-    '夜の性格診断8の相性レポートでは、互いのタイプの組み合わせに応じたスコアと改善アドバイスを提供します。サンプルレポートで内容をご確認ください。',
+    '夜の性格診断8の相性レポートでは、互いのタイプの組み合わせに応じたスコアと改善アドバイスを提供します。',
   alternates: {
     canonical: 'https://nightpersonality.com/compatibility/results',
   },
