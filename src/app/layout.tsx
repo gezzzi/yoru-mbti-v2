@@ -19,23 +19,23 @@ const delaGothicOne = Dela_Gothic_One({
 });
 
 export const metadata: Metadata = {
-  title: "夜の性格診断",
+  title: "夜の性格診断8",
   description: "あなたの隠された夜の性格を診断します",
-  applicationName: "夜の性格診断",
-  authors: [{ name: "夜の性格診断" }],
+  applicationName: "夜の性格診断8",
+  authors: [{ name: "夜の性格診断8" }],
   generator: "Next.js",
   keywords: ["性格診断", "MBTI", "夜の性格", "personality test"],
   openGraph: {
-    title: "夜の性格診断",
+    title: "夜の性格診断8",
     description: "あなたの隠された夜の性格を診断します",
     url: "https://nightpersonality.com",
-    siteName: "夜の性格診断",
+    siteName: "夜の性格診断8",
     images: [
       {
         url: "https://nightpersonality.com/og.png",
         width: 512,
         height: 512,
-        alt: "夜の性格診断",
+        alt: "夜の性格診断8",
       }
     ],
     locale: "ja_JP",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "夜の性格診断",
+    title: "夜の性格診断8",
     description: "あなたの隠された夜の性格を診断します",
     images: ["https://nightpersonality.com/og.png"],
     creator: "@nightpersonality",
@@ -75,9 +75,9 @@ export default function RootLayout({
     >
       <head>
         <meta name="theme-color" content="#000000" />
-        <meta property="og:site_name" content="夜の性格診断" />
-        <meta name="application-name" content="夜の性格診断" />
-        <meta name="apple-mobile-web-app-title" content="夜の性格診断" />
+        <meta property="og:site_name" content="夜の性格診断8" />
+        <meta name="application-name" content="夜の性格診断8" />
+        <meta name="apple-mobile-web-app-title" content="夜の性格診断8" />
 
         {/* Preconnect for performance optimization */}
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
@@ -249,13 +249,13 @@ export default function RootLayout({
             {
               "@context": "https://schema.org",
               "@type": "WebSite",
-              "name": "夜の性格診断",
+              "name": "夜の性格診断8",
               "alternateName": ["NightPersonality"],
               "url": "https://nightpersonality.com",
               "inLanguage": "ja",
               "publisher": {
                 "@type": "Organization",
-                "name": "夜の性格診断",
+                "name": "夜の性格診断8",
                 "url": "https://nightpersonality.com",
                 "logo": {
                   "@type": "ImageObject",

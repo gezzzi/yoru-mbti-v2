@@ -15,7 +15,7 @@ const AboutPage: React.FC = () => {
                   運営者情報
                 </h1>
                 <p className="text-[#e0e7ff]/80 mb-8 text-center">
-                  夜の性格診断の運営者についての情報です。
+                  夜の性格診断8の運営者についての情報です。
                 </p>
               </div>
 
@@ -25,7 +25,7 @@ const AboutPage: React.FC = () => {
                   <div className="text-[#e0e7ff]/80 space-y-2 text-sm">
                     <div className="flex flex-col sm:flex-row sm:items-center">
                       <span className="font-medium sm:w-32">サイト名：</span>
-                      <span>夜の性格診断</span>
+                      <span>夜の性格診断8</span>
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center">
                       <span className="font-medium sm:w-32">URL：</span>
@@ -50,7 +50,7 @@ const AboutPage: React.FC = () => {
                   <div className="text-[#e0e7ff]/80 space-y-2 text-sm">
                     <div className="flex flex-col sm:flex-row sm:items-center">
                       <span className="font-medium sm:w-32">運営者名：</span>
-                      <span>夜の性格診断</span>
+                      <span>夜の性格診断8</span>
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center">
                       <span className="font-medium sm:w-32">連絡先：</span>
@@ -68,7 +68,7 @@ const AboutPage: React.FC = () => {
                   <h2 className="text-xl font-semibold text-[#e0e7ff] mb-4">サービス概要</h2>
                   <div className="text-[#e0e7ff]/80 space-y-3 text-sm">
                     <p>
-                      夜の性格診断は、独自の5軸システムを使用した性格診断サービスです。
+                      夜の性格診断8は、独自の5軸システムを使用した性格診断サービスです。
                       恋愛や親密な関係における性格タイプを診断し、自己理解と相互理解を深めることを目的としています。
                     </p>
                     <p>

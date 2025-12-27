@@ -39,7 +39,7 @@ const Footer: React.FC = () => {
         <div className="border-t border-gray-100 mt-12 pt-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between text-center md:text-left">
             <div className="text-sm text-gray-400 mb-4 md:mb-0">
-              © 2025 夜の性格診断 - すべての権利を保有
+              © 2025 夜の性格診断8 - すべての権利を保有
             </div>
           </div>
         </div>

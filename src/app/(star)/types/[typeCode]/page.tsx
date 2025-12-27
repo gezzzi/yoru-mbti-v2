@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: TypePageProps) {
   }
   
   return {
-    title: `${personalityType.name} (${personalityType.code}) - 夜の性格診断`,
+    title: `${personalityType.name} (${personalityType.code}) - 夜の性格診断8`,
     description: personalityType.description,
     keywords: [
       personalityType.name,

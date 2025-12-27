@@ -5,8 +5,8 @@ import NeonText from '@/components/NeonText';
 import BlogPostsList from '@/components/BlogPostsList';
 
 export const metadata: Metadata = {
-  title: 'ブログ | 夜の性格診断',
-  description: '夜の性格診断に関する記事やコラムをお届けします。',
+  title: 'ブログ | 夜の性格診断8',
+  description: '夜の性格診断8に関する記事やコラムをお届けします。',
 };
 
 export default function BlogPage() {

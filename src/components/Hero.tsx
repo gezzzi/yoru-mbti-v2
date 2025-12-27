@@ -52,7 +52,7 @@ const Hero: React.FC = () => {
         {/* レスポンシブ対応 */}
         <ScrollAnimation animation="fadeIn" duration={800}>
           <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight drop-shadow-lg select-none text-center">
-            <NeonText text={["夜の", "性格診断"]} specialCharIndex={2} className="gap-1" />
+            <NeonText text={["夜の", "性格診断8"]} specialCharIndex={2} className="gap-1" />
           </h1>
         </ScrollAnimation>
         <ScrollAnimation animation="fadeInUp" delay={200}>

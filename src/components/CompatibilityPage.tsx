@@ -66,7 +66,7 @@ const TypeImage: React.FC<{ typeCode: string; emoji: string; name: string }> = (
 // 5軸: E=50, L=50, A=50, L2=50, O=50（すべて中間値）
 // タグ: 25個すべてスコア3（どちらでもない）
 // 秘密の回答: 質問37「もしバレないなら、ワンナイトしてみたいと思う」→ 回答3（どちらでもない）
-// ユーザー名: 夜の性格診断（Base64エンコード済み）
+// ユーザー名: 夜の性格診断8（Base64エンコード済み）
 const DEFAULT_TEST_CODE = '2EWPYQ2-6HF6HF6HF6HF6HF-113_JUU1JUE0JTlDJUUzJTgxJUFFJUU2JTgwJUE3JUU2JUEwJUJDJUU4JUE4JUJBJUU2JTk2JUFE';
 
 const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onShowResults }) => {

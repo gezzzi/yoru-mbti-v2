@@ -3,7 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
-This is a Next.js 14 application called "夜の性格診断" (Night Personality Test) - a sophisticated Japanese psychological assessment application that determines intimate/romantic personality types using a unique 5-axis system (NOT traditional MBTI). The app is deployed at https://nightpersonality.com and serves Japanese-speaking users.
+This is a Next.js 14 application called "夜の性格診断8" (Night Personality Test 8) - a sophisticated Japanese psychological assessment application that determines intimate/romantic personality types using a unique 5-axis system (NOT traditional MBTI). The app is deployed at https://nightpersonality.com and serves Japanese-speaking users.
 
 ## Development Commands
 ```bash

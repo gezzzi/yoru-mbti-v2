@@ -20,12 +20,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   if (!post) {
     return {
-      title: '記事が見つかりません | 夜の性格診断',
+      title: '記事が見つかりません | 夜の性格診断8',
     };
   }
 
   return {
-    title: `${post.title} | 夜の性格診断`,
+    title: `${post.title} | 夜の性格診断8`,
     description: post.excerpt,
   };
 }

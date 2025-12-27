@@ -309,7 +309,7 @@ export const shareWithWebAPI = async (
     if (!qrFile) throw new Error('QRコードの変換に失敗しました');
 
     const shareData = {
-      title: title || '夜の性格診断',
+      title: title || '夜の性格診断8',
       text: text,
       files: [qrFile]
     };
@@ -420,9 +420,9 @@ export const copyToClipboard = async (text: string): Promise<boolean> => {
 // 相性診断結果用のSNS投稿テキストを生成
 export const generateCompatibilityShareText = (myResult: TestResult, partnerResult: TestResult, compatibilityPercent: number): string => {
   const siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://your-site.com';
-  return `【夜の性格診断】\n` +
+  return `【夜の性格診断8】\n` +
     `❤️ 相性診断結果 ❤️\n` +
     `あなたとパートナーとの相性スコアは 『${compatibilityPercent}%』 です！\n` +
     `${siteUrl}\n` +
-    `#夜の性格診断`;
+    `#夜の性格診断8`;
 }; 

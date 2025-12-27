@@ -56,7 +56,7 @@ const SNSShareModal: React.FC<SNSShareModalProps> = ({ result, isOpen, onClose, 
         shareText,
         qrRef.current,
         `相性診断QRコード_${result.type.code}.png`,
-        '夜の性格診断 - 相性診断コード'
+        '夜の性格診断8 - 相性診断コード'
       );
       
       if (success === 'cancelled') {

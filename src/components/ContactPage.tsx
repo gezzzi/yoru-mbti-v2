@@ -31,8 +31,8 @@ const ContactPage: React.FC = () => {
         },
         body: JSON.stringify({
           access_key: 'fa2bd7b0-75fd-43aa-83b1-bc2f0e49d0bd',
-          subject: `【夜の性格診断】${formData.category || 'お問い合わせ'}`,
-          from_name: '夜の性格診断 お問い合わせフォーム',
+          subject: `【夜の性格診断8】${formData.category || 'お問い合わせ'}`,
+          from_name: '夜の性格診断8 お問い合わせフォーム',
           name: formData.name,
           email: formData.email,
           category: formData.category,
@@ -66,7 +66,7 @@ const ContactPage: React.FC = () => {
                   お問い合わせ
                 </h1>
                 <p className="text-[#e0e7ff]/80 mb-8 text-center">
-                  夜の性格診断へのお問い合わせはこちらからお願いします。
+                  夜の性格診断8へのお問い合わせはこちらからお願いします。
                 </p>
               </div>
 

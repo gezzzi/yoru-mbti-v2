@@ -1163,7 +1163,7 @@ const Results: React.FC<ResultsProps> = ({ result }) => {
                     </div>
                   </div>
                   <p className="text-base sm:text-lg text-white/80 max-w-xl leading-relaxed">
-                    夜の性格診断から生まれたLINEスタンプ。日常のトークをもっと楽しく彩ろう。
+                    夜の性格診断8から生まれたLINEスタンプ。日常のトークをもっと楽しく彩ろう。
                   </p>
                   <button
                     onClick={() => {

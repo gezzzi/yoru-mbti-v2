@@ -34,13 +34,13 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
             <div className="w-8 h-8 relative">
               <Image 
                 src="/favicon.svg" 
-                alt="夜の性格診断" 
+                alt="夜の性格診断8" 
                 width={32} 
                 height={32}
                 className="w-full h-full"
               />
             </div>
-            <span className={`text-xl font-bold transition-colors ${currentPage === 'home' ? 'text-teal-300' : 'text-white'}`}>夜の性格診断</span>
+            <span className={`text-xl font-bold transition-colors ${currentPage === 'home' ? 'text-teal-300' : 'text-white'}`}>夜の性格診断8</span>
           </Link>
         </div>
         

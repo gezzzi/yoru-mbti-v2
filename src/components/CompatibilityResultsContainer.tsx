@@ -100,7 +100,7 @@ const CompatibilityResultsContainer = ({
           <p className="text-sm uppercase tracking-[0.35em] text-white/40">Sample Report</p>
           <h1 className="text-3xl md:text-4xl font-semibold leading-tight">カップル相性診断サンプルレポート</h1>
           <p className="text-base md:text-lg text-white/75">
-            このページでは、夜の性格診断で生成されるカップルレポートのダイジェストを掲載しています。実際の診断ではお二人の回答データに基づき、以下のような詳細なレポートを即時にお届けします。
+            このページでは、夜の性格診断8で生成されるカップルレポートのダイジェストを掲載しています。実際の診断ではお二人の回答データに基づき、以下のような詳細なレポートを即時にお届けします。
           </p>
         </header>
 
