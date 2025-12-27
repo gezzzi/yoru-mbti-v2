@@ -19,14 +19,14 @@ const delaGothicOne = Dela_Gothic_One({
 });
 
 export const metadata: Metadata = {
-  title: "夜の性格診断8",
+  title: "夜の性格診断８　MBTI・セックス相性診断",
   description: "あなたの隠された夜の性格を診断します",
   applicationName: "夜の性格診断8",
   authors: [{ name: "夜の性格診断8" }],
   generator: "Next.js",
   keywords: ["性格診断", "MBTI", "夜の性格", "personality test"],
   openGraph: {
-    title: "夜の性格診断8",
+    title: "夜の性格診断８　MBTI・セックス相性診断",
     description: "あなたの隠された夜の性格を診断します",
     url: "https://nightpersonality.com",
     siteName: "夜の性格診断8",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "夜の性格診断8",
+    title: "夜の性格診断８　MBTI・セックス相性診断",
     description: "あなたの隠された夜の性格を診断します",
     images: ["https://nightpersonality.com/og.png"],
     creator: "@nightpersonality",
