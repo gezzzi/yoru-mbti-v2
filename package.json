@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@types/qrcode": "^1.5.5",
     "gray-matter": "^4.0.3",
     "html2canvas": "^1.4.1",
