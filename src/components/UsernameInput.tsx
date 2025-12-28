@@ -65,7 +65,7 @@ const UsernameInput: React.FC<UsernameInputProps> = ({
   const genderOptions = [
     { value: 'male' as Gender, label: '男性', icon: '♂', selectedClass: 'bg-cyan-500 border-cyan-400 text-white' },
     { value: 'female' as Gender, label: '女性', icon: '♀', selectedClass: 'bg-pink-500 border-pink-400 text-white' },
-    { value: 'other' as Gender, label: 'その他', icon: '⚧', selectedClass: 'bg-purple-500 border-purple-400 text-white' },
+    { value: 'other' as Gender, label: 'その他', icon: '✦', selectedClass: 'bg-purple-500 border-purple-400 text-white' },
   ];
 
   return (

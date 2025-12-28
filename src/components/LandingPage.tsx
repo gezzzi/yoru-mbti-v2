@@ -42,10 +42,10 @@ const LandingPage: React.FC = () => {
             <div className="text-center mt-8 sm:mt-10">
               <p className="text-white/80 text-base sm:text-lg mb-4 sm:mb-6">5分で現状を可視化</p>
               <Link
-                href="/compatibility"
+                href="/test"
                 className="inline-flex items-center px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold rounded-full hover:from-pink-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg text-sm sm:text-base"
               >
-                相性診断をはじめる
+                性格診断をはじめる
                 <svg className="w-4 h-4 sm:w-5 sm:h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>

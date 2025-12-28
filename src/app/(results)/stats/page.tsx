@@ -120,7 +120,7 @@ const PieChart = ({ data }: { data: typeof genderDistribution }) => {
       color: '#a855f7', 
       label: 'その他', 
       percentage: data.other,
-      icon: '⚧'
+      icon: '✦'
     },
   ];
   
