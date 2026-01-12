@@ -64,10 +64,10 @@ const Hero: React.FC = () => {
           <div className="inline-block relative overflow-hidden rounded-full p-1" onMouseEnter={handleMouseEnter}>
             <Link
               href="/test"
-              className="inline-flex items-center px-5 sm:px-6 md:px-8 py-3 sm:py-3 md:py-4 bg-gradient-to-r from-[#6366f1] to-[#a78bfa] text-white font-semibold rounded-full hover:from-[#818cf8] hover:to-[#a78bfa] transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl text-base sm:text-base md:text-lg relative z-10"
+              className="inline-flex items-center px-8 sm:px-6 md:px-8 py-5 sm:py-3 md:py-4 bg-gradient-to-r from-[#6366f1] to-[#a78bfa] text-white font-semibold rounded-full hover:from-[#818cf8] hover:to-[#a78bfa] transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl text-lg sm:text-base md:text-lg relative z-10"
             >
-              無料で診断をはじめる
-              <svg className="w-4 h-4 sm:w-5 sm:h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              診断をはじめる
+              <svg className="w-5 h-5 sm:w-5 sm:h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </Link>
