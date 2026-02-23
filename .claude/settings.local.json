@@ -56,7 +56,17 @@
       "mcp__chrome-devtools__performance_analyze_insight",
       "mcp__chrome-devtools__navigate_page",
       "mcp__chrome-devtools__take_snapshot",
-      "mcp__chrome-devtools__evaluate_script"
+      "mcp__chrome-devtools__evaluate_script",
+      "Bash(tail:*)",
+      "Bash(cd:*)",
+      "Bash(wc:*)",
+      "Bash(done)",
+      "Bash(tr }:*)",
+      "mcp__chrome-devtools__list_pages",
+      "Bash(python3:*)",
+      "Bash(echo done:*)",
+      "Bash(taskkill:*)",
+      "WebFetch(domain:fonts.googleapis.com)"
     ],
     "deny": []
   }

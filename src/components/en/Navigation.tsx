@@ -11,7 +11,7 @@ interface NavigationProps {
   hasTestResult?: boolean;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) => {
+const EnNavigation: React.FC<NavigationProps> = ({ currentPage }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -25,105 +25,105 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
   return (
     <nav className="bg-slate-600 shadow-sm fixed top-0 left-0 right-0 z-50">
       <div className="relative">
-        {/* アプリ名 - 完全に左端に配置 */}
+        {/* App name - left aligned */}
         <div className="absolute left-4 top-0 h-16 flex items-center z-10">
-          <Link 
-            href="/"
+          <Link
+            href="/en"
             className="flex items-center space-x-2"
             onClick={closeMenu}
           >
             <div className="w-8 h-8 relative">
-              <Image 
-                src="/favicon.svg" 
-                alt="夜の性格診断8" 
-                width={32} 
+              <Image
+                src="/favicon.svg"
+                alt="Night Personality Test"
+                width={32}
                 height={32}
                 className="w-full h-full"
               />
             </div>
-            <span className={`text-xl font-bold transition-colors ${currentPage === 'home' ? 'text-teal-300' : 'text-white'}`}>夜の性格診断8</span>
+            <span className={`text-lg font-bold transition-colors ${currentPage === 'home' ? 'text-teal-300' : 'text-white'}`}>NightPersonality</span>
           </Link>
         </div>
 
         {/* Language switcher - right side */}
         <div className="absolute right-16 lg:right-4 top-0 h-16 flex items-center z-10">
-          <LanguageSwitcher currentLocale="ja" />
+          <LanguageSwitcher currentLocale="en" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-center items-center h-16 relative">
 
-          {/* デスクトップメニュー - 中央配置 */}
+          {/* Desktop menu - center aligned */}
           <div className="hidden lg:flex items-center space-x-8">
-            <Link 
-              href="/results"
+            <Link
+              href="/en/results"
               onClick={closeMenu}
               className={`text-sm font-medium transition-colors ${
-                currentPage === 'results' 
-                  ? 'text-teal-300' 
+                currentPage === 'results'
+                  ? 'text-teal-300'
                   : 'text-white'
               }`}
             >
-              あなたの結果
+              Your Results
             </Link>
-            <Link 
-              href="/test"
+            <Link
+              href="/en/test"
               onClick={closeMenu}
               className={`text-sm font-medium transition-colors ${
-                currentPage === 'quiz' 
-                  ? 'text-teal-300' 
+                currentPage === 'quiz'
+                  ? 'text-teal-300'
                   : 'text-white'
               }`}
             >
-              性格診断テスト
+              Personality Test
             </Link>
-            <Link 
-              href="/types"
+            <Link
+              href="/en/types"
               onClick={closeMenu}
               className={`text-sm font-medium transition-colors ${
-                currentPage === 'types' 
-                  ? 'text-teal-300' 
+                currentPage === 'types'
+                  ? 'text-teal-300'
                   : 'text-white'
               }`}
             >
-              性格タイプ
+              Personality Types
             </Link>
-            <Link 
-              href="/compatibility"
+            <Link
+              href="/en/compatibility"
               onClick={closeMenu}
               className={`text-sm font-medium transition-colors ${
                 currentPage === 'compatibility' || currentPage === 'compatibility-results'
-                  ? 'text-teal-300' 
+                  ? 'text-teal-300'
                   : 'text-white'
               }`}
             >
-              相性診断
+              Compatibility
             </Link>
-            <Link 
-              href="/stats"
+            <Link
+              href="/en/stats"
               onClick={closeMenu}
               className={`text-sm font-medium transition-colors ${
-                currentPage === 'stats' 
-                  ? 'text-teal-300' 
+                currentPage === 'stats'
+                  ? 'text-teal-300'
                   : 'text-white'
               }`}
             >
-              統計
+              Stats
             </Link>
-            <Link 
-              href="/blog"
+            <Link
+              href="/en/blog"
               onClick={closeMenu}
               className={`text-sm font-medium transition-colors ${
-                currentPage === 'blog' 
-                  ? 'text-teal-300' 
+                currentPage === 'blog'
+                  ? 'text-teal-300'
                   : 'text-white'
               }`}
             >
-              夜ブログ
+              Blog
             </Link>
           </div>
 
-          {/* ハンバーガーメニューボタン - 右端固定 */}
+          {/* Hamburger menu button - right aligned */}
           <div className="lg:hidden absolute right-0 top-0 h-16">
             <div className="h-full flex items-center">
               <button
@@ -136,76 +136,76 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
           </div>
           </div>
         </div>
-        
-        {/* モバイルメニュー */}
+
+        {/* Mobile menu */}
         {isMenuOpen && (
           <div className="lg:hidden bg-slate-600">
             <div className="px-4 pt-2 pb-4 space-y-2">
-              <Link 
-                href="/results"
+              <Link
+                href="/en/results"
                 onClick={closeMenu}
                 className={`block w-full text-left py-2 text-sm font-medium transition-colors ${
-                  currentPage === 'results' 
-                    ? 'text-teal-300' 
+                  currentPage === 'results'
+                    ? 'text-teal-300'
                     : 'text-white'
                 }`}
               >
-                あなたの結果
+                Your Results
               </Link>
-              <Link 
-                href="/test"
+              <Link
+                href="/en/test"
                 onClick={closeMenu}
                 className={`block w-full text-left py-2 text-sm font-medium transition-colors ${
-                  currentPage === 'quiz' 
-                    ? 'text-teal-300' 
+                  currentPage === 'quiz'
+                    ? 'text-teal-300'
                     : 'text-white'
                 }`}
               >
-                性格診断テスト
+                Personality Test
               </Link>
-              <Link 
-                href="/types"
+              <Link
+                href="/en/types"
                 onClick={closeMenu}
                 className={`block w-full text-left py-2 text-sm font-medium transition-colors ${
-                  currentPage === 'types' 
-                    ? 'text-teal-300' 
+                  currentPage === 'types'
+                    ? 'text-teal-300'
                     : 'text-white'
                 }`}
               >
-                性格タイプ
+                Personality Types
               </Link>
-              <Link 
-                href="/compatibility"
+              <Link
+                href="/en/compatibility"
                 onClick={closeMenu}
                 className={`block w-full text-left py-2 text-sm font-medium transition-colors ${
                   currentPage === 'compatibility' || currentPage === 'compatibility-results'
-                    ? 'text-teal-300' 
+                    ? 'text-teal-300'
                     : 'text-white'
                 }`}
               >
-                相性診断
+                Compatibility
               </Link>
-              <Link 
-                href="/stats"
+              <Link
+                href="/en/stats"
                 onClick={closeMenu}
                 className={`block w-full text-left py-2 text-sm font-medium transition-colors ${
-                  currentPage === 'stats' 
-                    ? 'text-teal-300' 
+                  currentPage === 'stats'
+                    ? 'text-teal-300'
                     : 'text-white'
                 }`}
               >
-                統計
+                Stats
               </Link>
-              <Link 
-                href="/blog"
+              <Link
+                href="/en/blog"
                 onClick={closeMenu}
                 className={`block w-full text-left py-2 text-sm font-medium transition-colors ${
-                  currentPage === 'blog' 
-                    ? 'text-teal-300' 
+                  currentPage === 'blog'
+                    ? 'text-teal-300'
                     : 'text-white'
                 }`}
               >
-                夜ブログ
+                Blog
               </Link>
             </div>
           </div>
@@ -215,4 +215,4 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage, hasTestResult }) =
   );
 };
 
-export default Navigation; 
+export default EnNavigation;

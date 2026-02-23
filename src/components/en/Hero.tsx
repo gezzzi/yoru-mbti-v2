@@ -1,0 +1,100 @@
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import NeonText from '../NeonText';
+import { ScrollAnimation } from '../ScrollAnimation';
+
+const EnHero: React.FC = () => {
+  const [ripples, setRipples] = useState<{ x: number; y: number; id: number }[]>([]);
+
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (ripples.length > 0) return;
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = rect.width / 2;
+    const y = rect.height / 2;
+    const newRipple = { x, y, id: Date.now() };
+
+    setRipples([newRipple]);
+
+    setTimeout(() => {
+      setRipples([]);
+    }, 800);
+  };
+
+  useEffect(() => {
+    const determineViewportType = () => {
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(userAgent);
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+
+      const viewportType = isMobile && !isStandalone ? 'svh' : 'lvh';
+
+      document.documentElement.style.setProperty('--viewport-type', viewportType);
+      document.documentElement.classList.add(`viewport-${viewportType}`);
+    };
+
+    determineViewportType();
+  }, []);
+
+  return (
+    <main className="flex-1 flex flex-col items-center justify-center w-full p-0 m-0 min-h-dvh overflow-hidden">
+      {/* Text section */}
+      <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 text-center flex-1 gap-12 sm:gap-16 md:gap-20 pt-20 pb-6 sm:pt-16 sm:pb-14 md:pt-32 md:pb-8">
+        <ScrollAnimation animation="fadeIn" duration={800}>
+          <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight drop-shadow-lg select-none text-center">
+            <NeonText text={["Night", "Personality"]} specialCharIndex={5} className="gap-1" />
+          </h1>
+        </ScrollAnimation>
+        <ScrollAnimation animation="fadeInUp" delay={200}>
+          <p className="text-lg sm:text-xl md:text-2xl text-white/90 leading-relaxed max-w-3xl mx-auto drop-shadow px-2 sm:px-4">
+            In just 5 minutes, discover your intimate personality type and understand why you&apos;re drawn to certain dynamics in relationships. The results are surprisingly accurate.
+          </p>
+        </ScrollAnimation>
+        <ScrollAnimation animation="fadeInUp" delay={400}>
+          <div className="inline-block relative overflow-hidden rounded-full p-1" onMouseEnter={handleMouseEnter}>
+            <Link
+              href="/en/test"
+              className="inline-flex items-center px-8 sm:px-6 md:px-8 py-5 sm:py-3 md:py-4 bg-gradient-to-r from-[#6366f1] to-[#a78bfa] text-white font-semibold rounded-full hover:from-[#818cf8] hover:to-[#a78bfa] transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl text-lg sm:text-base md:text-lg relative z-10"
+            >
+              Take the Test
+              <svg className="w-5 h-5 sm:w-5 sm:h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+            {/* Ripple effect */}
+            {ripples.map(ripple => (
+              <span
+                key={ripple.id}
+                className="absolute bg-white/40 rounded-full pointer-events-none animate-ripple z-0"
+                style={{
+                  left: ripple.x,
+                  top: ripple.y,
+                  width: '40px',
+                  height: '40px',
+                  transform: 'translate(-50%, -50%)',
+                }}
+              />
+            ))}
+          </div>
+        </ScrollAnimation>
+      </div>
+      {/* Image section */}
+      <ScrollAnimation animation="fadeInUp" delay={600} className="w-full flex-shrink-0 max-w-6xl mx-auto">
+        <Image
+          src="/images/page/lp.png"
+          alt="Night Personality Test illustration"
+          width={1152}
+          height={360}
+          className="w-full h-auto max-h-64 sm:max-h-80 md:max-h-96 object-contain select-none pointer-events-none"
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 90vw, (max-width: 1200px) 80vw, 1152px"
+          priority
+        />
+      </ScrollAnimation>
+    </main>
+  );
+};
+
+export default EnHero;

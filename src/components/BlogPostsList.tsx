@@ -9,11 +9,13 @@ import { BlogPostMeta } from '@/types/blog';
 
 interface BlogPostsListProps {
   posts: BlogPostMeta[];
+  basePath?: string;
 }
 
 type SortOrder = 'newest' | 'oldest';
 
-export default function BlogPostsList({ posts }: BlogPostsListProps) {
+export default function BlogPostsList({ posts, basePath = '/blog' }: BlogPostsListProps) {
+  const isEn = basePath.startsWith('/en/');
   const searchParams = useSearchParams();
   const router = useRouter();
   const tagFromUrl = searchParams.get('tag');
@@ -91,9 +93,9 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
   const handleTagSelect = (tag: string | null) => {
     setSelectedTag(tag);
     if (tag) {
-      router.push(`/blog?tag=${encodeURIComponent(tag)}`, { scroll: false });
+      router.push(`${basePath}?tag=${encodeURIComponent(tag)}`, { scroll: false });
     } else {
-      router.push('/blog', { scroll: false });
+      router.push(basePath, { scroll: false });
     }
   };
 
@@ -135,7 +137,7 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
             onClick={() => setIsFilterOpen(!isFilterOpen)}
             className="flex items-center gap-2 px-4 py-2 bg-white/10 border border-pink-300/30 rounded-lg text-white hover:bg-white/20 transition-all"
           >
-            <span>{selectedTag ? `タグ: ${selectedTag}` : 'タグで絞り込み'}</span>
+            <span>{selectedTag ? `${isEn ? 'Tag' : 'タグ'}: ${selectedTag}` : (isEn ? 'Filter by tag' : 'タグで絞り込み')}</span>
             <ChevronDown size={16} className={`transition-transform ${isFilterOpen ? 'rotate-180' : ''}`} />
           </button>
 
@@ -150,7 +152,7 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
                   !selectedTag ? 'bg-pink-500/20 text-pink-200' : ''
                 }`}
               >
-                すべて表示
+                {isEn ? 'Show all' : 'すべて表示'}
               </button>
               {allTags.map((tag) => (
                 <button
@@ -172,7 +174,7 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
 
         {/* Sort Order */}
         <div className="flex items-center gap-2">
-          <span className="text-white/60 text-sm">並び替え:</span>
+          <span className="text-white/60 text-sm">{isEn ? 'Sort:' : '並び替え:'}</span>
           <button
             onClick={() => setSortOrder('newest')}
             className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
@@ -181,7 +183,7 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
                 : 'bg-white/10 text-white/70 border border-white/20 hover:bg-white/20'
             }`}
           >
-            新しい順
+            {isEn ? 'Newest' : '新しい順'}
           </button>
           <button
             onClick={() => setSortOrder('oldest')}
@@ -191,25 +193,25 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
                 : 'bg-white/10 text-white/70 border border-white/20 hover:bg-white/20'
             }`}
           >
-            古い順
+            {isEn ? 'Oldest' : '古い順'}
           </button>
         </div>
       </div>
 
       {/* Results Count */}
       <p className="text-white/60 text-sm mb-6">
-        {filteredPosts.length}件の記事
+        {isEn ? `${filteredPosts.length} article${filteredPosts.length !== 1 ? 's' : ''}` : `${filteredPosts.length}件の記事`}
       </p>
 
       {/* Posts Grid */}
       {filteredPosts.length === 0 ? (
         <div className="text-center py-20">
-          <p className="text-white/60 text-xl sm:text-2xl">該当する記事がありません。</p>
+          <p className="text-white/60 text-xl sm:text-2xl">{isEn ? 'No matching articles.' : '該当する記事がありません。'}</p>
           <button
             onClick={() => handleTagSelect(null)}
             className="mt-4 px-6 py-2 bg-white/10 border border-white/20 rounded-lg text-white hover:bg-white/20 transition-all"
           >
-            フィルターをクリア
+            {isEn ? 'Clear filter' : 'フィルターをクリア'}
           </button>
         </div>
       ) : isMobile ? (
@@ -226,7 +228,7 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
                 <Link
                   key={post.slug}
                   ref={setCardRef(post.slug)}
-                  href={`/blog/${post.slug}`}
+                  href={`${basePath}/${post.slug}`}
                   className={`group relative bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-xl overflow-hidden backdrop-blur-md transition-all duration-300 block flex-shrink-0 w-[85vw] snap-center ${
                     isCentered ? 'scale-105' : 'scale-95 opacity-70'
                   }`}
@@ -279,7 +281,7 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
                     <div className="flex items-center justify-between text-xs text-white/60 border-t border-white/10 pt-3">
                       <span>{post.date}</span>
                       <span className="text-pink-200">
-                        続きを読む →
+                        {isEn ? 'Read more' : '続きを読む'} →
                       </span>
                     </div>
                   </div>
@@ -308,7 +310,7 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
           {filteredPosts.map((post) => (
             <Link
               key={post.slug}
-              href={`/blog/${post.slug}`}
+              href={`${basePath}/${post.slug}`}
               className="group relative bg-gradient-to-br from-white/10 to-white/5 border border-white/20 rounded-xl overflow-hidden backdrop-blur-md transition-all duration-300 block hover:-translate-y-1 hover:bg-white/15 hover:border-white/30"
             >
               {/* Image */}
@@ -359,7 +361,7 @@ export default function BlogPostsList({ posts }: BlogPostsListProps) {
                 <div className="flex items-center justify-between text-sm text-white/60 border-t border-white/10 pt-3">
                   <span>{post.date}</span>
                   <span className="group-hover:translate-x-1 transition-transform text-pink-200">
-                    続きを読む →
+                    {isEn ? 'Read more' : '続きを読む'} →
                   </span>
                 </div>
               </div>
