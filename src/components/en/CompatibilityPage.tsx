@@ -8,7 +8,6 @@ import { Heart, AlertCircle, TestTube, User, Share2, Copy, Check, Upload, Camera
 import SNSShareModal from '../SNSShareModal';
 import Image from 'next/image';
 import QRCodeWithLogo from '../QRCodeWithLogo';
-import QrScanner from 'qr-scanner';
 import NeonText from '../NeonText';
 import { ScrollAnimation } from '../ScrollAnimation';
 import { buildPersonalityImageSources, getModernPersonalityCode } from '@/utils/personalityImage';
@@ -335,6 +334,8 @@ const EnCompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, on
     setError('');
 
     try {
+      // Dynamically load QrScanner
+      const QrScanner = (await import('qr-scanner')).default;
       // Convert file to Data URL
       const reader = new FileReader();
       reader.onload = async (e) => {
@@ -412,6 +413,8 @@ const EnCompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, on
     setError('');
 
     try {
+      // Dynamically load QrScanner
+      const QrScanner = (await import('qr-scanner')).default;
       // Read the QR code
       const rawResult: unknown = await QrScanner.scanImage(file);
       const result = typeof rawResult === 'string' ? rawResult.trim() : String(rawResult ?? '').trim();

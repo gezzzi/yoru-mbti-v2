@@ -8,10 +8,12 @@ import { personalityTypes } from '../data/personalityTypes';
 import Image from 'next/image';
 import NeonText from './NeonText';
 import { ScrollAnimation } from './ScrollAnimation';
-import Fireworks from './Fireworks';
-import HeartRain from './HeartRain';
-import SnowfallAnimation from './SnowfallAnimation';
-import PetalAnimation from './PetalAnimation';
+import dynamic from 'next/dynamic';
+
+const Fireworks = dynamic(() => import('./Fireworks'), { ssr: false });
+const HeartRain = dynamic(() => import('./HeartRain'), { ssr: false });
+const SnowfallAnimation = dynamic(() => import('./SnowfallAnimation'), { ssr: false });
+const PetalAnimation = dynamic(() => import('./PetalAnimation'), { ssr: false });
 import { PositionDescriptionModal } from './PositionDescriptionModal';
 import { Position48, positions48, PositionMood } from '../data/positions48';
 import { questions } from '../data/questions';

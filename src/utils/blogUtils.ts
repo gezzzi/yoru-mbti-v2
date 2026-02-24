@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { cache } from 'react';
 import { BlogPost, BlogPostMeta } from '@/types/blog';
 
 const postsDirectory = path.join(process.cwd(), 'content/blog');
@@ -8,7 +9,7 @@ const postsDirectory = path.join(process.cwd(), 'content/blog');
 /**
  * MDファイルから全ブログ記事のメタデータを取得
  */
-export function getAllPosts(): BlogPostMeta[] {
+export const getAllPosts = cache(function getAllPosts(): BlogPostMeta[] {
   // ディレクトリが存在しない場合は空配列を返す
   if (!fs.existsSync(postsDirectory)) {
     return [];
@@ -41,12 +42,12 @@ export function getAllPosts(): BlogPostMeta[] {
     if (a.date > b.date) return -1;
     return 0;
   });
-}
+});
 
 /**
  * 特定のslugからブログ記事の詳細を取得
  */
-export function getPostBySlug(slug: string): BlogPost | null {
+export const getPostBySlug = cache(function getPostBySlug(slug: string): BlogPost | null {
   const fullPath = path.join(postsDirectory, `${slug}.md`);
   
   if (!fs.existsSync(fullPath)) {
@@ -67,12 +68,12 @@ export function getPostBySlug(slug: string): BlogPost | null {
     tags: data.tags || [],
     imageUrl: data.imageUrl,
   };
-}
+});
 
 /**
  * 全ブログ記事のslugを取得（静的生成用）
  */
-export function getAllPostSlugs(): string[] {
+export const getAllPostSlugs = cache(function getAllPostSlugs(): string[] {
   if (!fs.existsSync(postsDirectory)) {
     return [];
   }
@@ -81,12 +82,12 @@ export function getAllPostSlugs(): string[] {
   return fileNames
     .filter((fileName) => fileName.endsWith('.md'))
     .map((fileName) => fileName.replace(/\.md$/, ''));
-}
+});
 
 /**
  * 前後の記事を取得
  */
-export function getAdjacentPosts(currentSlug: string): {
+export const getAdjacentPosts = cache(function getAdjacentPosts(currentSlug: string): {
   prev: BlogPostMeta | null;
   next: BlogPostMeta | null;
 } {
@@ -104,5 +105,5 @@ export function getAdjacentPosts(currentSlug: string): {
   const next = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
 
   return { prev, next };
-}
+});
 

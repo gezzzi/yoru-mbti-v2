@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { Check } from 'lucide-react';
 import EnUsernameInput from '@/components/en/UsernameInput';
 import { questions as originalQuestions, getShuffledQuestions } from '@/data/en/questions';
@@ -8,6 +8,105 @@ import { Question } from '@/types/personality';
 import { getProgressPercentage } from '@/utils/testLogic';
 import NeonText from '@/components/NeonText';
 import { ScrollAnimation } from '@/components/ScrollAnimation';
+
+// Scale values (defined outside component)
+const scaleValues = [5, 4, 3, 2, 1, 0];
+
+const getCircleSize = (index: number) => {
+  if (index === 0 || index === 5) return 'w-14 h-14 md:w-20 md:h-20';
+  if (index === 1 || index === 4) return 'w-12 h-12 md:w-16 md:h-16';
+  return 'w-11 h-11 md:w-14 md:h-14';
+};
+
+const getCircleColor = (value: number, isSelected: boolean) => {
+  if (isSelected) {
+    return 'bg-yellow-400 border-yellow-500 text-white';
+  }
+  return 'border-gray-400 bg-gray-800 text-gray-300';
+};
+
+interface QuestionItemProps {
+  question: Question;
+  currentAnswer: number | undefined;
+  onAnswerSelect: (questionId: number, value: number) => void;
+  onRefSet: (id: number, el: HTMLDivElement | null) => void;
+}
+
+const QuestionItem = React.memo<QuestionItemProps>(({ question, currentAnswer, onAnswerSelect, onRefSet }) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    const currentValue = currentAnswer ?? 2;
+
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const newValue = Math.min(currentValue + 1, 5);
+      onAnswerSelect(question.id, newValue);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      const newValue = Math.max(currentValue - 1, 0);
+      onAnswerSelect(question.id, newValue);
+    } else if (e.key >= '1' && e.key <= '6') {
+      const value = 6 - parseInt(e.key);
+      onAnswerSelect(question.id, value);
+    }
+  };
+
+  return (
+    <div
+      ref={(el) => { onRefSet(question.id, el); }}
+      className="px-0 py-8 sm:p-6 md:p-8 mb-8 border-b border-gray-100"
+      onKeyDown={handleKeyDown}
+      tabIndex={0}
+      role="group"
+      aria-labelledby={`question-${question.id}`}
+    >
+      <div className="text-center mb-8 px-4">
+        <h3
+          id={`question-${question.id}`}
+          className="text-xl md:text-2xl font-bold text-gray-100 leading-relaxed max-w-2xl mx-auto"
+        >
+          {question.text}
+        </h3>
+      </div>
+
+      <div className="flex flex-col items-center space-y-6">
+        <div className="flex justify-between items-center w-full max-w-2xl px-6 sm:px-12 md:px-5">
+          <span className="text-base font-bold text-cyan-300">Yes</span>
+          <span className="text-base font-bold text-pink-300">No</span>
+        </div>
+
+        <div
+          className="flex items-center justify-center space-x-3 sm:space-x-3 md:space-x-6"
+          role="radiogroup"
+          aria-labelledby={`question-${question.id}`}
+        >
+          {scaleValues.map((value, index) => {
+            const isSelected = currentAnswer === value;
+            const optionText = question.options[index]?.text || '';
+
+            return (
+              <button
+                key={value}
+                onClick={() => onAnswerSelect(question.id, value)}
+                className={`${getCircleSize(index)} rounded-full border-2 transition-all duration-100 hover:scale-105 ${
+                  getCircleColor(value, isSelected)
+                } ${isSelected ? 'scale-105 shadow-lg' : 'hover:shadow-md'} flex items-center justify-center`}
+                role="radio"
+                aria-checked={isSelected}
+                aria-label={optionText}
+                title={optionText}
+              >
+                {isSelected && (
+                  <Check className="w-4 h-4 md:w-5 md:h-5 text-white" strokeWidth={3} />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+});
+QuestionItem.displayName = 'QuestionItem';
 
 interface QuizProps {
   onComplete: (answers: Record<string, number>, username?: string) => void;
@@ -54,7 +153,7 @@ const EnQuiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
   const totalProgress = username ? answeredQuestions + 1 : answeredQuestions;
   const progress = Math.round((totalProgress / totalQuestions) * 100);
 
-  const handleAnswerSelect = (questionId: number, value: number) => {
+  const handleAnswerSelect = useCallback((questionId: number, value: number) => {
     setAnswers(prev => ({
       ...prev,
       [questionId]: value
@@ -111,7 +210,7 @@ const EnQuiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
         }
       }
     }, 30); // Ultra fast response
-  };
+  }, [currentPageQuestions, isUsernameInputPage, shouldShowUsernameInput, isLastPage]);
 
   const handleNext = () => {
     if (isLastPage) {
@@ -267,104 +366,9 @@ const EnQuiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
     return questionsAnswered;
   })();
 
-  // Scale values from strongly agree to strongly disagree (6-point scale)
-  // 0-5 scale to match questions.ts: 5=Strongly agree, 0=Strongly disagree
-  const scaleValues = [5, 4, 3, 2, 1, 0];
-
-  const getCircleSize = (index: number) => {
-    if (index === 0 || index === 5) return 'w-14 h-14 md:w-20 md:h-20'; // Largest circles (extreme ends)
-    if (index === 1 || index === 4) return 'w-12 h-12 md:w-16 md:h-16'; // Large circles
-    return 'w-11 h-11 md:w-14 md:h-14'; // Medium circles (middle options)
-  };
-
-  const getCircleColor = (value: number, isSelected: boolean) => {
-    if (isSelected) {
-      return 'bg-yellow-400 border-yellow-500 text-white'; // Selected: bold yellow
-    }
-    return 'border-gray-400 bg-gray-800 text-gray-300'; // Unselected: light gray
-  };
-
-  const QuestionItem: React.FC<{ question: Question }> = ({ question }) => {
-    const currentAnswer = answers[question.id];
-
-    // Keyboard navigation handler
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-      const currentValue = currentAnswer ?? 2; // Default to near-center
-
-      if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        const newValue = Math.min(currentValue + 1, 5);
-        handleAnswerSelect(question.id, newValue);
-      } else if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        const newValue = Math.max(currentValue - 1, 0);
-        handleAnswerSelect(question.id, newValue);
-      } else if (e.key >= '1' && e.key <= '6') {
-        // Number keys for direct selection (1=Strongly agree, 6=Strongly disagree)
-        const value = 6 - parseInt(e.key);
-        handleAnswerSelect(question.id, value);
-      }
-    };
-
-    return (
-      <div
-        ref={(el) => { questionRefs.current[question.id] = el; }}
-        className="px-0 py-8 sm:p-6 md:p-8 mb-8 border-b border-gray-100"
-        onKeyDown={handleKeyDown}
-        tabIndex={0}
-        role="group"
-        aria-labelledby={`question-${question.id}`}
-      >
-        <div className="text-center mb-8 px-4">
-          <h3
-            id={`question-${question.id}`}
-            className="text-xl md:text-2xl font-bold text-gray-100 leading-relaxed max-w-2xl mx-auto"
-          >
-            {question.text}
-          </h3>
-        </div>
-
-        {/* Visual Scale */}
-        <div className="flex flex-col items-center space-y-6">
-          {/* Scale Labels */}
-          <div className="flex justify-between items-center w-full max-w-2xl px-6 sm:px-12 md:px-5">
-            <span className="text-base font-bold text-cyan-300">Yes</span>
-            <span className="text-base font-bold text-pink-300">No</span>
-          </div>
-
-          {/* Circle Scale */}
-          <div
-            className="flex items-center justify-center space-x-3 sm:space-x-3 md:space-x-6"
-            role="radiogroup"
-            aria-labelledby={`question-${question.id}`}
-          >
-            {scaleValues.map((value, index) => {
-              const isSelected = currentAnswer === value;
-              const optionText = question.options[index]?.text || '';
-
-              return (
-                <button
-                  key={value}
-                  onClick={() => handleAnswerSelect(question.id, value)}
-                  className={`${getCircleSize(index)} rounded-full border-2 transition-all duration-100 hover:scale-105 ${
-                    getCircleColor(value, isSelected)
-                  } ${isSelected ? 'scale-105 shadow-lg' : 'hover:shadow-md'} flex items-center justify-center`}
-                  role="radio"
-                  aria-checked={isSelected}
-                  aria-label={optionText}
-                  title={optionText}
-                >
-                  {isSelected && (
-                    <Check className="w-4 h-4 md:w-5 md:h-5 text-white" strokeWidth={3} />
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    );
-  };
+  const handleRefSet = useCallback((id: number, el: HTMLDivElement | null) => {
+    questionRefs.current[id] = el;
+  }, []);
 
 
   return (
@@ -409,7 +413,13 @@ const EnQuiz: React.FC<QuizProps> = ({ onComplete, onBack }) => {
         <div className={hasTransitioned ? '' : 'animate-fadeInUp'}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {currentPageQuestions.map((question) => (
-              <QuestionItem key={question.id} question={question} />
+              <QuestionItem
+                key={question.id}
+                question={question}
+                currentAnswer={answers[question.id]}
+                onAnswerSelect={handleAnswerSelect}
+                onRefSet={handleRefSet}
+              />
             ))}
             {(shouldShowUsernameInput || isUsernameInputPage) && (
               <EnUsernameInput

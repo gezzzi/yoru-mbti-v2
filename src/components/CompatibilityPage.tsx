@@ -8,7 +8,7 @@ import { Heart, AlertCircle, TestTube, User, Share2, Copy, Check, Upload, Camera
 import SNSShareModal from './SNSShareModal';
 import Image from 'next/image';
 import QRCodeWithLogo from './QRCodeWithLogo';
-import QrScanner from 'qr-scanner';
+
 import NeonText from './NeonText';
 import { ScrollAnimation } from './ScrollAnimation';
 import { buildPersonalityImageSources, getModernPersonalityCode } from '@/utils/personalityImage';
@@ -335,17 +335,19 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
     setError('');
 
     try {
+      // QrScannerを動的にロード
+      const QrScanner = (await import('qr-scanner')).default;
       // ファイルをData URLに変換
       const reader = new FileReader();
       reader.onload = async (e) => {
         const imageDataUrl = e.target?.result as string;
         setUploadedQRImage(imageDataUrl);
-        
+
         try {
           // まず通常の読み取りを試みる
           let qrText = '';
           let readSuccess = false;
-          
+
           try {
             const result: unknown = await QrScanner.scanImage(file);
             if (typeof result === 'string') {
@@ -414,6 +416,8 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
     setError('');
 
     try {
+      // QrScannerを動的にロード
+      const QrScanner = (await import('qr-scanner')).default;
       // QRコードを読み取る
       const rawResult: unknown = await QrScanner.scanImage(file);
       const result = typeof rawResult === 'string' ? rawResult.trim() : String(rawResult ?? '').trim();

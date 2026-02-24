@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { cache } from 'react';
 import { BlogPost, BlogPostMeta } from '@/types/blog';
 
 const postsDirectory = path.join(process.cwd(), 'content/blog-en');
@@ -8,7 +9,7 @@ const postsDirectory = path.join(process.cwd(), 'content/blog-en');
 /**
  * Get all English blog post metadata from MD files
  */
-export function getAllEnPosts(): BlogPostMeta[] {
+export const getAllEnPosts = cache(function getAllEnPosts(): BlogPostMeta[] {
   if (!fs.existsSync(postsDirectory)) {
     return [];
   }
@@ -40,12 +41,12 @@ export function getAllEnPosts(): BlogPostMeta[] {
     if (a.date > b.date) return -1;
     return 0;
   });
-}
+});
 
 /**
  * Get a specific English blog post by slug
  */
-export function getEnPostBySlug(slug: string): BlogPost | null {
+export const getEnPostBySlug = cache(function getEnPostBySlug(slug: string): BlogPost | null {
   const fullPath = path.join(postsDirectory, `${slug}.md`);
 
   if (!fs.existsSync(fullPath)) {
@@ -66,12 +67,12 @@ export function getEnPostBySlug(slug: string): BlogPost | null {
     tags: data.tags || [],
     imageUrl: data.imageUrl,
   };
-}
+});
 
 /**
  * Get all English blog post slugs (for static generation)
  */
-export function getAllEnPostSlugs(): string[] {
+export const getAllEnPostSlugs = cache(function getAllEnPostSlugs(): string[] {
   if (!fs.existsSync(postsDirectory)) {
     return [];
   }
@@ -80,12 +81,12 @@ export function getAllEnPostSlugs(): string[] {
   return fileNames
     .filter((fileName) => fileName.endsWith('.md'))
     .map((fileName) => fileName.replace(/\.md$/, ''));
-}
+});
 
 /**
  * Get adjacent (previous/next) English blog posts
  */
-export function getAdjacentEnPosts(currentSlug: string): {
+export const getAdjacentEnPosts = cache(function getAdjacentEnPosts(currentSlug: string): {
   prev: BlogPostMeta | null;
   next: BlogPostMeta | null;
 } {
@@ -103,4 +104,4 @@ export function getAdjacentEnPosts(currentSlug: string): {
   const next = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
 
   return { prev, next };
-}
+});
