@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { ScrollAnimation } from '@/components/ScrollAnimation';
 import { personalityInsights } from '@/data/en/personalityInsights';
+import { personalityTypes } from '@/data/en/personalityTypes';
 import { buildPersonalityImageSources } from '@/utils/personalityImage';
 
 // Category color schemes
@@ -192,6 +193,55 @@ const EnPersonalityTypeDetail: React.FC<PersonalityTypeDetailProps> = ({ type })
                     </ScrollAnimation>
                   </div>
                 )}
+
+                {/* Compatible Types */}
+                {type.compatibility && type.compatibility.length > 0 && (
+                  <ScrollAnimation animation="fadeInUp" delay={950}>
+                    <section className="mt-10 rounded-2xl py-6 md:py-8 space-y-4">
+                      <header className="space-y-2 text-center">
+                        <p className="text-xs uppercase tracking-[0.35em] text-white/50">Best Matches</p>
+                        <h2 className="text-2xl font-semibold text-[#86efac]">Most Compatible Types</h2>
+                        <p className="text-lg text-[#e0e7ff] leading-relaxed">
+                          These personality types tend to complement {type.name} the best.
+                        </p>
+                      </header>
+                      <div className="flex flex-wrap gap-3 justify-center">
+                        {type.compatibility.map((compatCode) => {
+                          const compatType = personalityTypes.find(t => t.code === compatCode);
+                          return compatType ? (
+                            <Link
+                              key={compatCode}
+                              href={`/en/types/${compatCode.toLowerCase()}`}
+                              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 hover:border-green-400/40 transition-all duration-200"
+                            >
+                              <span className="text-lg">{compatType.emoji}</span>
+                              <div>
+                                <span className="font-mono text-green-400 text-sm">{compatCode}</span>
+                                <span className="text-white/90 text-sm ml-2">{compatType.name}</span>
+                              </div>
+                            </Link>
+                          ) : null;
+                        })}
+                      </div>
+                    </section>
+                  </ScrollAnimation>
+                )}
+
+                {/* Related Article Link */}
+                <ScrollAnimation animation="fadeInUp" delay={1000}>
+                  <div className="mt-8 bg-white/5 rounded-xl p-5 border border-white/10">
+                    <p className="text-white/60 text-sm mb-2">Want to learn more?</p>
+                    <Link
+                      href="/en/blog/bedroom-personality-type-guide"
+                      className="text-pink-300 hover:text-pink-200 transition-colors text-base font-medium inline-flex items-center"
+                    >
+                      Read: What Your Bedroom Personality Type Says About You
+                      <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  </div>
+                </ScrollAnimation>
 
                 {/* Action Buttons */}
                 <div className="mt-12 text-center">

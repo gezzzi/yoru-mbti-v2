@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
+import Script from 'next/script';
 import { notFound } from 'next/navigation';
 import { ChevronLeft, ChevronRight, User } from 'lucide-react';
 import { getEnPostBySlug, getAllEnPostSlugs, getAdjacentEnPosts } from '@/utils/enBlogUtils';
@@ -27,6 +28,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${post.title} | Night Personality Test`,
     description: post.excerpt,
+    keywords: post.tags.join(', ') + ', intimate personality, couple compatibility, night personality test, relationship advice',
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url: `https://nightpersonality.com/en/blog/${params.slug}`,
+      siteName: 'Night Personality Test',
+      locale: 'en_US',
+      type: 'article',
+      publishedTime: post.date,
+      authors: [post.author],
+    },
     alternates: {
       canonical: `https://nightpersonality.com/en/blog/${params.slug}`,
       languages: {
@@ -45,8 +57,37 @@ export default function EnBlogPostPage({ params }: Props) {
     notFound();
   }
 
+  // Build Article schema JSON-LD
+  const articleSchema = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": post.title,
+    "description": post.excerpt,
+    "author": {
+      "@type": "Organization",
+      "name": post.author,
+      "url": "https://nightpersonality.com"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Night Personality Test",
+      "url": "https://nightpersonality.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://nightpersonality.com/og.png"
+      }
+    },
+    "datePublished": post.date,
+    "mainEntityOfPage": `https://nightpersonality.com/en/blog/${params.slug}`,
+    "inLanguage": "en",
+    "keywords": post.tags.join(", "),
+  });
+
   return (
     <article className="min-h-screen text-white relative w-full">
+      <Script id={`article-schema-${params.slug}`} type="application/ld+json">
+        {articleSchema}
+      </Script>
       <div className="relative z-10">
         {/* Hero Section */}
         <div className="h-[60vh] relative overflow-hidden">
@@ -96,6 +137,29 @@ export default function EnBlogPostPage({ params }: Props) {
           {/* Article Content */}
           <div className="text-white text-xl sm:text-2xl leading-relaxed [&_h1]:text-4xl [&_h1]:sm:text-5xl [&_h1]:font-semibold [&_h1]:text-pink-200 [&_h1]:mt-16 [&_h1]:mb-8 [&_h2]:text-3xl [&_h2]:sm:text-4xl [&_h2]:font-semibold [&_h2]:text-pink-200 [&_h2]:mt-20 [&_h2]:mb-6 [&_h3]:text-2xl [&_h3]:sm:text-3xl [&_h3]:font-semibold [&_h3]:text-pink-200 [&_h3]:mt-10 [&_h3]:mb-4 [&_a]:text-pink-300 [&_a]:underline [&_strong]:text-white [&_ul]:space-y-2 [&_ul]:pl-6 [&_ul]:list-disc [&_ol]:space-y-2 [&_ol]:pl-6 [&_ol]:list-decimal [&_li]:text-white [&_p]:text-white [&_p]:mb-6">
             <BlogContent content={post.content} />
+          </div>
+
+          {/* CTA: Take the Test */}
+          <div className="mt-16 bg-gradient-to-r from-purple-900/40 to-pink-900/40 rounded-2xl p-6 sm:p-8 border border-purple-500/20 text-center">
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">Ready to Discover Your Intimate Personality Type?</h3>
+            <p className="text-white/80 mb-5 text-base sm:text-lg">Take the free 5-minute quiz and find out your bedroom personality type. No sign up required.</p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
+                href="/en/test"
+                className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold rounded-full hover:from-pink-600 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
+              >
+                Take the Test
+                <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+              <Link
+                href="/en/types"
+                className="inline-flex items-center justify-center px-6 py-3 bg-white/10 text-white font-semibold rounded-full hover:bg-white/20 transition-all duration-200 border border-white/20"
+              >
+                Explore All 8 Types
+              </Link>
+            </div>
           </div>
 
           {/* Tags */}

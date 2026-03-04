@@ -17,15 +17,31 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Night Personality Test - Discover Your Intimate Type",
-  description: "Discover your hidden intimate personality type with our 5-axis assessment. Take the test in just 5 minutes.",
+  title: {
+    default: "Intimate Personality Test for Couples - Free & Anonymous | Night Personality",
+    template: "%s | Night Personality Test",
+  },
+  description: "Discover your bedroom personality type with our free 5-axis intimacy quiz. Take it solo or with your partner using QR codes. No sign up, 100% anonymous. 40 questions, 5 minutes.",
   applicationName: "Night Personality Test",
   authors: [{ name: "Night Personality Test" }],
   generator: "Next.js",
-  keywords: ["personality test", "intimate personality", "compatibility test", "relationship quiz", "night personality"],
+  keywords: [
+    "intimate personality test",
+    "couple compatibility quiz",
+    "sexual compatibility test free",
+    "bedroom personality type",
+    "intimacy quiz for couples",
+    "relationship compatibility test",
+    "couple quiz anonymous",
+    "night personality test",
+    "romantic personality type",
+    "free intimacy test no sign up",
+    "couple quiz to do together",
+    "5 axis personality test",
+  ],
   openGraph: {
-    title: "Night Personality Test - Discover Your Intimate Type",
-    description: "Discover your hidden intimate personality type with our 5-axis assessment.",
+    title: "Intimate Personality Test for Couples - Free & Anonymous",
+    description: "Discover your bedroom personality type with our free 5-axis intimacy quiz. No sign up, completely anonymous. Share results with your partner via QR code.",
     url: "https://nightpersonality.com/en",
     siteName: "Night Personality Test",
     images: [
@@ -33,7 +49,7 @@ export const metadata: Metadata = {
         url: "https://nightpersonality.com/og.png",
         width: 512,
         height: 512,
-        alt: "Night Personality Test",
+        alt: "Night Personality Test - Free Intimate Compatibility Quiz for Couples",
       }
     ],
     locale: "en_US",
@@ -41,8 +57,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Night Personality Test - Discover Your Intimate Type",
-    description: "Discover your hidden intimate personality type with our 5-axis assessment.",
+    title: "Intimate Personality Test for Couples - Free & Anonymous",
+    description: "Discover your bedroom personality type in 5 minutes. Free, anonymous, no sign up. Share with your partner via QR code.",
     images: ["https://nightpersonality.com/og.png"],
     creator: "@nightpersonality",
     site: "@nightpersonality",

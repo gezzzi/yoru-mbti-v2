@@ -295,6 +295,74 @@ const EnLandingPage: React.FC = () => {
         </div>
       </section>
 
+      {/* Blog & Resources */}
+      <section className="w-full px-4 py-12 sm:py-16 md:py-24">
+        <div className="max-w-4xl mx-auto">
+          <ScrollAnimation animation="fadeInUp">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center mb-3 sm:mb-4">
+              Learn More About Intimate Personality
+            </h2>
+            <p className="text-base sm:text-lg text-white/70 text-center mb-8 sm:mb-12">
+              Expert articles on personality types, compatibility, and relationship improvement
+            </p>
+          </ScrollAnimation>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+            {[
+              {
+                title: "What Your Bedroom Personality Says About You",
+                description: "Discover how the 5 intimate axes shape your love life and what your type reveals.",
+                href: "/en/blog/bedroom-personality-type-guide",
+                icon: "\uD83D\uDD2E"
+              },
+              {
+                title: "Couple Compatibility Test Guide",
+                description: "Learn how to use compatibility tests effectively to strengthen your relationship.",
+                href: "/en/blog/couple-compatibility-quiz-guide",
+                icon: "\uD83D\uDC91"
+              },
+              {
+                title: "Fun Couple Quizzes for Date Night",
+                description: "10 fun quizzes to take with your partner tonight for deeper connection.",
+                href: "/en/blog/fun-couple-quizzes-to-take-together",
+                icon: "\uD83C\uDF19"
+              }
+            ].map((item, index) => (
+              <ScrollAnimation key={index} animation="fadeInUp" delay={index * 150}>
+                <Link
+                  href={item.href}
+                  className="block bg-white/5 backdrop-blur-sm rounded-xl p-5 sm:p-6 border border-white/10 hover:bg-white/10 hover:border-purple-500/30 transition-all duration-300 h-full"
+                >
+                  <div className="text-3xl mb-3">{item.icon}</div>
+                  <h3 className="text-base sm:text-lg font-bold text-white mb-2">{item.title}</h3>
+                  <p className="text-sm sm:text-base text-white/70">{item.description}</p>
+                  <span className="inline-flex items-center text-pink-300 text-sm mt-3 hover:text-pink-200">
+                    Read more
+                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </Link>
+              </ScrollAnimation>
+            ))}
+          </div>
+
+          <ScrollAnimation animation="fadeInUp" delay={450}>
+            <div className="text-center mt-6 sm:mt-8">
+              <Link
+                href="/en/blog"
+                className="inline-flex items-center text-white/70 hover:text-white text-sm sm:text-base transition-colors"
+              >
+                View all articles
+                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+          </ScrollAnimation>
+        </div>
+      </section>
+
       {/* Final CTA */}
       <section className="w-full px-4 py-16 sm:py-20 md:py-28">
         <div className="max-w-4xl mx-auto text-center">

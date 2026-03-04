@@ -176,9 +176,18 @@ const sampleNightParagraphs = (sampleNightCompatibility ?? '')
   .filter(Boolean);
 
 export const metadata: Metadata = {
-  title: 'Compatibility Results | Night Personality Test',
+  title: 'Couple Compatibility Results - Intimate Match Score | Night Personality Test',
   description:
-    'View your Night Personality Test compatibility report with scores and improvement advice tailored to your type combination.',
+    'See your intimate compatibility score and detailed analysis. Get personalized tips to improve your relationship based on your unique personality type combination across 5 intimate axes.',
+  keywords: 'couple compatibility results, intimate match score, relationship compatibility analysis, couple quiz results, sexual compatibility score, partner match percentage',
+  openGraph: {
+    title: 'Your Intimate Compatibility Results | Night Personality Test',
+    description: 'See how compatible you are with your partner across 5 intimate personality axes. Get personalized improvement tips.',
+    url: 'https://nightpersonality.com/en/compatibility/results',
+    siteName: 'Night Personality Test',
+    locale: 'en_US',
+    type: 'website',
+  },
   alternates: {
     canonical: 'https://nightpersonality.com/en/compatibility/results',
     languages: {

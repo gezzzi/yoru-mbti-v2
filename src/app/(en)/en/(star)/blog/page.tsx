@@ -5,8 +5,17 @@ import NeonText from '@/components/NeonText';
 import BlogPostsList from '@/components/BlogPostsList';
 
 export const metadata: Metadata = {
-  title: 'Blog | Night Personality Test',
-  description: 'Articles and insights about the Night Personality Test and understanding your intimate personality type.',
+  title: 'Intimate Personality & Relationship Blog | Night Personality Test',
+  description: 'Expert articles on intimate personality types, couple compatibility, bedroom communication, and relationship improvement tips. Discover how your personality affects your love life.',
+  keywords: 'intimate personality blog, relationship advice, couple compatibility tips, bedroom personality articles, love style guide, romantic personality insights',
+  openGraph: {
+    title: 'Intimate Personality & Relationship Blog | Night Personality',
+    description: 'Expert articles on intimate personality types, couple compatibility, and relationship improvement tips.',
+    url: 'https://nightpersonality.com/en/blog',
+    siteName: 'Night Personality Test',
+    locale: 'en_US',
+    type: 'website',
+  },
   alternates: {
     canonical: 'https://nightpersonality.com/en/blog',
     languages: {
