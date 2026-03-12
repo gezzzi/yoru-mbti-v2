@@ -79,181 +79,14 @@ body > iframe[src*="admax"] {
   contain: layout style size;
 }
 
-/* タグのフェードイン効果 */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fadeIn {
-  animation: fadeIn 0.5s ease-out forwards;
-  animation-delay: var(--animation-delay, 0s);
-  opacity: 0;
-}
-
-@keyframes fadeInLetter {
-  from {
-    opacity: 0;
-    transform: translateY(0.25em);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.fade-in-letter {
-  display: inline-block;
-  opacity: 0;
-  animation: fadeInLetter 0.4s ease forwards;
-}
-
-@keyframes fadeInJump {
-  0% {
-    opacity: 0;
-    transform: translateY(10px) scale(0.95);
-  }
-  60% {
-    opacity: 1;
-    transform: translateY(-4px) scale(1.02);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.animate-fadeInJump {
-  animation: fadeInJump 0.6s ease-out forwards;
-  opacity: 0;
-}
-
-/* リップルエフェクト */
-@keyframes ripple {
-  0% {
-    width: 40px;
-    height: 40px;
-    opacity: 0.6;
-  }
-  100% {
-    width: 400px;
-    height: 400px;
-    opacity: 0;
-  }
-}
-
-.animate-ripple {
-  animation: ripple 0.8s ease-out forwards;
-  width: 40px;
-  height: 40px;
-}
-
-/* タグの軽量な光るアニメーション */
-@keyframes gentle-glow {
-  0%, 100% {
-    opacity: 0.4;
-  }
-  25% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
-  75% {
-    opacity: 0.6;
-  }
-}
-
-.animate-gentle-glow {
-  animation: gentle-glow 3s ease-in-out infinite;
-  animation-delay: var(--glow-delay, 0s);
-  will-change: opacity;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
-}
-
-/* アニメーション中の影の変化 */
-@keyframes shadow-pulse {
-  0%, 100% {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  }
-  50% {
-    box-shadow: 0 6px 12px -2px rgba(0, 0, 0, 0.2);
-  }
-}
-
-.animate-gentle-glow {
-  animation: gentle-glow 3s ease-in-out infinite, shadow-pulse 3s ease-in-out infinite;
-}
-
-/* ホバー時は一時的にアニメーションを停止 */
-.animate-gentle-glow:hover {
-  animation-play-state: paused;
-  opacity: 1;
-  box-shadow: 0 8px 16px -3px rgba(0, 0, 0, 0.3);
-}
-
 /* デフォルト（クラスが適用される前） */
 .min-h-dvh {
   min-height: 100vh;
 }
 
-.category-diagonal::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -20px;
-  width: 100%;
-  height: 60px;
-  background: inherit;
-  transform: skewY(-2deg);
-  z-index: 1;
-  pointer-events: none;
-}
-
 @keyframes twinkle {
   0%, 100% { opacity: 0; }
   50% { opacity: 1; }
-}
-@keyframes pulsePink {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.8;
-  }
-}
-@keyframes shimmerGold {
-  0%, 100% {
-    filter: brightness(1);
-  }
-  50% {
-    filter: brightness(1.5);
-  }
-}
-@keyframes electricBlue {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-@keyframes glowGreen {
-  0%, 100% {
-    filter: blur(0px);
-  }
-  50% {
-    filter: blur(2px);
-  }
 }
 
 /* Enhanced Neon Text Styling */
@@ -279,15 +112,14 @@ body > iframe[src*="admax"] {
   -webkit-text-fill-color: transparent;
   text-shadow: none;
   filter: drop-shadow(0 0 6px #c084fc);
-  animation: 
+  animation:
     sequential-blink 3s 5;
-  animation-delay: 
+  animation-delay:
     calc(var(--char-index) * 0.2s);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transform: translateZ(0);
   font-weight: bold;
-  will-change: transform;
   transform-style: preserve-3d;
   perspective: 1000px;
 }
@@ -316,9 +148,9 @@ body > iframe[src*="admax"] {
   -webkit-text-fill-color: transparent;
   text-shadow: none;
   filter: drop-shadow(0 0 6px #ff00ff);
-  animation: 
+  animation:
     sequential-blink 3s 5;
-  animation-delay: 
+  animation-delay:
     calc(var(--char-index) * 0.2s);
   -webkit-font-smoothing: antialiased;
   transform: translateZ(0);
@@ -336,8 +168,6 @@ body > iframe[src*="admax"] {
   z-index: -1;
   text-shadow: none;
   filter: drop-shadow(0 0 6px #ff0099);
-  /* animation removed */
-  /* animation-delay removed */
   -webkit-font-smoothing: antialiased;
   transform: translateZ(0);
 }
@@ -346,7 +176,7 @@ body > iframe[src*="admax"] {
   display: none;
 }
 
-/* iPhone最適化されたネオンスタイル - 3Dフリップエフェクト */
+/* iPhone最適化されたネオンスタイル */
 .neon-char-iphone {
   display: inline-block;
   position: relative;
@@ -358,9 +188,9 @@ body > iframe[src*="admax"] {
   filter: drop-shadow(0 0 6px #c084fc);
   font-weight: bold;
   margin: 0 2px;
-  animation: 
+  animation:
     sequential-blink 3s 5;
-  animation-delay: 
+  animation-delay:
     calc(var(--char-index) * 0.2s);
   -webkit-font-smoothing: antialiased;
   transform: translateZ(0);
@@ -389,9 +219,9 @@ body > iframe[src*="admax"] {
   -webkit-text-stroke: 3px #ff00ff;
   text-stroke: 3px #ff00ff;
   filter: drop-shadow(0 0 6px #ff00ff);
-  animation: 
+  animation:
     sequential-blink 3s 5;
-  animation-delay: 
+  animation-delay:
     calc(var(--char-index) * 0.2s);
 }
 
@@ -407,8 +237,6 @@ body > iframe[src*="admax"] {
   z-index: -1;
   text-shadow: none;
   filter: drop-shadow(0 0 6px #ff0099);
-  /* animation removed */
-  /* animation-delay removed */
 }
 
 .neon-char-iphone.special::after {
@@ -422,66 +250,25 @@ body > iframe[src*="admax"] {
 }
 
 @keyframes gentle-pulse {
-  0%, 100% { 
+  0%, 100% {
     transform: scale(1) translateZ(0);
     filter: drop-shadow(0 0 5px currentColor);
   }
-  50% { 
+  50% {
     transform: scale(1.03) translateZ(0);
     filter: drop-shadow(0 0 8px currentColor);
   }
 }
 
-/* rotate-slow animation removed */
-
 @keyframes outline-pulse {
-  0%, 100% { 
+  0%, 100% {
     transform: scale(1) translateZ(0);
     opacity: 0.8;
   }
-  50% { 
+  50% {
     transform: scale(1.02) translateZ(0);
     opacity: 1;
   }
-}
-
-@keyframes flip-3d {
-  0%, 100% { transform: rotateY(0deg) rotateX(0deg); }
-  25% { transform: rotateY(180deg) rotateX(10deg); }
-  50% { transform: rotateY(360deg) rotateX(0deg); }
-  75% { transform: rotateY(540deg) rotateX(-10deg); }
-}
-
-@keyframes flip-3d-reverse {
-  0%, 100% { transform: rotateY(0deg) scale(1); }
-  25% { transform: rotateY(-90deg) scale(1.2); }
-  50% { transform: rotateY(-180deg) scale(1); }
-  75% { transform: rotateY(-270deg) scale(1.2); }
-}
-
-@keyframes shadow-dance {
-  0%, 100% { 
-    text-shadow: 
-      0 0 25px #ff6b35,
-      0 0 50px #ff4500;
-  }
-  50% { 
-    text-shadow: 
-      0 0 40px #ff6b35,
-      0 0 80px #ff4500,
-      0 0 120px #ff0000;
-  }
-}
-
-@keyframes shimmer {
-  0% { opacity: 0.3; transform: translateX(-5px); }
-  50% { opacity: 0.7; transform: translateX(5px); }
-  100% { opacity: 0.3; transform: translateX(-5px); }
-}
-
-@keyframes drift {
-  0%, 100% { transform: rotate(-5deg) scale(0.9); }
-  50% { transform: rotate(5deg) scale(1.1); }
 }
 
 /* iPhone specific optimizations for crisp neon text */
@@ -494,21 +281,21 @@ body > iframe[src*="admax"] {
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
   }
-  
+
   .neon-char::before {
     -webkit-text-stroke-width: 2px;
     text-stroke-width: 2px;
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
   }
-  
+
   .neon-char.special {
     -webkit-text-stroke-width: 1.5px;
     text-stroke-width: 1.5px;
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
   }
-  
+
   .neon-char.special::before {
     -webkit-text-stroke-width: 3px;
     text-stroke-width: 3px;
@@ -523,81 +310,26 @@ body > iframe[src*="admax"] {
     -webkit-font-smoothing: subpixel-antialiased;
     -moz-osx-font-smoothing: auto;
     text-rendering: optimizeSpeed;
-    will-change: transform;
   }
-  
+
   .neon-char::before,
   .neon-char.special::before,
   .neon-char.special::after {
     -webkit-font-smoothing: subpixel-antialiased;
-    will-change: transform;
   }
 }
 
-/* Debug styles for iPhone blur testing - uncomment one at a time to test */
-
-/* Test 1: Minimal stroke approach */
-.debug-test-1 .neon-char {
-  color: transparent !important;
-  -webkit-text-stroke: 2px #c084fc !important;
-  text-stroke: 2px #c084fc !important;
-  text-shadow: none !important;
-  -webkit-font-smoothing: antialiased !important;
-  font-weight: bold !important;
-  animation: none !important;
-}
-
-.debug-test-1 .neon-char::before,
-.debug-test-1 .neon-char::after {
-  display: none !important;
-}
-
-/* Test 2: Solid color approach */
-.debug-test-2 .neon-char {
-  color: #c084fc !important;
-  -webkit-text-stroke: none !important;
-  text-stroke: none !important;
-  text-shadow: 0 0 5px #fff44f, 0 0 10px #fffde7 !important;
-  -webkit-font-smoothing: antialiased !important;
-  animation: none !important;
-}
-
-.debug-test-2 .neon-char::before,
-.debug-test-2 .neon-char::after {
-  display: none !important;
-}
-
-/* Test 3: Box shadow approach *//*
-.debug-test-3 .neon-char {
-  color: transparent;
-  background: linear-gradient(transparent, transparent);
-  background-clip: text;
-  -webkit-background-clip: text;
-  border: 1px solid #c084fc;
-  box-shadow: 
-    0 0 5px #c084fc,
-    0 0 10px #ffc107;
-}
-
-/* Test 4: SVG filter approach *//*
-.debug-test-4 .neon-char {
-  color: #c084fc;
-  filter: url(#neon-glow);
-}
-*/
-
 /* Hide scrollbar utility */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari and Opera */
+  display: none;
 }
 
 /* Intersection Observer animations for NeonText */
-/* Initial state - before first animation */
 .neon-text:not(.has-animated) .neon-char,
 .neon-text:not(.has-animated) .neon-char-iphone {
   opacity: 0;
@@ -605,7 +337,6 @@ body > iframe[src*="admax"] {
   transition: none;
 }
 
-/* Animated state - fade in animation */
 .neon-text.has-animated .neon-char,
 .neon-text.has-animated .neon-char-iphone {
   opacity: 1;
@@ -614,19 +345,16 @@ body > iframe[src*="admax"] {
   transition-delay: calc(var(--char-index) * 0.05s);
 }
 
-/* Pause blinking animation when out of view */
 .neon-text:not(.in-view) .neon-char,
 .neon-text:not(.in-view) .neon-char-iphone {
   animation-play-state: paused !important;
 }
 
-/* Resume blinking animation when in view */
 .neon-text.in-view .neon-char,
 .neon-text.in-view .neon-char-iphone {
   animation-play-state: running !important;
 }
 
-/* Initial state for pseudo elements */
 .neon-text:not(.has-animated) .neon-char::before,
 .neon-text:not(.has-animated) .neon-char-iphone::before,
 .neon-text:not(.has-animated) .neon-char.special::before,
@@ -636,7 +364,6 @@ body > iframe[src*="admax"] {
   opacity: 0;
 }
 
-/* Pause/resume blinking animation for pseudo elements */
 .neon-text:not(.in-view) .neon-char::before,
 .neon-text:not(.in-view) .neon-char-iphone::before,
 .neon-text:not(.in-view) .neon-char.special::before,

@@ -3,6 +3,7 @@ import "../globals.css";
 import Script from "next/script";
 import { Inter, Space_Grotesk } from "next/font/google";
 import MobileOverlayAd from "@/components/MobileOverlayAd";
+import DeferredStyles from "@/components/DeferredStyles";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -98,148 +99,15 @@ export default function EnglishRootLayout({
         <meta name="apple-mobile-web-app-title" content="Night Personality" />
 
         {/* Preconnect for performance optimization */}
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://www.google-analytics.com" />
 
-        {/* Critical CSS - inline for faster initial paint */}
+        {/* Critical CSS - minimal inline for faster initial paint */}
         <style dangerouslySetInnerHTML={{
-          __html: `
-            /* Critical CSS for above-the-fold content */
-            *, ::before, ::after {
-              box-sizing: border-box;
-              border-width: 0;
-              border-style: solid;
-              border-color: #e5e7eb;
-            }
-            html {
-              line-height: 1.5;
-              -webkit-text-size-adjust: 100%;
-              -moz-tab-size: 4;
-              tab-size: 4;
-              font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            }
-            body {
-              margin: 0;
-              line-height: inherit;
-              background: #0c1220;
-              color: #ffffff;
-              font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-              -webkit-font-smoothing: antialiased;
-              -moz-osx-font-smoothing: grayscale;
-            }
-            h1, h2, h3, h4, h5, h6, .font-head {
-              font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            }
-            .min-h-dvh {
-              min-height: 100vh;
-            }
-            @supports (min-height: 100dvh) {
-              .min-h-dvh {
-                min-height: 100dvh;
-              }
-            }
-            .bg-gradient-to-br {
-              background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
-            }
-            .from-purple-900 {
-              --tw-gradient-from: #581c87;
-              --tw-gradient-to: rgb(88 28 135 / 0);
-              --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-            }
-            .via-purple-800 {
-              --tw-gradient-to: rgb(107 33 168 / 0);
-              --tw-gradient-stops: var(--tw-gradient-from), #6b21a8, var(--tw-gradient-to);
-            }
-            .to-pink-900 {
-              --tw-gradient-to: #831843;
-            }
-            .text-white {
-              color: #ffffff;
-            }
-            .antialiased {
-              -webkit-font-smoothing: antialiased;
-              -moz-osx-font-smoothing: grayscale;
-            }
-            /* Starfield animation base */
-            @keyframes twinkle {
-              0%, 100% { opacity: 0; }
-              50% { opacity: 1; }
-            }
-            /* Button and interactive element base styles */
-            button {
-              font-family: inherit;
-              font-size: 100%;
-              font-weight: inherit;
-              line-height: inherit;
-              color: inherit;
-              margin: 0;
-              padding: 0;
-              background-color: transparent;
-              background-image: none;
-              text-transform: none;
-              cursor: pointer;
-            }
-            a {
-              color: inherit;
-              text-decoration: inherit;
-            }
-            /* Flexbox utilities for layout */
-            .flex {
-              display: flex;
-            }
-            .flex-col {
-              flex-direction: column;
-            }
-            .items-center {
-              align-items: center;
-            }
-            .justify-center {
-              justify-content: center;
-            }
-            /* Text utilities */
-            .text-center {
-              text-align: center;
-            }
-            .text-4xl {
-              font-size: 2.25rem;
-              line-height: 2.5rem;
-            }
-            .text-xl {
-              font-size: 1.25rem;
-              line-height: 1.75rem;
-            }
-            .font-bold {
-              font-weight: 700;
-            }
-            /* Spacing utilities */
-            .p-4 {
-              padding: 1rem;
-            }
-            .px-8 {
-              padding-left: 2rem;
-              padding-right: 2rem;
-            }
-            .py-4 {
-              padding-top: 1rem;
-              padding-bottom: 1rem;
-            }
-            .mt-8 {
-              margin-top: 2rem;
-            }
-            .mb-8 {
-              margin-bottom: 2rem;
-            }
-            /* Hide scrollbar */
-            .scrollbar-hide {
-              -ms-overflow-style: none;
-              scrollbar-width: none;
-            }
-            .scrollbar-hide::-webkit-scrollbar {
-              display: none;
-            }
-          `
+          __html: `*,::before,::after{box-sizing:border-box;border-width:0;border-style:solid}html{line-height:1.5;-webkit-text-size-adjust:100%}body{margin:0;background:#0c1220;color:#fff;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.min-h-screen{min-height:100vh}@keyframes twinkle{0%,100%{opacity:0}50%{opacity:1}}`
         }} />
 
         {/* Google Analytics 4 */}
@@ -288,6 +156,7 @@ export default function EnglishRootLayout({
       </head>
       <body className={`${inter.className} bg-[#0c1220] text-white antialiased`}>
         {children}
+        <DeferredStyles />
         <MobileOverlayAd />
       </body>
     </html>
