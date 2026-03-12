@@ -58,6 +58,27 @@ h6,
   }
 }
 
+/* Ninja AdMax オーバーレイ広告のCLS防止 */
+[id*="admax"],
+[class*="admax"],
+[data-admax-id],
+.admax-switch,
+.admax-switch-overlay {
+  position: fixed !important;
+  contain: layout style size;
+  z-index: 9999;
+}
+
+/* admaxのiframeやスクリプトが挿入する要素のCLS防止 */
+body > div[id^="admaxoverlay"],
+body > div[style*="position: fixed"],
+body > ins,
+body > iframe[src*="shinobi"],
+body > iframe[src*="admax"] {
+  position: fixed !important;
+  contain: layout style size;
+}
+
 /* タグのフェードイン効果 */
 @keyframes fadeIn {
   from {

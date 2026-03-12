@@ -1,0 +1,2 @@
+- [feedback_no_adsense.md](feedback_no_adsense.md) - AdSense不可、PC広告不要
+- [project_revenue_goal.md](project_revenue_goal.md) - 収益最大化が最優先目標、現状の収益データ
