@@ -97,6 +97,7 @@ export default function EnBlogPostPage({ params }: Props) {
               src={post.imageUrl}
               alt={post.title}
               fill
+              sizes="100vw"
               className="object-cover opacity-60"
               priority
             />

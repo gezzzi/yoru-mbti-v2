@@ -241,6 +241,7 @@ export default function BlogPostsList({ posts, basePath = '/blog' }: BlogPostsLi
                         src={post.imageUrl}
                         alt={post.title}
                         fill
+                        sizes="85vw"
                         className="object-cover"
                       />
                     ) : (
@@ -321,6 +322,7 @@ export default function BlogPostsList({ posts, basePath = '/blog' }: BlogPostsLi
                     src={post.imageUrl}
                     alt={post.title}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover transition-all duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
                   />
                 ) : (

@@ -65,10 +65,11 @@ export const ScrollAnimation = ({
           : getInitialStyles()
       } ${className}`}
       style={{
-        transition: isVisible 
-          ? `all ${duration}ms ease-out ${delay}ms` 
+        transition: isVisible
+          ? `opacity ${duration}ms ease-out ${delay}ms, transform ${duration}ms ease-out ${delay}ms`
           : 'none',
-        willChange: 'opacity, transform',
+        willChange: isVisible ? 'auto' : 'opacity, transform',
+        contain: 'layout style',
       }}
     >
       {children}

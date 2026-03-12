@@ -563,6 +563,8 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                       <img
                         src={qrImageDataUrl}
                         alt="QRコード"
+                        width={200}
+                        height={200}
                         className="w-[200px] h-[200px] object-contain"
                         style={{ touchAction: 'none' }}
                       />
@@ -678,6 +680,8 @@ const CompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, onSh
                                   <img
                                     src={uploadedQRImage}
                                     alt="アップロードされたQRコード"
+                                    width={200}
+                                    height={200}
                                     className="w-full h-auto max-w-[200px]"
                                   />
                                 </div>

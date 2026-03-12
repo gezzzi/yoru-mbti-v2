@@ -6,13 +6,13 @@ import MobileOverlayAd from "@/components/MobileOverlayAd";
 
 const inter = Inter({
   subsets: ["latin"],
-  display: "swap",
+  display: "optional",
   variable: "--font-inter",
 });
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  display: "swap",
+  display: "optional",
   variable: "--font-space",
 });
 

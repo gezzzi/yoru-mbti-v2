@@ -40,7 +40,7 @@ const EnHero: React.FC = () => {
   }, []);
 
   return (
-    <main className="flex-1 flex flex-col items-center justify-center w-full p-0 m-0 min-h-dvh overflow-hidden">
+    <main className="flex-1 flex flex-col items-center justify-center w-full p-0 m-0 min-h-screen overflow-hidden">
       {/* Text section */}
       <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 text-center flex-1 gap-12 sm:gap-16 md:gap-20 pt-20 pb-6 sm:pt-16 sm:pb-14 md:pt-32 md:pb-8">
         <ScrollAnimation animation="fadeIn" duration={800}>

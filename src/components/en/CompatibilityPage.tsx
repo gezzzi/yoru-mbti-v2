@@ -549,6 +549,8 @@ const EnCompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, on
                       <img
                         src={qrImageDataUrl}
                         alt="QR Code"
+                        width={200}
+                        height={200}
                         className="w-[200px] h-[200px] object-contain"
                         style={{ touchAction: 'none' }}
                       />
@@ -664,6 +666,8 @@ const EnCompatibilityPage: React.FC<CompatibilityPageProps> = ({ onStartTest, on
                                   <img
                                     src={uploadedQRImage}
                                     alt="Uploaded QR Code"
+                                    width={200}
+                                    height={200}
                                     className="w-full h-auto max-w-[200px]"
                                   />
                                 </div>
